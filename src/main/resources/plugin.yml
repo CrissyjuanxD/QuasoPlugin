@@ -1,0 +1,253 @@
+name: QuasoPlugin
+main: imp.crissyjuanxd.QuasoPlugin
+version: ${project.version}
+api-version: 1.21
+author: CrissyJuanXD
+description: Plugin dedicado para el streamer Crosszy
+commands:
+  revive:
+    description: Revive a player.
+    usage: /revive <player>
+    permission: viciont_hardcore3.revive
+    permission-message: No tienes permiso para usar este comando.
+  revivecoords:
+    description: Configura las coordenadas del revive.
+    usage: /revivecoords <x> <y> <z>
+    permission: viciont_hardcore3.revivecoords
+    permission-message: No tienes permiso para usar este comando.
+  cambiardia:
+    description: Cambia manualmente al día especificado
+    usage: /cambiardia <día>
+    permission: viciont_hardcore3.cambiardia
+    permission-message: No tienes permiso para usar este comando.
+  dia:
+    description: Muestra el día actual de Viciont Hardcore 3
+    usage: /dia
+  ping:
+    description: Muestra tu ping actual en milisegundos.
+    usage: /ping
+  ruletavct:
+    description: Comando para reproducir la animación de la ruleta.
+    usage: /ruletavct <json>
+    permission: viciont_hardcore3.ruletavct
+    permission-message: No tienes permiso para usar este comando.
+  muertevct:
+    description: Comando para reproducir la animación de la Muerte.
+    usage: /muertevct <json>
+    permission: viciont_hardcore3.muertevct
+    permission-message: No tienes permiso para usar este comando.
+  bonusvct:
+    description: Comando para reproducir la animación de Bonus.
+    usage: /bonusvct <json>
+    permission: viciont_hardcore3.bonusvct
+    permission-message: No tienes permiso para usar este comando.
+  structure:
+    description: Genera estructuras especiales en el mundo
+    usage: /structure <nombre>
+    permission: vicionthardcore3.command.estructure
+    permission-message: No tienes permiso para usar este comando.
+  lavaclash:
+    description: Comando principal del evento LavaClash
+    usage: /lavaclash <start|battle|force|reglas|resetpurple|end|list|add|remove>
+    permission: viciont_hardcore3.command.lavaclash
+    permission-message: No tienes permiso para usar este comando.
+  itemparty:
+    description: Comando principal del evento ItemParty
+    usage: /itemparty <start|end|reset|reload>
+    permission: viciont_hardcore3.command.itemparty
+    permission-message: No tienes permiso para usar este comando.
+  hotpotato:
+    description: Comando principal del evento HotPotato
+    usage: /hotpotato <start|force|reglas|battle|stop|list|add|remove|reload>
+    permission: viciont_hardcore3.command.hotpotato
+    permission-message: No tienes permiso para usar este comando.
+  logros:
+    description: Comando para ver los logros.
+    usage: /logros
+  addlogro:
+    description: Añade un logro a un jugador.
+    usage: /addlogro <nombrelogro> <jugador> [item_lista|all]
+    permission: viciont_hardcore3.command.addlogro
+    permission-message: No tienes permiso para usar este comando.
+  removelogro:
+    description: Remueve un logro a un jugador.
+    usage: /removelogro <nombrelogro> <jugador> [item_lista|all]
+    permission: viciont_hardcore3.command.removelogro
+    permission-message: No tienes permiso para usar este comando.
+  magictp:
+    description: Teletransporta jugadores a coordenadas especificadas con efectos especiales.
+    usage: /magictp <jugador o @a> <x y z | spawn>
+    permission: viciont_hardcore3.command.magic
+    permission-message: No tienes permiso para usar este comando.
+  spawnvct:
+    description: Spawnea un mob personalizado en tu ubicación
+    usage: /spawnvct <mob> [jugador (opcional)] [x] [y] [z]
+    permission: viciont_hardcore3.command.spawnvct
+    permission-message: No tienes permiso para usar este comando.
+  addtiempo:
+    description: Añade un temporizador en la bossbar.
+    usage: /addtiempo [nombre opcional] <tiempo> [on/off]
+    permission: viciont_hardcore3.command.addtiempo
+    permission-message: No tienes permiso para usar este comando.
+  removetiempo:
+    description: Elimina un temporizador de la bossbar.
+    usage: /removetiempo [nombre opcional]
+    permission: viciont_hardcore3.command.removetiempo
+    permission-message: No tienes permiso para usar este comando.
+  tiempoview:
+    description: Muestra los temporizadores activos en la bossbar.
+    usage: /tiempoview <jugador/all>
+    permission: viciont_hardcore3.command.tiempoview
+    permission-message: No tienes permiso para usar este comando.
+  givevct:
+    description: Da un item especial del plugin a un jugador.
+    usage: /givevct <item> [cantidad] [jugador]
+    permission: viciont_hardcore3.command.givevct
+    permission-message: No tienes permiso para usar este comando.
+  addnightmare:
+    description: Añade el evento Nightmare a un jugador o a todos.
+    usage: /addnightmare <player|@a>
+    permission: viciont_hardcore3.command.addnightmare
+    permission-message: No tienes permiso para usar este comando.
+  removenightmare:
+    description: Remueve el evento Nightmare a un jugador o a todos.
+    usage: /removenightmare <player|@a>
+    permission: viciont_hardcore3.command.removenightmare
+    permission-message: No tienes permiso para usar este comando.
+  resetnightmarecooldown:
+    description: Resetea el cooldown del evento Nightmare a un jugador o a todos.
+    usage: /resetnightmarecooldown <player|@a>
+    permission: viciont_hardcore3.command.resetnightmarecooldown
+    permission-message: No tienes permiso para usar este comando.
+  levelnightmare:
+    description: Ajusta el nivel de la pesadilla
+    usage: /levelnightmare <jugador|@a> <Nvl1/Nvl2/Nvl3>
+    permission: viciont_hardcore3.command.levelnightmare
+    permission-message: No tienes permiso para usar este comando.
+  activarmision:
+    description: Activa una misión específica
+    usage: /activarmision <número>
+    permission: viciont_hardcore3.missions.admin
+    permission-message: No tienes permiso para usar este comando.
+  desactivarmision:
+    description: Desactiva una misión específica
+    usage: /desactivarmision <número>
+    permission: viciont_hardcore3.missions.admin
+    permission-message: No tienes permiso para usar este comando.
+  misiones:
+    description: Abre la interfaz del sistema de misiones
+    usage: /misiones
+  addmision:
+    description: Añade una misión completada a un jugador
+    usage: /addmision <jugador> <número>
+    permission: viciont_hardcore3.missions.admin
+    permission-message: No tienes permiso para usar este comando.
+  removemision:
+    description: Remueve una misión completada de un jugador
+    usage: /removemision <jugador> <número>
+    permission: viciont_hardcore3.missions.admin
+    permission-message: No tienes permiso para usar este comando.
+  penalizadosmisiones:
+    description: Muestra la lista de jugadores penalizados por misiones
+    usage: /penalizadosmisiones
+    permission: viciont_hardcore3.missions.admin
+    permission-message: No tienes permiso para usar este comando.
+  mobcap:
+    description: Comando principal para gestionar MobCap
+    usage: /mobcap <info|setbase|doble|triple|normal|habilitar|deshabilitar|reset|reload|mob>
+    permission: viciont_hardcore3.mobcap.admin
+    aliases: [ mc, mobcapmanager ]
+  mobcapinfo:
+    description: Muestra información detallada del MobCap
+    usage: /mobcapinfo
+    permission: viciont_hardcore3.mobcap.admin
+    aliases: [ mcinfo, mobcapstatus ]
+  habilidades:
+    description: Muestra las habilidades desbloqueadas de un jugador
+    usage: /habilidades <jugador>
+  debugarena:
+    description: Activa el modo debug de arenas.
+    usage: /debugarena
+    permission: viciont_hardcore3.command.debugarena
+    permission-message: No tienes permiso para usar este comando.
+  altarvct:
+    description: Comando para administrar los Altares.
+    usage: /altarvct <info|create|addcooldown|delcooldown>
+    permission: viciont_hardcore3.command.altarcreate
+    permission-message: No tienes permiso para usar este comando.
+  pvp:
+    description: Activa o desactiva el PVP.
+    usage: /pvp <activate|deactivate>
+    permission: viciont_hardcore3.command.pvp
+    permission-message: No tienes permiso para usar este comando.
+  proteccion:
+    description: Obtiene la guía de protecciones
+    usage: /proteccion
+  mochilas:
+    description: Comando para administrar mochilas
+    usage: /mochilas <jugador>
+    permission: viciont_hardcore3.command.mochilas
+    permission-message: No tienes permiso para usar este comando.
+  delmochilas:
+    description: Elimina las mochilas de un jugador
+    usage: /delmochilas <jugador>
+    permission: viciont_hardcore3.command.mochilas
+  casino:
+    description: Abre la interfaz del casino
+    usage: /casino <set/reload/slot/remove> <blackjack/slot>
+    permission: viciont_hardcore3.command.casino
+    permission-message: No tienes permiso para usar este comando.
+  anuncio:
+    description: Envia un anuncio global con formato personalizado.
+    usage: /anuncio <mensaje>
+    permission: viciont_hardcore3.command.anuncio
+    permission-message: No tienes permiso para usar este comando.
+  itempartycastigo:
+    description: Administrar castigos del evento ItemParty
+    usage: /itempartycastigo remove <jugador>
+    permission: itemparty.admin
+  bosstp:
+    description: Tepea a la zona del Boss
+    usage: /bosstp
+  setbossspawn:
+    description: Establece el spawn del Boss
+    usage: /setbossspawn
+    permission: viciont_hardcore3.command.setbossspawn
+    permission-message: No tienes permiso para usar este comando.
+  givestatue:
+    description: Comando para configurar las Estatuas de efectos.
+    usage: /givestatue
+    permission: viciont_hardcore3.command.givestatue
+    permission-message: No tienes permiso para usar este comando.
+  givespawner:
+    description: Da un spawner personalizado que genera mobs custom.
+    usage: /givespawner <mob> [jugador] | /givespawner vanilla <mob_vanilla> [jugador]
+    permission: viciont_hardcore3.command.givespawner
+    permission-message: No tienes permiso para usar este comando.
+  reloadcustomspawn:
+    description: Recarga todos los spawners custom en el mundo
+    usage: /reloadcustomspawn
+    permission: viciont_hardcore3.command.givespawner
+    permission-message: No tienes permiso para usar este comando.
+  quasoreload:
+    description: Recarga la configuración del plugin
+    usage: /quasoreload
+    permission: viciont_hardcore3.command.reload
+    permission-message: No tienes permiso para usar este comando.
+  spawnshop:
+    description: Spawnea una tienda (aldeano) en las coordenadas especificadas
+    usage: /spawnshop <nombre> [x] [y] [z]
+    permission: viciont_hardcore3.shop.admin
+    permission-message: No tienes permiso para usar este comando.
+  trade:
+    description: Comando para configurar trades de la ShopSystem
+    usage: /trade <item> <cantidad>
+    permission: viciont_hardcore3.command.trade
+    permission-message: No tienes permiso para usar este comando.
+  removeshop:
+    description: Elimina un aldeano de la ShopSystem
+    usage: /removeshop
+    permission: viciont_hardcore3.command.removeshop
+    permission-message: No tienes permiso para usar este comando.
+
+softdepend: [EliteMobs]

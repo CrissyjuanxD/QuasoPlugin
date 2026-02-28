@@ -102,6 +102,29 @@ public class ItemPartyHandler implements Listener {
 
     public void reloadConfig() { loadConfig(); }
 
+    private void syncTeamsToEventScoreboard() {
+        if (eventScoreboard == null) return;
+        Scoreboard mainBoard = Bukkit.getScoreboardManager().getMainScoreboard();
+
+        for (Team mainTeam : mainBoard.getTeams()) {
+            Team newTeam = eventScoreboard.getTeam(mainTeam.getName());
+            if (newTeam == null) {
+                newTeam = eventScoreboard.registerNewTeam(mainTeam.getName());
+            }
+            newTeam.setPrefix(mainTeam.getPrefix());
+            newTeam.setSuffix(mainTeam.getSuffix());
+            newTeam.setColor(mainTeam.getColor());
+            newTeam.setOption(Team.Option.NAME_TAG_VISIBILITY, mainTeam.getOption(Team.Option.NAME_TAG_VISIBILITY));
+            newTeam.setOption(Team.Option.COLLISION_RULE, mainTeam.getOption(Team.Option.COLLISION_RULE));
+
+            for (String entry : mainTeam.getEntries()) {
+                if (!newTeam.hasEntry(entry)) {
+                    newTeam.addEntry(entry);
+                }
+            }
+        }
+    }
+
     public void iniciarEvento() {
         if (eventoActivo) { Bukkit.broadcastMessage("§c¡El evento ya está activo!"); return; }
         if (Bukkit.getOnlinePlayers().size() < 2) {
@@ -114,6 +137,8 @@ public class ItemPartyHandler implements Listener {
         if (eventScoreboard == null) {
             eventScoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
         }
+
+        syncTeamsToEventScoreboard();
 
         Objective oldObj = eventScoreboard.getObjective("itemparty");
         if (oldObj != null) oldObj.unregister();
@@ -313,6 +338,15 @@ public class ItemPartyHandler implements Listener {
                 puntosBars.put(p.getUniqueId(), bar);
             }
             if (!bar.getPlayers().contains(p)) bar.addPlayer(p);
+
+            Scoreboard mainBoard = Bukkit.getScoreboardManager().getMainScoreboard();
+            Team mainTeam = mainBoard.getEntryTeam(p.getName());
+            if (mainTeam != null && eventScoreboard != null) {
+                Team evTeam = eventScoreboard.getTeam(mainTeam.getName());
+                if (evTeam != null && !evTeam.hasEntry(p.getName())) {
+                    evTeam.addEntry(p.getName());
+                }
+            }
         }
 
         if (playersConfig.contains("punishments." + uuidStr)) {

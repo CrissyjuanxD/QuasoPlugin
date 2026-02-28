@@ -29,7 +29,7 @@ public class DayCommandHandler implements CommandExecutor {
             }
         } else if (label.equalsIgnoreCase("dia")) {
             int currentDay = dayHandler.getCurrentDay();
-            sender.sendMessage(ChatColor.GOLD + "Estamos en el día " + currentDay + " de IsManuSMP.");
+            sender.sendMessage(ChatColor.GOLD + "Estamos en el día " + currentDay + " de Croissants.");
         } else {
             return false;
         }

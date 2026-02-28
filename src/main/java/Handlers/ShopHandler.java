@@ -1,4 +1,6 @@
 /*
+//CODIGO ANTIGUO
+
 package Handlers;
 
 import Habilidades.HabilidadesBook;
@@ -709,9 +711,6 @@ public class ShopHandler implements Listener {
                 break;
             case "corrupted_rotten":
                 item = items.CorruptedMobItems.createCorruptedMeet();
-                break;
-            case "corrupted_spidereyes":
-                item = items.CorruptedMobItems.createCorruptedSpiderEye();
                 break;
             case "libro_habilidades":
                 item = Habilidades.HabilidadesBook.createHabilidadesBook();

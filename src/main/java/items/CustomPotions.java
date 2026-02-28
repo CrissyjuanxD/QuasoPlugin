@@ -3,9 +3,13 @@ package items;
 import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class CustomPotions {
 
@@ -91,6 +95,26 @@ public class CustomPotions {
                 9,    // Nivel X (Amplificador 9)
                 Color.ORANGE
         );
+    }
+
+    public static ItemStack getSpeedHoneyBottle() {
+        ItemStack honey = new ItemStack(Material.HONEY_BOTTLE);
+        ItemMeta meta = honey.getItemMeta();
+
+        if (meta != null) {
+            meta.setDisplayName("§6§lFrasco de Velocidad");
+
+            List<String> lore = new ArrayList<>();
+            lore.add("§9Velocidad IV (6:00)");
+            meta.setLore(lore);
+
+            // Identificador para el evento de consumo (usamos un CustomModelData único)
+            meta.setCustomModelData(8001);
+
+            honey.setItemMeta(meta);
+        }
+
+        return honey;
     }
 
     /**

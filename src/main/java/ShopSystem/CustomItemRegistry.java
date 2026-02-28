@@ -7,15 +7,16 @@ import imp.crissyjuanxd.QuasoPlugin;
 import items.*;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class CustomItemRegistry {
 
-    private static QuasoPlugin plugin;
+    private static JavaPlugin plugin;
 
-    public static void init(QuasoPlugin pl) {
+    public static void init(JavaPlugin pl) {
         plugin = pl;
     }
 

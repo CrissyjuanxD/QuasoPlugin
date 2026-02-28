@@ -1,5 +1,7 @@
 package Events.Skybattle;
 
+import Habilidades.HabilidadesEffects;
+import Habilidades.HabilidadesManager;
 import Handlers.Teams.TeamType;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.*;
@@ -32,6 +34,10 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class EventoHandler implements Listener {
+
+    private final HabilidadesManager habilidadesManager;
+    private final HabilidadesEffects habilidadesEffects;
+
     private final Set<String> participantes = new HashSet<>();
     private final Map<String, Integer> kills = new HashMap<>();
     private final List<String> ordenEliminados = new ArrayList<>();
@@ -64,8 +70,10 @@ public class EventoHandler implements Listener {
     private Material bloqueActual;
     private String nombreBloqueActual;
 
-    public EventoHandler(JavaPlugin plugin) {
+    public EventoHandler(JavaPlugin plugin, HabilidadesManager habilidadesManager, HabilidadesEffects habilidadesEffects) {
         this.plugin = plugin;
+        this.habilidadesManager = habilidadesManager;
+        this.habilidadesEffects = habilidadesEffects;
         this.cofresHandler = new CofresHandler(plugin);
         this.estadoArchivo = new File(plugin.getDataFolder(), "estado_evento.yml");
         verificarEstadoEvento();
@@ -107,7 +115,7 @@ public class EventoHandler implements Listener {
         bloqueActual = bloquesPosibles.get(new Random().nextInt(bloquesPosibles.size()));
         nombreBloqueActual = nombresBloques.get(bloqueActual);
 
-        String jsonMessage = "[\"\",{\"text\":\"\\n\"},{\"text\":\"\\u06de Evento\",\"bold\":true,\"color\":\"#F977F9\"},{\"text\":\" \\u27a4\",\"bold\":true,\"color\":\"gray\"},{\"text\":\"\\n\\n\"},{\"text\":\"¡Ha comenzado el evento \",\"color\":\"#c55cf3\"},{\"text\":\"LAVACLASH\",\"bold\":true,\"color\":\"#D98836\"},{\"text\":\"!\\nLos primeros \",\"color\":\"#c55cf3\"},{\"text\":\"20\",\"bold\":true,\"color\":\"#c55cf3\"},{\"text\":\" jugadores en obtener\\nun \",\"color\":\"#c55cf3\"},{\"text\":\"Manu Ticket\",\"bold\":true,\"color\":\"#E9BF66\"},{\"text\":\" participarán\\n\\nPara obtener el ticket deberan romper un \",\"color\":\"#c55cf3\"},{\"text\":\"\\n\"},{\"text\":\"" + nombreBloqueActual + "\",\"bold\":true,\"color\":\"#57A9CB\"},{\"text\":\"\\n \"}]";
+        String jsonMessage = "[\"\",{\"text\":\"\\n\"},{\"text\":\"\\u06de Evento\",\"bold\":true,\"color\":\"#F977F9\"},{\"text\":\" \\u27a4\",\"bold\":true,\"color\":\"gray\"},{\"text\":\"\\n\\n\"},{\"text\":\"¡Ha comenzado el evento \",\"color\":\"#c55cf3\"},{\"text\":\"LAVACLASH\",\"bold\":true,\"color\":\"#D98836\"},{\"text\":\"!\\nLos primeros \",\"color\":\"#c55cf3\"},{\"text\":\"20\",\"bold\":true,\"color\":\"#c55cf3\"},{\"text\":\" jugadores en obtener\\nun \",\"color\":\"#c55cf3\"},{\"text\":\"Crosszy Ticket\",\"bold\":true,\"color\":\"#E9BF66\"},{\"text\":\" participarán\\n\\nPara obtener el ticket deberan romper un \",\"color\":\"#c55cf3\"},{\"text\":\"\\n\"},{\"text\":\"" + nombreBloqueActual + "\",\"bold\":true,\"color\":\"#57A9CB\"},{\"text\":\"\\n \"}]";
 
         // MODIFICADO: Enviar tellraw solo a jugadores en la zona en lugar de usar comando global si es posible,
         // o iterar el comando para cada jugador. Asumo que ruletavct es broadcast, lo cambio a tellraw individual para respetar la zona.
@@ -184,6 +192,11 @@ public class EventoHandler implements Listener {
 
         for (String nombre : participantes) {
             restaurarTeamOriginal(nombre);
+            Player p = Bukkit.getPlayer(nombre);
+            if (p != null) {
+                habilidadesManager.enableHabilidades(p);
+                habilidadesEffects.reapplyAllEffects(p, habilidadesManager);
+            }
         }
 
         participantes.clear();
@@ -284,7 +297,7 @@ public class EventoHandler implements Listener {
                     + "{\"text\":\"\u06de\",\"color\":\"#BA7FD0\"},"
                     + "{\"text\":\" " + jugador.getName() + "\",\"bold\":true,\"color\":\"#863ECF\"},"
                     + "{\"text\":\" ha obtenido el \",\"color\":\"#BA7FD0\"},"
-                    + "{\"text\":\"Manu ticket\",\"bold\":true,\"color\":\"#E9BF66\"},"
+                    + "{\"text\":\"Crosszy ticket\",\"bold\":true,\"color\":\"#E9BF66\"},"
                     + "{\"text\":\" - Ticket:\",\"color\":\"#BA7FD0\"},"
                     + "{\"text\":\" " + participantes.size() + "\",\"bold\":true,\"color\":\"#863ECF\"},"
                     + "{\"text\":\"/\",\"bold\":true,\"color\":\"#BA7FD0\"},"
@@ -335,7 +348,8 @@ public class EventoHandler implements Listener {
             for (String jugador : participantes) {
                 Player p = Bukkit.getPlayer(jugador);
                 if (p != null && i < shroomlightLocations.size()) {
-                    // Obtener la ubicación y convertirla a coordenadas
+                    habilidadesManager.disableHabilidades(p);
+                    habilidadesEffects.reapplyAllEffects(p, habilidadesManager);
                     Location loc = shroomlightLocations.get(i).add(0.5, 1, 0.5);
                     double x = loc.getX();
                     double y = loc.getY();
@@ -798,6 +812,8 @@ public class EventoHandler implements Listener {
         });
         jugador.getInventory().clear();
 
+        habilidadesManager.enableHabilidades(jugador);
+        habilidadesEffects.reapplyAllEffects(jugador, habilidadesManager);
         // Agrega al orden de eliminados
         if (!ordenEliminados.contains(eliminado)) {
             ordenEliminados.add(eliminado);
@@ -997,6 +1013,9 @@ public class EventoHandler implements Listener {
                 Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "tick rate 20");
                 Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "effect clear @a minecraft:speed");
                 Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "effect clear @a minecraft:night_vision");
+
+                habilidadesManager.enableHabilidades(ganador);
+                habilidadesEffects.reapplyAllEffects(ganador, habilidadesManager);
                 // Teletransporta al ganador a la ubicación de espectadores
                 Location ubiEspec = new Location(ganador.getWorld(), 20015.00, 106.00, 20000.27, -1979.64f, 0.46f);
                 ganador.teleport(ubiEspec);
@@ -1423,7 +1442,14 @@ public class EventoHandler implements Listener {
 
         participantes.add(nombreJugador);
         Player p = Bukkit.getPlayer(nombreJugador);
-        if (p != null) aplicarTeamLavaClash(p);
+        if (p != null) {
+            aplicarTeamLavaClash(p);
+
+            if (eventoEnCurso || preparacion) {
+                habilidadesManager.disableHabilidades(p);
+                habilidadesEffects.reapplyAllEffects(p, habilidadesManager);
+            }
+        }
         sender.sendMessage(ChatColor.GREEN + "Jugador " + nombreJugador + " agregado al evento");
 
         // Mensaje como en onBlockBreak
@@ -1431,7 +1457,7 @@ public class EventoHandler implements Listener {
                 + "{\"text\":\"\u06de\",\"color\":\"#BA7FD0\"},"
                 + "{\"text\":\" " + nombreJugador + "\",\"bold\":true,\"color\":\"#863ECF\"},"
                 + "{\"text\":\" ha obtenido el \",\"color\":\"#BA7FD0\"},"
-                + "{\"text\":\"Manu ticket\",\"bold\":true,\"color\":\"#E9BF66\"},"
+                + "{\"text\":\"Crosszy ticket\",\"bold\":true,\"color\":\"#E9BF66\"},"
                 + "{\"text\":\" - Ticket:\",\"color\":\"#BA7FD0\"},"
                 + "{\"text\":\" " + participantes.size() + "\",\"bold\":true,\"color\":\"#863ECF\"},"
                 + "{\"text\":\"/\",\"bold\":true,\"color\":\"#BA7FD0\"},"
@@ -1451,6 +1477,11 @@ public class EventoHandler implements Listener {
 
         participantes.remove(nombreJugador);
         restaurarTeamOriginal(nombreJugador);
+        Player p = Bukkit.getPlayer(nombreJugador);
+        if (p != null) {
+            habilidadesManager.enableHabilidades(p);
+            habilidadesEffects.reapplyAllEffects(p, habilidadesManager);
+        }
         sender.sendMessage(ChatColor.GREEN + "Jugador " + nombreJugador + " eliminado del evento");
     }
 

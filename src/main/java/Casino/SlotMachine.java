@@ -173,7 +173,7 @@ public class SlotMachine implements Listener {
         sm.setDisplayName(ChatColor.of("#B5EAD7") + "" + ChatColor.BOLD + "¡GIRAR!");
         sm.setLore(Arrays.asList(
                 "",
-                ChatColor.of("#C7CEEA") + "Coloca una " + ChatColor.of("#FFD3A5") + "Vithium Ficha",
+                ChatColor.of("#C7CEEA") + "Coloca una " + ChatColor.of("#FFD3A5") + "DinoFicha",
                 ChatColor.of("#C7CEEA") + "en el slot inferior y haz clic aquí",
                 ""
         ));
@@ -221,7 +221,7 @@ public class SlotMachine implements Listener {
         // 4. Indicadores de Ficha (Alrededor del slot 49)
         ItemStack tokenIndicator = new ItemStack(Material.GRAY_STAINED_GLASS_PANE);
         ItemMeta tokenMeta = tokenIndicator.getItemMeta();
-        tokenMeta.setDisplayName(ChatColor.of("#FFD3A5") + "" + ChatColor.BOLD + "Coloca Ficha Aquí");
+        tokenMeta.setDisplayName(ChatColor.of("#FFD3A5") + "" + ChatColor.BOLD + "Coloca DinoFicha Aquí");
         tokenMeta.setCustomModelData(1000);
         tokenIndicator.setItemMeta(tokenMeta);
 
@@ -308,7 +308,7 @@ public class SlotMachine implements Listener {
             if (cursor != null && cursor.getType() != Material.AIR) {
                 if (!cursor.isSimilar(EconomyItems.createVithiumToken())) {
                     e.setCancelled(true);
-                    p.sendMessage(ChatColor.of("#FFB3BA") + "۞ Solo puedes colocar Vithium Fichas aquí.");
+                    p.sendMessage(ChatColor.of("#FFB3BA") + "۞ Solo puedes colocar DinoFichas aquí.");
                     return;
                 }
             }
@@ -330,7 +330,7 @@ public class SlotMachine implements Listener {
 
         ItemStack bet = inv.getItem(tokenSlot);
         if (bet == null || !bet.isSimilar(EconomyItems.createVithiumToken())) {
-            p.sendMessage(ChatColor.of("#FFB3BA") + "۞ ¡Coloca una Vithium Ficha primero!");
+            p.sendMessage(ChatColor.of("#FFB3BA") + "۞ ¡Coloca una DinoFicha primero!");
             p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 1.0f, 0.8f);
             return;
         }
@@ -627,7 +627,7 @@ public class SlotMachine implements Listener {
         ItemStack item = null;
 
         switch (name.toLowerCase()) {
-            case "vithiums_fichas":
+            case "dino_fichas":
                 item = EconomyItems.createVithiumToken();
                 break;
             case "vithiums":

@@ -34,7 +34,7 @@ public class ToastHandler {
         {
           "display": {
             "icon": { "id": "minecraft:fox_spawn_egg" },
-            "title": { "text": "Notificaciones IsManuSMP" },
+            "title": { "text": "Notificaciones Croissants" },
             "description": { "text": "Registro de eventos del servidor" },
             "background": "minecraft:textures/block/orange_wool.png",
             "frame": "task",

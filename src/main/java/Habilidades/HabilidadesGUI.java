@@ -100,7 +100,7 @@ public class HabilidadesGUI implements Listener {
     }
 
     private ItemStack createHabilidadItem(Player player, HabilidadesType type, int level) {
-        boolean isUnlocked = manager.hasHabilidad(player.getUniqueId(), type, level);
+        boolean isUnlocked = manager.hasHabilidadPurchased(player.getUniqueId(), type, level);
         boolean canUnlock = manager.canUnlock(player.getUniqueId(), type, level);
 
         ItemStack item;
@@ -214,7 +214,7 @@ public class HabilidadesGUI implements Listener {
 
         lore.add(ChatColor.of("#C77DFF") + "• " + xp + " Niveles de XP");
         lore.add(ChatColor.of("#C77DFF") + "• " + item);
-        lore.add(ChatColor.of("#C77DFF") + "• " + coins + " ManuCoins");
+        lore.add(ChatColor.of("#C77DFF") + "• " + coins + " DinoCoins");
     }
 
     @EventHandler
@@ -252,7 +252,7 @@ public class HabilidadesGUI implements Listener {
     }
 
     private void handleUnlock(Player player, HabilidadesType type, int level) {
-        if (manager.hasHabilidad(player.getUniqueId(), type, level)) {
+        if (manager.hasHabilidadPurchased(player.getUniqueId(), type, level)) {
             player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_NO, 1f, 1f);
             return;
         }
@@ -285,7 +285,7 @@ public class HabilidadesGUI implements Listener {
             return;
         }
         if (!hasManuCoins(player, coinCost)) {
-            player.sendMessage(ChatColor.RED + "No tienes suficientes ManuCoins.");
+            player.sendMessage(ChatColor.RED + "No tienes suficientes DinoCoins.");
             return;
         }
 

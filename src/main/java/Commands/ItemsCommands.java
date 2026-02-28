@@ -40,14 +40,14 @@ public class ItemsCommands implements CommandExecutor, TabCompleter {
         this.amuletInmortal = new AmuletInmortal(plugin);
         this.lifeCampfire = new LifeCampfire(plugin);
         this.iceBowItem = new IceBowItem(plugin);
-        plugin.getCommand("givevct").setExecutor(this);
-        plugin.getCommand("givevct").setTabCompleter(this);
+        plugin.getCommand("giveqp").setExecutor(this);
+        plugin.getCommand("giveqp").setTabCompleter(this);
     }
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (args.length == 0) {
-            sender.sendMessage("§cUso: /givevct <item> [cantidad] [jugador]");
+            sender.sendMessage("§cUso: /giveqp <item> [cantidad] [jugador]");
             return true;
         }
 
@@ -198,6 +198,10 @@ public class ItemsCommands implements CommandExecutor, TabCompleter {
                 item = CustomPotions.getSplashAbsorptionXPotion();
                 item.setAmount(cantidad);
                 break;
+            case "frasco_de_velocidad":
+                item = CustomPotions.getSpeedHoneyBottle();
+                item.setAmount(cantidad);
+                break;
             case "amulet_bloodmoon":
                 item = amuletBloodM.createAmulet();
                 item.setAmount(cantidad);
@@ -268,6 +272,7 @@ public class ItemsCommands implements CommandExecutor, TabCompleter {
             completions.add("potion_haste_3");
             completions.add("potion_haste_2");
             completions.add("splash_absorption_10");
+            completions.add("frasco_de_velocidad");
             completions.add("amulet_bloodmoon");
             completions.add("amuleto_inmortalidad");
             completions.add("life_campfire");

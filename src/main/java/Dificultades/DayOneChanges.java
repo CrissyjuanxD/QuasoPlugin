@@ -161,6 +161,17 @@ public class DayOneChanges implements Listener {
     }
 
     @EventHandler
+    public void onHoneyConsume(PlayerItemConsumeEvent event) {
+       ItemStack item = event.getItem();
+
+        if (item.getType() == Material.HONEY_BOTTLE && item.hasItemMeta()) {
+            if (item.getItemMeta().hasCustomModelData() && item.getItemMeta().getCustomModelData() == 8001) {
+                event.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 7200, 3));
+            }
+        }
+    }
+
+    @EventHandler
     public void onPlayerVoidDamage(EntityDamageEvent event) {
         if (!isApplied) return;
         if (!(event.getEntity() instanceof Player player)) return;

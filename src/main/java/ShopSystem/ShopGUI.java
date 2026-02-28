@@ -12,7 +12,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class ShopGUI {
@@ -27,42 +26,28 @@ public class ShopGUI {
         String shopId = villager.getPersistentDataContainer().get(shopManager.shopIdKey, PersistentDataType.STRING);
         String title = ChatColor.GOLD + "Configurar: " + (villager.getCustomName() != null ? villager.getCustomName() : "Tienda");
 
-        // Asegurar longitud de título
         if (title.length() > 32) title = title.substring(0, 32);
 
         Inventory gui = Bukkit.createInventory(null, 54, title);
-
-        // Guardar estado de edición
         shopManager.editingShops.put(player.getUniqueId(), shopId);
-
-        // Cargar datos frescos
         shopManager.loadShopTrades(shopId, villager);
 
-        // Paneles decorativos
         ItemStack pane = new ItemStack(Material.LIME_STAINED_GLASS_PANE);
         ItemMeta paneMeta = pane.getItemMeta();
         paneMeta.setDisplayName(" ");
         pane.setItemMeta(paneMeta);
 
         for (int i = 0; i < 54; i++) {
-            if (i % 9 == 4) gui.setItem(i, pane); // Columna central
+            if (i % 9 == 4) gui.setItem(i, pane);
         }
 
-        // Rellenar tradeos (0-11)
         List<MerchantRecipe> recipes = villager.getRecipes();
 
         for (int i = 0; i < 12; i++) {
-            // Calcular slots en la GUI
-            // Columna izquierda (0-3) para ingredientes, Derecha (5-8) para otros? No, usaremos layout simple
-            // Layout:
-            // Trade 1: Slot 0 (Ing1), Slot 1 (Ing2), Slot 2 (Result)
-            // Trade 7: Slot 5 (Ing1), Slot 6 (Ing2), Slot 7 (Result)
-
             int row = (i < 6) ? i : (i - 6);
             int baseSlot = (row * 9) + ((i < 6) ? 0 : 5);
 
             MerchantRecipe recipe = (i < recipes.size()) ? recipes.get(i) : null;
-
             ItemStack ing1 = null, ing2 = null, res = null;
 
             if (recipe != null) {
@@ -82,9 +67,9 @@ public class ShopGUI {
     private ItemStack createDisplayItem(ItemStack item, String type, int tradeIndex) {
         boolean isPlaceholder = false;
 
-        // Detectar si es nuestro placeholder
+        // Detecta el "Papel Vacío" igual que en tu código viejo
         if (item == null || item.getType() == Material.AIR ||
-                (item.getType() == Material.STRUCTURE_VOID && item.hasItemMeta() && item.getItemMeta().getDisplayName().contains("Vacío"))) {
+                (item.getType() == Material.PAPER && item.hasItemMeta() && item.getItemMeta().hasCustomModelData() && item.getItemMeta().getCustomModelData() == 100)) {
             isPlaceholder = true;
         }
 

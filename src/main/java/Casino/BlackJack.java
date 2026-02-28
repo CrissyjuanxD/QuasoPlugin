@@ -233,7 +233,7 @@ public class BlackJack implements Listener {
         ItemStack token = EconomyItems.createVithiumToken();
 
         if (bet == null || !bet.isSimilar(token)) {
-            player.sendMessage(ChatColor.of("#FFB3BA") + "۞ ¡Coloca ManuFichas para apostar!");
+            player.sendMessage(ChatColor.of("#FFB3BA") + "۞ ¡Coloca DinoFichas para apostar!");
             return;
         }
 
@@ -487,7 +487,7 @@ public class BlackJack implements Listener {
                 if (cursor.isSimilar(EconomyItems.createVithiumToken())) {
                     e.setCancelled(false); // Meter fichas
                 } else {
-                    p.sendMessage(ChatColor.of("#FFB3BA") + "۞ Solo se aceptan ManuFichas.");
+                    p.sendMessage(ChatColor.of("#FFB3BA") + "۞ Solo se aceptan DinoFichas.");
                 }
             }
             return;

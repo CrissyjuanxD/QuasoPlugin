@@ -106,9 +106,9 @@ public class Mission6 implements Mission, Listener {
                 missionHandler.completeMission(killer, 6);
             } else {
                 String msg = ChatColor.GOLD + "۞ " +
-                        ChatColor.of("#FFCC99") + "Zombies: " + ChatColor.of("#FFA07A") + zKilled + ChatColor.of("#FFE4B5") + "/" + ChatColor.of("#FFA07A") + "10" +
+                        ChatColor.of("#FFCC99") + "Corr. Zombies: " + ChatColor.of("#FFA07A") + zKilled + ChatColor.of("#FFE4B5") + "/" + ChatColor.of("#FFA07A") + "10" +
                         ChatColor.GRAY + " | " +
-                        ChatColor.of("#FFCC99") + "Arañas: " + ChatColor.of("#FFA07A") + sKilled + ChatColor.of("#FFE4B5") + "/" + ChatColor.of("#FFA07A") + "10";
+                        ChatColor.of("#FFCC99") + "Corr. Arañas: " + ChatColor.of("#FFA07A") + sKilled + ChatColor.of("#FFE4B5") + "/" + ChatColor.of("#FFA07A") + "10";
                 actionBarHandler.sendActionBar(killer, msg);
             }
         }

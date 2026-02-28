@@ -44,14 +44,14 @@ public class SpawnMobs implements CommandExecutor, TabCompleter {
         this.customBoat = new CustomBoat(plugin);
         this.infestedBeeHandler = new InfestedBeeHandler(plugin);
         this.corruptedBee = new CorruptedBee(plugin);
-        plugin.getCommand("spawnvct").setExecutor(this);
-        plugin.getCommand("spawnvct").setTabCompleter(this);
+        plugin.getCommand("spawnqp").setExecutor(this);
+        plugin.getCommand("spawnqp").setTabCompleter(this);
     }
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (args.length < 1) {
-            sender.sendMessage("Uso: /spawnvct <mob> [jugador (opcional)] [x] [y] [z]");
+            sender.sendMessage("Uso: /spawnqp <mob> [jugador (opcional)] [x] [y] [z]");
             return true;
         }
 

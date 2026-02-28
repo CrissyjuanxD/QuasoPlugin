@@ -224,8 +224,8 @@ public class MissionGUI implements Listener {
             lore.add(ChatColor.of("#FFCC99") + "Progreso:");
             int z = data.getProgressInt("zombies_killed");
             int s = data.getProgressInt("spiders_killed");
-            lore.add(ChatColor.GRAY + "- Zombies Corr.: " + (z >= 30 ? ChatColor.GREEN : ChatColor.YELLOW) + z + "/30");
-            lore.add(ChatColor.GRAY + "- Arañas Corr.: " + (s >= 30 ? ChatColor.GREEN : ChatColor.YELLOW) + s + "/30");
+            lore.add(ChatColor.GRAY + "- Zombies Corr.: " + (z >= 10 ? ChatColor.GREEN : ChatColor.YELLOW) + z + "/10");
+            lore.add(ChatColor.GRAY + "- Arañas Corr.: " + (s >= 10 ? ChatColor.GREEN : ChatColor.YELLOW) + s + "/10");
         } else if (mission instanceof Mission7) {
             lore.add("");
             lore.add(ChatColor.GRAY + "- Salto: " + (data.isCompleted() ? ChatColor.GREEN + "Completado" : ChatColor.RED + "Pendiente"));
@@ -247,7 +247,11 @@ public class MissionGUI implements Listener {
             lore.add(ChatColor.GRAY + "- Reina Derrotada: " + (data.isCompleted() ? ChatColor.GREEN + "✔" : ChatColor.RED + "✖"));
         } else if (mission instanceof Mission11) {
             lore.add("");
-            lore.add(ChatColor.GRAY + "- Sacrificio de Amistad: " + (data.isCompleted() ? ChatColor.GREEN + "✔" : ChatColor.RED + "✖"));
+            lore.add(ChatColor.of("#FFCC99") + "Progreso:");
+            int spiders = data.getProgressInt("elite_spiders_killed");
+            int skeletons = data.getProgressInt("elite_skeletons_killed");
+            lore.add(ChatColor.GRAY + "- Elite Spiders: " + (spiders >= 10 ? ChatColor.GREEN : ChatColor.YELLOW) + spiders + "/10");
+            lore.add(ChatColor.GRAY + "- Elite Skeletons: " + (skeletons >= 10 ? ChatColor.GREEN : ChatColor.YELLOW) + skeletons + "/10");
         } else if (mission instanceof Mission12) {
             lore.add("");
             int bees = data.getProgressInt("bees_killed");

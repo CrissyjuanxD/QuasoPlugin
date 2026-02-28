@@ -9,6 +9,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -373,7 +374,7 @@ public class QueenBeeHandler extends BaseBoss implements Listener {
                 }
 
                 if (bee.getLocation().distance(target.getLocation()) <= 2.0) {
-                    target.damage(5.0, bee);
+                    target.damage(8.0, bee);
                     target.addPotionEffect(new PotionEffect(PotionEffectType.POISON, 80, 1));
                     bee.getWorld().playSound(bee.getLocation(), Sound.ENTITY_BEE_STING, 1f, 0.7f);
                     cancel();
@@ -419,7 +420,7 @@ public class QueenBeeHandler extends BaseBoss implements Listener {
                 bee.getWorld().playSound(bee.getLocation(), Sound.ENTITY_BEE_LOOP_AGGRESSIVE, 0.4f, 1.5f);
 
                 if (bee.getLocation().distance(target.getLocation()) <= 2.5) {
-                    target.damage(7.0, bee);
+                    target.damage(10.0, bee);
                     target.addPotionEffect(new PotionEffect(PotionEffectType.SLOWNESS, 60, 1));
                     bee.getWorld().playSound(bee.getLocation(), Sound.ENTITY_BEE_STING, 1f, 0.4f);
                     cancel();
@@ -464,7 +465,7 @@ public class QueenBeeHandler extends BaseBoss implements Listener {
                 }
 
                 if (bee.getLocation().distance(target.getLocation()) <= 2.0) {
-                    target.damage(4.0, bee);
+                    target.damage(6.0, bee);
                     target.getWorld().spawnParticle(Particle.CRIT, target.getLocation(), 10, 0.4, 0.4, 0.4, 0.1);
                     target.getWorld().playSound(target.getLocation(), Sound.ENTITY_BEE_STING, 1f, 1.6f);
                 }
@@ -583,7 +584,7 @@ public class QueenBeeHandler extends BaseBoss implements Listener {
 
                     for (Entity e : w.getNearbyEntities(newLoc, 1, 1, 1)) {
                         if (e instanceof Player p && getActivePlayers().contains(p)) {
-                            p.damage(8.0, bee);
+                            p.damage(11.0, bee);
                             p.addPotionEffect(new PotionEffect(PotionEffectType.POISON, 200, 1));
                             p.addPotionEffect(new PotionEffect(PotionEffectType.SLOWNESS, 80, 1));
                             spike.remove();
@@ -718,7 +719,7 @@ public class QueenBeeHandler extends BaseBoss implements Listener {
                     for (Entity e : w.getNearbyEntities(newLoc, 1, 1, 1)) {
                         if (e instanceof Player p && getActivePlayers().contains(p)) {
                             explodeSpike(newLoc);
-                            p.damage(6.0, bee);
+                            p.damage(9.0, bee);
                             p.addPotionEffect(new PotionEffect(PotionEffectType.NAUSEA, 80, 0));
                             p.addPotionEffect(new PotionEffect(PotionEffectType.SLOWNESS, 80, 1));
                             spike.remove();
@@ -750,7 +751,7 @@ public class QueenBeeHandler extends BaseBoss implements Listener {
 
         for (Entity e : w.getNearbyEntities(loc, 4, 3, 4)) {
             if (e instanceof Player p && getActivePlayers().contains(p)) {
-                p.damage(4.0, bee);
+                p.damage(6.0, bee);
                 p.addPotionEffect(new PotionEffect(PotionEffectType.SLOWNESS, 60, 1));
             }
         }
@@ -1286,6 +1287,66 @@ public class QueenBeeHandler extends BaseBoss implements Listener {
         ExperienceOrb orb = (ExperienceOrb) bee.getWorld().spawnEntity(bee.getLocation(), EntityType.EXPERIENCE_ORB);
         orb.setExperience(3000);
 
+        NamespacedKey killsKey = new NamespacedKey(plugin, "queen_bee_kills");
+
+        for (Player p : getActivePlayers()) {
+            int kills = p.getPersistentDataContainer().getOrDefault(killsKey, PersistentDataType.INTEGER, 0);
+            kills++;
+            p.getPersistentDataContainer().set(killsKey, PersistentDataType.INTEGER, kills);
+
+            if (kills == 1) {
+                ItemStack bundle = new ItemStack(Material.BUNDLE);
+                org.bukkit.inventory.meta.BundleMeta meta = (org.bukkit.inventory.meta.BundleMeta) bundle.getItemMeta();
+
+                ItemStack coins = items.EconomyItems.createVithiumCoin();
+                coins.setAmount(15);
+                meta.addItem(coins);
+
+                meta.addItem(new ItemStack(Material.ENCHANTED_GOLDEN_APPLE, 5));
+
+                ItemStack speed = items.CustomPotions.getSpeedHoneyBottle();
+                speed.setAmount(16);
+                meta.addItem(speed);
+
+                bundle.setItemMeta(meta);
+                giveOrDropItem(p, bundle);
+
+                p.sendMessage(ChatColor.of("#EFDC93") + "¡Has derrotado a la Abeja Reina por primera vez! Se te ha entregado un Bundle de recompensa especial.");
+
+            } else if (kills == 2) {
+                ItemStack coins = items.EconomyItems.createVithiumCoin();
+                coins.setAmount(10);
+                giveOrDropItem(p, coins);
+
+                giveOrDropItem(p, new ItemStack(Material.ENCHANTED_GOLDEN_APPLE, 3));
+
+                ItemStack speed = items.CustomPotions.getSpeedHoneyBottle();
+                speed.setAmount(8);
+                giveOrDropItem(p, speed);
+
+                p.sendMessage(ChatColor.of("#EFDC93") + "¡Has derrotado a la Abeja Reina por segunda vez! Recibes tu recompensa.");
+
+            } else {
+                ItemStack coins = items.EconomyItems.createVithiumCoin();
+                coins.setAmount(5);
+                giveOrDropItem(p, coins);
+
+                ItemStack speed = items.CustomPotions.getSpeedHoneyBottle();
+                speed.setAmount(3);
+                giveOrDropItem(p, speed);
+
+                p.sendMessage(ChatColor.of("#EFDC93") + "¡Has derrotado a la Abeja Reina (" + kills + " veces)! Recibes la recompensa estándar.");
+            }
+
+            p.playSound(p.getLocation(), Sound.UI_TOAST_CHALLENGE_COMPLETE, 1f, 1f);
+        }
+    }
+
+    private void giveOrDropItem(Player p, ItemStack item) {
+        HashMap<Integer, ItemStack> leftover = p.getInventory().addItem(item);
+        for (ItemStack left : leftover.values()) {
+            p.getWorld().dropItemNaturally(p.getLocation(), left);
+        }
     }
 
     // Abeja inmune a explosiones (incluyendo sus propias)

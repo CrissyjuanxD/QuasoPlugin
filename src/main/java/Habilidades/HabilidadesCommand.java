@@ -31,13 +31,39 @@ public class HabilidadesCommand implements CommandExecutor, TabCompleter {
             return true;
         }
 
-        // Comando ver (default)
         if (args.length == 1) {
             Player target = Bukkit.getPlayer(args[0]);
             if (target != null) {
                 showSkills(sender, target);
                 return true;
             }
+        }
+
+        if (args[0].equalsIgnoreCase("on") || args[0].equalsIgnoreCase("off")) {
+            if (!sender.hasPermission("viciont.admin")) {
+                sender.sendMessage(ChatColor.RED + "No tienes permiso.");
+                return true;
+            }
+            if (args.length != 2) {
+                sender.sendMessage(ChatColor.RED + "Uso: /habilidades " + args[0] + " <jugador>");
+                return true;
+            }
+            Player target = Bukkit.getPlayer(args[1]);
+            if (target == null) {
+                sender.sendMessage(ChatColor.RED + "Jugador no encontrado.");
+                return true;
+            }
+
+            if (args[0].equalsIgnoreCase("off")) {
+                manager.disableHabilidades(target);
+                sender.sendMessage(ChatColor.YELLOW + "Habilidades DESACTIVADAS para " + target.getName());
+            } else {
+                manager.enableHabilidades(target);
+                sender.sendMessage(ChatColor.GREEN + "Habilidades ACTIVADAS para " + target.getName());
+            }
+
+            effects.reapplyAllEffects(target, manager);
+            return true;
         }
 
         // Comandos admin: add/remove <jugador> <tipo> <nivel>
@@ -95,15 +121,38 @@ public class HabilidadesCommand implements CommandExecutor, TabCompleter {
     private void sendHelp(CommandSender sender) {
         sender.sendMessage(ChatColor.RED + "Uso: /habilidades <jugador>");
         if (sender.hasPermission("viciont.admin")) {
-            sender.sendMessage(ChatColor.RED + "Uso admin: /habilidades <add/remove> <jugador> <TIPO> <nivel>");
+            sender.sendMessage(ChatColor.RED + "Uso admin: /habilidades <add/remove/on/off> <jugador> <TIPO> <nivel>");
         }
     }
 
     private void showSkills(CommandSender sender, Player target) {
         Map<HabilidadesType, List<Integer>> habilidades = manager.getPlayerHabilidades(target.getUniqueId());
-        // ... (Tu código de mostrar habilidades existente va aquí) ...
-        sender.sendMessage(ChatColor.of("#C77DFF") + "Habilidades de " + target.getName() + "...");
-        // ...
+
+        sender.sendMessage("");
+        sender.sendMessage(ChatColor.of("#C77DFF") + "" + ChatColor.BOLD + "═══════════════════════════");
+        sender.sendMessage(ChatColor.of("#E0AAFF") + "" + ChatColor.BOLD + "Habilidades de " + target.getName());
+        sender.sendMessage(ChatColor.of("#C77DFF") + "" + ChatColor.BOLD + "═══════════════════════════");
+        sender.sendMessage("");
+
+        if (habilidades.isEmpty()) {
+            sender.sendMessage(ChatColor.of("#9D4EDD") + "Este jugador no tiene habilidades desbloqueadas.");
+        } else {
+            for (HabilidadesType type : HabilidadesType.values()) {
+                if (habilidades.containsKey(type)) {
+                    List<Integer> levels = habilidades.get(type);
+                    String levelsStr = levels.stream()
+                            .map(String::valueOf)
+                            .collect(Collectors.joining(", "));
+
+                    sender.sendMessage(ChatColor.of("#C77DFF") + "• " + type.getDisplayName() + ": " +
+                            ChatColor.of("#E0AAFF") + "Niveles " + levelsStr);
+                }
+            }
+        }
+
+        sender.sendMessage("");
+        sender.sendMessage(ChatColor.of("#C77DFF") + "" + ChatColor.BOLD + "═══════════════════════════");
+        sender.sendMessage("");
     }
 
     @Override
@@ -114,10 +163,12 @@ public class HabilidadesCommand implements CommandExecutor, TabCompleter {
             if (sender.hasPermission("viciont.admin")) {
                 list.add("add");
                 list.add("remove");
+                list.add("on");
+                list.add("off");
             }
             return list;
         }
-        if (args.length == 2 && (args[0].equalsIgnoreCase("add") || args[0].equalsIgnoreCase("remove"))) {
+        if (args.length == 2 && (args[0].equalsIgnoreCase("add") || args[0].equalsIgnoreCase("remove") || args[0].equalsIgnoreCase("on") || args[0].equalsIgnoreCase("off"))) {
             return Bukkit.getOnlinePlayers().stream().map(Player::getName).collect(Collectors.toList());
         }
         if (args.length == 3 && (args[0].equalsIgnoreCase("add") || args[0].equalsIgnoreCase("remove"))) {

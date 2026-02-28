@@ -10,18 +10,27 @@ import org.bukkit.scoreboard.*;
 
 public class VHList extends BukkitRunnable {
 
-    private final JavaPlugin plugin;
-    private boolean showCreator = true;
-    private int counter = 0;
+    private static final String HEADER = ChatColor.DARK_GRAY + "●" + ChatColor.GRAY + ChatColor.BOLD + "" + ChatColor.STRIKETHROUGH + "                 " +
+            ChatColor.BLUE + ChatColor.BOLD + ChatColor.STRIKETHROUGH + "                 " +
+            ChatColor.GRAY + ChatColor.BOLD + ChatColor.STRIKETHROUGH + "                 " + ChatColor.DARK_GRAY + "●\n" +
+            ChatColor.GRAY + " \n" +
+            ChatColor.RED + "" + ChatColor.BOLD + "      \uD83E\uDD50" + ChatColor.GOLD + ChatColor.BOLD + " CROISSANTS " + ChatColor.RED + ChatColor.BOLD + "\uD83E\uDD50    " +
+            ChatColor.GRAY + " \n" +
+            ChatColor.GRAY + " \n";
+
+    private static final String FOOTER_BOTTOM = " \n" +
+            ChatColor.GRAY + " \n" +
+            ChatColor.WHITE + "" + ChatColor.BOLD + "Organizado por: " + ChatColor.YELLOW + "Crosszy\n" +
+            ChatColor.GRAY + " \n" +
+            ChatColor.DARK_GRAY + "" + ChatColor.BOLD + "●" + ChatColor.GRAY + ChatColor.BOLD + "" + ChatColor.STRIKETHROUGH + "           " +
+            ChatColor.BLUE + ChatColor.BOLD + "" + ChatColor.STRIKETHROUGH + "           " +
+            ChatColor.GRAY + ChatColor.BOLD + "" + ChatColor.STRIKETHROUGH + "     " +
+            ChatColor.DARK_GRAY + ChatColor.BOLD + "●" + ChatColor.GRAY + ChatColor.BOLD + "" + ChatColor.STRIKETHROUGH + "      " +
+            ChatColor.BLUE + ChatColor.BOLD + "" + ChatColor.STRIKETHROUGH + "           " +
+            ChatColor.GRAY + ChatColor.BOLD + "" + ChatColor.STRIKETHROUGH + "           " +
+            ChatColor.DARK_GRAY + ChatColor.BOLD + "●";
 
     public VHList(JavaPlugin plugin) {
-        this.plugin = plugin;
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                showCreator = !showCreator;
-            }
-        }.runTaskTimer(plugin, 0L, 200L); // 200 ticks = 10 segundos
     }
 
     @Override
@@ -33,41 +42,22 @@ public class VHList extends BukkitRunnable {
     }
 
     public void updateTablistForPlayer(Player player) {
-        String header = ChatColor.DARK_GRAY + "●" + ChatColor.GRAY + ChatColor.BOLD + "" + ChatColor.STRIKETHROUGH + "                 " +
-                ChatColor.BLUE + ChatColor.BOLD + ChatColor.STRIKETHROUGH + "                 " +
-                ChatColor.GRAY + ChatColor.BOLD + ChatColor.STRIKETHROUGH + "                 " + ChatColor.DARK_GRAY + "●\n" +
-                ChatColor.GRAY + " \n" +
-                ChatColor.RED + "" + ChatColor.BOLD + "      \uD83E\uDD50" + ChatColor.GOLD + ChatColor.BOLD + " CROISSANTS " + ChatColor.RED + ChatColor.BOLD + "\uD83E\uDD50    " +
-                ChatColor.GRAY + " \n" +
-                ChatColor.GRAY + " \n";
-
-        String alternatingText;
-            alternatingText = ChatColor.WHITE + "" + ChatColor.BOLD + "Organizado por: " + ChatColor.YELLOW + "Crosszy";
-
-        String PingText;
+        // 2. Solo calculamos dinámicamente lo que realmente cambia (el ping)
         int ping = player.getPing();
+        String pingColor;
+
         if (ping < 100) {
-            PingText = ChatColor.WHITE + "" + ChatColor.BOLD + "Ping: " + ChatColor.GREEN + ping + "ms";
+            pingColor = ChatColor.GREEN.toString();
         } else if (ping < 200) {
-            PingText = ChatColor.WHITE + "" + ChatColor.BOLD + "Ping: " + ChatColor.YELLOW + ping + "ms";
+            pingColor = ChatColor.YELLOW.toString();
         } else {
-            PingText = ChatColor.WHITE + "" + ChatColor.BOLD + "Ping: " + ChatColor.RED + ping + "ms";
+            pingColor = ChatColor.RED.toString();
         }
 
+        String pingText = ChatColor.GRAY + " \n" + ChatColor.WHITE + "" + ChatColor.BOLD + "Ping: " + pingColor + ping + "ms";
+        String footer = pingText + FOOTER_BOTTOM;
 
-        String footer = ChatColor.GRAY + " \n" +
-                PingText + " \n" +
-                ChatColor.GRAY + " \n" +
-                alternatingText + " \n" +
-                ChatColor.GRAY + " \n" +
-                ChatColor.DARK_GRAY + "" + ChatColor.BOLD + "●" + ChatColor.GRAY + ChatColor.BOLD + "" + ChatColor.STRIKETHROUGH + "           " +
-                ChatColor.BLUE + ChatColor.BOLD + "" + ChatColor.STRIKETHROUGH + "           " +
-                ChatColor.GRAY + ChatColor.BOLD + "" + ChatColor.STRIKETHROUGH + "     " +
-                ChatColor.DARK_GRAY + ChatColor.BOLD + "●" + ChatColor.GRAY + ChatColor.BOLD + "" + ChatColor.STRIKETHROUGH + "      " +
-                ChatColor.BLUE + ChatColor.BOLD + "" + ChatColor.STRIKETHROUGH + "           " +
-                ChatColor.GRAY + ChatColor.BOLD + "" + ChatColor.STRIKETHROUGH + "           " +
-                ChatColor.DARK_GRAY + ChatColor.BOLD + "●";
-        player.setPlayerListHeaderFooter(header, footer);
+        player.setPlayerListHeaderFooter(HEADER, footer);
 
         Scoreboard scoreboard = player.getScoreboard();
         Team team = scoreboard.getEntryTeam(player.getName());
@@ -87,67 +77,22 @@ public class VHList extends BukkitRunnable {
         }
 
         String coloredName = ChatColor.WHITE + tabPrefix + colorHex + player.getName() + suffix + " ";
-        player.setPlayerListName(coloredName);
+
+        // 3. Optimización de Red: Solo se envía el paquete al jugador si su nombre/clan realmente ha cambiado
+        String currentName = player.getPlayerListName();
+        if (currentName == null || !currentName.equals(coloredName)) {
+            player.setPlayerListName(coloredName);
+        }
     }
 
     public void updateHealthScoreboard(Player player) {
         Scoreboard scoreboard = player.getScoreboard();
-
-        // Crear o obtener el objetivo de salud
         Objective healthObjective = scoreboard.getObjective("Healthvct");
+
         if (healthObjective == null) {
             healthObjective = scoreboard.registerNewObjective("Healthvct", "health",
                     ChatColor.DARK_PURPLE + "❤ Vida", RenderType.HEARTS);
             healthObjective.setDisplaySlot(DisplaySlot.PLAYER_LIST);
         }
     }
-
-
-    // Método para obtener el Unicode según el equipo
-    private String getUnicodeForTeam(Team team) {
-        if (team != null) {
-            String teamName = team.getName();
-            switch (teamName) {
-                case "Admin":
-                    return ChatColor.GRAY + "" + ChatColor.BOLD + "[" + ChatColor.of("#ff935f") + ChatColor.BOLD + "HOK" + ChatColor.GRAY + ChatColor.BOLD + "]";
-                case "Mod":
-                    return ChatColor.GRAY + "" + ChatColor.BOLD + "[" + ChatColor.of("#00BFFF") + ChatColor.BOLD + "ANB" + ChatColor.GRAY + ChatColor.BOLD + "]";
-                case "Helper":
-                    return "\uEB92";
-                case "TSurvivor":
-                    return "\uEB8F";
-                case "ZMiembro":
-                    return ChatColor.GRAY + "" + ChatColor.BOLD + "[" + ChatColor.of("#ffa39d") + ChatColor.BOLD + "ALD" + ChatColor.GRAY + ChatColor.BOLD + "]";
-                case "ZFantasma":
-                    return "\uEB91";
-                default:
-                    return "";
-            }
-        }
-        return "";
-    }
-
-    private String getColorForTeam(Team team) {
-        if (team != null) {
-            String teamName = team.getName();
-            switch (teamName) {
-                case "Admin":
-                    return ChatColor.of("#ff935f").toString();
-                case "Mod":
-                    return ChatColor.of("#00BFFF").toString();
-                case "Helper":
-                    return ChatColor.of("#67E590").toString();
-                case "TSurvivor":
-                    return ChatColor.of("#9455ED").toString();
-                case "ZMiembro":
-                    return ChatColor.of("#ffa39d").toString();
-                case "ZFantasma":
-                    return ChatColor.of("#555555").toString();
-                default:
-                    return ChatColor.WHITE.toString();
-            }
-        }
-        return ChatColor.GRAY.toString();
-    }
-
 }

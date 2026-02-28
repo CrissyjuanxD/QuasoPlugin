@@ -56,9 +56,11 @@ public class EconomyItemsFunctions implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onBlockPlace(BlockPlaceEvent event) {
         ItemStack item = event.getItemInHand();
+
         if (isMochila(item)) {
             event.setCancelled(true);
             event.getPlayer().updateInventory();
+            return;
         }
 
         // Bloqueo extra para dinocoins por si acaso
@@ -471,12 +473,9 @@ public class EconomyItemsFunctions implements Listener {
 
     public boolean isMochila(ItemStack item) {
         if (item == null || item.getType() == Material.AIR) return false;
-
-        if (item.getType() != Material.ECHO_SHARD) return false;
-
+        if (!EconomyItems.isMaterialMochila(item.getType())) return false;
         ItemMeta meta = item.getItemMeta();
         if (meta == null || !meta.hasCustomModelData()) return false;
-
         int cmd = meta.getCustomModelData();
         return cmd >= 2020 && cmd <= 2027;
     }

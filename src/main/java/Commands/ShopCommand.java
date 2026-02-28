@@ -100,4 +100,5 @@ public class ShopCommand implements CommandExecutor, TabCompleter {
 
         return completions;
     }
-}*/
+}
+*/

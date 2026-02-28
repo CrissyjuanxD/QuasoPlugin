@@ -9,17 +9,10 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryOpenEvent;
-import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.MerchantRecipe;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class ShopListeners implements Listener {
 
@@ -31,34 +24,6 @@ public class ShopListeners implements Listener {
         this.shopGUI = shopGUI;
     }
 
-    // --- REUTILIZACIÓN DE LÓGICA DE TU CÓDIGO ANTIGUO ---
-    // Compara items ignorando el Lore para permitir mochilas usadas
-    private boolean isSimilarIgnoreLore(ItemStack recipeItem, ItemStack playerItem) {
-        if (playerItem == null || playerItem.getType() == Material.AIR) return false;
-        if (recipeItem.getType() != playerItem.getType()) return false;
-
-        ItemMeta rMeta = recipeItem.getItemMeta();
-        ItemMeta pMeta = playerItem.getItemMeta();
-
-        if (rMeta == null && pMeta == null) return true;
-        if (rMeta == null || pMeta == null) return false;
-
-        // Comparar Nombre (si la receta lo pide)
-        if (rMeta.hasDisplayName()) {
-            if (!pMeta.hasDisplayName()) return false;
-            if (!rMeta.getDisplayName().equals(pMeta.getDisplayName())) return false;
-        }
-
-        // Comparar CustomModelData (Crucial para items custom como tus mochilas)
-        if (rMeta.hasCustomModelData()) {
-            if (!pMeta.hasCustomModelData()) return false;
-            if (rMeta.getCustomModelData() != pMeta.getCustomModelData()) return false;
-        }
-
-        // IMPORTANTE: NO comparamos Lore. Esto permite que la mochila con stats pase.
-        return true;
-    }
-
     @EventHandler
     public void onInteract(PlayerInteractEntityEvent event) {
         if (!(event.getRightClicked() instanceof Villager)) return;
@@ -67,39 +32,43 @@ public class ShopListeners implements Listener {
 
         Player player = event.getPlayer();
 
+        // Actualizamos como se hacía nativamente
+        shopManager.updateTradesForPlayer(villager, player);
+
         if (player.isOp() && player.isSneaking()) {
             event.setCancelled(true);
 
-            if (shopManager.editingShops.containsKey(player.getUniqueId()) &&
-                    shopManager.editingTradeIndex.containsKey(player.getUniqueId()) &&
-                    shopManager.editingSlotType.containsKey(player.getUniqueId())) {
+            String clickedId = villager.getPersistentDataContainer().get(shopManager.shopIdKey, PersistentDataType.STRING);
+            boolean hasPendingEdit = shopManager.editingTradeIndex.containsKey(player.getUniqueId())
+                    && shopManager.editingSlotType.containsKey(player.getUniqueId());
+            String currentShopId = shopManager.editingShops.get(player.getUniqueId());
+            boolean isSameShop = clickedId != null && clickedId.equals(currentShopId);
 
-                String currentShopId = shopManager.editingShops.get(player.getUniqueId());
-                String clickedId = villager.getPersistentDataContainer().get(shopManager.shopIdKey, PersistentDataType.STRING);
+            if (hasPendingEdit && isSameShop) {
+                ItemStack handItem = player.getInventory().getItemInMainHand();
 
-                if (currentShopId != null && currentShopId.equals(clickedId)) {
-                    ItemStack handItem = player.getInventory().getItemInMainHand();
+                if (handItem != null && handItem.getType() != Material.AIR) {
+                    // Usamos la lógica de actualización del código viejo directamente
+                    int tradeIdx = shopManager.editingTradeIndex.get(player.getUniqueId());
+                    String slotType = shopManager.editingSlotType.get(player.getUniqueId());
 
-                    if (handItem != null && handItem.getType() != Material.AIR) {
-                        ShopCommands.applyItemToTrade(player, shopManager, handItem.clone());
-                        shopManager.editingTradeIndex.remove(player.getUniqueId());
-                        shopManager.editingSlotType.remove(player.getUniqueId());
-                        player.sendMessage(ChatColor.YELLOW + "Item configurado. Puedes abrir la GUI de nuevo.");
-                        shopGUI.openConfigGUI(player, villager);
-                    } else {
-                        // Cancelar edición si mano vacía
-                        shopManager.editingTradeIndex.remove(player.getUniqueId());
-                        shopManager.editingSlotType.remove(player.getUniqueId());
-                        player.sendMessage(ChatColor.GRAY + "Cancelado. Abriendo menú...");
-                        shopGUI.openConfigGUI(player, villager);
-                    }
-                    return;
+                    shopManager.updateVillagerTrade(villager, tradeIdx, slotType, handItem.clone());
+                    shopManager.saveShopTrades(currentShopId, villager.getRecipes());
+
+                    player.sendMessage(ChatColor.GREEN + "Tradeo actualizado: " + slotType + " -> " + handItem.getType());
+                    player.playSound(player.getLocation(), org.bukkit.Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1f, 1f);
+                } else {
+                    player.sendMessage(ChatColor.GRAY + "Cancelado. Abriendo menú...");
                 }
+
+                shopManager.editingTradeIndex.remove(player.getUniqueId());
+                shopManager.editingSlotType.remove(player.getUniqueId());
+                shopGUI.openConfigGUI(player, villager);
+                return;
             }
+
             shopGUI.openConfigGUI(player, villager);
-            return;
         }
-        shopManager.updateTradesForPlayer(villager, player);
     }
 
     @EventHandler
@@ -107,6 +76,7 @@ public class ShopListeners implements Listener {
         if (!(event.getWhoClicked() instanceof Player)) return;
         Player player = (Player) event.getWhoClicked();
 
+        if (event.getView().getTitle() == null) return;
         if (!event.getView().getTitle().startsWith(ChatColor.GOLD + "Configurar")) return;
 
         event.setCancelled(true);
@@ -139,11 +109,22 @@ public class ShopListeners implements Listener {
             shopManager.editingSlotType.put(player.getUniqueId(), type);
 
             if (event.isRightClick()) {
-                ItemStack empty = new ItemStack(Material.STRUCTURE_VOID);
-                ShopCommands.applyItemToTrade(player, shopManager, empty);
+                ItemStack empty = new ItemStack(Material.AIR);
+
+                String shopId = shopManager.editingShops.get(player.getUniqueId());
+                Villager villager = shopManager.getVillagerById(shopId);
+
+                if (villager != null) {
+                    shopManager.updateVillagerTrade(villager, tradeIndex, type, empty);
+                    shopManager.saveShopTrades(shopId, villager.getRecipes());
+                }
+
                 player.sendMessage(ChatColor.RED + "Slot limpiado.");
                 shopManager.editingTradeIndex.remove(player.getUniqueId());
                 shopManager.editingSlotType.remove(player.getUniqueId());
+
+                // Re-abrir para refrescar la GUI
+                if (villager != null) shopGUI.openConfigGUI(player, villager);
             } else {
                 player.closeInventory();
                 player.sendMessage(ChatColor.GREEN + "Editando Tradeo #" + (tradeIndex + 1) + " - " + type);
@@ -182,5 +163,4 @@ public class ShopListeners implements Listener {
             }
         }
     }
-
 }

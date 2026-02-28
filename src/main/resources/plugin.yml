@@ -31,11 +31,6 @@ commands:
     usage: /ruletavct <json>
     permission: viciont_hardcore3.ruletavct
     permission-message: No tienes permiso para usar este comando.
-  muertevct:
-    description: Comando para reproducir la animación de la Muerte.
-    usage: /muertevct <json>
-    permission: viciont_hardcore3.muertevct
-    permission-message: No tienes permiso para usar este comando.
   bonusvct:
     description: Comando para reproducir la animación de Bonus.
     usage: /bonusvct <json>
@@ -53,7 +48,7 @@ commands:
     permission-message: No tienes permiso para usar este comando.
   itemparty:
     description: Comando principal del evento ItemParty
-    usage: /itemparty <start|end|reset|reload>
+    usage: /itemparty <start|end|reset|reload|castigo>
     permission: viciont_hardcore3.command.itemparty
     permission-message: No tienes permiso para usar este comando.
   hotpotato:
@@ -79,9 +74,9 @@ commands:
     usage: /magictp <jugador o @a> <x y z | spawn>
     permission: viciont_hardcore3.command.magic
     permission-message: No tienes permiso para usar este comando.
-  spawnvct:
+  spawnqp:
     description: Spawnea un mob personalizado en tu ubicación
-    usage: /spawnvct <mob> [jugador (opcional)] [x] [y] [z]
+    usage: /spawnqp <mob> [jugador (opcional)] [x] [y] [z]
     permission: viciont_hardcore3.command.spawnvct
     permission-message: No tienes permiso para usar este comando.
   addtiempo:
@@ -99,9 +94,9 @@ commands:
     usage: /tiempoview <jugador/all>
     permission: viciont_hardcore3.command.tiempoview
     permission-message: No tienes permiso para usar este comando.
-  givevct:
+  giveqp:
     description: Da un item especial del plugin a un jugador.
-    usage: /givevct <item> [cantidad] [jugador]
+    usage: /giveqp <item> [cantidad] [jugador]
     permission: viciont_hardcore3.command.givevct
     permission-message: No tienes permiso para usar este comando.
   addnightmare:
@@ -145,11 +140,6 @@ commands:
   removemision:
     description: Remueve una misión completada de un jugador
     usage: /removemision <jugador> <número>
-    permission: viciont_hardcore3.missions.admin
-    permission-message: No tienes permiso para usar este comando.
-  penalizadosmisiones:
-    description: Muestra la lista de jugadores penalizados por misiones
-    usage: /penalizadosmisiones
     permission: viciont_hardcore3.missions.admin
     permission-message: No tienes permiso para usar este comando.
   mobcap:

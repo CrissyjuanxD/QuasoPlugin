@@ -8,15 +8,32 @@ import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
+import java.util.HashSet;
+import org.bukkit.entity.Player;
+
 public class HabilidadesManager {
 
     private final JavaPlugin plugin;
     private File habilidadesFile;
     private FileConfiguration habilidadesConfig;
 
+    private final Set<UUID> disabledPlayers = new HashSet<>();
+
     public HabilidadesManager(JavaPlugin plugin) {
         this.plugin = plugin;
         loadHabilidadesConfig();
+    }
+
+    public void disableHabilidades(Player player) {
+        disabledPlayers.add(player.getUniqueId());
+    }
+
+    public void enableHabilidades(Player player) {
+        disabledPlayers.remove(player.getUniqueId());
+    }
+
+    public boolean areHabilidadesDisabled(UUID playerUUID) {
+        return disabledPlayers.contains(playerUUID);
     }
 
     private void loadHabilidadesConfig() {
@@ -43,6 +60,15 @@ public class HabilidadesManager {
     }
 
     public boolean hasHabilidad(UUID playerUUID, HabilidadesType type, int level) {
+        if (areHabilidadesDisabled(playerUUID)) {
+            return false;
+        }
+
+        String path = playerUUID.toString() + "." + type.name() + "." + level;
+        return habilidadesConfig.getBoolean(path, false);
+    }
+
+    public boolean hasHabilidadPurchased(UUID playerUUID, HabilidadesType type, int level) {
         String path = playerUUID.toString() + "." + type.name() + "." + level;
         return habilidadesConfig.getBoolean(path, false);
     }

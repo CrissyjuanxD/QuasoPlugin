@@ -11,12 +11,10 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Villager;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.MerchantRecipe;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.util.RayTraceResult;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -39,7 +37,6 @@ public class ShopCommands implements CommandExecutor, TabCompleter {
         }
         Player player = (Player) sender;
 
-        // --- COMANDO SPAWNSHOP ---
         if (command.getName().equalsIgnoreCase("spawnshop")) {
             if (!player.hasPermission("viciont_hardcore3.shop.admin")) return true;
             if (args.length < 1) {
@@ -49,14 +46,11 @@ public class ShopCommands implements CommandExecutor, TabCompleter {
 
             String name = args[0].replace("_", " ");
             Location loc = player.getLocation();
-
-            // Variables opcionales
             Villager.Type type = Villager.Type.PLAINS;
             Villager.Profession profession = Villager.Profession.NONE;
 
             int nextArgIndex = 1;
 
-            // Detectar coordenadas (si los siguientes 3 args son numeros)
             if (args.length >= 4 && isDouble(args[1])) {
                 try {
                     double x = Double.parseDouble(args[1]);
@@ -67,7 +61,6 @@ public class ShopCommands implements CommandExecutor, TabCompleter {
                 } catch (NumberFormatException ignored) {}
             }
 
-            // Detectar Bioma y Profesion (en cualquier orden restante o fijo)
             if (args.length > nextArgIndex) {
                 try {
                     type = Villager.Type.valueOf(args[nextArgIndex].toUpperCase());
@@ -86,7 +79,6 @@ public class ShopCommands implements CommandExecutor, TabCompleter {
             return true;
         }
 
-        // --- REMOVESHOP ---
         if (command.getName().equalsIgnoreCase("removeshop")) {
             if (!player.hasPermission("viciont_hardcore3.shop.admin")) return true;
 
@@ -124,10 +116,11 @@ public class ShopCommands implements CommandExecutor, TabCompleter {
             return true;
         }
 
-        // --- TRADE (Configuración) ---
         if (command.getName().equalsIgnoreCase("trade")) {
             if (!player.hasPermission("viciont_hardcore3.shop.admin")) return true;
-            if (!shopManager.editingShops.containsKey(player.getUniqueId())) {
+
+            UUID uuid = player.getUniqueId();
+            if (!shopManager.editingShops.containsKey(uuid)) {
                 player.sendMessage(ChatColor.RED + "No estás editando ninguna tienda.");
                 return true;
             }
@@ -152,7 +145,32 @@ public class ShopCommands implements CommandExecutor, TabCompleter {
                     return true;
                 }
             }
-            ShopCommands.applyItemToTrade(player, shopManager, item);
+
+            String shopId = shopManager.editingShops.get(uuid);
+            Integer tradeIndex = shopManager.editingTradeIndex.get(uuid);
+            String slotType = shopManager.editingSlotType.get(uuid);
+
+            if (shopId == null || tradeIndex == null || slotType == null) {
+                player.sendMessage(ChatColor.RED + "Error: Sesión perdida. Abre la GUI.");
+                return true;
+            }
+
+            Villager villager = shopManager.getVillagerById(shopId);
+            if (villager == null) {
+                player.sendMessage(ChatColor.RED + "El aldeano ya no existe.");
+                return true;
+            }
+
+            // Aplicamos la misma lógica del código antiguo
+            shopManager.updateVillagerTrade(villager, tradeIndex, slotType, item);
+            shopManager.saveShopTrades(shopId, villager.getRecipes());
+
+            shopManager.editingTradeIndex.remove(uuid);
+            shopManager.editingSlotType.remove(uuid);
+
+            player.sendMessage(ChatColor.GREEN + "Tradeo actualizado: " + slotType + " -> " + item.getType());
+            player.playSound(player.getLocation(), org.bukkit.Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1f, 1f);
+
             return true;
         }
         return false;
@@ -165,66 +183,6 @@ public class ShopCommands implements CommandExecutor, TabCompleter {
         } catch (NumberFormatException e) {
             return false;
         }
-    }
-
-    public static void applyItemToTrade(Player player, ShopManager sm, ItemStack item) {
-        // Lógica de aplicar trade (igual que antes)
-        UUID uuid = player.getUniqueId();
-        String shopId = sm.editingShops.get(uuid);
-        Integer tradeIndex = sm.editingTradeIndex.get(uuid);
-        String slotType = sm.editingSlotType.get(uuid);
-
-        if (shopId == null || tradeIndex == null || slotType == null) {
-            player.sendMessage(ChatColor.RED + "Error: Sesión perdida. Abre la GUI.");
-            return;
-        }
-
-        Villager villager = sm.getVillagerById(shopId);
-        if (villager == null) {
-            player.sendMessage(ChatColor.RED + "El aldeano ya no existe.");
-            return;
-        }
-
-        List<MerchantRecipe> recipes = new ArrayList<>(villager.getRecipes());
-        while (recipes.size() <= tradeIndex) recipes.add(sm.createEmptyRecipe());
-
-        MerchantRecipe current = recipes.get(tradeIndex);
-        List<ItemStack> ingredients = new ArrayList<>(current.getIngredients());
-        ItemStack result = current.getResult();
-
-        // Limpiar placeholders
-        for (int i = 0; i < ingredients.size(); i++) {
-            if (ingredients.get(i).getType() == Material.STRUCTURE_VOID) {
-                ingredients.set(i, new ItemStack(Material.AIR));
-            }
-        }
-        if (result.getType() == Material.STRUCTURE_VOID) result = new ItemStack(Material.AIR);
-
-        while (ingredients.size() < 2) ingredients.add(new ItemStack(Material.AIR));
-
-        if (slotType.equals("Ingrediente 1")) ingredients.set(0, item);
-        else if (slotType.equals("Ingrediente 2")) ingredients.set(1, item);
-        else if (slotType.equals("Resultado")) result = item;
-
-        List<ItemStack> finalIngredients = new ArrayList<>();
-        for (ItemStack i : ingredients) {
-            if (i != null && !i.getType().isAir()) finalIngredients.add(i);
-        }
-
-        if (finalIngredients.isEmpty()) finalIngredients.add(new ItemStack(Material.STRUCTURE_VOID));
-        if (result == null || result.getType().isAir()) result = new ItemStack(Material.STRUCTURE_VOID);
-
-        MerchantRecipe newRecipe = new MerchantRecipe(result, Integer.MAX_VALUE);
-        newRecipe.setIngredients(finalIngredients);
-        newRecipe.setExperienceReward(false);
-        newRecipe.setPriceMultiplier(0.0f);
-
-        recipes.set(tradeIndex, newRecipe);
-        villager.setRecipes(recipes);
-        sm.saveShopTrades(shopId, recipes);
-
-        player.sendMessage(ChatColor.GREEN + "Tradeo actualizado: " + slotType + " -> " + item.getType());
-        player.playSound(player.getLocation(), org.bukkit.Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1f, 1f);
     }
 
     @Override
@@ -241,20 +199,13 @@ public class ShopCommands implements CommandExecutor, TabCompleter {
                         .collect(Collectors.toList());
             }
         }
-        // Autocompletado para /spawnshop
         if (command.getName().equalsIgnoreCase("spawnshop")) {
-            if (args.length == 1) return null; // Nombre libre
-
-            // Sugerir coords o Bioma/Profesion
+            if (args.length == 1) return null;
             if (args.length >= 2) {
                 String lastArg = args[args.length - 1].toUpperCase();
                 List<String> suggestions = new ArrayList<>();
-
-                // Añadir Biomas
                 for (Villager.Type t : Villager.Type.values()) suggestions.add(t.name());
-                // Añadir Profesiones
                 for (Villager.Profession p : Villager.Profession.values()) suggestions.add(p.name());
-
                 return suggestions.stream()
                         .filter(s -> s.startsWith(lastArg))
                         .collect(Collectors.toList());

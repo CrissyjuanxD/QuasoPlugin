@@ -1,6 +1,8 @@
 package Events.HotPotato;
 
 import Commands.TiempoCommand;
+import Habilidades.HabilidadesEffects;
+import Habilidades.HabilidadesManager;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.*;
 import org.bukkit.block.Block;
@@ -37,6 +39,8 @@ import java.util.stream.Collectors;
 public class HotPotatoHandler implements Listener {
 
     private final JavaPlugin plugin;
+    private final HabilidadesManager habilidadesManager;
+    private final HabilidadesEffects habilidadesEffects;
     private final List<String> participantes = new ArrayList<>();
     private final List<String> vivos = new ArrayList<>();
     private final List<String> bombasActuales = new ArrayList<>();
@@ -101,9 +105,11 @@ public class HotPotatoHandler implements Listener {
     private boolean poderesActivados = true;
     private String timerStart = "00:04:00";
 
-    public HotPotatoHandler(JavaPlugin plugin, TiempoCommand tiempoCommand) {
+    public HotPotatoHandler(JavaPlugin plugin, TiempoCommand tiempoCommand, HabilidadesManager habilidadesManager, HabilidadesEffects habilidadesEffects) {
         this.plugin = plugin;
         this.tiempoCommand = tiempoCommand;
+        this.habilidadesManager = habilidadesManager;
+        this.habilidadesEffects = habilidadesEffects;
 
         crearYcargarConfig();
 
@@ -307,6 +313,9 @@ public class HotPotatoHandler implements Listener {
                 p.setHealth(p.getMaxHealth());
                 p.setGameMode(GameMode.SURVIVAL);
                 Location loc = getSafeLocation(world);
+
+                habilidadesManager.disableHabilidades(p);
+                habilidadesEffects.reapplyAllEffects(p, habilidadesManager);
 
                 Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
                     String comando = String.format(Locale.US, "magictp %s %.2f %.2f %.2f", nombre, loc.getX(), loc.getY(), loc.getZ());
@@ -600,6 +609,8 @@ public class HotPotatoHandler implements Listener {
             jugador.setHealth(jugador.getMaxHealth());
             jugador.getInventory().clear();
             quitarEfectos(jugador);
+            habilidadesManager.enableHabilidades(jugador);
+            habilidadesEffects.reapplyAllEffects(jugador, habilidadesManager);
             jugador.teleport(zonaEspectadores);
 
             String mensaje = "";
@@ -1023,6 +1034,8 @@ public class HotPotatoHandler implements Listener {
             Player p = Bukkit.getPlayer(pName);
             restaurarTeamOriginal(pName);
             if (p != null) {
+                habilidadesManager.enableHabilidades(p);
+                habilidadesEffects.reapplyAllEffects(p, habilidadesManager);
                 p.setScoreboard(Bukkit.getScoreboardManager().getMainScoreboard());
                 Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "magictp " + p.getName() + " spawn");
             }
@@ -1388,6 +1401,8 @@ public class HotPotatoHandler implements Listener {
         tareasActivas.clear();
     }
 
+    //COMANDOS ADMINISTRATIVOS Y HELPER
+
     public void addParticipante(CommandSender sender, String nombre) {
         Player p = Bukkit.getPlayerExact(nombre);
         if (p == null) {
@@ -1398,7 +1413,12 @@ public class HotPotatoHandler implements Listener {
             participantes.add(nombre);
             aplicarTeamHotPotato(p);
             sender.sendMessage("§aJugador " + nombre + " añadido a HotPotato.");
-            if (tpRealizado) p.teleport(getSafeLocation(p.getWorld()));
+            if (tpRealizado) {
+                p.teleport(getSafeLocation(p.getWorld()));
+                // SI YA SE HIZO EL TP, LE QUITAMOS LAS HABILIDADES
+                habilidadesManager.disableHabilidades(p);
+                habilidadesEffects.reapplyAllEffects(p, habilidadesManager);
+            }
         }
     }
 
@@ -1411,6 +1431,8 @@ public class HotPotatoHandler implements Listener {
         if (participantes.contains(nombre)) {
             participantes.remove(nombre);
             restaurarTeamOriginal(nombre);
+            habilidadesManager.enableHabilidades(p);
+            habilidadesEffects.reapplyAllEffects(p, habilidadesManager);
             sender.sendMessage("§cJugador " + nombre + " removido de HotPotato.");
             if (tpRealizado) p.teleport(zonaEspectadores);
         }

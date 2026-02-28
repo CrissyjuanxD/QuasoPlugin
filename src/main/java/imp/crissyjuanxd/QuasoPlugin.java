@@ -129,6 +129,7 @@ public class QuasoPlugin extends JavaPlugin implements Listener {
     private HabilidadesGUI habilidadesGUI;
     private HabilidadesListener habilidadesListener;
     private HabilidadesEffects habilidadesEffects;
+    private CustomItemRegistry customItemRegistry;
 
     // ------------------------------------------------------------------------
     //  Eventos
@@ -184,13 +185,13 @@ public class QuasoPlugin extends JavaPlugin implements Listener {
         initAsyncAndUtilitySystems();
         initAnimationAndTitleSystem();
         initGameplaySystem();
+        initHabilidadesSystem();
         initEventsSystem();
         initEventCommandsSystem();
         initShopSystem();
         initMobsAndBossesSystem();
         initMobCapSystem();
         statueEffectSystem();
-        initHabilidadesSystem();
         initCasinoSystem();
 
         getLogger().info("DinoNuggetsSMP habilitado completamente.");
@@ -339,14 +340,14 @@ public class QuasoPlugin extends JavaPlugin implements Listener {
 
     private void initGeneralCommandsAndCustomSpawners() {
         // spawnvct
-        Objects.requireNonNull(this.getCommand("spawnvct"))
+        Objects.requireNonNull(this.getCommand("spawnqp"))
                 .setExecutor(new SpawnMobs(this, dayHandler));
 
         // Items generales
         ItemsCommands itemsCommands = new ItemsCommands(this);
 
-        Objects.requireNonNull(this.getCommand("givevct")).setExecutor(itemsCommands);
-        Objects.requireNonNull(this.getCommand("givevct")).setTabCompleter(itemsCommands);
+        Objects.requireNonNull(this.getCommand("giveqp")).setExecutor(itemsCommands);
+        Objects.requireNonNull(this.getCommand("giveqp")).setTabCompleter(itemsCommands);
 
         Objects.requireNonNull(this.getCommand("ping")).setExecutor(new PingCommand(this));
 
@@ -428,13 +429,29 @@ public class QuasoPlugin extends JavaPlugin implements Listener {
         Objects.requireNonNull(this.getCommand("levelnightmare")).setExecutor(nightmareCommand);
     }
 
+    private void initHabilidadesSystem() {
+        habilidadesManager = new HabilidadesManager(this);
+        habilidadesEffects = new HabilidadesEffects(this);
+        habilidadesGUI = new HabilidadesGUI(this, habilidadesManager, dayHandler);
+        habilidadesListener = new HabilidadesListener(this, habilidadesManager, habilidadesEffects);
+
+        Bukkit.getPluginManager().registerEvents(habilidadesGUI, this);
+        Bukkit.getPluginManager().registerEvents(habilidadesListener, this);
+
+        HabilidadesCommand habilidadesCommand = new HabilidadesCommand(habilidadesManager, habilidadesEffects);
+        Objects.requireNonNull(getCommand("habilidades")).setExecutor(habilidadesCommand);
+        Objects.requireNonNull(getCommand("habilidades")).setTabCompleter(habilidadesCommand);
+
+        getLogger().info("Sistema de Habilidades habilitado correctamente!");
+    }
+
     private void initEventsSystem() {
-        eventoHandler = new EventoHandler(this);
+        eventoHandler = new EventoHandler(this, habilidadesManager, habilidadesEffects);
         achievementPartyHandler = new AchievementPartyHandler(this);
         achievementGUI = new AchievementGUI(this, achievementPartyHandler);
         achievementCommands = new AchievementCommands(achievementPartyHandler);
         itemPartyHandler = new ItemPartyHandler(this, tiempoCommand);
-        hotPotatoHandler = new HotPotatoHandler(this, tiempoCommand);
+        hotPotatoHandler = new HotPotatoHandler(this, tiempoCommand, habilidadesManager, habilidadesEffects);
 
         Bukkit.getPluginManager().registerEvents(eventoHandler, this);
         Bukkit.getPluginManager().registerEvents(achievementPartyHandler, this);
@@ -446,7 +463,6 @@ public class QuasoPlugin extends JavaPlugin implements Listener {
         Objects.requireNonNull(this.getCommand("addlogro")).setTabCompleter(achievementCommands);
         Objects.requireNonNull(this.getCommand("removelogro")).setExecutor(achievementCommands);
         Objects.requireNonNull(this.getCommand("removelogro")).setTabCompleter(achievementCommands);
-        getCommand("itempartycastigo").setExecutor(new ItemPartyCastigoCommand(itemPartyHandler));
     }
 
     private void initEventCommandsSystem() {
@@ -465,13 +481,14 @@ public class QuasoPlugin extends JavaPlugin implements Listener {
     }
 
     private void initShopSystem() {
+
         CustomItemRegistry.init(this);
 
         //Inicializar Shop System
         ShopManager shopManager = new ShopManager(this);
         ShopGUI shopGUI = new ShopGUI(shopManager);
-        ShopListeners shopListeners = new ShopListeners(shopManager, shopGUI);
         ShopCommands shopCommands = new ShopCommands(shopManager, shopGUI);
+        ShopListeners shopListeners = new ShopListeners(shopManager, shopGUI);
 
         //Registrar Eventos y Comandos
         getServer().getPluginManager().registerEvents(shopListeners, this);
@@ -528,22 +545,6 @@ public class QuasoPlugin extends JavaPlugin implements Listener {
 
         // Cargar estatuas ya existentes en el mundo (por si hubo reload)
         statueManager.loadStatues();
-    }
-
-    private void initHabilidadesSystem() {
-        habilidadesManager = new HabilidadesManager(this);
-        habilidadesEffects = new HabilidadesEffects(this);
-        habilidadesGUI = new HabilidadesGUI(this, habilidadesManager, dayHandler);
-        habilidadesListener = new HabilidadesListener(this, habilidadesManager, habilidadesEffects);
-
-        Bukkit.getPluginManager().registerEvents(habilidadesGUI, this);
-        Bukkit.getPluginManager().registerEvents(habilidadesListener, this);
-
-        HabilidadesCommand habilidadesCommand = new HabilidadesCommand(habilidadesManager, habilidadesEffects);
-        Objects.requireNonNull(getCommand("habilidades")).setExecutor(habilidadesCommand);
-        Objects.requireNonNull(getCommand("habilidades")).setTabCompleter(habilidadesCommand);
-
-        getLogger().info("Sistema de Habilidades habilitado correctamente!");
     }
 
     private void initCasinoSystem() {

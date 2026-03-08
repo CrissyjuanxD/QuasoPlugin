@@ -15,7 +15,6 @@ public class ActionBarHandler {
     }
 
     public void sendActionBar(Player player, String message) {
-        // CORRECCIÓN: Usar fromLegacyText para que lea los colores Hex y códigos §
         player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(message));
     }
 }

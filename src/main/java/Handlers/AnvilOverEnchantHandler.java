@@ -32,7 +32,6 @@ public class AnvilOverEnchantHandler implements Listener {
             EnchantmentStorageMeta bookMeta = (EnchantmentStorageMeta) secondItem.getItemMeta();
             if (bookMeta == null || !bookMeta.hasStoredEnchants()) return;
 
-            // Clonamos el primer item para forzar un resultado
             ItemStack resultItem = event.getResult();
             if (resultItem == null || resultItem.getType() == Material.AIR) {
                 resultItem = firstItem.clone();
@@ -43,21 +42,16 @@ public class AnvilOverEnchantHandler implements Listener {
 
             boolean hasOverEnchant = false;
 
-            // Revisamos los encantamientos del libro
             for (Map.Entry<Enchantment, Integer> entry : bookMeta.getStoredEnchants().entrySet()) {
                 Enchantment enchant = entry.getKey();
                 int bookLevel = entry.getValue();
 
-                // Si el encantamiento del libro es MAYOR al máximo de Vanilla (ej: Filo 6 > 5)
-                // O si simplemente es mayor al que ya tiene el arma
                 if (bookLevel > enchant.getMaxLevel() || bookLevel > resultItem.getEnchantmentLevel(enchant)) {
-                    // Forzamos el encantamiento en el resultado (true = ignorar restricciones)
                     resultMeta.addEnchant(enchant, bookLevel, true);
                     hasOverEnchant = true;
                 }
             }
 
-            // Si forzamos algún encantamiento, lo aplicamos al resultado
             if (hasOverEnchant) {
                 resultItem.setItemMeta(resultMeta);
                 event.setResult(resultItem);

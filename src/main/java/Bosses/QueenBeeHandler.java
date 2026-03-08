@@ -26,7 +26,7 @@ import java.util.*;
 
 public class QueenBeeHandler extends BaseBoss implements Listener {
 
-    // Usado por /debugarena
+    //  /debugarena
     public static final Map<UUID, QueenBeeHandler> ACTIVE_BOSSES = new HashMap<>();
 
     private final Bee bee;
@@ -73,23 +73,18 @@ public class QueenBeeHandler extends BaseBoss implements Listener {
         PersistentDataContainer pdc = bee.getPersistentDataContainer();
 
         if (pdc.has(bossKey, PersistentDataType.BYTE)) {
-            // CASO 1: RESURRECCIÓN (El server se reinició o chunk cargado)
-            // Recuperamos el centro de la arena original guardado
             double x = pdc.get(arenaCenterX, PersistentDataType.DOUBLE);
             double y = pdc.get(arenaCenterY, PersistentDataType.DOUBLE);
             double z = pdc.get(arenaCenterZ, PersistentDataType.DOUBLE);
 
-            // Sobrescribimos la spawnLocation del BaseBoss con la original
             this.spawnLocation.setX(x);
             this.spawnLocation.setY(y);
             this.spawnLocation.setZ(z);
 
-            // Importante: Al revivir, iniciamos start() de inmediato
             this.start();
 
         } else {
             // CASO 2: PRIMER SPAWN
-            // Guardamos los datos para el futuro
             pdc.set(bossKey, PersistentDataType.BYTE, (byte) 1);
             pdc.set(arenaCenterX, PersistentDataType.DOUBLE, spawnLocation.getX());
             pdc.set(arenaCenterY, PersistentDataType.DOUBLE, spawnLocation.getY());
@@ -181,14 +176,11 @@ public class QueenBeeHandler extends BaseBoss implements Listener {
         bee.setCannotEnterHiveTicks(Integer.MAX_VALUE);
         bee.setAnger(999999);
 
-        // Si está en regeneración, forzamos posición y cancelamos lógica
         if (inRegenerationPhase) {
-            // Seguridad extra para evitar que se mueva si el runnable falla un tick
             bee.setTarget(null);
             return;
         }
 
-        // Si está ejecutando otro ataque, no hacemos nada
         if (runningSpecial || runningMelee) return;
 
         double max = Objects.requireNonNull(bee.getAttribute(Attribute.MAX_HEALTH)).getBaseValue();
@@ -222,7 +214,6 @@ public class QueenBeeHandler extends BaseBoss implements Listener {
     }
 
     private void cleanupResources() {
-        // Tareas y lógica común de limpieza
         if (regenTask != null) regenTask.cancel();
 
         for (Bee hive : healTotems) {
@@ -322,7 +313,7 @@ public class QueenBeeHandler extends BaseBoss implements Listener {
         } else {
             startRandomSpecial();
             meleeDoneSinceLastSpecial = 0;
-            requiredMeleeBetweenSpecials = random.nextInt(3) + 1; // 1–3 otra vez
+            requiredMeleeBetweenSpecials = random.nextInt(3) + 1;
         }
     }
 
@@ -523,14 +514,12 @@ public class QueenBeeHandler extends BaseBoss implements Listener {
 
         int count = 5;
 
-        // Direcciones base en círculo
         List<Vector> baseDirs = new ArrayList<>();
         for (int i = 0; i < count; i++) {
             double angle = (2 * Math.PI / count) * i;
             baseDirs.add(new Vector(Math.cos(angle), -0.1, Math.sin(angle)).normalize().multiply(0.4));
         }
 
-        // Jugadores únicos aleatorios para dirigirles 1 aguijón
         List<Player> shuffled = new ArrayList<>(players);
         Collections.shuffle(shuffled);
         int targetCount = Math.min(shuffled.size(), count);
@@ -604,7 +593,6 @@ public class QueenBeeHandler extends BaseBoss implements Listener {
         }.runTaskLater(plugin, 60L);
     }
 
-    // Esfera venenosa en el suelo + sonido constante
     private void createPoisonSphere(Location center) {
         World w = center.getWorld();
         double radius = 3.0;
@@ -765,7 +753,7 @@ public class QueenBeeHandler extends BaseBoss implements Listener {
         World w = bee.getWorld();
         w.playSound(bee.getLocation(), Sound.ENTITY_BEE_LOOP_AGGRESSIVE, 1.5f, 0.7f);
 
-        int count = 8 + random.nextInt(9); //
+        int count = 8 + random.nextInt(9);
 
         for (int i = 0; i < count; i++) {
             double dx = random.nextDouble() * getArenaRadius() * 2 - getArenaRadius();
@@ -773,7 +761,6 @@ public class QueenBeeHandler extends BaseBoss implements Listener {
 
             Location spawnLoc = spawnLocation.clone().add(dx, 1, dz);
 
-            // Efecto visual previo al spawn
             new BukkitRunnable() {
                 int y = 0;
                 @Override
@@ -793,20 +780,16 @@ public class QueenBeeHandler extends BaseBoss implements Listener {
                 }
             }.runTaskTimer(plugin, 0L, 2L);
 
-            // Spawn del mob usando CorruptedBee
             new BukkitRunnable() {
                 @Override
                 public void run() {
-                    // CAMBIO: Usamos el helper para spawnear la Corrupted Bee
                     Bee minion = corruptedBee.spawnCorruptedBee(spawnLoc);
 
-                    // Asignar target al jugador más cercano
                     Player near = getNearestPlayer();
                     if (near != null) {
                         minion.setTarget(near);
                     }
 
-                    // Timer de vida del minion
                     new BukkitRunnable() {
                         @Override
                         public void run() {
@@ -841,7 +824,6 @@ public class QueenBeeHandler extends BaseBoss implements Listener {
         w.playSound(center, Sound.BLOCK_BREWING_STAND_BREW, 1.0f, 0.6f);
 
 
-        // Antes: {-3, 0, 4}
         double[] yOffsets = {-6, -3, 1};
 
         new BukkitRunnable() {
@@ -891,12 +873,10 @@ public class QueenBeeHandler extends BaseBoss implements Listener {
         if (inRegenerationPhase) return;
         inRegenerationPhase = true;
 
-        // Cancelar cualquier ataque en curso por seguridad
         runningSpecial = false;
         runningMelee = false;
 
         World w = bee.getWorld();
-        // Punto central (asegurate que spawnLocation esté bien definido)
         Location center = spawnLocation.clone().add(0, 4, 0);
 
         bee.teleport(center);
@@ -904,11 +884,10 @@ public class QueenBeeHandler extends BaseBoss implements Listener {
         bee.setTarget(null);
         bee.setVelocity(new Vector(0, 0, 0));
         bee.setGravity(false);
-        // Efecto visual de escudo o regeneración
         w.playSound(center, Sound.ITEM_TOTEM_USE, 1f, 0.5f);
 
         for (Player p : getActivePlayers()) {
-            p.sendMessage("\n" + // Salto de línea inicial
+            p.sendMessage("\n" +
                     ChatColor.of("#E6737E") + "\u06de" +
                     ChatColor.of("#E47643") + " Destruye los" +
                     ChatColor.of("#EFDC93") + ChatColor.BOLD + " 4 totems Amarillos" +
@@ -916,17 +895,16 @@ public class QueenBeeHandler extends BaseBoss implements Listener {
         }
 
         healTotems.clear();
-        double radius = 8; // Un poco más separado para que sea visible
+        double radius = 8;
 
         // --- Spawnear los 4 Tótems ---
         for (int i = 0; i < 4; i++) {
             Location l = center.clone().add(
                     Math.cos(i * Math.PI / 2) * radius,
-                    -2, // Un poco más abajo que la abeja
+                    -2,
                     Math.sin(i * Math.PI / 2) * radius
             );
 
-            // Spawnear totem (Bee falsa)
             Bee hive = w.spawn(l, Bee.class, b -> {
                 b.setCustomName(ChatColor.GOLD + "§lHEAL TOTEM");
                 b.setCustomNameVisible(false);
@@ -935,12 +913,11 @@ public class QueenBeeHandler extends BaseBoss implements Listener {
                 b.setSilent(true);
                 b.setGlowing(true);
                 b.setRemoveWhenFarAway(false);
-                // Darle algo de vida para que no mueran de 1 golpe (opcional)
                 Objects.requireNonNull(b.getAttribute(Attribute.MAX_HEALTH)).setBaseValue(2);
                 b.setHealth(2);
             });
 
-            applyGlow(hive); // Tu método de glow team
+            applyGlow(hive);
             healTotems.add(hive);
 
             w.spawnParticle(Particle.END_ROD, l, 20, 0.5, 0.5, 0.5, 0.05);
@@ -952,58 +929,47 @@ public class QueenBeeHandler extends BaseBoss implements Listener {
 
             @Override
             public void run() {
-                // 1. Validaciones de existencia
                 if (!bee.isValid() || bee.isDead()) {
                     cancel();
                     return;
                 }
 
-                // 2. Mantener al Boss INMOVIL en el centro
                 if (bee.getLocation().distanceSquared(center) > 1) {
                     bee.teleport(center);
                 }
                 bee.setAI(false);
                 bee.setVelocity(new Vector(0,0,0));
 
-                // 3. Verificar tótems vivos
                 long alive = healTotems.stream().filter(Bee::isValid).count();
 
-                // CONDICION DE SALIDA 1: No quedan tótems
                 if (alive == 0) {
                     finishRegenerationPhase();
                     cancel();
                     return;
                 }
 
-                // 4. Efectos visuales (Rayos hacia la abeja)
                 for (Bee totem : healTotems) {
                     if (totem.isValid()) {
                         drawBeam(totem.getLocation(), bee.getLocation().add(0, 0.5, 0), Color.PURPLE);
                     }
                 }
 
-                // 5. Lógica de Curación (Cada 40 ticks = 2 segundos)
                 if (t % 40 == 0 && t > 0) {
                     double max = Objects.requireNonNull(bee.getAttribute(Attribute.MAX_HEALTH)).getBaseValue();
                     double current = bee.getHealth();
 
-                    // Calculo: 1 totem = 10 vida, 4 totems = 40 vida
                     double healAmount = alive * 10.0;
 
                     double newHealth = Math.min(max, current + healAmount);
                     bee.setHealth(newHealth);
 
-                    // Feedback visual y sonoro
                     w.playSound(bee.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1f, 2f);
                     w.spawnParticle(Particle.HEART, bee.getLocation().add(0, 1, 0), 10, 1, 1, 1);
 
-                    // Mensaje actionbar opcional
                     for(Player p : currentPlayers.stream().map(Bukkit::getPlayer).filter(Objects::nonNull).toList()) {
                         p.sendActionBar("§d§lLA REINA SE REGENERA: §a+" + (int)healAmount + " HP");
                     }
 
-                    // CONDICION DE SALIDA 2: Vida al 100% (max)
-                    // EL ERROR ANTERIOR ESTABA AQUI (usabas 'half' en lugar de 'max')
                     if (newHealth >= max) {
                         finishRegenerationPhase();
                         cancel();
@@ -1026,7 +992,6 @@ public class QueenBeeHandler extends BaseBoss implements Listener {
         }
         regenTask = null;
 
-        // Eliminar tótems restantes
         for (Bee hive : healTotems) {
             if (hive != null && hive.isValid()) {
                 hive.getWorld().spawnParticle(Particle.CLOUD, hive.getLocation(), 10);
@@ -1098,7 +1063,6 @@ public class QueenBeeHandler extends BaseBoss implements Listener {
     public void onGenericDamage(EntityDamageEvent e) {
         if (!e.getEntity().equals(bee)) return;
 
-        // Si es la muerte final programada por nosotros, DEJAR QUE PASE
         if (isFinalDeath) {
             return;
         }
@@ -1117,7 +1081,6 @@ public class QueenBeeHandler extends BaseBoss implements Listener {
         if (bee.getHealth() - e.getFinalDamage() <= 0) {
             e.setCancelled(true);
 
-            // GUARDAR AL ASESINO
             if (e instanceof EntityDamageByEntityEvent eventByEntity) {
                 if (eventByEntity.getDamager() instanceof Player p) {
                     this.killer = p;
@@ -1137,12 +1100,9 @@ public class QueenBeeHandler extends BaseBoss implements Listener {
         Entity damaged = e.getEntity();
         Entity damager = e.getDamager();
 
-        // VALIDACIÓN CRÍTICA PARA EVITAR BUCLE
         if (damaged.equals(bee)) {
-            // Si es la muerte final scriptada, permitimos que pase el daño normal
             if (isFinalDeath) return;
 
-            // Si ya está en animación, cancelar todo daño
             if (isDying) {
                 e.setCancelled(true);
                 return;
@@ -1152,22 +1112,18 @@ public class QueenBeeHandler extends BaseBoss implements Listener {
         if (damaged.equals(bee) && damager instanceof Player player) {
             if (player.getInventory().getItemInMainHand().getType() == Material.MACE) {
                 e.setCancelled(true);
-                // Feedback visual/sonoro de que el ataque rebotó
                 player.playSound(bee.getLocation(), Sound.ITEM_SHIELD_BLOCK, 1f, 0.5f);
                 player.spawnParticle(Particle.CRIT, bee.getLocation().add(0, 1, 0), 5, 0.5, 0.5, 0.5, 0.1);
                 return;
             }
         }
 
-        // Proyectiles hacen menos daño fuera de regeneración
         if (damaged.equals(bee)) {
             if (damager instanceof Projectile) {
                 e.setDamage(e.getDamage() * 0.5);
             }
-            // No hacemos return aquí para que pase a la lógica de muerte de abajo
         }
 
-        // Daño a tótems (sin cambios)
         if (damaged instanceof Bee hive && healTotems.contains(hive)) {
             double hp = hive.getHealth() - e.getFinalDamage();
             if (hp <= 0) {
@@ -1180,21 +1136,18 @@ public class QueenBeeHandler extends BaseBoss implements Listener {
             return;
         }
 
-        // LÓGICA DE MUERTE
         if (damaged.equals(bee)) {
-            // Si el daño que va a recibir es mayor o igual a su vida actual
             if (bee.getHealth() - e.getFinalDamage() <= 0) {
-                e.setCancelled(true); // CANCELAMOS LA MUERTE VANILLA
+                e.setCancelled(true);
 
-                // Guardar killer para la muerte final
                 if (damager instanceof Player p) {
                     this.killer = p;
                 } else if (damager instanceof Projectile proj && proj.getShooter() instanceof Player p) {
                     this.killer = p;
                 }
 
-                bee.setHealth(1); // Mantener vivo
-                startDeathAnimation(); // INICIAMOS NUESTRA MUERTE
+                bee.setHealth(1);
+                startDeathAnimation();
             }
         }
     }
@@ -1205,14 +1158,12 @@ public class QueenBeeHandler extends BaseBoss implements Listener {
 
         if (regenTask != null) regenTask.cancel();
 
-        // Estado de "Muerto viviente"
         bee.setAI(false);
         bee.setInvulnerable(true);
         bee.setGravity(false);
         bee.setGlowing(true);
         bee.setCustomName(ChatColor.DARK_RED + "☠ Abeja Reina Caída ☠");
 
-        // Limpiar barras
         mainBar.removeAll();
         staticBar.removeAll();
 
@@ -1225,17 +1176,14 @@ public class QueenBeeHandler extends BaseBoss implements Listener {
 
             @Override
             public void run() {
-                // 1. Aumentamos ticks AL PRINCIPIO para asegurar que la animación avance
-                // aunque ocurra un error visual abajo.
                 ticks++;
 
                 if (!bee.isValid()) {
                     cancel();
-                    onDeath(); // Limpieza de emergencia
+                    onDeath();
                     return;
                 }
 
-                // 2. FIN DE LA ANIMACIÓN (3 segundos = 60 ticks)
                 if (ticks >= 60) {
                     try {
                         w.spawnParticle(Particle.EXPLOSION_EMITTER, bee.getLocation(), 5);
@@ -1243,14 +1191,13 @@ public class QueenBeeHandler extends BaseBoss implements Listener {
                         w.playSound(bee.getLocation(), Sound.ENTITY_GENERIC_EXPLODE, 5.0f, 0.6f);
                     } catch (Exception ignored) {}
 
-                    // --- MUERTE REAL ---
                     isFinalDeath = true;
                     bee.setInvulnerable(false);
 
                     if (killer != null && killer.isOnline()) {
-                        bee.damage(10000, killer); // Matar atribuyendo daño
+                        bee.damage(10000, killer);
                     } else {
-                        bee.setHealth(0); // Muerte natural
+                        bee.setHealth(0);
                     }
 
                     finalizeDeath();
@@ -1258,18 +1205,14 @@ public class QueenBeeHandler extends BaseBoss implements Listener {
                     return;
                 }
 
-                // 3. ANIMACIÓN DE ASCENSO
                 Location loc = bee.getLocation().add(0, 0.15, 0);
                 double offsetX = (random.nextDouble() - 0.5) * 0.2;
                 double offsetZ = (random.nextDouble() - 0.5) * 0.2;
                 loc.add(offsetX, 0, offsetZ);
                 bee.teleport(loc);
 
-                // 4. PARTICULAS SEGURAS (Con Try-Catch para evitar el bucle infinito en consola)
                 try {
                     w.spawnParticle(Particle.CLOUD, bee.getLocation().add(0, 0.5, 0), 5, 0.1, 0.1, 0.1, 0.05);
-
-                    // WAX_ON es similar a la miel pero muy seguro en todas las versiones
                     w.spawnParticle(Particle.WAX_ON, bee.getLocation(), 3, 0.5, 0.5, 0.5);
                 } catch (Exception e) {
                 }
@@ -1349,7 +1292,6 @@ public class QueenBeeHandler extends BaseBoss implements Listener {
         }
     }
 
-    // Abeja inmune a explosiones (incluyendo sus propias)
     @EventHandler
     public void onEntityDamageExplosions(EntityDamageEvent e) {
         if (!e.getEntity().equals(bee)) return;

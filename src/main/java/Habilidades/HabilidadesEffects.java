@@ -460,14 +460,12 @@ public class HabilidadesEffects {
             if (currentBase != expectedHealth) {
                 player.getAttribute(Attribute.MAX_HEALTH).setBaseValue(expectedHealth);
 
-                // Si la vida máxima bajó a 20 (apagar habilidades), bajamos su vida actual para que no sea mayor que la máxima
                 if (player.getHealth() > expectedHealth) {
                     player.setHealth(expectedHealth);
                 }
             }
         }
 
-        // 2. Agilidad
         if (manager.hasHabilidad(player.getUniqueId(), HabilidadesType.AGILIDAD, 1)) {
             addInfiniteEffect(player, PotionEffectType.HASTE, 0);
         } else {
@@ -486,7 +484,6 @@ public class HabilidadesEffects {
             player.removePotionEffect(PotionEffectType.SPEED);
         }
 
-        // 3. Resistencia
         if (manager.hasHabilidad(player.getUniqueId(), HabilidadesType.RESISTENCIA, 4)) {
             addInfiniteEffect(player, PotionEffectType.RESISTANCE, 0);
         } else {

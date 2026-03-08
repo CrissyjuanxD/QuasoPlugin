@@ -143,7 +143,6 @@ public class LifeCampfire implements Listener {
         ItemStack item = event.getItem();
 
         if (isFuel(item)) {
-            // Cancelar siempre para evitar que planten la flor
             event.setCancelled(true);
 
             if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
@@ -155,13 +154,10 @@ public class LifeCampfire implements Listener {
                     if (activeCampfires.containsKey(loc)) {
                         ActiveCampfire campfire = activeCampfires.get(loc);
 
-                        // Consumir el combustible
                         item.setAmount(item.getAmount() - 1);
 
-                        // Añadir 2 al radio y reproducir efectos
                         campfire.addFuel();
 
-                        // Mensaje visual discreto
                         String msg = "[\"\",{\"text\":\"+2 Bloques de Radio\",\"bold\":true,\"color\":\"#ee5b2b\"}]";
                         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "tellraw " + event.getPlayer().getName() + " actionbar " + msg);
                     }
@@ -174,8 +170,8 @@ public class LifeCampfire implements Listener {
     public void onBlockBreak(BlockBreakEvent event) {
         Location loc = event.getBlock().getLocation();
         if (activeCampfires.containsKey(loc)) {
-            activeCampfires.get(loc).destroy(false); // Eliminado por un jugador manualmente
-            event.setDropItems(false); // No suelta la fogata de nuevo por balance
+            activeCampfires.get(loc).destroy(false);
+            event.setDropItems(false);
         }
     }
 
@@ -198,7 +194,7 @@ public class LifeCampfire implements Listener {
 
         public void addFuel() {
             radius += 2;
-            if (radius > 16) radius = 16; // Máximo permitido
+            if (radius > 16) radius = 16;
 
             loc.getWorld().playSound(loc, Sound.ITEM_FIRECHARGE_USE, 1f, 1f);
             loc.getWorld().playSound(loc, Sound.BLOCK_CAMPFIRE_CRACKLE, 2f, 1.5f);
@@ -209,30 +205,25 @@ public class LifeCampfire implements Listener {
             task = new BukkitRunnable() {
                 @Override
                 public void run() {
-                    // Si el bloque ya no es una fogata, cancelar (por si explotó, etc)
                     if (loc.getBlock().getType() != Material.CAMPFIRE) {
                         destroy(false);
                         return;
                     }
 
-                    ticksLived += 5; // Se ejecuta cada 5 ticks (0.25 segundos) para que las partículas se vean fluidas
+                    ticksLived += 5;
 
-                    // 4 Minutos = 4800 Ticks. Si llega al límite o el radio baja a 0, se destruye.
                     if (ticksLived >= 4800 || radius <= 0) {
-                        destroy(true); // true = Destrucción natural (se acabó el tiempo)
+                        destroy(true);
                         return;
                     }
 
-                    // Cada 10 segundos (200 Ticks), pierde 1 bloque de radio
                     if (ticksLived % 200 == 0) {
                         radius--;
                         loc.getWorld().playSound(loc, Sound.BLOCK_FIRE_EXTINGUISH, 0.4f, 0.8f);
                     }
 
-                    // Renderizar el Ring de pelea (Cada 5 ticks)
                     drawRingParticles();
 
-                    // Aplicar efectos a jugadores en el área (Cada segundo / 20 ticks)
                     if (ticksLived % 20 == 0) {
                         applyEffects();
                     }
@@ -243,7 +234,6 @@ public class LifeCampfire implements Listener {
         private void applyEffects() {
             int amplifier;
 
-            // Lógica de debilitamiento
             if (radius <= 6) {
                 amplifier = 0; // Nivel I
             } else if (radius <= 12) {
@@ -252,12 +242,10 @@ public class LifeCampfire implements Listener {
                 amplifier = 2; // Nivel III
             }
 
-            // Duración de 60 ticks (3 segundos) para evitar el parpadeo de los corazones extra
             PotionEffect regen = new PotionEffect(PotionEffectType.REGENERATION, 60, amplifier, true, true);
             PotionEffect resis = new PotionEffect(PotionEffectType.RESISTANCE, 60, amplifier, true, true);
             PotionEffect healthBoost = new PotionEffect(PotionEffectType.HEALTH_BOOST, 60, amplifier, true, true);
 
-            // Coordenadas centrales exactas de la fogata
             double cx = loc.getX() + 0.5;
             double cz = loc.getZ() + 0.5;
 
@@ -265,7 +253,6 @@ public class LifeCampfire implements Listener {
                 double dx = Math.abs(p.getLocation().getX() - cx);
                 double dz = Math.abs(p.getLocation().getZ() - cz);
 
-                // Si está dentro del cuadro
                 if (dx <= radius && dz <= radius) {
                     p.addPotionEffect(regen);
                     p.addPotionEffect(resis);
@@ -277,17 +264,14 @@ public class LifeCampfire implements Listener {
         private void drawRingParticles() {
             World w = loc.getWorld();
 
-            // Colores del Aura (Amarillo, Verde y un toque de Naranja)
             Particle.DustOptions yellow = new Particle.DustOptions(Color.fromRGB(240, 230, 90), 1.2f);
             Particle.DustOptions green = new Particle.DustOptions(Color.fromRGB(130, 230, 100), 1.2f);
             Particle.DustOptions orange = new Particle.DustOptions(Color.fromRGB(240, 150, 60), 0.8f);
 
-            // Alturas de los "cables" del ring (0.5 = suelo, 1.5 = medio, 2.5 = alto)
             double[] heights = {0.5, 1.5, 2.5};
 
-            double step = 1.5; // Espaciado entre partículas (1.5 es ligero para el servidor pero se ve genial)
+            double step = 1.5;
 
-            // Dibujar las 4 caras del cuadrado
             for (double x = -radius; x <= radius; x += step) {
                 spawnParticleColumn(w, loc.clone().add(x + 0.5, 0, -radius + 0.5), heights, yellow, green, orange);
                 spawnParticleColumn(w, loc.clone().add(x + 0.5, 0, radius + 0.5), heights, yellow, green, orange);
@@ -302,10 +286,8 @@ public class LifeCampfire implements Listener {
             for (double h : heights) {
                 Location pLoc = basePoint.clone().add(0, h, 0);
 
-                // Efecto Spark Constante
                 w.spawnParticle(Particle.ELECTRIC_SPARK, pLoc, 1, 0, 0, 0, 0);
 
-                // Alternador de color aleatorio para dar el toque vivo
                 double rand = Math.random();
                 Particle.DustOptions chosenColor = rand < 0.45 ? c1 : (rand < 0.90 ? c2 : c3);
 

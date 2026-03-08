@@ -102,12 +102,10 @@ public class MissionHandler implements Listener {
             // Cargar datos previos del jugador
             Map<Integer, MissionData> data = dbManager.loadPlayerMissions(uuid);
 
-            // Sincronizar con el estado GLOBAL
             for (int missionId : globalActiveMissions) {
-                // Si el jugador no tenía la misión registrada en su BD, la creamos
                 if (!data.containsKey(missionId)) {
                     MissionData newMission = new MissionData(true, false, false, "{}");
-                    newMission.setDirty(true); // Forzamos que se guarde en la próxima sincronización
+                    newMission.setDirty(true);
                     data.put(missionId, newMission);
                 } else {
                     MissionData existingMission = data.get(missionId);

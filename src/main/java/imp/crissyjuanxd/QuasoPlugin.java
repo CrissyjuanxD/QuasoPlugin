@@ -85,7 +85,6 @@ public class QuasoPlugin extends JavaPlugin implements Listener {
     // ------------------------------------------------------------------------
 
     private MissionHandler missionHandler;
-    private MissionSystemCommands missionSystemCommands;
     private MissionRewardHandler missionRewardHandler;
 
 /*    private ShopHandler shopHandler;

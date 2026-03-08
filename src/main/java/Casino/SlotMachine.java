@@ -121,9 +121,8 @@ public class SlotMachine implements Listener {
             FileConfiguration def = YamlConfiguration.loadConfiguration(configFile);
 
             // Probabilidad de ganar (Porcentaje 0 - 100)
-            def.set("SlotMachine.win_chance", 15.0); // 15% de probabilidad de ganar
+            def.set("SlotMachine.win_chance", 15.0);
 
-            // Recompensas reestructuradas
             def.set("SlotMachine.minerales.three_out_of_three", Arrays.asList("diamond 5", "gold_ingot 10"));
             def.set("SlotMachine.itemsvarios.three_out_of_three", Arrays.asList("golden_apple 2", "experience_bottle 16"));
             def.set("SlotMachine.pociones.three_out_of_three", Arrays.asList("potion 1"));
@@ -143,7 +142,6 @@ public class SlotMachine implements Listener {
 
         Location loc = event.getClickedBlock().getLocation();
 
-        // Verificar si es una mesa válida
         if (!manager.isTable(loc) || !manager.getTableType(loc).equals("slot")) return;
 
         event.setCancelled(true);
@@ -176,13 +174,12 @@ public class SlotMachine implements Listener {
     }
 
     private void setupGUI(Inventory inv, Player player, Location machineLoc) {
-        // 1. Botones Principales
         ItemStack close = new ItemStack(Material.BARRIER);
         ItemMeta cm = close.getItemMeta();
         cm.setDisplayName(ChatColor.of("#FF6B6B") + "" + ChatColor.BOLD + "Cerrar");
         cm.setCustomModelData(1000);
         close.setItemMeta(cm);
-        inv.setItem(closeButton, close); // Slot 0
+        inv.setItem(closeButton, close);
 
         ItemStack spin = new ItemStack(Material.LEVER);
         ItemMeta sm = spin.getItemMeta();
@@ -195,9 +192,8 @@ public class SlotMachine implements Listener {
         ));
         sm.setCustomModelData(1000);
         spin.setItemMeta(sm);
-        inv.setItem(spinButton, spin); // Slot 43
+        inv.setItem(spinButton, spin);
 
-        // Izquierda (27, 28, 29) -> Apunta a la derecha
         ItemStack leftLine = new ItemStack(Material.RED_DYE);
         ItemMeta leftMeta = leftLine.getItemMeta();
         leftMeta.setDisplayName(ChatColor.GOLD + "" + ChatColor.BOLD + "»» " + ChatColor.RED + "Línea de Premio" + ChatColor.GOLD + " »»");
@@ -208,7 +204,6 @@ public class SlotMachine implements Listener {
         inv.setItem(28, leftLine);
         inv.setItem(29, leftLine);
 
-        // Derecha (33, 34, 35) -> Apunta a la izquierda
         ItemStack rightLine = new ItemStack(Material.RED_DYE);
         ItemMeta rightMeta = rightLine.getItemMeta();
         rightMeta.setDisplayName(ChatColor.GOLD + "" + ChatColor.BOLD + "«« " + ChatColor.RED + "Línea de Premio" + ChatColor.GOLD + " ««");
@@ -226,13 +221,11 @@ public class SlotMachine implements Listener {
         glass.setItemMeta(gm);
 
         for (int i = 0; i < 54; i++) {
-            // Si el slot está vacío, no es el tokenSlot y no es parte de los rodillos, poner gris
             if (inv.getItem(i) == null && i != tokenSlot && !isReelSlot(i)) {
                 inv.setItem(i, glass);
             }
         }
 
-        // 4. Indicadores de Ficha (Alrededor del slot 49 - FIX CÁLCULO DE SLOTS)
         ItemStack tokenIndicator = new ItemStack(Material.ORANGE_DYE);
         ItemMeta tokenMeta = tokenIndicator.getItemMeta();
         tokenMeta.setDisplayName(ChatColor.of("#FFD3A5") + "" + ChatColor.BOLD + "Coloca DinoFicha Aquí");
@@ -244,7 +237,6 @@ public class SlotMachine implements Listener {
             inv.setItem(slot, tokenIndicator);
         }
 
-        // 5. Inicializar Rodillos (O recuperar estado)
         AnimationState animState = animationStates.get(machineLoc);
         if (animState != null && activeAnimations.containsKey(machineLoc) && isSpinning.getOrDefault(player.getUniqueId(), false)) {
             updateGUIFromAnimationState(inv, animState);
@@ -311,7 +303,6 @@ public class SlotMachine implements Listener {
         // FIX BEDROCK: Usar Metadata para validar la sesión en lugar del Title
         if (!p.hasMetadata("slot_machine_location")) return;
 
-        // Prevención extra para asegurar que es un menú de máquina
         if (e.getView().getTopInventory().getSize() != 54) return;
 
         if (e.getClickedInventory() == p.getInventory()) return;
@@ -365,7 +356,7 @@ public class SlotMachine implements Listener {
         Random r = new Random();
 
         double winChance = config.getDouble("SlotMachine.win_chance", 15.0);
-        double roll = r.nextDouble() * 100; // 0.0 a 100.0
+        double roll = r.nextDouble() * 100;
         boolean shouldWin = roll <= winChance;
 
         if (shouldWin) {
@@ -470,7 +461,6 @@ public class SlotMachine implements Listener {
             new BukkitRunnable() {
                 @Override
                 public void run() {
-                    // Si ya no está girando, procedemos a limpiar
                     if (!isSpinning.getOrDefault(p.getUniqueId(), false)) {
                         cleanupDisplays(loc);
                         animationStates.remove(loc);
@@ -538,7 +528,6 @@ public class SlotMachine implements Listener {
     public void onClose(InventoryCloseEvent e) {
         Player p = (Player) e.getPlayer();
 
-        // FIX BEDROCK: Validación por Metadata
         if (!p.hasMetadata("slot_machine_location")) return;
 
         ItemStack tokens = e.getInventory().getItem(tokenSlot);

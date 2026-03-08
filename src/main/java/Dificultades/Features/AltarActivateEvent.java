@@ -13,7 +13,7 @@ public class AltarActivateEvent extends Event implements Cancellable {
     private final Location location;
     private final String altarType;
     private boolean cancelled = false;
-    private int cooldownSeconds = 0; // El listener decidirá cuánto tiempo poner
+    private int cooldownSeconds = 0;
 
     public AltarActivateEvent(Player player, Location location, String altarType) {
         this.player = player;

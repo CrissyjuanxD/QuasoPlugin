@@ -69,14 +69,12 @@ public class HabilidadesCommand implements CommandExecutor, TabCompleter {
                     sender.sendMessage(ChatColor.GREEN + "Habilidades ACTIVADAS globalmente.");
                 }
 
-                // Refrescar a todos los conectados
                 for (Player p : Bukkit.getOnlinePlayers()) {
                     effects.reapplyAllEffects(p, manager);
                 }
                 return true;
             }
 
-            // Lógica Jugador Individual
             Player target = Bukkit.getPlayer(targetName);
             if (target == null) {
                 sender.sendMessage(ChatColor.RED + "Jugador no encontrado.");
@@ -154,7 +152,6 @@ public class HabilidadesCommand implements CommandExecutor, TabCompleter {
     }
 
     private void showSkills(CommandSender sender, Player target) {
-        // Al mostrar, queremos ver las que compró, no las que están actualmente "usables"
         Map<HabilidadesType, List<Integer>> habilidades = manager.getPlayerHabilidades(target.getUniqueId());
 
         boolean isGlobalDisabled = manager.isGlobalDisabled();

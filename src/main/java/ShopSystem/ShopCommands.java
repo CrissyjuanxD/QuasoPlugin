@@ -45,7 +45,6 @@ public class ShopCommands implements CommandExecutor, TabCompleter {
                 return true;
             }
 
-            // CORRECCIÓN: Parseador de Comillas para permitir nombres separados
             String fullArgs = String.join(" ", args);
             String name = "Tienda";
 
@@ -60,7 +59,7 @@ public class ShopCommands implements CommandExecutor, TabCompleter {
                 }
             } else {
                 String[] split = fullArgs.split(" ", 2);
-                name = split[0].replace("_", " "); // Soporte retroactivo para guiones bajos
+                name = split[0].replace("_", " ");
                 fullArgs = split.length > 1 ? split[1] : "";
             }
 
@@ -72,7 +71,6 @@ public class ShopCommands implements CommandExecutor, TabCompleter {
                 String[] remainingArgs = fullArgs.split(" ");
                 int argIndex = 0;
 
-                // Verificamos si proporcionaron coordenadas
                 if (remainingArgs.length >= 3 && isDouble(remainingArgs[0])) {
                     try {
                         double x = Double.parseDouble(remainingArgs[0]);
@@ -224,7 +222,6 @@ public class ShopCommands implements CommandExecutor, TabCompleter {
         if (command.getName().equalsIgnoreCase("spawnshop")) {
             if (args.length == 1) return Arrays.asList("\"Nombre de la Tienda\"");
 
-            // Lógica de autocompletado si ya pasamos el nombre
             String fullArgs = String.join(" ", args);
             String[] remaining = null;
             if (fullArgs.startsWith("\"")) {
@@ -243,7 +240,7 @@ public class ShopCommands implements CommandExecutor, TabCompleter {
                 int currentArgIndex = remaining.length - 1; // 0=coordX, 1=coordY, 2=coordZ, 3=Type, 4=Profession
                 String lastArg = remaining[currentArgIndex].toUpperCase();
 
-                if (currentArgIndex == 3 || currentArgIndex == 0) { // Bioma (Type)
+                if (currentArgIndex == 3 || currentArgIndex == 0) {
                     List<String> suggestions = new ArrayList<>();
                     for (Villager.Type t : Villager.Type.values()) suggestions.add(t.name());
                     return suggestions.stream().filter(s -> s.startsWith(lastArg)).collect(Collectors.toList());

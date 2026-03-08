@@ -35,7 +35,6 @@ public class excavatorItem implements Listener {
     private final JavaPlugin plugin;
     private final NamespacedKey excavatorKey;
 
-    // Set para evitar bucles infinitos al romper bloques en cadena
     private final Set<UUID> activeMiners = new HashSet<>();
 
     public excavatorItem(JavaPlugin plugin) {
@@ -43,16 +42,12 @@ public class excavatorItem implements Listener {
         this.excavatorKey = new NamespacedKey(plugin, "la_excavadora");
     }
 
-    // Método para obtener o dar el item
     public ItemStack createExcavator() {
         ItemStack pickaxe = new ItemStack(Material.NETHERITE_PICKAXE);
         ItemMeta meta = pickaxe.getItemMeta();
 
         if (meta != null) {
-            // Nombre
             meta.setDisplayName(ChatColor.of("#7d4dac") + ChatColor.BOLD.toString() + "La Excavadora");
-
-            // Lore
             List<String> lore = new ArrayList<>();
             lore.add("");
             lore.add(ChatColor.of("#5692d2") + "Con este pico podrás");
@@ -63,7 +58,6 @@ public class excavatorItem implements Listener {
             lore.add("");
             meta.setLore(lore);
 
-            // Atributos (Rango de interacción) -> Compatible con Bukkit 1.20.5+
             AttributeModifier modifier = new AttributeModifier(
                     UUID.randomUUID(),
                     "block_interaction_range",
@@ -73,7 +67,6 @@ public class excavatorItem implements Listener {
             );
             meta.addAttributeModifier(Attribute.BLOCK_INTERACTION_RANGE, modifier);
 
-            // Tag NBT invisible para identificar el pico de forma 100% segura
             PersistentDataContainer data = meta.getPersistentDataContainer();
             data.set(excavatorKey, PersistentDataType.BYTE, (byte) 1);
 
@@ -89,7 +82,6 @@ public class excavatorItem implements Listener {
         return data.has(excavatorKey, PersistentDataType.BYTE);
     }
 
-    // Lista blanca de bloques permitidos
     private boolean isWhitelisted(Material type) {
         if (type.name().endsWith("_ORE")) return true;
 
@@ -100,6 +92,8 @@ public class excavatorItem implements Listener {
                 type == Material.GRANITE ||
                 type == Material.DIORITE ||
                 type == Material.NETHERRACK ||
+                type == Material.BASALT ||
+                type == Material.BLACKSTONE ||
                 type == Material.ANCIENT_DEBRIS;
     }
 
@@ -108,7 +102,6 @@ public class excavatorItem implements Listener {
         Player player = event.getPlayer();
         UUID uuid = player.getUniqueId();
 
-        // Evitar bucle recursivo
         if (activeMiners.contains(uuid)) return;
 
         ItemStack item = player.getInventory().getItemInMainHand();
@@ -117,8 +110,7 @@ public class excavatorItem implements Listener {
         Block centerBlock = event.getBlock();
         if (!isWhitelisted(centerBlock.getType())) return;
 
-        // Obtener la cara del bloque que el jugador está mirando para orientar el 3x3
-        double range = player.getGameMode() == org.bukkit.GameMode.CREATIVE ? 10.0 : 9.5; // Distancia base + Atributo extra
+        double range = player.getGameMode() == org.bukkit.GameMode.CREATIVE ? 10.0 : 9.5;
         RayTraceResult trace = player.rayTraceBlocks(range, FluidCollisionMode.NEVER);
         BlockFace face = (trace != null && trace.getHitBlockFace() != null) ? trace.getHitBlockFace() : BlockFace.UP;
 
@@ -127,34 +119,31 @@ public class excavatorItem implements Listener {
 
         for (int a = -1; a <= 1; a++) {
             for (int b = -1; b <= 1; b++) {
-                if (a == 0 && b == 0) continue; // El bloque central ya lo rompe el evento original
+                if (a == 0 && b == 0) continue;
 
                 int x = 0, y = 0, z = 0;
                 switch (face) {
                     case UP:
                     case DOWN:
-                        x = a; z = b; break; // Minando en el suelo o techo
+                        x = a; z = b; break;
                     case NORTH:
                     case SOUTH:
-                        x = a; y = b; break; // Minando paredes de Norte/Sur
+                        x = a; y = b; break;
                     case EAST:
                     case WEST:
-                        z = a; y = b; break; // Minando paredes de Este/Oeste
+                        z = a; y = b; break;
                     default:
                         x = a; y = b; break;
                 }
 
                 Block target = centerBlock.getRelative(x, y, z);
 
-                // Comprobar whitelist de los bloques secundarios
                 if (isWhitelisted(target.getType())) {
 
-                    // Crear evento falso para que WorldGuard o ProtectionStones validen si se puede romper
                     BlockBreakEvent fakeEvent = new BlockBreakEvent(target, player);
                     Bukkit.getPluginManager().callEvent(fakeEvent);
 
                     if (!fakeEvent.isCancelled()) {
-                        // Rompe el bloque naturalente (aplica Fortuna, Silk Touch y dropea los items)
                         target.breakNaturally(item);
                         blocksBroken++;
                     }
@@ -162,7 +151,6 @@ public class excavatorItem implements Listener {
             }
         }
 
-        // Desgaste de durabilidad por los bloques extra rotos
         if (blocksBroken > 0 && player.getGameMode() != org.bukkit.GameMode.CREATIVE) {
             applyDurabilityDamage(player, item, blocksBroken);
         }
@@ -176,7 +164,6 @@ public class excavatorItem implements Listener {
             int unbreaking = item.getEnchantmentLevel(Enchantment.UNBREAKING);
             int damageToApply = 0;
 
-            // Fórmula vainilla para herramienta con Irrompibilidad: Probabilidad del (100 / (Nivel + 1))% de gastar uso
             for (int i = 0; i < blocksBroken; i++) {
                 if (Math.random() < (1.0 / (unbreaking + 1))) {
                     damageToApply++;
@@ -187,7 +174,6 @@ public class excavatorItem implements Listener {
                 damageable.setDamage(damageable.getDamage() + damageToApply);
                 item.setItemMeta(damageable);
 
-                // Destruir el pico si se pasa de la durabilidad máxima
                 if (damageable.getDamage() > item.getType().getMaxDurability()) {
                     player.getInventory().setItemInMainHand(null);
                     player.playSound(player.getLocation(), org.bukkit.Sound.ENTITY_ITEM_BREAK, 1f, 1f);

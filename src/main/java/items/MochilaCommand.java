@@ -52,7 +52,6 @@ public class MochilaCommand implements CommandExecutor {
             return true;
         }
 
-        // Subcomando GIVE (Requiere jugador ONLINE para recibir el item)
         if (args.length > 1 && args[0].equalsIgnoreCase("give")) {
             Player targetOnline = Bukkit.getPlayer(args[1]);
             if (targetOnline == null) {
@@ -63,7 +62,6 @@ public class MochilaCommand implements CommandExecutor {
             return true;
         }
 
-        // Subcomando VER/RECUPERAR (Funciona OFFLINE)
         if (sender instanceof Player) {
             buscarJugadorYAbrirMenu((Player) sender, args[0], false);
         }
@@ -78,10 +76,8 @@ public class MochilaCommand implements CommandExecutor {
         new BukkitRunnable() {
             @Override
             public void run() {
-                // 1. Buscamos la UUID en nuestra tabla 'players'
                 UUID targetUUID = functions.getDbManager().getUuidByName(targetName);
 
-                // 2. Si no está en DB, intentamos el caché de Bukkit como último recurso
                 if (targetUUID == null) {
                     try {
                         targetUUID = Bukkit.getOfflinePlayer(targetName).getUniqueId();
@@ -98,7 +94,6 @@ public class MochilaCommand implements CommandExecutor {
                     return;
                 }
 
-                // 3. Cargamos las mochilas usando la UUID encontrada
                 List<DatabaseManager.BackpackInfo> backpacks = functions.getDbManager().getPlayerBackpacks(targetUUID);
                 final UUID finalUUID = targetUUID;
 
@@ -110,7 +105,6 @@ public class MochilaCommand implements CommandExecutor {
                             return;
                         }
 
-                        // Abrimos la GUI correspondiente
                         String titulo = isDeleteMode ?
                                 ChatColor.RED + "BORRAR Mochilas de: " + targetName :
                                 ChatColor.DARK_RED + "Mochilas de: " + targetName;

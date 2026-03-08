@@ -38,16 +38,13 @@ public class BossChunkListener implements Listener {
     private void checkAndRestoreBoss(Entity entity) {
         if (!(entity instanceof Bee bee)) return;
 
-        // Verificar si es un boss
         if (!entity.getPersistentDataContainer().has(bossKey, PersistentDataType.BYTE)) return;
 
-        // Verificar si está muerto (a veces quedan cadáveres glitcheados)
         if (bee.isDead() || bee.getHealth() <= 0) {
-            bee.remove(); // Limpiar basura
+            bee.remove();
             return;
         }
 
-        // Evitar duplicados si ya está activo
         if (QueenBeeHandler.ACTIVE_BOSSES.containsKey(bee.getUniqueId())) {
             return;
         }
@@ -56,10 +53,8 @@ public class BossChunkListener implements Listener {
         bee.setInvulnerable(false);
         bee.setGravity(true);
 
-        // Retrasamos 1 tick la inyección de lógica para asegurar que el chunk está 100% listo
         Bukkit.getScheduler().runTaskLater(plugin, () -> {
             if (bee.isValid() && !bee.isDead()) {
-                // Verificar doble check por si otro plugin o listener actuó
                 if (!QueenBeeHandler.ACTIVE_BOSSES.containsKey(bee.getUniqueId())) {
                     new QueenBeeHandler(plugin, bee);
                     plugin.getLogger().info("Abeja Reina reactivada y IA forzada en: " + bee.getLocation());

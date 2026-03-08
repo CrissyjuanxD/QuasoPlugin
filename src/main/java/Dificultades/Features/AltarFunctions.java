@@ -26,10 +26,8 @@ public class AltarFunctions implements Listener, CommandExecutor, TabCompleter {
     private final JavaPlugin plugin;
     private final NamespacedKey cooldownKey;
 
-    // OPTIMIZACIÓN: Lista única para gestionar todos los hologramas activos
     private final List<TextDisplay> activeAltars = new ArrayList<>();
 
-    // Color Hexadecimal #bc74ec
     private final ChatColor customHexColor = ChatColor.of("#bc74ec");
 
     public AltarFunctions(JavaPlugin plugin) {
@@ -43,7 +41,6 @@ public class AltarFunctions implements Listener, CommandExecutor, TabCompleter {
             plugin.getCommand("altarvct").setTabCompleter(this);
         }
 
-        // Recuperar y arrancar el motor global
         Bukkit.getScheduler().runTaskLater(plugin, () -> {
             restoreAllLoadedCooldowns();
             startGlobalTicker();
@@ -115,7 +112,6 @@ public class AltarFunctions implements Listener, CommandExecutor, TabCompleter {
 
     private void createCooldownHologram(Location loc, int seconds) {
         long endTime = System.currentTimeMillis() + (seconds * 1000L);
-        // Altura +2.5 (1 bloque más arriba que el 1.5 original)
         Location hologramLoc = loc.clone().add(0.5, 2.5, 0.5);
 
         TextDisplay display = (TextDisplay) loc.getWorld().spawnEntity(hologramLoc, EntityType.TEXT_DISPLAY);
@@ -126,8 +122,6 @@ public class AltarFunctions implements Listener, CommandExecutor, TabCompleter {
         display.getPersistentDataContainer().set(cooldownKey, PersistentDataType.LONG, endTime);
         activeAltars.add(display);
 
-        // Ordenar por tiempo restante (opcional, para que #1 sea siempre el que acaba antes)
-        // activeAltars.sort(Comparator.comparingLong(d -> d.getPersistentDataContainer().get(cooldownKey, PersistentDataType.LONG)));
     }
 
     private boolean isCooldownActive(Location loc) {
@@ -168,13 +162,11 @@ public class AltarFunctions implements Listener, CommandExecutor, TabCompleter {
                     long remainingMillis = endTime - System.currentTimeMillis();
 
                     if (remainingMillis <= 0) {
-                        // Tiempo acabado
                         display.getWorld().spawnParticle(Particle.TRIAL_SPAWNER_DETECTION_OMINOUS, display.getLocation(), 15, 0.5, 0.5, 0.5);
                         display.getWorld().playSound(display.getLocation(), Sound.BLOCK_NOTE_BLOCK_CHIME, 1f, 2f);
                         display.remove();
                         it.remove();
                     } else {
-                        // Actualizar Texto
                         long totalSeconds = remainingMillis / 1000;
                         long h = totalSeconds / 3600;
                         long m = (totalSeconds % 3600) / 60;

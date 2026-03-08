@@ -63,7 +63,6 @@ public class EconomyItemsFunctions implements Listener {
             return;
         }
 
-        // Bloqueo extra para dinocoins por si acaso
         if (item.getType() == Material.SUNFLOWER && item.hasItemMeta() &&
                 item.getItemMeta().hasCustomModelData() && item.getItemMeta().getCustomModelData() == 2000) {
             event.setCancelled(true);
@@ -85,24 +84,18 @@ public class EconomyItemsFunctions implements Listener {
 
         Player player = event.getPlayer();
 
-        // 1. INTERACCIÓN CON MOCHILA
         if (isMochila(item)) {
             event.setCancelled(true);
 
-            // Ignorar mano secundaria (Bedrock doble packet fix)
             if (event.getHand() == EquipmentSlot.OFF_HAND) return;
 
-            // Solo Click Derecho
             if (event.getAction().toString().contains("RIGHT")) {
 
-                // 1. Verificar si YA tiene un inventario abierto (Fix Bedrock Long Press)
-                // Si el jugador mantiene presionado, Bedrock manda paquetes incluso con el inv abierto.
                 if (player.getOpenInventory().getType() != InventoryType.CRAFTING &&
                         player.getOpenInventory().getType() != InventoryType.CREATIVE) {
                     return;
                 }
 
-                // 2. Verificar bloqueo de proceso
                 if (processing.contains(player.getUniqueId())) {
                     player.sendMessage(ChatColor.RED + "⌚ Procesando... espera un segundo.");
                     return;
@@ -162,7 +155,6 @@ public class EconomyItemsFunctions implements Listener {
         if (mochilaId == null) {
             mochilaId = UUID.randomUUID().toString();
             setMochilaId(mochila, mochilaId);
-            // Asegurar que el item se actualice correctamente en la mano principal
             if (player.getInventory().getItemInMainHand().getType() == mochila.getType()) {
                 player.getInventory().setItemInMainHand(mochila);
             } else {
@@ -205,17 +197,14 @@ public class EconomyItemsFunctions implements Listener {
     }
 
     private void openInventorySafely(Player player, Inventory inv, String mochilaId) {
-        // Mantenemos el delay de 2 ticks, es esencial para que Geyser procese el Cooldown primero
         new BukkitRunnable() {
             @Override
             public void run() {
-                // Registramos antes de abrir
                 mochilasAbiertas.put(player.getUniqueId(), mochilaId);
 
                 player.openInventory(inv);
                 player.playSound(player.getLocation(), Sound.ITEM_BUNDLE_DROP_CONTENTS, 1.0f, 1.0f);
 
-                // Liberar bloqueo
                 processing.remove(player.getUniqueId());
             }
         }.runTaskLater(plugin, 2L);
@@ -246,10 +235,8 @@ public class EconomyItemsFunctions implements Listener {
             Inventory inv = event.getInventory();
             ItemStack[] contents = inv.getContents();
 
-            // BLOQUEO: Evita que abra otra mochila mientras guarda esta
             processing.add(playerId);
 
-            // CACHE UPDATE: Crítico, actualizamos RAM al instante
             mochilasCache.put(mochilaId, contents);
 
             ItemStack hand = player.getInventory().getItemInMainHand();
@@ -257,11 +244,8 @@ public class EconomyItemsFunctions implements Listener {
             int level = 1;
 
             if (isMochila(hand)) {
-                // *** FIX CRITICO AQUI ***
-                // Al cerrar el inventario, aplicamos un cooldown al item en mano.
-                // Esto fuerza a Bedrock a dejar de "mantener presionado".
-                // Impide que se vuelva a abrir inmediatamente leyendo datos viejos.
-                player.setCooldown(hand.getType(), 10); // 0.5 segundos de bloqueo al cerrar
+
+                player.setCooldown(hand.getType(), 10);
 
                 if (Objects.equals(getMochilaId(hand), mochilaId)) {
                     if (hand.hasItemMeta()) {
@@ -310,8 +294,6 @@ public class EconomyItemsFunctions implements Listener {
         Player player = (Player) event.getWhoClicked();
         String title = event.getView().getTitle();
 
-        // --- EXCEPCIÓN: GUIs ADMINISTRATIVAS ---
-        // Si estamos en un menú de admin, DEJAMOS PASAR la interacción para que handleAdminGuiClick funcione
         if (title.startsWith(ChatColor.DARK_RED + "Mochilas de: ") ||
                 title.startsWith(ChatColor.RED + "BORRAR Mochilas de: ")) {
 
@@ -320,7 +302,7 @@ public class EconomyItemsFunctions implements Listener {
             } else {
                 handleDeleteGuiClick(event, player, event.getCurrentItem());
             }
-            return; // Salimos aquí para no aplicar reglas de anidamiento a la GUI de iconos
+            return;
         }
 
         ItemStack current = event.getCurrentItem();
@@ -335,17 +317,14 @@ public class EconomyItemsFunctions implements Listener {
         }
 
         // --- SEGURIDAD: ANIDAMIENTO ---
-        // Solo aplicamos esto si el jugador tiene ABIERTA una mochila REAL (funcional)
         if (mochilasAbiertas.containsKey(player.getUniqueId())) {
 
-            // Regla 1: No mover mochilas dentro de la mochila abierta
             if (isMochila(current)) {
                 event.setCancelled(true);
                 player.sendMessage(ChatColor.RED + "⚠ No puedes meter una mochila dentro de otra.");
                 return;
             }
 
-            // Regla 2: No usar números para cambiar mochilas
             if (event.getClick() == ClickType.NUMBER_KEY) {
                 ItemStack hotbarItem = player.getInventory().getItem(event.getHotbarButton());
                 if (isMochila(hotbarItem)) {
@@ -357,19 +336,17 @@ public class EconomyItemsFunctions implements Listener {
     }
 
     private void handleAdminGuiClick(InventoryClickEvent event, Player player, ItemStack current) {
-        event.setCancelled(true); // Siempre cancelar en GUI admin
+        event.setCancelled(true);
         if (current == null || !current.hasItemMeta()) return;
 
-        // Obtener ID del lore (que pusimos en MochilaCommand)
         String idRaw = getMochilaIdFromLore(current);
         if (idRaw == null) return;
 
         if (event.isLeftClick()) {
-            // RECUPERAR (Click Izquierdo)
             ItemStack copy = getBackpackItemByModel(current.getItemMeta().getCustomModelData());
             setMochilaId(copy, idRaw);
             ItemMeta meta = copy.getItemMeta();
-            meta.setDisplayName(current.getItemMeta().getDisplayName()); // Nombre original
+            meta.setDisplayName(current.getItemMeta().getDisplayName());
             copy.setItemMeta(meta);
 
             player.getInventory().addItem(copy);
@@ -378,13 +355,11 @@ public class EconomyItemsFunctions implements Listener {
             player.closeInventory();
 
         } else if (event.isRightClick()) {
-            // ESPIAR (Click Derecho)
             player.closeInventory();
-            ItemStack temp = EconomyItems.createPurpleMochila(); // Placeholder visual
+            ItemStack temp = EconomyItems.createPurpleMochila();
             setMochilaId(temp, idRaw);
 
             player.sendMessage(ChatColor.YELLOW + "🕵 Espiando contenido de la mochila...");
-            // Usamos la lógica normal de abrir mochila
             abrirMochila(player, temp);
         }
     }
@@ -411,7 +386,7 @@ public class EconomyItemsFunctions implements Listener {
     public void onChatConfirm(AsyncPlayerChatEvent event) {
         Player player = event.getPlayer();
         if (pendingDeletion.containsKey(player.getUniqueId())) {
-            event.setCancelled(true); // No mostrar mensaje en público
+            event.setCancelled(true);
             String msg = event.getMessage().toLowerCase();
             String idToDelete = pendingDeletion.remove(player.getUniqueId());
 
@@ -420,7 +395,6 @@ public class EconomyItemsFunctions implements Listener {
                     @Override
                     public void run() {
                         boolean deleted = dbManager.deleteBackpack(idToDelete);
-                        // Limpiar caché si estaba cargada
                         mochilasCache.remove(idToDelete);
 
                         new BukkitRunnable() {

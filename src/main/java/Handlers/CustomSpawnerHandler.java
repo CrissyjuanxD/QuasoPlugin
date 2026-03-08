@@ -53,8 +53,6 @@ public class CustomSpawnerHandler implements Listener {
     private final Iceologer iceologerSpawner;
     private final CorruptedZombies corruptedZombieSpawner;
     private final CorruptedSpider corruptedSpider;
-    /*private final QueenBeeHandler queenBeeHandler;*/
-    /*private final HellishBeeHandler hellishBeeHandler;*/
     private final InfestedBeeHandler infestedBeeHandler;
     private final GuardianBlaze guardianBlaze;
     private final GuardianCorruptedSkeleton guardianCorruptedSkeleton;
@@ -125,20 +123,16 @@ public class CustomSpawnerHandler implements Listener {
         this.spawnerKey = new NamespacedKey(plugin, "custom_spawner");
         this.spawnModeKey = new NamespacedKey(plugin, "spawn_mode");
 
-        // Inicializar todas las instancias de mobs
         this.bombitaSpawner = new Bombita(plugin);
         this.iceologerSpawner = new Iceologer(plugin);
         this.corruptedZombieSpawner = new CorruptedZombies(plugin);
         this.corruptedSpider = new CorruptedSpider(plugin, dayHandler);
-        /*this.queenBeeHandler = new QueenBeeHandler(plugin);*/
-        /*this.hellishBeeHandler = new HellishBeeHandler(plugin);*/
         this.infestedBeeHandler = new InfestedBeeHandler(plugin);
         this.guardianBlaze = new GuardianBlaze(plugin);
         this.guardianCorruptedSkeleton = new GuardianCorruptedSkeleton(plugin);
         this.corruptedInfernalSpider = new CorruptedInfernalSpider(plugin);
         this.corruptedBee = new CorruptedBee(plugin);
 
-        // Inicializar el sistema de spawn personalizado
         startCustomSpawnTask();
 
         Bukkit.getScheduler().runTaskLater(plugin, this::loadAllCustomSpawners, 100L);

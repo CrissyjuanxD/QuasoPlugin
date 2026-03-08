@@ -42,7 +42,6 @@ public class VHList extends BukkitRunnable {
     }
 
     public void updateTablistForPlayer(Player player) {
-        // 2. Solo calculamos dinámicamente lo que realmente cambia (el ping)
         int ping = player.getPing();
         String pingColor;
 
@@ -78,7 +77,6 @@ public class VHList extends BukkitRunnable {
 
         String coloredName = ChatColor.WHITE + tabPrefix + colorHex + player.getName() + suffix + " ";
 
-        // 3. Optimización de Red: Solo se envía el paquete al jugador si su nombre/clan realmente ha cambiado
         String currentName = player.getPlayerListName();
         if (currentName == null || !currentName.equals(coloredName)) {
             player.setPlayerListName(coloredName);

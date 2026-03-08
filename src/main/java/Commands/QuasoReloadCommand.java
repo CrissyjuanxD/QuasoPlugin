@@ -24,10 +24,7 @@ public class QuasoReloadCommand implements CommandExecutor {
             return true;
         }
 
-        // 1. Recargar el archivo config.yml del disco
         plugin.reloadConfig();
-
-        // 2. Actualizar la memoria del DatabaseManager con los nuevos datos
         databaseManager.reload();
 
         sender.sendMessage(ChatColor.GREEN + "§l[QuasoPlugin] §aConfiguración y Base de Datos recargadas correctamente.");

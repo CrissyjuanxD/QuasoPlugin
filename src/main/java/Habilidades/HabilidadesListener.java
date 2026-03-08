@@ -28,7 +28,6 @@ public class HabilidadesListener implements Listener {
 
     private final Map<UUID, Integer> jumpCount = new HashMap<>();
 
-    // --- NUEVAS VARIABLES BASADAS EN EL SISTEMA ROBUSTO ---
     private final Set<UUID> protectNextLanding = new HashSet<>();
     private final Map<UUID, Double> storedFallDistance = new HashMap<>();
 
@@ -39,7 +38,6 @@ public class HabilidadesListener implements Listener {
         this.actionBar = new ActionBarHandler(plugin);
     }
 
-    // --- GUI ---
     @EventHandler
     public void onInteract(PlayerInteractEvent event) {
         if (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
@@ -96,10 +94,8 @@ public class HabilidadesListener implements Listener {
         boolean blocked = false;
 
         if (resLevel >= 3) {
-            // Nivel 3: 10% de probabilidad de bloquear CUALQUIER daño
             if (Math.random() < 0.10) blocked = true;
         } else if (resLevel == 2) {
-            // Nivel 2: 10% de probabilidad de bloquear daño de MONSTRUOS
             if (event instanceof EntityDamageByEntityEvent) {
                 EntityDamageByEntityEvent byEntity = (EntityDamageByEntityEvent) event;
                 if (byEntity.getDamager() instanceof Monster) {
@@ -107,7 +103,6 @@ public class HabilidadesListener implements Listener {
                 }
             }
         } else if (resLevel == 1) {
-            // Nivel 1: 10% de probabilidad de bloquear PROYECTILES
             if (event instanceof EntityDamageByEntityEvent) {
                 EntityDamageByEntityEvent byEntity = (EntityDamageByEntityEvent) event;
                 if (byEntity.getDamager() instanceof org.bukkit.entity.Projectile) {

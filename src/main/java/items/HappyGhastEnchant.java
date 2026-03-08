@@ -49,6 +49,8 @@ public class HappyGhastEnchant implements Listener {
             lore.add("");
             lore.add(ChatColor.of("#6BD2D6") + "Combínalo con un Harness");
             lore.add(ChatColor.of("#6BD2D6") + "en un Yunque.");
+            lore.add(ChatColor.of("#6BD2D6") + "Sirve para mejorar la velocidad de vuelo ");
+            lore.add(ChatColor.of("#6BD2D6") + "de los Happy Ghasts.");
 
             meta.setLore(lore);
             meta.getPersistentDataContainer().set(enchantKey, PersistentDataType.INTEGER, Math.min(level, 2));

@@ -36,8 +36,6 @@ public class chatgeneral implements Listener {
             finalPrefix = team.getPrefix();
             suffix = team.getSuffix();
 
-            // Intentamos obtener el color Hex exacto desde nuestro Enum si es posible
-            // Si no, usamos el color del equipo de Bukkit
             try {
                 Handlers.Teams.TeamType type = Handlers.Teams.TeamType.getById(team.getName());
                 if (type != null) {
@@ -48,18 +46,15 @@ public class chatgeneral implements Listener {
             finalPrefix = ChatColor.GRAY + "";
         }
 
-        // FORMATO: [ALDEANO] (ColorHex)Nombre (Suffix): Mensaje
         event.setFormat(finalPrefix + nameColor + "%1$s" + ChatColor.RESET + suffix + ChatColor.WHITE + ": %2$s");
     }
 
-    // Método para obtener el color del equipo
     private ChatColor getTeamColor(Team team) {
         if (team == null) {
             return ChatColor.DARK_AQUA;
         }
         String teamName = team.getName();
 
-            // Personalizar colores según el nombre del equipo
             switch (teamName) {
                 case "Admin":
                     return ChatColor.of("#ff935f");
@@ -78,7 +73,6 @@ public class chatgeneral implements Listener {
             }
     }
 
-    //Metodo para obtener el Prefijo del equipo.
     private String getTeamPrefix(Team team) {
         if (team == null) {
             return "";

@@ -122,7 +122,6 @@ public class HotPotatoHandler implements Listener {
     public void crearYcargarConfig() {
         configFile = new File(plugin.getDataFolder(), "hotpotatoconfig.yml");
 
-        // Si no existe, lo creamos
         if (!configFile.exists()) {
             configFile.getParentFile().mkdirs();
             try {
@@ -134,7 +133,6 @@ public class HotPotatoHandler implements Listener {
 
         config = YamlConfiguration.loadConfiguration(configFile);
 
-        // Agregamos comentarios a la cabecera del archivo YML
         config.options().header(
                 "==========================================================\n" +
                         "Configuración General de HotPotato\n" +
@@ -153,7 +151,7 @@ public class HotPotatoHandler implements Listener {
 
         if (!config.contains("tiempo_por_ronda_segundos")) {
             config.set("tiempo_por_ronda_segundos", 120);
-            config.set("modo_rondas", "max"); // Por defecto lo dejamos en max
+            config.set("modo_rondas", "max");
             config.set("poderes_activados", true);
             config.set("timer_start", "00:04:00");
 
@@ -457,19 +455,14 @@ public class HotPotatoHandler implements Listener {
         } else {
             int restantes = total;
 
-            // --- MODO MAX (NUEVO) ---
             if (velocidadRondas.equals("max")) {
                 int cantidadEliminar = restantes - 3;
 
                 if (cantidadEliminar <= 9) {
-                    // Si faltan menos de 9 para llegar a los 3 ganadores,
-                    // forzamos el máximo de rondas posibles (muriendo de 1 en 1 o de 2)
                     for (int i = 0; i < cantidadEliminar; i++) {
                         secuenciaBombas.add(1);
                     }
                 } else {
-                    // Si son muchos, calculamos exactamente cuántos matar por ronda
-                    // para asegurar que haya exactamente 9 rondas ANTES de la final
                     int basePorRonda = cantidadEliminar / 9;
                     int residuo = cantidadEliminar % 9;
 
@@ -478,7 +471,7 @@ public class HotPotatoHandler implements Listener {
                         secuenciaBombas.add(muertesEstaRonda);
                     }
                 }
-                secuenciaBombas.add(2); // La última siempre elimina a 2 para que quede el ganador absoluto
+                secuenciaBombas.add(2);
             }
             // --- MODO RAPIDA/LENTA ---
             else {
@@ -532,7 +525,7 @@ public class HotPotatoHandler implements Listener {
             return;
         }
 
-        rondaEnPausa = false; // FIN DE PAUSA: Ya pueden pasarse la bomba
+        rondaEnPausa = false;
         int bombasEstaRonda = secuenciaBombas.get(rondaActual);
         rondaActual++;
 
@@ -598,7 +591,6 @@ public class HotPotatoHandler implements Listener {
     private void finalizarRonda() {
         if (!enBatalla) return;
 
-        // INICIO DE PAUSA: Nadie puede golpear y pasar la bomba mientras mueren y hay delay
         rondaEnPausa = true;
 
         for (String pName : participantes) {
@@ -787,7 +779,7 @@ public class HotPotatoHandler implements Listener {
 
     @EventHandler
     public void onGolpe(EntityDamageByEntityEvent e) {
-        if (!enBatalla || rondaEnPausa) return; // FIX DE TIEMPO MUERTO: No se puede pasar si está en pausa
+        if (!enBatalla || rondaEnPausa) return;
         if (!(e.getEntity() instanceof Player) || !(e.getDamager() instanceof Player)) return;
 
         Player victima = (Player) e.getEntity();

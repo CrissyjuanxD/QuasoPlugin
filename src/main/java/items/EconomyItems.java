@@ -43,7 +43,6 @@ public class EconomyItems {
         ItemStack item = new ItemStack(Material.GOLD_NUGGET);
         ItemMeta meta = item.getItemMeta();
 
-        // Nombre del item con formato JSON-like
         meta.setDisplayName(ChatColor.of("#3a86b6") + "DinoFichas " + ChatColor.GRAY + "۞");
         meta.setCustomModelData(2010);
 
@@ -62,7 +61,6 @@ public class EconomyItems {
     }
 
     public static ItemStack createNormalMochila() {
-        // Nivel 1 → lime_bundle color → LIME_SHULKER_BOX
         ItemStack item = new ItemStack(Material.LIME_SHULKER_BOX);
         ItemMeta meta = item.getItemMeta();
 
@@ -79,13 +77,11 @@ public class EconomyItems {
         meta.setRarity(ItemRarity.EPIC);
         meta.addEnchant(Enchantment.UNBREAKING, 1, true);
         meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
-        // Sin setItemModel → se renderiza perfecto en merchant
         item.setItemMeta(meta);
         return item;
     }
 
     public static ItemStack createGreenMochila() {
-        // Nivel 2 → yellow_bundle color → YELLOW_SHULKER_BOX
         ItemStack item = new ItemStack(Material.YELLOW_SHULKER_BOX);
         ItemMeta meta = item.getItemMeta();
 
@@ -107,7 +103,6 @@ public class EconomyItems {
     }
 
     public static ItemStack createRedMochila() {
-        // Nivel 3 → orange_bundle color → ORANGE_SHULKER_BOX
         ItemStack item = new ItemStack(Material.ORANGE_SHULKER_BOX);
         ItemMeta meta = item.getItemMeta();
 
@@ -129,7 +124,6 @@ public class EconomyItems {
     }
 
     public static ItemStack createBlueMochila() {
-        // Nivel 4 → red_bundle color → RED_SHULKER_BOX
         ItemStack item = new ItemStack(Material.RED_SHULKER_BOX);
         ItemMeta meta = item.getItemMeta();
 
@@ -151,7 +145,6 @@ public class EconomyItems {
     }
 
     public static ItemStack createPurpleMochila() {
-        // Nivel 5 → purple_bundle color → PURPLE_SHULKER_BOX
         ItemStack item = new ItemStack(Material.PURPLE_SHULKER_BOX);
         ItemMeta meta = item.getItemMeta();
 
@@ -307,7 +300,6 @@ public class EconomyItems {
     }
 
     public static void applyPanicAppleEffects(Player player) {
-        // Efectos de 5 segundos (100 ticks)
         player.addPotionEffect(new PotionEffect(
                 PotionEffectType.ABSORPTION,
                 100,

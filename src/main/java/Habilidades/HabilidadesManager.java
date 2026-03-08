@@ -65,7 +65,6 @@ public class HabilidadesManager {
 
         habilidadesConfig = YamlConfiguration.loadConfiguration(habilidadesFile);
 
-        // Cargar estado global y jugadores
         globalDisabled = habilidadesConfig.getBoolean("global_disabled", false);
 
         if (habilidadesConfig.contains("disabled_players")) {
@@ -120,7 +119,6 @@ public class HabilidadesManager {
         for (HabilidadesType type : HabilidadesType.values()) {
             List<Integer> levels = new ArrayList<>();
             for (int level = 1; level <= 4; level++) {
-                // Ahora buscamos qué compró el jugador, sin importar si sus habilidades están desactivadas temporalmente
                 if (hasHabilidadPurchased(playerUUID, type, level)) {
                     levels.add(level);
                 }
@@ -135,7 +133,7 @@ public class HabilidadesManager {
 
     public void removeHabilidad(UUID playerUUID, HabilidadesType type, int level) {
         String path = playerUUID.toString() + "." + type.name() + "." + level;
-        habilidadesConfig.set(path, false); // O null para borrarlo
+        habilidadesConfig.set(path, false);
         saveConfig();
     }
 

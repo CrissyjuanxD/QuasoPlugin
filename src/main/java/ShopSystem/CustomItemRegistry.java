@@ -23,7 +23,6 @@ public class CustomItemRegistry {
     public static ItemStack getCustomItem(String name, int amount) {
         ItemStack item = null;
 
-        // Instancias necesarias para ciertos items
         items.DoubleLifeTotem doubleLifeTotem = new items.DoubleLifeTotem(plugin);
         items.EconomyIceTotem economyIceTotem = new items.EconomyIceTotem(plugin);
         items.EconomyFlyTotem economyFlyTotem = new items.EconomyFlyTotem(plugin);

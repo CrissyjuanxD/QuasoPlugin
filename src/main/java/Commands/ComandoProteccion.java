@@ -23,9 +23,7 @@ public class ComandoProteccion implements CommandExecutor {
         Player jugador = (Player) sender;
         ItemStack libro = crearLibroGuia();
 
-        // Intentar agregar al inventario
         if (jugador.getInventory().firstEmpty() == -1) {
-            // Inventario lleno, dropear el libro
             jugador.getWorld().dropItemNaturally(jugador.getLocation(), libro);
             jugador.sendMessage(ChatColor.GOLD + "Se ha dropeado la guía de protecciones ya que tu inventario está lleno.");
         } else {
@@ -44,7 +42,6 @@ public class ComandoProteccion implements CommandExecutor {
         meta.setAuthor("Servidor");
         meta.setDisplayName(ChatColor.GOLD + "" + ChatColor.BOLD + "Guía de Protecciones");
 
-        // Contenido del libro
         String[] paginas = {
                 ChatColor.BLACK + "▸ " + ChatColor.BOLD + "/addnamepr <nombre>\n" +
                         ChatColor.BLACK + "Descripción: Nombra tu protección. Este comando es indispensable para usar el resto\n" +

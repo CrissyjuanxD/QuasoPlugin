@@ -174,7 +174,6 @@ public class BlackJack implements Listener {
         playerHead.setItemMeta(pMeta);
         inv.setItem(playerHeadSlot, playerHead);
 
-        // CAMBIO ESTÉTICO: Lingote de Resina (con fallback a Ladrillo si la versión no lo tiene aún)
         ItemStack deal = new ItemStack(getSafeMaterial("RESIN_BRICK", Material.BRICK));
         ItemMeta dealMeta = deal.getItemMeta();
         dealMeta.setDisplayName(ChatColor.of("#90EE90") + "" + ChatColor.BOLD + "REPARTIR");
@@ -404,7 +403,6 @@ public class BlackJack implements Listener {
         }
     }
 
-    // CAMBIO ESTÉTICO: Mapeo de palos a Patrones de Banner y ocultar tooltip
     private ItemStack createCardItem(Card card) {
         Material mat = Material.PAPER;
         switch (card.suit) {
@@ -423,7 +421,6 @@ public class BlackJack implements Listener {
             meta.setCustomModelData(cardModelData.get(key));
         }
 
-        // Escondemos los encantamientos/textos extra (Ej: Pattern: Creeper Charge)
         meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
         try {
             meta.addItemFlags(ItemFlag.valueOf("HIDE_ADDITIONAL_TOOLTIP")); // 1.20.5+
@@ -467,7 +464,6 @@ public class BlackJack implements Listener {
         // comprobamos si el jugador tiene la sesión abierta en metadata.
         if (!p.hasMetadata("blackjack_loc")) return;
 
-        // Prevención extra para asegurar que es un menú grande de casino
         if (e.getView().getTopInventory().getSize() != 54) return;
 
         e.setCancelled(true);
@@ -532,7 +528,6 @@ public class BlackJack implements Listener {
         Player p = e.getPlayer();
         if (!p.hasMetadata("blackjack_loc")) return;
 
-        // Si se sale del server mientras juega, forzamos el inicio del timer
         if (isPlaying.getOrDefault(p.getUniqueId(), false)) {
             Location loc = (Location) p.getMetadata("blackjack_loc").get(0).value();
             startReconnectTimer(p, loc);
@@ -598,7 +593,7 @@ public class BlackJack implements Listener {
         };
 
         reconnectTimers.put(id, timer);
-        timer.runTaskLater(plugin, 1200L); // 60 segundos
+        timer.runTaskLater(plugin, 1200L);
     }
 
     private void cancelReconnectTimer(UUID id) {

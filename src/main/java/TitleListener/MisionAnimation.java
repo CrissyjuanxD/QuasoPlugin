@@ -23,12 +23,10 @@ public class MisionAnimation {
         }
         ongoingAnimations++;
 
-        // Efectos iniciales
         player.addPotionEffect(new PotionEffect(PotionEffectType.DARKNESS, 80, 1, true, false, false));
         player.addPotionEffect(new PotionEffect(PotionEffectType.RESISTANCE, 80, 0, true, false, false));
         player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_BELL, 3.0f, 1.0f);
 
-        // Etapas de la animación
         String[] stages = {
                 ChatColor.GRAY + "M_",
                 ChatColor.WHITE + "Mi",
@@ -61,7 +59,7 @@ public class MisionAnimation {
             public void run() {
                 if (showingFinalMessage) {
                     finalMessageTicks++;
-                    if (finalMessageTicks >= 60) { // 3 segundos (60 ticks)
+                    if (finalMessageTicks >= 60) {
                         showJsonMessageAndFinish();
                     }
                     return;

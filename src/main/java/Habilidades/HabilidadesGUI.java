@@ -45,30 +45,25 @@ public class HabilidadesGUI implements Listener {
     }
 
     private void fillGUIWithPanels(Inventory gui) {
-        // Ahora usamos tintes en lugar de paneles de cristal
         ItemStack purpleDye = createPanel(Material.PURPLE_DYE, " ");
         ItemStack magentaDye = createPanel(Material.MAGENTA_DYE, " ");
         ItemStack blackDye = createPanel(Material.BLACK_DYE, " ");
 
-        // Slots morados (se removieron los que ahora son negros)
         int[] purpleSlots = {0, 8, 45, 53};
         for (int slot : purpleSlots) {
             gui.setItem(slot, purpleDye);
         }
 
-        // Slots magenta
         int[] magentaSlots = {1, 2, 3, 4, 5, 6, 7, 9, 17, 18, 26, 27, 35, 36, 44};
         for (int slot : magentaSlots) {
             gui.setItem(slot, magentaDye);
         }
 
-        // Nuevos slots negros (19-25 y 37-43)
         int[] blackSlots = {19, 20, 21, 22, 23, 24, 25, 37, 38, 39, 40, 41, 42, 43};
         for (int slot : blackSlots) {
             gui.setItem(slot, blackDye);
         }
 
-        // Pepitas de hierro ahora encantadas
         ItemStack nextSkill = createPanel(Material.IRON_NUGGET, ChatColor.GRAY + "Siguiente Habilidad");
         ItemMeta nextMeta = nextSkill.getItemMeta();
         if (nextMeta != null) {
@@ -114,7 +109,6 @@ public class HabilidadesGUI implements Listener {
         boolean isUnlocked = manager.hasHabilidadPurchased(player.getUniqueId(), type, level);
         boolean canUnlock = manager.canUnlock(player.getUniqueId(), type, level);
 
-        // Asignamos el Material correspondiente sin importar si está desbloqueado o no
         Material mat;
         switch (type) {
             case AGILIDAD:
@@ -140,7 +134,6 @@ public class HabilidadesGUI implements Listener {
             List<String> lore = getLore(type, level, isUnlocked, canUnlock);
             meta.setLore(lore);
 
-            // Si está desbloqueado, solo le añadimos el brillo (encantamiento)
             if (isUnlocked) {
                 meta.addEnchant(Enchantment.UNBREAKING, 1, true);
                 meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);

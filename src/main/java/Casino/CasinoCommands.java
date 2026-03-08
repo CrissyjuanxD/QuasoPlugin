@@ -26,7 +26,6 @@ public class CasinoCommands implements CommandExecutor, TabCompleter {
 
         if (args.length == 0) return false;
 
-        // /casino set <type>
         if (args[0].equalsIgnoreCase("set")) {
             if (!(sender instanceof Player player)) return true;
             if (args.length < 2) {
@@ -51,7 +50,6 @@ public class CasinoCommands implements CommandExecutor, TabCompleter {
             return true;
         }
 
-        // /casino remove
         if (args[0].equalsIgnoreCase("remove")) {
             if (!(sender instanceof Player player)) return true;
 
@@ -65,7 +63,6 @@ public class CasinoCommands implements CommandExecutor, TabCompleter {
             return true;
         }
 
-        // /casino reload
         if (args[0].equalsIgnoreCase("reload")) {
             manager.reload();
             sender.sendMessage(ChatColor.GREEN + "Casino recargado.");

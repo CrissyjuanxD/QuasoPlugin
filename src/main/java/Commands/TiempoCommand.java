@@ -388,13 +388,10 @@ public class TiempoCommand implements CommandExecutor, TabCompleter {
 
             int timeLeft = timers.get(barId);
 
-            // Bloque de Tiempo Terminado (Ejecutará el sonido las 3 veces, pero la acción sólo 1)
             if (timeLeft <= 0) {
                 bossBar.setTitle(ChatColor.RED + "Tiempo Terminado!");
                 bossBar.setProgress(0.0);
 
-                // --- FIX DE LA EJECUCIÓN TRIPLE ---
-                // Solo se ejecuta y agenda en el exacto momento que toca 0
                 if (timeLeft == 0) {
                     if (timerActions.containsKey(barId)) {
                         String cmdToRun = timerActions.get(barId);
@@ -403,7 +400,6 @@ public class TiempoCommand implements CommandExecutor, TabCompleter {
                     Bukkit.getScheduler().runTaskLater(plugin, () -> removeBossBarInternal(barId), 50L);
                 }
 
-                // Esto sí se ejecutará 3 veces (0, -1, -2) para el sonido consecutivo
                 if (barId.contains("_")) {
                     try {
                         UUID playerId = UUID.fromString(barId.split("_")[0]);

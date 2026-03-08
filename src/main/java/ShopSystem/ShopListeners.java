@@ -119,7 +119,7 @@ public class ShopListeners implements Listener {
         if (player.hasCooldown(Material.STRUCTURE_VOID)) return;
 
         String shopId = shopManager.activeShops.get(player.getUniqueId());
-        if (shopId == null) return; // Protección contra el null
+        if (shopId == null) return;
         Villager villager = shopManager.getVillagerById(shopId);
         if (villager == null) return;
 
@@ -264,7 +264,6 @@ public class ShopListeners implements Listener {
                 }
             }
 
-            // CORRECCIÓN: Ejecutar en el siguiente tick para saber si simplemente se actualizó la GUI
             Bukkit.getScheduler().runTaskLater(shopManager.getPlugin(), () -> {
                 String currentTitle = player.getOpenInventory().getTitle();
                 boolean stillInShop = currentTitle.startsWith(ChatColor.GOLD + "" + ChatColor.BOLD + "Tienda:") ||

@@ -26,7 +26,6 @@ public class SetBossSpawnCommand implements CommandExecutor {
 
         Player player = (Player) sender;
 
-        // Verificar permisos (Mismos que tu setspawn)
         if (!player.isOp() && !player.hasPermission("viciont.admin")) {
             player.sendMessage(ChatColor.RED + "No tienes permiso para usar este comando.");
             return true;
@@ -37,7 +36,6 @@ public class SetBossSpawnCommand implements CommandExecutor {
 
         if (world == null) return true;
 
-        // Guardar en la config bajo la sección "boss_spawn"
         plugin.getConfig().set("boss_spawn.world", world.getName());
         plugin.getConfig().set("boss_spawn.x", loc.getX());
         plugin.getConfig().set("boss_spawn.y", loc.getY());

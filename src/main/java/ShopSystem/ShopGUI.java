@@ -52,7 +52,6 @@ public class ShopGUI {
     }
 
     private void populateBaseGUI(Inventory gui, Villager villager, boolean isConfig) {
-        // Cabeceras (Fila 0) - Separador central vacío (Slot 4 eliminado)
         gui.setItem(0, createHeader(Material.ORANGE_DYE, ChatColor.GOLD + "Precio #1", false));
         gui.setItem(1, createHeader(Material.ORANGE_DYE, ChatColor.GOLD + "Precio #2", false));
         gui.setItem(2, createHeader(Material.COPPER_NUGGET, ChatColor.GOLD + "\u279C", true));
@@ -83,7 +82,6 @@ public class ShopGUI {
             gui.setItem(baseSlot + 1, createDisplayItem(ing2, "Ingrediente 2", i, isConfig));
             gui.setItem(baseSlot + 2, createHeader(Material.IRON_NUGGET, ChatColor.GOLD + "\u279C", true));
             gui.setItem(baseSlot + 3, createDisplayItem(res, "Producto", i, isConfig));
-            // Slot central (row * 9 + 4) queda en NULL (Vacío)
         }
     }
 

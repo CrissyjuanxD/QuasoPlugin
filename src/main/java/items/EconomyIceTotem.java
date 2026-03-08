@@ -152,7 +152,6 @@ public class EconomyIceTotem implements Listener {
 
                     livingEntity.setVelocity(direction);
 
-                    // Aplicar daño
                     livingEntity.damage(5);
 
                     livingEntity.setFreezeTicks(400);
@@ -165,18 +164,15 @@ public class EconomyIceTotem implements Listener {
                             true
                     ));
 
-                    // Efecto visual en el mob afectado
                     world.spawnParticle(Particle.SNOWFLAKE, livingEntity.getLocation().add(0, 1, 0), 15);
                     world.spawnParticle(Particle.ITEM_SNOWBALL, livingEntity.getLocation().add(0, 0.5, 0), 10);
 
-                    // Crear partículas de hielo alrededor del mob
                     Particle.DustOptions iceDust = new Particle.DustOptions(Color.fromRGB(200, 230, 255), 1.5f);
                     world.spawnParticle(Particle.DUST, livingEntity.getLocation().add(0, 1, 0), 20, 0.5, 1, 0.5, iceDust);
                 }
             }
         }
 
-        // Efecto final: crear una capa de escarcha en el suelo
         new BukkitRunnable() {
             @Override
             public void run() {

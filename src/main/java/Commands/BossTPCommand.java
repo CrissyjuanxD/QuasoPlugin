@@ -17,9 +17,8 @@ import org.bukkit.scheduler.BukkitRunnable;
 public class BossTPCommand implements CommandExecutor {
 
     private final QuasoPlugin plugin;
-    private final MissionHandler missionHandler; // Cambiamos DayHandler por MissionHandler
+    private final MissionHandler missionHandler;
 
-    // Actualizamos el constructor
     public BossTPCommand(QuasoPlugin plugin, MissionHandler missionHandler) {
         this.plugin = plugin;
         this.missionHandler = missionHandler;

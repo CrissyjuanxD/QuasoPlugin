@@ -19,8 +19,8 @@ public class CustomPotions {
                 Material.POTION,
                 "§9§lPoción de Resistencia II",
                 PotionEffectType.RESISTANCE,
-                12000, // 10 minutos (10 * 60 * 20)
-                1,     // Nivel II (Amplificador 1)
+                12000,
+                1,
                 Color.BLUE
         );
     }
@@ -31,8 +31,8 @@ public class CustomPotions {
                 Material.SPLASH_POTION,
                 "§9§lPoción de Resistencia III",
                 PotionEffectType.RESISTANCE,
-                7200, // 6 minutos (6 * 60 * 20)
-                2,    // Nivel III (Amplificador 2)
+                7200,
+                2,
                 Color.BLUE
         );
     }
@@ -43,8 +43,8 @@ public class CustomPotions {
                 Material.POTION,
                 "§7§lPoción de Caída Lenta",
                 PotionEffectType.SLOW_FALLING,
-                18000, // 15 minutos (15 * 60 * 20)
-                0,     // Nivel I
+                18000,
+                0,
                 Color.GRAY
         );
     }
@@ -55,8 +55,8 @@ public class CustomPotions {
                 Material.SPLASH_POTION,
                 "§d§lPoción de Regeneración III",
                 PotionEffectType.REGENERATION,
-                3600, // 3 minutos (3 * 60 * 20)
-                2,    // Nivel III
+                3600,
+                2,
                 Color.FUCHSIA
         );
     }
@@ -67,8 +67,8 @@ public class CustomPotions {
                 Material.POTION,
                 "§e§lPoción de Prisa Minera III",
                 PotionEffectType.HASTE,
-                18000, // 15 minutos
-                2,     // Nivel III
+                18000,
+                2,
                 Color.YELLOW
         );
     }
@@ -79,8 +79,8 @@ public class CustomPotions {
                 Material.POTION,
                 "§e§lPoción de Prisa Minera II",
                 PotionEffectType.HASTE,
-                18000, // 15 minutos
-                1,     // Nivel II
+                18000,
+                1,
                 Color.YELLOW
         );
     }
@@ -91,8 +91,8 @@ public class CustomPotions {
                 Material.SPLASH_POTION,
                 "§6§lPoción de Absorción X",
                 PotionEffectType.ABSORPTION,
-                3600, // 3 minutos
-                9,    // Nivel X (Amplificador 9)
+                3600,
+                9,
                 Color.ORANGE
         );
     }
@@ -108,7 +108,6 @@ public class CustomPotions {
             lore.add("§9Velocidad IV (6:00)");
             meta.setLore(lore);
 
-            // Identificador para el evento de consumo (usamos un CustomModelData único)
             meta.setCustomModelData(8001);
 
             honey.setItemMeta(meta);
@@ -134,10 +133,8 @@ public class CustomPotions {
         if (meta != null) {
             meta.setDisplayName(name);
 
-            // Añadir el efecto principal. El true fuerza a que sobrescriba otros efectos si los hay
             meta.addCustomEffect(new PotionEffect(effectType, duration, amplifier), true);
 
-            // Colorear el líquido de la poción para que combine visualmente con el nombre
             meta.setColor(color);
 
             potion.setItemMeta(meta);

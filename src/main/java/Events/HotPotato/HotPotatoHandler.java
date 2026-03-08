@@ -3,6 +3,7 @@ package Events.HotPotato;
 import Commands.TiempoCommand;
 import Habilidades.HabilidadesEffects;
 import Habilidades.HabilidadesManager;
+import TitleListener.EventoAnimation;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.*;
 import org.bukkit.block.Block;
@@ -41,6 +42,7 @@ public class HotPotatoHandler implements Listener {
     private final JavaPlugin plugin;
     private final HabilidadesManager habilidadesManager;
     private final HabilidadesEffects habilidadesEffects;
+    private final EventoAnimation eventoAnimation;
     private final List<String> participantes = new ArrayList<>();
     private final List<String> vivos = new ArrayList<>();
     private final List<String> bombasActuales = new ArrayList<>();
@@ -51,25 +53,22 @@ public class HotPotatoHandler implements Listener {
     private final List<Entity> poderesEnSuelo = new ArrayList<>();
     private final List<BukkitTask> tareasActivas = new ArrayList<>();
 
-    // Map para el cooldown del mensaje del cactus (Lime Terracotta)
     private final Map<String, Long> cooldownCactus = new HashMap<>();
 
     private boolean eventoIniciado = false;
     private boolean enBatalla = false;
     private boolean tpRealizado = false;
+    private boolean rondaEnPausa = false; // NUEVO: Evita que se pasen la papa mientras explotan
 
-    // Coordenadas fijas de la Arena (Para protección de mobs y bloques)
     private int arenaMinX, arenaMaxX;
     private int arenaMinY, arenaMaxY;
     private int arenaMinZ, arenaMaxZ;
 
-    // Coordenadas Actuales del Borde
     private int minX, maxX;
     private int minY, maxY;
     private int minZ, maxZ;
     private Location zonaEspectadores;
 
-    // Rondas y Bordes
     private int rondaActual = 0;
     private int totalRondasCalculadas = 0;
     private int rondaInicioBorde = 5;
@@ -77,9 +76,8 @@ public class HotPotatoHandler implements Listener {
     private BukkitTask timerRonda;
     private BukkitTask taskActionBar;
     private BukkitTask taskRotacionPoderes;
-    private BukkitTask taskSaturacionDanio; // Mantiene comida y hace daño de entorno
+    private BukkitTask taskSaturacionDanio;
 
-    // Variables Borde
     private int tiempoBorde = 120;
     private boolean bordeReduciendose = false;
     private BukkitTask taskBordeParticulas;
@@ -91,17 +89,15 @@ public class HotPotatoHandler implements Listener {
     private final TiempoCommand tiempoCommand;
     private final String EVENT_TIMER_ID = "hotpotatoGlobalTimer";
 
-    // Lista de Canciones
     private final List<String> cancionesDisponibles = new ArrayList<>();
     private int indexCancion = 0;
 
     private final Map<String, String> originalTeams = new HashMap<>();
 
-    // --- CONFIGURACION CUSTOM ---
     private File configFile;
     private FileConfiguration config;
     private int tiempoRondaSegundos = 120;
-    private String velocidadRondas = "rapida"; // rapida o lenta
+    private String velocidadRondas = "rapida";
     private boolean poderesActivados = true;
     private String timerStart = "00:04:00";
 
@@ -110,10 +106,10 @@ public class HotPotatoHandler implements Listener {
         this.tiempoCommand = tiempoCommand;
         this.habilidadesManager = habilidadesManager;
         this.habilidadesEffects = habilidadesEffects;
+        this.eventoAnimation = new EventoAnimation(plugin);
 
         crearYcargarConfig();
 
-        // Llenar canciones
         cancionesDisponibles.addAll(Arrays.asList(
                 "minecraft:music_disc.creator", "minecraft:music_disc.precipice",
                 "minecraft:music_disc.mellohi", "minecraft:music_disc.stal",
@@ -123,44 +119,63 @@ public class HotPotatoHandler implements Listener {
         ));
     }
 
-    // --- SISTEMA DE CONFIGURACION ---
     public void crearYcargarConfig() {
         configFile = new File(plugin.getDataFolder(), "hotpotatoconfig.yml");
+
+        // Si no existe, lo creamos
         if (!configFile.exists()) {
             configFile.getParentFile().mkdirs();
             try {
                 configFile.createNewFile();
-                config = YamlConfiguration.loadConfiguration(configFile);
-                config.set("tiempo_por_ronda_segundos", 120);
-                config.set("modo_rondas", "rapida");
-                config.set("poderes_activados", true);
-                config.set("timer_start", "00:04:00");
-
-                // Coordenadas de la arena
-                config.set("zona.minX", 20903);
-                config.set("zona.maxX", 21078);
-                config.set("zona.minY", 71);
-                config.set("zona.maxY", 103);
-                config.set("zona.minZ", 20920);
-                config.set("zona.maxZ", 21081);
-
-                // Zona Espectadores
-                config.set("espectadores.x", 21000.5);
-                config.set("espectadores.y", 100.0);
-                config.set("espectadores.z", 21000.5);
-
-                config.save(configFile);
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
+
         config = YamlConfiguration.loadConfiguration(configFile);
+
+        // Agregamos comentarios a la cabecera del archivo YML
+        config.options().header(
+                "==========================================================\n" +
+                        "Configuración General de HotPotato\n" +
+                        "==========================================================\n" +
+                        "tiempo_por_ronda_segundos: Cuánto dura cada ronda.\n" +
+                        "poderes_activados: Si los ítems especiales aparecen en el suelo.\n" +
+                        "timer_start: Cuánto tiempo esperan en el lobby antes del TP.\n" +
+                        "modo_rondas:\n" +
+                        "  'rapida' -> Escala la cantidad de bombas en +1 por ronda.\n" +
+                        "  'lenta'  -> Sube, se mantiene, sube, se mantiene.\n" +
+                        "  'max'    -> Fuerza a que haya un máximo de 10 rondas (o las\n" +
+                        "              máximas posibles con los jugadores actuales).\n" +
+                        "=========================================================="
+        );
+        config.options().copyHeader(true);
+
+        if (!config.contains("tiempo_por_ronda_segundos")) {
+            config.set("tiempo_por_ronda_segundos", 120);
+            config.set("modo_rondas", "max"); // Por defecto lo dejamos en max
+            config.set("poderes_activados", true);
+            config.set("timer_start", "00:04:00");
+
+            config.set("zona.minX", 20903);
+            config.set("zona.maxX", 21078);
+            config.set("zona.minY", 71);
+            config.set("zona.maxY", 103);
+            config.set("zona.minZ", 20920);
+            config.set("zona.maxZ", 21081);
+
+            config.set("espectadores.x", 21000.5);
+            config.set("espectadores.y", 100.0);
+            config.set("espectadores.z", 21000.5);
+
+            try { config.save(configFile); } catch (IOException ignored) {}
+        }
+
         tiempoRondaSegundos = config.getInt("tiempo_por_ronda_segundos", 120);
         velocidadRondas = config.getString("modo_rondas", "rapida").toLowerCase();
         poderesActivados = config.getBoolean("poderes_activados", true);
         timerStart = config.getString("timer_start", "00:04:00");
 
-        // Cargar las coordenadas fijas de la Arena
         arenaMinX = config.getInt("zona.minX", 20903);
         arenaMaxX = config.getInt("zona.maxX", 21078);
         arenaMinY = config.getInt("zona.minY", 71);
@@ -168,7 +183,6 @@ public class HotPotatoHandler implements Listener {
         arenaMinZ = config.getInt("zona.minZ", 20920);
         arenaMaxZ = config.getInt("zona.maxZ", 21081);
 
-        // Inicializar el borde con las coordenadas de la Arena
         minX = arenaMinX;
         maxX = arenaMaxX;
         minY = arenaMinY;
@@ -227,12 +241,10 @@ public class HotPotatoHandler implements Listener {
         Scoreboard mainBoard = Bukkit.getScoreboardManager().getMainScoreboard();
         Team hpTeam = mainBoard.getTeam(Handlers.Teams.TeamType.HOTPOTATO.getId());
 
-        // Remover del team del evento
         if (hpTeam != null && hpTeam.hasEntry(playerName)) {
             hpTeam.removeEntry(playerName);
         }
 
-        // Devolver al original si existía
         if (originalTeams.containsKey(playerName)) {
             String oldTeamName = originalTeams.get(playerName);
             if (oldTeamName != null) {
@@ -241,7 +253,7 @@ public class HotPotatoHandler implements Listener {
                     old.addEntry(playerName);
                 }
             }
-            originalTeams.remove(playerName); // Limpiar el mapa para evitar basura
+            originalTeams.remove(playerName);
         }
     }
 
@@ -271,7 +283,7 @@ public class HotPotatoHandler implements Listener {
         }
 
         String jsonStart = "[\"\",{\"text\":\"\\u06de\",\"bold\":true,\"color\":\"dark_purple\"},{\"text\":\" Evento\",\"bold\":true,\"color\":\"light_purple\"},{\"text\":\" \\u25ba\",\"bold\":true,\"color\":\"gray\"},{\"text\":\"\\n\\n\"},{\"text\":\"Ha empezado el evento \",\"bold\":true,\"color\":\"#C66869\"},{\"text\":\"\\u201c\",\"bold\":true,\"color\":\"gray\"},{\"text\":\"Hot\",\"bold\":true,\"color\":\"red\"},{\"text\":\"Potato\",\"bold\":true,\"color\":\"gold\"},{\"text\":\"\\u201d\",\"bold\":true,\"color\":\"gray\"},{\"text\":\".\",\"bold\":true,\"color\":\"#C66869\"},{\"text\":\"\\n\"},{\"text\":\"Todos los jugadores activos están incluidos en el evento.\",\"color\":\"#DCA26E\"},{\"text\":\"\\n\"},{\"text\":\"Todos los jugadores serán teletransportados en \",\"color\":\"#DCA26E\"},{\"text\":\"" + tiempoText + "\",\"color\":\"#64ABD4\"},{\"text\":\".\",\"color\":\"#DCA26E\"},{\"text\":\"\\n\\n\"},{\"text\":\"Ojo:\",\"bold\":true,\"color\":\"#EF7A1B\"},{\"text\":\"\\n\"},{\"text\":\"Es obligatorio que los jugadores no tengan nada en el inventario.\",\"color\":\"#D54225\"},{\"text\":\"\\n \"}]";
-        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "tellraw @a " + jsonStart);
+        for (Player p : Bukkit.getOnlinePlayers()) eventoAnimation.playAnimation(p, jsonStart);
 
         tiempoCommand.createBossBar(EVENT_TIMER_ID, totalSeconds, timerStart, "on");
         tiempoCommand.updateBossBarDisplayName(EVENT_TIMER_ID, "§cHot§6Potato§f:");
@@ -408,6 +420,7 @@ public class HotPotatoHandler implements Listener {
                     this.cancel();
 
                     enBatalla = true;
+                    rondaEnPausa = false;
                     vivos.clear();
                     vecesConBomba.clear();
                     poderActual.clear();
@@ -429,7 +442,7 @@ public class HotPotatoHandler implements Listener {
                     iniciarRotacionPoderes();
                     iniciarSaturacionYDanioEntorno();
                     siguienteRonda();
-                    mostrarBordeParticulasContinuo(); // Iniciar borde visual desde el principio
+                    mostrarBordeParticulasContinuo();
                 }
             }
         }.runTaskTimer(plugin, 0L, 20L);
@@ -443,32 +456,58 @@ public class HotPotatoHandler implements Listener {
             secuenciaBombas.add(Math.max(1, total - 1));
         } else {
             int restantes = total;
-            int cantidadBombasActual = 1;
-            boolean subir = true;
 
-            while (restantes > 3) {
-                // Asegurar que siempre queden exactamente 3 para la ronda final
-                if (restantes - cantidadBombasActual < 3) {
-                    cantidadBombasActual = restantes - 3;
+            // --- MODO MAX (NUEVO) ---
+            if (velocidadRondas.equals("max")) {
+                int cantidadEliminar = restantes - 3;
+
+                if (cantidadEliminar <= 9) {
+                    // Si faltan menos de 9 para llegar a los 3 ganadores,
+                    // forzamos el máximo de rondas posibles (muriendo de 1 en 1 o de 2)
+                    for (int i = 0; i < cantidadEliminar; i++) {
+                        secuenciaBombas.add(1);
+                    }
+                } else {
+                    // Si son muchos, calculamos exactamente cuántos matar por ronda
+                    // para asegurar que haya exactamente 9 rondas ANTES de la final
+                    int basePorRonda = cantidadEliminar / 9;
+                    int residuo = cantidadEliminar % 9;
+
+                    for (int i = 0; i < 9; i++) {
+                        int muertesEstaRonda = basePorRonda + (i < residuo ? 1 : 0);
+                        secuenciaBombas.add(muertesEstaRonda);
+                    }
                 }
-                if (cantidadBombasActual <= 0) cantidadBombasActual = 1;
+                secuenciaBombas.add(2); // La última siempre elimina a 2 para que quede el ganador absoluto
+            }
+            // --- MODO RAPIDA/LENTA ---
+            else {
+                int cantidadBombasActual = 1;
+                boolean subir = true;
 
-                secuenciaBombas.add(cantidadBombasActual);
-                restantes -= cantidadBombasActual;
+                while (restantes > 3) {
+                    if (restantes - cantidadBombasActual < 3) {
+                        cantidadBombasActual = restantes - 3;
+                    }
+                    if (cantidadBombasActual <= 0) cantidadBombasActual = 1;
 
-                if (restantes > 3) {
-                    if (velocidadRondas.equals("rapida")) {
-                        cantidadBombasActual++;
-                    } else {
-                        if (secuenciaBombas.size() % 2 == 0) {
-                            if (subir) cantidadBombasActual++;
-                            else cantidadBombasActual = Math.max(1, cantidadBombasActual - 1);
-                            subir = !subir;
+                    secuenciaBombas.add(cantidadBombasActual);
+                    restantes -= cantidadBombasActual;
+
+                    if (restantes > 3) {
+                        if (velocidadRondas.equals("rapida")) {
+                            cantidadBombasActual++;
+                        } else {
+                            if (secuenciaBombas.size() % 2 == 0) {
+                                if (subir) cantidadBombasActual++;
+                                else cantidadBombasActual = Math.max(1, cantidadBombasActual - 1);
+                                subir = !subir;
+                            }
                         }
                     }
                 }
+                secuenciaBombas.add(2);
             }
-            secuenciaBombas.add(2); // Última ronda siempre mueren 2 y queda 1
         }
 
         totalRondasCalculadas = secuenciaBombas.size();
@@ -477,7 +516,7 @@ public class HotPotatoHandler implements Listener {
         if (totalRondasCalculadas < 5) {
             rondaInicioBorde = 1;
         } else {
-            rondaInicioBorde = totalRondasCalculadas - 3; // Empezara a cerrar faltando las ultimas 4 rondas
+            rondaInicioBorde = totalRondasCalculadas - 3;
             if (rondaInicioBorde < 1) rondaInicioBorde = 1;
         }
     }
@@ -493,6 +532,7 @@ public class HotPotatoHandler implements Listener {
             return;
         }
 
+        rondaEnPausa = false; // FIN DE PAUSA: Ya pueden pasarse la bomba
         int bombasEstaRonda = secuenciaBombas.get(rondaActual);
         rondaActual++;
 
@@ -502,7 +542,6 @@ public class HotPotatoHandler implements Listener {
         tiempoPoder.clear();
         cargasRelentizadora.clear();
 
-        // Poner musica de ronda a todos
         String cancion = cancionesDisponibles.get(indexCancion % cancionesDisponibles.size());
         indexCancion++;
         getJugadoresEnZona().forEach(p -> {
@@ -510,7 +549,6 @@ public class HotPotatoHandler implements Listener {
             p.playSound(p.getLocation(), cancion, SoundCategory.RECORDS, Float.MAX_VALUE, 1.0f);
         });
 
-        // Limpiar jugadores antes de empezar ronda
         for (String nombre : vivos) {
             Player p = Bukkit.getPlayer(nombre);
             if (p != null) {
@@ -546,7 +584,6 @@ public class HotPotatoHandler implements Listener {
             }
         }
 
-        // Borde se cierra en los ultimos 23 segundos
         if (rondaActual >= rondaInicioBorde) {
             long ticksParaBorde = (tiempoRondaSegundos - 23) * 20L;
             if (ticksParaBorde < 0) ticksParaBorde = 0;
@@ -561,7 +598,9 @@ public class HotPotatoHandler implements Listener {
     private void finalizarRonda() {
         if (!enBatalla) return;
 
-        // Quitar la musica para darle epicidad a las explosiones
+        // INICIO DE PAUSA: Nadie puede golpear y pasar la bomba mientras mueren y hay delay
+        rondaEnPausa = true;
+
         for (String pName : participantes) {
             Player p = Bukkit.getPlayer(pName);
             if (p != null) Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "stopsound " + p.getName() + " record");
@@ -584,13 +623,11 @@ public class HotPotatoHandler implements Listener {
             p.getWorld().spawnParticle(Particle.EXPLOSION_EMITTER, p.getLocation(), 2);
             p.sendMessage("§c¡Has explotado!");
 
-            // Avisar a los demás
             getJugadoresEnZona().forEach(z -> {
                 z.sendMessage("§8§l[§c§l☠§8§l]§6§l " + nombre + " §r§7ha explotado.");
                 z.playSound(z.getLocation(), Sound.ENTITY_GENERIC_EXPLODE, Float.MAX_VALUE, 1f);
             });
 
-            // Esta función ahora se encarga de quitar el team, el scoreboard y hacer el TP
             procesarMuerte(p, null, "Bomba");
         }
     }
@@ -615,7 +652,7 @@ public class HotPotatoHandler implements Listener {
 
             String mensaje = "";
             if (causa.equals("Bomba")) {
-                // El mensaje ya se envía en matarJugadorBomba
+                // Ya enviado en matarJugadorBomba
             } else if (causa.equals("Entorno")) {
                 mensaje = "§8§l[§c§l☠§8§l]§6§l " + jugador.getName() + " §r§7ha muerto por el daño del evento.";
                 jugador.sendMessage("§c¡Has muerto por daño de entorno!");
@@ -644,6 +681,7 @@ public class HotPotatoHandler implements Listener {
     private void avanzarRondaPrematuramente() {
         if (timerRonda != null) timerRonda.cancel();
 
+        rondaEnPausa = true; // Se adelanta el tiempo muerto
         tiempoCommand.removeBossBar(EVENT_TIMER_ID);
 
         for (String pName : participantes) {
@@ -677,7 +715,6 @@ public class HotPotatoHandler implements Listener {
                         boolean recibirDanioBorde = false;
                         boolean recibirDanioCactus = false;
 
-                        // Comprobar borde actual
                         if (loc.getX() < minX || loc.getX() > maxX || loc.getZ() < minZ || loc.getZ() > maxZ) {
                             recibirDanioBorde = true;
                         }
@@ -750,7 +787,7 @@ public class HotPotatoHandler implements Listener {
 
     @EventHandler
     public void onGolpe(EntityDamageByEntityEvent e) {
-        if (!enBatalla) return;
+        if (!enBatalla || rondaEnPausa) return; // FIX DE TIEMPO MUERTO: No se puede pasar si está en pausa
         if (!(e.getEntity() instanceof Player) || !(e.getDamager() instanceof Player)) return;
 
         Player victima = (Player) e.getEntity();
@@ -776,7 +813,7 @@ public class HotPotatoHandler implements Listener {
 
     @EventHandler
     public void onMove(PlayerMoveEvent e) {
-        if (!enBatalla || !poderesActivados) return;
+        if (!enBatalla || !poderesActivados || rondaEnPausa) return;
         Player p = e.getPlayer();
         if (!vivos.contains(p.getName()) || bombasActuales.contains(p.getName())) return;
 
@@ -850,7 +887,7 @@ public class HotPotatoHandler implements Listener {
 
     @EventHandler
     public void onProjectileLaunch(ProjectileLaunchEvent e) {
-        if (!enBatalla) return;
+        if (!enBatalla || rondaEnPausa) return;
         if (e.getEntity() instanceof WindCharge charge && charge.getShooter() instanceof Player p) {
             if (vivos.contains(p.getName()) && "Bola Relentizadora".equals(poderActual.get(p.getName()))) {
                 int c = cargasRelentizadora.getOrDefault(p.getName(), 2) - 1;
@@ -866,7 +903,7 @@ public class HotPotatoHandler implements Listener {
 
     @EventHandler
     public void onProjectileHit(ProjectileHitEvent e) {
-        if (!enBatalla) return;
+        if (!enBatalla || rondaEnPausa) return;
         if (e.getEntity() instanceof WindCharge charge) {
             if (charge.getShooter() instanceof Player tirador && e.getHitEntity() instanceof Player victima) {
                 if (bombasActuales.contains(victima.getName())) {
@@ -1025,6 +1062,7 @@ public class HotPotatoHandler implements Listener {
         eventoIniciado = false;
         tpRealizado = false;
         enBatalla = false;
+        rondaEnPausa = false;
         limpiarArena();
         cancelarTareasActivas();
 
@@ -1213,7 +1251,7 @@ public class HotPotatoHandler implements Listener {
 
     private void mostrarBordeParticulasContinuo() {
         if (taskBordeParticulas != null && !taskBordeParticulas.isCancelled()) {
-            return; // Ya está corriendo, no creamos otra
+            return;
         }
         taskBordeParticulas = new BukkitRunnable() {
             @Override
@@ -1230,7 +1268,7 @@ public class HotPotatoHandler implements Listener {
         if (espectadores.isEmpty()) return;
         Particle particula = Particle.SONIC_BOOM;
         int stepY = 6, stepXZ = 4;
-        for (int y = arenaMinY; y <= arenaMaxY; y += stepY) { // Usar alturas fijas de la arena
+        for (int y = arenaMinY; y <= arenaMaxY; y += stepY) {
             for (int z = minZ; z <= maxZ; z += stepXZ) {
                 spawnParticleIfClose(espectadores, particula, minX, y, z);
                 spawnParticleIfClose(espectadores, particula, maxX, y, z);
@@ -1321,7 +1359,6 @@ public class HotPotatoHandler implements Listener {
         World w = Bukkit.getWorld("world");
         Location loc = getSafeLocation(w);
 
-        // Verifica si está dentro de los límites actuales del borde
         if(loc.getBlockX() < minX || loc.getBlockX() > maxX || loc.getBlockZ() < minZ || loc.getBlockZ() > maxZ) return;
 
         loc.add(0, 0.5, 0);
@@ -1415,7 +1452,6 @@ public class HotPotatoHandler implements Listener {
             sender.sendMessage("§aJugador " + nombre + " añadido a HotPotato.");
             if (tpRealizado) {
                 p.teleport(getSafeLocation(p.getWorld()));
-                // SI YA SE HIZO EL TP, LE QUITAMOS LAS HABILIDADES
                 habilidadesManager.disableHabilidades(p);
                 habilidadesEffects.reapplyAllEffects(p, habilidadesManager);
             }

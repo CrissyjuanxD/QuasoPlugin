@@ -26,9 +26,9 @@ commands:
   ping:
     description: Muestra tu ping actual en milisegundos.
     usage: /ping
-  ruletavct:
+  ruletaqp:
     description: Comando para reproducir la animación de la ruleta.
-    usage: /ruletavct <json>
+    usage: /ruletaqp <json>
     permission: viciont_hardcore3.ruletavct
     permission-message: No tienes permiso para usar este comando.
   bonusvct:
@@ -79,20 +79,10 @@ commands:
     usage: /spawnqp <mob> [jugador (opcional)] [x] [y] [z]
     permission: viciont_hardcore3.command.spawnvct
     permission-message: No tienes permiso para usar este comando.
-  addtiempo:
-    description: Añade un temporizador en la bossbar.
-    usage: /addtiempo [nombre opcional] <tiempo> [on/off]
+  timers:
+    description: Comando General para crear, editar, remover y ver timers.
+    usage: /timers <crear|editar|remover|lista>
     permission: viciont_hardcore3.command.addtiempo
-    permission-message: No tienes permiso para usar este comando.
-  removetiempo:
-    description: Elimina un temporizador de la bossbar.
-    usage: /removetiempo [nombre opcional]
-    permission: viciont_hardcore3.command.removetiempo
-    permission-message: No tienes permiso para usar este comando.
-  tiempoview:
-    description: Muestra los temporizadores activos en la bossbar.
-    usage: /tiempoview <jugador/all>
-    permission: viciont_hardcore3.command.tiempoview
     permission-message: No tienes permiso para usar este comando.
   giveqp:
     description: Da un item especial del plugin a un jugador.
@@ -119,29 +109,14 @@ commands:
     usage: /levelnightmare <jugador|@a> <Nvl1/Nvl2/Nvl3>
     permission: viciont_hardcore3.command.levelnightmare
     permission-message: No tienes permiso para usar este comando.
-  activarmision:
-    description: Activa una misión específica
-    usage: /activarmision <número>
-    permission: viciont_hardcore3.missions.admin
-    permission-message: No tienes permiso para usar este comando.
-  desactivarmision:
-    description: Desactiva una misión específica
-    usage: /desactivarmision <número>
+  missions:
+    description: Comando administrativo para misiones.
+    usage: /missions
     permission: viciont_hardcore3.missions.admin
     permission-message: No tienes permiso para usar este comando.
   misiones:
     description: Abre la interfaz del sistema de misiones
     usage: /misiones
-  addmision:
-    description: Añade una misión completada a un jugador
-    usage: /addmision <jugador> <número>
-    permission: viciont_hardcore3.missions.admin
-    permission-message: No tienes permiso para usar este comando.
-  removemision:
-    description: Remueve una misión completada de un jugador
-    usage: /removemision <jugador> <número>
-    permission: viciont_hardcore3.missions.admin
-    permission-message: No tienes permiso para usar este comando.
   mobcap:
     description: Comando principal para gestionar MobCap
     usage: /mobcap <info|setbase|doble|triple|normal|habilitar|deshabilitar|reset|reload|mob>
@@ -240,4 +215,4 @@ commands:
     permission: viciont_hardcore3.command.removeshop
     permission-message: No tienes permiso para usar este comando.
 
-softdepend: [EliteMobs]
+depend: [EliteMobs]

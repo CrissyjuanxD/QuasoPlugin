@@ -21,17 +21,15 @@ public class EconomyItems {
         ItemStack item = new ItemStack(Material.SUNFLOWER);
         ItemMeta meta = item.getItemMeta();
 
-        // Nombre del item con formato JSON-like
         meta.setDisplayName(ChatColor.of("#FFCC80") + "DinoCoins " + ChatColor.GRAY + "۞");
         meta.setCustomModelData(2000);
 
         List<String> lore = new ArrayList<>();
         lore.add(" ");
-        lore.add(ChatColor.GRAY + "Estas " + ChatColor.GOLD + "monedas");
-        lore.add(ChatColor.GRAY + "fueron creadas unicamente para ");
-        lore.add(ChatColor.DARK_PURPLE + "hacer rico " + ChatColor.GRAY + "a" + ChatColor.GOLD + " Crosszy" + ChatColor.GRAY + ".");
+        lore.add(ChatColor.GRAY + "Moneda oficial del servidor.");
+        lore.add(ChatColor.DARK_GRAY + "Usada en la economia de la ciudad.");
         lore.add(" ");
-        lore.add(ChatColor.GRAY + "> Se puede cambiar por DinoFichas en el spawn.");
+        lore.add(ChatColor.GRAY + "> Cambiala por DinoFichas en el spawn.");
 
         meta.setLore(lore);
         meta.setRarity(ItemRarity.EPIC);

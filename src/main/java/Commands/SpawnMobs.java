@@ -128,8 +128,8 @@ public class SpawnMobs implements CommandExecutor, TabCompleter {
                 sender.sendMessage("¡Infested Bee ha sido spawneada en " + locationToString(location) + "!");
                 break;
 
-            case "foxstatue":
-                Fox_Statue.spawn(location);
+            case "estatuarecompensa":
+                Estatua_Reward.spawn(location);
                 sender.sendMessage("¡Estatua de Zorro ha sido spawneada en " + locationToString(location) + "!");
                 break;
 
@@ -164,7 +164,7 @@ public class SpawnMobs implements CommandExecutor, TabCompleter {
             suggestions.add("guardiancorruptedskeleton");
             suggestions.add("corruptedinfernalspider");
             suggestions.add("infestedbee");
-            suggestions.add("foxstatue");
+            suggestions.add("estatuarecompensa");
             suggestions.add("corruptedbee");
         } else if (args.length == 2) {
             for (Player player : Bukkit.getOnlinePlayers()) {

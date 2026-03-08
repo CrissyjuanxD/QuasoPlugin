@@ -9,6 +9,7 @@ import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.inventory.ItemStack;
@@ -73,7 +74,7 @@ public class Mission5 implements Mission, Listener {
     @Override
     public void checkCompletion(String playerName) {}
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onZombieDeath(EntityDeathEvent event) {
         org.bukkit.entity.LivingEntity entity = event.getEntity();
         if (!(entity instanceof org.bukkit.entity.Zombie)) return;

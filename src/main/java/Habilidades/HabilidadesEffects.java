@@ -3,11 +3,17 @@ package Habilidades;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.*;
 import org.bukkit.attribute.Attribute;
+import org.bukkit.attribute.AttributeInstance;
+import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
 public class HabilidadesEffects {
 
@@ -38,7 +44,6 @@ public class HabilidadesEffects {
                 if (stage == 0) {
                     if (y <= 2) {
                         spawnPoofParticles(player, y);
-                        // Iniciar círculo mágico solo una vez
                         if (magicCircleTask == null) {
                             magicCircleTask = startMagicCircle(player, true);
                             magicCircleTask.runTaskTimer(plugin, 0, 2);
@@ -77,13 +82,11 @@ public class HabilidadesEffects {
                         stage = 2;
                     }
                 } else if (stage == 2) {
-                    // Detener el círculo mágico y hacer fade out
                     if (magicCircleTask != null) {
                         magicCircleTask.cancel();
                         magicCircleTask = null;
                     }
 
-                    // Iniciar fade out
                     if (fadeOutTask == null) {
                         fadeOutTask = startMagicCircleFadeOut(player);
                         fadeOutTask.runTaskTimer(plugin, 0, 2);
@@ -100,14 +103,13 @@ public class HabilidadesEffects {
                         }
                     }
 
-                    // Programar la finalización después de que termine el fade out
                     new BukkitRunnable() {
                         @Override
                         public void run() {
                             player.removePotionEffect(PotionEffectType.SLOWNESS);
                             applyHabilidadEffect(player, type, level);
                         }
-                    }.runTaskLater(plugin, 40); // 2 segundos para el fade out
+                    }.runTaskLater(plugin, 40);
 
                     cancel();
                 }
@@ -129,7 +131,6 @@ public class HabilidadesEffects {
                 }
 
                 Location center = player.getLocation();
-                World world = center.getWorld();
 
                 if (fadeIn && fadeProgress < 1.0) {
                     fadeProgress += 0.05;
@@ -140,7 +141,6 @@ public class HabilidadesEffects {
                 spawnMagicCircle(center, radius, angle, fadeProgress);
                 spawnMagicStar(center, fadeProgress);
 
-                // Si ya terminó el fade in, mantener el alpha en 1.0
                 if (fadeIn && fadeProgress >= 1.0) {
                     fadeProgress = 1.0;
                 }
@@ -162,7 +162,6 @@ public class HabilidadesEffects {
                 }
 
                 Location center = player.getLocation();
-                World world = center.getWorld();
 
                 fadeProgress -= 0.05;
                 angle += 0.1;
@@ -405,102 +404,100 @@ public class HabilidadesEffects {
 
     private void applyHabilidadEffect(Player player, HabilidadesType type, int level) {
         switch (type) {
-            case VITALIDAD:
-                applyVitalidadEffect(player, level);
-                break;
-            case RESISTENCIA:
-                applyResistenciaEffect(player, level);
-                break;
-            case AGILIDAD:
-                applyAgilidadEffect(player, level);
-                break;
+            case VITALIDAD: applyVitalidadEffect(player, level); break;
+            case RESISTENCIA: applyResistenciaEffect(player, level); break;
+            case AGILIDAD: applyAgilidadEffect(player, level); break;
         }
     }
 
     private void applyVitalidadEffect(Player player, int level) {
-        double currentMaxHealth = player.getAttribute(Attribute.MAX_HEALTH).getBaseValue();
-        double newMaxHealth = currentMaxHealth + 2.0;
+        double expectedMaxHealth = 20.0 + (level * 5.0);
 
-        player.getAttribute(Attribute.MAX_HEALTH).setBaseValue(newMaxHealth);
+        if (player.getAttribute(Attribute.MAX_HEALTH) != null) {
+            player.getAttribute(Attribute.MAX_HEALTH).setBaseValue(expectedMaxHealth);
+        }
 
-        // Curar la diferencia para que no aparezca el corazón vacío
         if (player.getHealth() > 0) {
-            player.setHealth(Math.min(player.getHealth() + 2.0, newMaxHealth));
+            player.setHealth(Math.min(player.getHealth() + 5.0, expectedMaxHealth));
         }
     }
 
     private void applyResistenciaEffect(Player player, int level) {
         if (level == 4) {
-            addPermanentEffect(player, PotionEffectType.RESISTANCE, 0);
+            addInfiniteEffect(player, PotionEffectType.RESISTANCE, 0);
         }
     }
 
     private void applyAgilidadEffect(Player player, int level) {
-        // CORREGIDO: Lógica actualizada
         if (level == 1) {
-            // Nivel 1: Haste I
-            addPermanentEffect(player, PotionEffectType.HASTE, 0);
+            addInfiniteEffect(player, PotionEffectType.HASTE, 0);
         } else if (level == 2) {
-            // Nivel 2: Jump Boost I
-            addPermanentEffect(player, PotionEffectType.JUMP_BOOST, 0);
+            addInfiniteEffect(player, PotionEffectType.DOLPHINS_GRACE, 1);
         } else if (level == 3) {
-            // Nivel 3: Speed I
-            addPermanentEffect(player, PotionEffectType.SPEED, 0);
+            addInfiniteEffect(player, PotionEffectType.SPEED, 0);
         }
     }
 
     public void reapplyAllEffects(Player player, HabilidadesManager manager) {
-        // 1. Vitalidad: +1 Corazón (2 HP) por nivel
-        double baseHealth = 20.0;
-        double extraHealth = 0;
+        if (!player.isOnline()) return;
 
-        for (int i = 1; i <= 4; i++) {
-            if (manager.hasHabilidad(player.getUniqueId(), HabilidadesType.VITALIDAD, i)) {
-                extraHealth += 2.0;
+        applyAllInternal(player, manager);
+
+        Bukkit.getScheduler().runTaskLater(plugin, () -> {
+            if (player.isOnline()) {
+                applyAllInternal(player, manager);
+            }
+        }, 60L);
+    }
+
+    private void applyAllInternal(Player player, HabilidadesManager manager) {
+        int vitLevel = manager.getHighestLevel(player.getUniqueId(), HabilidadesType.VITALIDAD);
+        double expectedHealth = 20.0 + (vitLevel * 5.0);
+
+        if (player.getAttribute(Attribute.MAX_HEALTH) != null) {
+            double currentBase = player.getAttribute(Attribute.MAX_HEALTH).getBaseValue();
+
+            if (currentBase != expectedHealth) {
+                player.getAttribute(Attribute.MAX_HEALTH).setBaseValue(expectedHealth);
+
+                // Si la vida máxima bajó a 20 (apagar habilidades), bajamos su vida actual para que no sea mayor que la máxima
+                if (player.getHealth() > expectedHealth) {
+                    player.setHealth(expectedHealth);
+                }
             }
         }
 
-        // Ajustar vida máxima
-        if (player.getAttribute(Attribute.MAX_HEALTH) != null) {
-            player.getAttribute(Attribute.MAX_HEALTH).setBaseValue(baseHealth + extraHealth);
-        }
-
         // 2. Agilidad
-        // Nivel 1: Haste I
         if (manager.hasHabilidad(player.getUniqueId(), HabilidadesType.AGILIDAD, 1)) {
-            addPermanentEffect(player, PotionEffectType.HASTE, 0); // Haste I
+            addInfiniteEffect(player, PotionEffectType.HASTE, 0);
         } else {
             player.removePotionEffect(PotionEffectType.HASTE);
         }
 
-        // Nivel 2: Jump Boost I
         if (manager.hasHabilidad(player.getUniqueId(), HabilidadesType.AGILIDAD, 2)) {
-            addPermanentEffect(player, PotionEffectType.JUMP_BOOST, 0); // Jump I
+            addInfiniteEffect(player, PotionEffectType.DOLPHINS_GRACE, 1);
         } else {
-            player.removePotionEffect(PotionEffectType.JUMP_BOOST);
+            player.removePotionEffect(PotionEffectType.DOLPHINS_GRACE);
         }
 
-        // Nivel 3: Speed I
         if (manager.hasHabilidad(player.getUniqueId(), HabilidadesType.AGILIDAD, 3)) {
-            addPermanentEffect(player, PotionEffectType.SPEED, 0); // Speed I
+            addInfiniteEffect(player, PotionEffectType.SPEED, 0);
         } else {
             player.removePotionEffect(PotionEffectType.SPEED);
         }
 
-        // Nivel 4: (Triple salto es en Listener)
-
         // 3. Resistencia
-        // Nivel 4: Resistance I
         if (manager.hasHabilidad(player.getUniqueId(), HabilidadesType.RESISTENCIA, 4)) {
-            addPermanentEffect(player, PotionEffectType.RESISTANCE, 0); // Resistencia I
+            addInfiniteEffect(player, PotionEffectType.RESISTANCE, 0);
         } else {
             player.removePotionEffect(PotionEffectType.RESISTANCE);
         }
     }
 
-    private void addPermanentEffect(Player player, PotionEffectType type, int amplifier) {
-        if (!player.hasPotionEffect(type) || player.getPotionEffect(type).getAmplifier() != amplifier || player.getPotionEffect(type).getDuration() < 10000) {
-            player.addPotionEffect(new PotionEffect(type, Integer.MAX_VALUE, amplifier, false, false, true));
+    private void addInfiniteEffect(Player player, PotionEffectType type, int amplifier) {
+        PotionEffect effect = player.getPotionEffect(type);
+        if (effect == null || effect.getAmplifier() != amplifier || effect.getDuration() != PotionEffect.INFINITE_DURATION) {
+            player.addPotionEffect(new PotionEffect(type, PotionEffect.INFINITE_DURATION, amplifier, false, false, false));
         }
     }
 }

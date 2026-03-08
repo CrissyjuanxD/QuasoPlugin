@@ -39,7 +39,7 @@ public class Mission2 implements Mission, Listener {
 
     @Override
     public String getDescription() {
-        return "Mata 60 mobs hostiles\nmientras haya una\nBloodMoon activa.";
+        return "Mata 125 mobs hostiles\nmientras haya una\nBloodMoon activa.";
     }
 
     @Override
@@ -52,7 +52,7 @@ public class Mission2 implements Mission, Listener {
         List<ItemStack> rewards = new ArrayList<>();
 
         ItemStack coins = EconomyItems.createVithiumCoin();
-        coins.setAmount(14);
+        coins.setAmount(17);
         ItemStack goldenApples = new ItemStack(Material.GOLDEN_APPLE, 10);
         ItemStack sharpBook = new ItemStack(Material.ENCHANTED_BOOK);
         EnchantmentStorageMeta meta = (EnchantmentStorageMeta) sharpBook.getItemMeta();
@@ -92,7 +92,7 @@ public class Mission2 implements Mission, Listener {
         if (actuator == null || !actuator.isInProgress()) return;
 
         int current = data.getProgressInt("bloodmoon_kills");
-        int target = 60;
+        int target = 125;
 
         if (current < target) {
             current++;

@@ -14,7 +14,7 @@ import java.util.List;
 public class HabilidadesBook {
 
     public static ItemStack createHabilidadesBook() {
-        ItemStack book = new ItemStack(Material.BOOK);
+        ItemStack book = new ItemStack(Material.KNOWLEDGE_BOOK);
         ItemMeta meta = book.getItemMeta();
 
         meta.setDisplayName(ChatColor.of("#C77DFF") + "" + ChatColor.BOLD + "Libro de Habilidades");

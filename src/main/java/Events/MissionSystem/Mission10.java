@@ -47,7 +47,7 @@ public class Mission10 implements Mission, Listener {
         ItemStack coins = EconomyItems.createVithiumCoin();
         coins.setAmount(12);
         ItemStack goldenApples = new ItemStack(Material.GOLD_BLOCK, 10);
-        ItemStack unBook = new ItemStack(Material.ENCHANTED_BOOK, 3);
+        ItemStack unBook = new ItemStack(Material.ENCHANTED_BOOK);
         EnchantmentStorageMeta meta = (EnchantmentStorageMeta) unBook.getItemMeta();
         if (meta != null) {
             meta.addStoredEnchant(Enchantment.UNBREAKING, 4, true);
@@ -55,9 +55,9 @@ public class Mission10 implements Mission, Listener {
         }
         ItemStack xpFill = new ItemStack(Material.HONEY_BOTTLE, 1);
         for (int i = 0; i < 27; i++) {
-            if (i == 11) rewards.add(goldenApples);
-            else if (i == 13) rewards.add(coins);
-            else if (i == 15) rewards.add(unBook);
+            if (i == 10 || i == 11 || i == 12) rewards.add(unBook);
+            else if (i == 14) rewards.add(coins);
+            else if (i == 16) rewards.add(goldenApples);
             else rewards.add(xpFill.clone());
         }
         return rewards;

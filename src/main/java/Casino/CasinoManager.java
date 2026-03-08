@@ -160,8 +160,8 @@ public class CasinoManager {
         if (activeHolograms.containsKey(loc)) return;
         if (!loc.getChunk().isLoaded()) return;
 
-        // CAMBIO: Altura +3.5 (antes 1.5) para que flote más alto
-        Location holoLoc = loc.clone().add(0.5, 3.5, 0.5);
+        // CAMBIO: Altura bajada de 3.5 a 3.0 para que quede más cerca de la mesa
+        Location holoLoc = loc.clone().add(0.5, 3.0, 0.5);
 
         String type = casinoTables.get(loc);
         String titleText;
@@ -210,7 +210,7 @@ public class CasinoManager {
 
         // 2. Limpieza de huérfanos en el área (por si acaso)
         if (loc.getWorld() != null && loc.getChunk().isLoaded()) {
-            Location searchLoc = loc.clone().add(0.5, 3.5, 0.5); // Misma altura que el spawn
+            Location searchLoc = loc.clone().add(0.5, 3.0, 0.5); // Ajustado a 3.0
             for (Entity e : loc.getChunk().getEntities()) {
                 if (e instanceof TextDisplay && e.getScoreboardTags().contains("casino_hologram")) {
                     if (e.getLocation().distanceSquared(searchLoc) < 2.0) {
@@ -243,7 +243,6 @@ public class CasinoManager {
 
                     Color color = type.equalsIgnoreCase("blackjack") ? Color.LIME : Color.ORANGE;
 
-                    // Ajusté ligeramente la altura de las partículas también para que no queden tan lejos del holograma
                     loc.getWorld().spawnParticle(Particle.DUST, x, loc.getY() + 1.2, z, 1,
                             new Particle.DustOptions(color, 1));
 

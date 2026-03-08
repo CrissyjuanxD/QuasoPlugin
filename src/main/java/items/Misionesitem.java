@@ -14,7 +14,7 @@ import java.util.List;
 public class Misionesitem {
 
     public static ItemStack createMisiones() {
-        ItemStack book = new ItemStack(Material.FILLED_MAP);
+        ItemStack book = new ItemStack(Material.MAP);
         ItemMeta meta = book.getItemMeta();
 
         meta.setDisplayName(ChatColor.of("#FF8000") + "" + ChatColor.BOLD + "Misiones");

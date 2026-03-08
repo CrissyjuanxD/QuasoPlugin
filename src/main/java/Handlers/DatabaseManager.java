@@ -17,12 +17,11 @@ public class DatabaseManager {
 
     public DatabaseManager(JavaPlugin plugin) {
         this.plugin = plugin;
-        loadConfig(); // Cargamos los datos de la imagen
-        initializeDatabase();
+        loadConfig();
+        connectWithRetry(3);
     }
 
     public void loadConfig() {
-        // Leemos la sección Database1 del config.yml
         this.host = plugin.getConfig().getString("Database1.host");
         this.port = plugin.getConfig().getInt("Database1.port");
         this.database = plugin.getConfig().getString("Database1.database");
@@ -30,31 +29,52 @@ public class DatabaseManager {
         this.password = plugin.getConfig().getString("Database1.password");
     }
 
-    // Método para obtener una conexión fresca cada vez
     private Connection getConnection() throws SQLException {
-        // URL de conexión MySQL con opciones para evitar errores de SSL y reconexión
-        String url = "jdbc:mysql://" + this.host + ":" + this.port + "/" + this.database + "?useSSL=false&autoReconnect=true";
+        String url = "jdbc:mysql://" + this.host + ":" + this.port + "/" + this.database +
+                "?useSSL=false&autoReconnect=true&allowPublicKeyRetrieval=true&serverTimezone=UTC&connectTimeout=5000";
         return DriverManager.getConnection(url, this.username, this.password);
     }
 
-    private void initializeDatabase() {
+    private void connectWithRetry(int maxRetries) {
+        int attempt = 0;
+        while (attempt < maxRetries) {
+            try {
+                initializeDatabase();
+                return; // Si tiene éxito, salimos del bucle
+            } catch (SQLException e) {
+                attempt++;
+                plugin.getLogger().warning("Intento " + attempt + " fallido al conectar a MySQL: " + e.getMessage());
+                if (attempt >= maxRetries) {
+                    plugin.getLogger().severe("¡No se pudo conectar a la base de datos después de " + maxRetries + " intentos!");
+                } else {
+                    try {
+                        Thread.sleep(2000); // Esperar 2 segundos antes del siguiente intento
+                    } catch (InterruptedException ignored) {}
+                }
+            }
+        }
+    }
+
+    private void initializeDatabase() throws SQLException {
         try (Connection conn = getConnection();
              Statement stmt = conn.createStatement()) {
 
-            // Tabla Jugadores
             stmt.executeUpdate("CREATE TABLE IF NOT EXISTS players (" +
                     "uuid VARCHAR(36) PRIMARY KEY, " +
                     "name VARCHAR(16), " +
                     "first_join DATETIME DEFAULT CURRENT_TIMESTAMP, " +
                     "team_name VARCHAR(20) DEFAULT 'ZMiembro');");
 
-            // Tabla Misiones (Nueva)
+            stmt.executeUpdate("CREATE TABLE IF NOT EXISTS global_missions (" +
+                    "mission_id INT PRIMARY KEY, " +
+                    "is_active BOOLEAN DEFAULT 1, " +
+                    "activation_date DATETIME DEFAULT CURRENT_TIMESTAMP);");
+
             stmt.executeUpdate("CREATE TABLE IF NOT EXISTS player_missions (" +
                     "uuid VARCHAR(36), " +
                     "player_name VARCHAR(16), " +
                     "mission_id INT, " +
                     "mission_name VARCHAR(64), " +
-                    "is_active BOOLEAN DEFAULT 0, " +
                     "is_completed BOOLEAN DEFAULT 0, " +
                     "reward_claimed BOOLEAN DEFAULT 0, " +
                     "progress_json TEXT, " +
@@ -72,17 +92,12 @@ public class DatabaseManager {
 
             plugin.getLogger().info("Conectado a MySQL y tablas verificadas.");
 
-        } catch (SQLException e) {
-            plugin.getLogger().severe("No se pudo conectar a MySQL. Revisa el config.yml y el nombre de la DB.");
-            plugin.getLogger().severe("Error DB: " + e.getMessage());
         }
     }
 
-    // Ya no necesitamos cerrar manual, pero lo dejamos vacío por compatibilidad
     public void closeConnection() {
     }
 
-    // Verificar jugador
     public boolean hasJoinedBefore(UUID uuid) {
         String sql = "SELECT uuid FROM players WHERE uuid = ?";
         try (Connection conn = getConnection();
@@ -98,7 +113,6 @@ public class DatabaseManager {
         }
     }
 
-    // Registrar jugador
     public void registerPlayer(UUID uuid, String name, String teamName) {
         String sql = "INSERT INTO players (uuid, name, team_name) VALUES (?, ?, ?)";
         try (Connection conn = getConnection();
@@ -114,34 +128,9 @@ public class DatabaseManager {
         }
     }
 
-    public Map<Integer, MissionData> loadPlayerMissions(UUID uuid) {
-        Map<Integer, MissionData> missions = new HashMap<>();
-        String sql = "SELECT mission_id, is_active, is_completed, reward_claimed, progress_json FROM player_missions WHERE uuid = ?";
-
-        try (Connection conn = getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setString(1, uuid.toString());
-            ResultSet rs = stmt.executeQuery();
-
-            while (rs.next()) {
-                int id = rs.getInt("mission_id");
-                boolean active = rs.getBoolean("is_active");
-                boolean completed = rs.getBoolean("is_completed");
-                boolean claimed = rs.getBoolean("reward_claimed");
-                String json = rs.getString("progress_json");
-
-                missions.put(id, new MissionData(active, completed, claimed, json));
-            }
-        } catch (SQLException e) {
-            plugin.getLogger().severe("Error cargando misiones: " + e.getMessage());
-        }
-        return missions;
-    }
-
     public Set<Integer> getGlobalActiveMissions() {
         Set<Integer> activeMissions = new HashSet<>();
-        // Buscamos cualquier mission_id que al menos un jugador tenga como is_active = true
-        String sql = "SELECT DISTINCT mission_id FROM player_missions WHERE is_active = 1";
+        String sql = "SELECT mission_id FROM global_missions WHERE is_active = 1";
 
         try (Connection conn = getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -156,61 +145,51 @@ public class DatabaseManager {
         return activeMissions;
     }
 
-    public void deactivateMissionGlobally(int missionId) {
-        String sql = "UPDATE player_missions SET is_active = 0 WHERE mission_id = ?";
+    public void setMissionGlobalState(int missionId, boolean active) {
+        String sql = "INSERT INTO global_missions (mission_id, is_active) VALUES (?, ?) " +
+                "ON DUPLICATE KEY UPDATE is_active = ?";
         try (Connection conn = getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setInt(1, missionId);
+            stmt.setBoolean(2, active);
+            stmt.setBoolean(3, active);
             stmt.executeUpdate();
 
         } catch (SQLException e) {
-            plugin.getLogger().severe("Error desactivando misión globalmente: " + e.getMessage());
+            plugin.getLogger().severe("Error actualizando estado global de misión: " + e.getMessage());
         }
     }
 
-   /* public void saveMissionAsync(UUID uuid, String playerName, int missionId, String missionName, MissionData data) {
-        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
-            String sql = "INSERT INTO player_missions (uuid, player_name, mission_id, mission_name, is_active, is_completed, reward_claimed, progress_json) " +
-                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?) " +
-                    "ON DUPLICATE KEY UPDATE player_name=?, mission_name=?, is_active=?, is_completed=?, reward_claimed=?, progress_json=?";
+    public Map<Integer, MissionData> loadPlayerMissions(UUID uuid) {
+        Map<Integer, MissionData> missions = new HashMap<>();
+        String sql = "SELECT mission_id, is_completed, reward_claimed, progress_json FROM player_missions WHERE uuid = ?";
 
-            try (Connection conn = getConnection();
-                 PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try (Connection conn = getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, uuid.toString());
+            ResultSet rs = stmt.executeQuery();
 
-                String json = data.getJsonProgress();
+            while (rs.next()) {
+                int id = rs.getInt("mission_id");
+                boolean completed = rs.getBoolean("is_completed");
+                boolean claimed = rs.getBoolean("reward_claimed");
+                String json = rs.getString("progress_json");
 
-                // Insert Params
-                stmt.setString(1, uuid.toString());
-                stmt.setString(2, playerName);
-                stmt.setInt(3, missionId);
-                stmt.setString(4, missionName);
-                stmt.setBoolean(5, data.isActive());
-                stmt.setBoolean(6, data.isCompleted());
-                stmt.setBoolean(7, data.isRewardClaimed());
-                stmt.setString(8, json);
-
-                // Update Params
-                stmt.setString(9, playerName);
-                stmt.setString(10, missionName);
-                stmt.setBoolean(11, data.isActive());
-                stmt.setBoolean(12, data.isCompleted());
-                stmt.setBoolean(13, data.isRewardClaimed());
-                stmt.setString(14, json);
-
-                stmt.executeUpdate();
-            } catch (SQLException e) {
-                plugin.getLogger().severe("Error guardando misión " + missionId + " de " + playerName + ": " + e.getMessage());
+                missions.put(id, new MissionData(false, completed, claimed, json));
             }
-        });
-    }*/
+        } catch (SQLException e) {
+            plugin.getLogger().severe("Error cargando misiones: " + e.getMessage());
+        }
+        return missions;
+    }
 
     public void savePlayerMissionsBatchSync(UUID uuid, String playerName, Map<Integer, MissionData> missionsToSave, Map<Integer, String> missionNames) {
         if (missionsToSave.isEmpty()) return;
 
-        String sql = "INSERT INTO player_missions (uuid, player_name, mission_id, mission_name, is_active, is_completed, reward_claimed, progress_json) " +
-                "VALUES (?, ?, ?, ?, ?, ?, ?, ?) " +
-                "ON DUPLICATE KEY UPDATE player_name=?, mission_name=?, is_active=?, is_completed=?, reward_claimed=?, progress_json=?";
+        String sql = "INSERT INTO player_missions (uuid, player_name, mission_id, mission_name, is_completed, reward_claimed, progress_json) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?) " +
+                "ON DUPLICATE KEY UPDATE player_name=?, mission_name=?, is_completed=?, reward_claimed=?, progress_json=?";
 
         try (Connection conn = getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -225,17 +204,15 @@ public class DatabaseManager {
                 stmt.setString(2, playerName);
                 stmt.setInt(3, missionId);
                 stmt.setString(4, missionName);
-                stmt.setBoolean(5, data.isActive());
-                stmt.setBoolean(6, data.isCompleted());
-                stmt.setBoolean(7, data.isRewardClaimed());
-                stmt.setString(8, json);
+                stmt.setBoolean(5, data.isCompleted());
+                stmt.setBoolean(6, data.isRewardClaimed());
+                stmt.setString(7, json);
 
-                stmt.setString(9, playerName);
-                stmt.setString(10, missionName);
-                stmt.setBoolean(11, data.isActive());
-                stmt.setBoolean(12, data.isCompleted());
-                stmt.setBoolean(13, data.isRewardClaimed());
-                stmt.setString(14, json);
+                stmt.setString(8, playerName);
+                stmt.setString(9, missionName);
+                stmt.setBoolean(10, data.isCompleted());
+                stmt.setBoolean(11, data.isRewardClaimed());
+                stmt.setString(12, json);
 
                 stmt.addBatch();
             }
@@ -271,7 +248,6 @@ public class DatabaseManager {
                 "ON DUPLICATE KEY UPDATE item_name=?, item_level=?, contents=?, updated_at=CURRENT_TIMESTAMP";
 
         try (Connection conn = getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
-            // Valores para INSERT (Nueva mochila)
             stmt.setString(1, backpackUuid);
             stmt.setString(2, ownerUuid.toString());
             stmt.setString(3, ownerName);
@@ -279,7 +255,6 @@ public class DatabaseManager {
             stmt.setInt(5, level);
             stmt.setString(6, contents);
 
-            // Valores para UPDATE (Mochila existente)
             stmt.setString(7, itemName);
             stmt.setInt(8, level);
             stmt.setString(9, contents);
@@ -300,7 +275,6 @@ public class DatabaseManager {
         }
     }
 
-    // Clase auxiliar para guardar info básica en la GUI de admin
     public static class BackpackInfo {
         public String uuid;
         public String itemName;
@@ -350,12 +324,12 @@ public class DatabaseManager {
         } catch (SQLException e) {
             plugin.getLogger().severe("Error buscando UUID por nombre: " + e.getMessage());
         }
-        return null; // Retorna null si no se encuentra en la base de datos
+        return null;
     }
 
     public void reload() {
         loadConfig();
-        initializeDatabase();
+        connectWithRetry(3);
         plugin.getLogger().info("¡Configuración de base de datos recargada!");
     }
 }

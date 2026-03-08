@@ -31,10 +31,10 @@ public class Mission27 implements Mission, Listener {
     }
 
     @Override
-    public String getName() { return "Día de los Furros"; }
+    public String getName() { return "Día del Omega"; }
 
     @Override
-    public String getDescription() { return "Elimina a IsManuPlay en combate."; }
+    public String getDescription() { return "Mata al prieto de Crosszy."; }
 
     @Override
     public int getMissionNumber() { return 27; }
@@ -43,13 +43,13 @@ public class Mission27 implements Mission, Listener {
     public List<ItemStack> getRewards() {
         List<ItemStack> rewards = new ArrayList<>();
         ItemStack coins = EconomyItems.createVithiumCoin();
-        coins.setAmount(40);
-        ItemStack goldenApples = new ItemStack(Material.ENCHANTED_GOLDEN_APPLE, 10);
+        coins.setAmount(16);
+        ItemStack goldenApples = new ItemStack(Material.ENCHANTED_GOLDEN_APPLE, 5);
 
         ItemStack specificHead = new ItemStack(Material.PLAYER_HEAD, 1);
         if (specificHead.getItemMeta() instanceof SkullMeta meta) {
-            meta.setOwningPlayer(Bukkit.getOfflinePlayer("IsManuPlay"));
-            meta.setDisplayName("§cCabeza de IsManuPlay");
+            meta.setOwningPlayer(Bukkit.getOfflinePlayer("Crosszy"));
+            meta.setDisplayName("§cCabeza de Crosszy");
             specificHead.setItemMeta(meta);
         }
 
@@ -75,7 +75,7 @@ public class Mission27 implements Mission, Listener {
         Player victim = event.getEntity();
         Player killer = victim.getKiller();
 
-        if (victim.getName().equalsIgnoreCase("IsManuPlay")) {
+        if (victim.getName().equalsIgnoreCase("Crosszy")) {
             if (killer != null && !killer.equals(victim)) {
 
                 if (!missionHandler.isMissionActive(killer, 27)) return;
@@ -84,10 +84,9 @@ public class Mission27 implements Mission, Listener {
 
                 if (!data.isCompleted()) {
                     successNotification.showSuccess(killer);
-                    String msg = ChatColor.GOLD + "۞ " + ChatColor.RED + "¡LEYENDA DERROTADA!";
+                    String msg = ChatColor.GOLD + "۞ " + ChatColor.RED + "¡Omega DERROTADO!";
                     actionBarHandler.sendActionBar(killer, msg);
 
-                    // La DB se guarda al invocar el completeMission
                     missionHandler.completeMission(killer, 27);
                 }
             }

@@ -267,7 +267,7 @@ public class DayOneChanges implements Listener {
 
                 spawnQueenBee(loc);
                 player.removePotionEffect(PotionEffectType.BAD_OMEN);
-                event.setCooldownSeconds(1500);
+                event.setCooldownSeconds(7200);
 
             } else {
                 player.sendMessage(net.md_5.bungee.api.ChatColor.RED + "۞ Necesitas Bad Omen para activar este altar.");

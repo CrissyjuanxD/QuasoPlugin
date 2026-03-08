@@ -33,7 +33,7 @@ public class MissionRewardHandler implements Listener {
         if (event.getHand() != EquipmentSlot.HAND) return;
 
         Entity entity = event.getRightClicked();
-        if (entity.getType() != EntityType.FOX) return;
+        if (entity.getType() != EntityType.COPPER_GOLEM) return;
         if (!entity.getScoreboardTags().contains("reward_statue") &&
                 !entity.getName().contains("Estatua de Recompensas")) return;
 

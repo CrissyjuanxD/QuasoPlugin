@@ -1,7 +1,7 @@
 package Events.ItemParty;
 
 import Commands.TiempoCommand;
-import TitleListener.RuletaAnimation;
+import TitleListener.EventoAnimation;
 import items.ItemsPartyRecolect;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -44,7 +44,7 @@ public class ItemPartyHandler implements Listener {
 
     private final JavaPlugin plugin;
     private final TiempoCommand tiempoCommand;
-    private final RuletaAnimation ruletaAnimation;
+    private final EventoAnimation ruletaAnimation;
     private final ItemsPartyRecolect partyItems;
     private long lastScoreUpdate = 0L;
 
@@ -72,7 +72,7 @@ public class ItemPartyHandler implements Listener {
     public ItemPartyHandler(JavaPlugin plugin, TiempoCommand tiempoCommand) {
         this.plugin = plugin;
         this.tiempoCommand = tiempoCommand;
-        this.ruletaAnimation = new RuletaAnimation(plugin);
+        this.ruletaAnimation = new EventoAnimation(plugin);
         this.partyItems = new ItemsPartyRecolect(plugin);
         this.KEY_ORIGIN = new NamespacedKey(plugin, "itemparty_origin");
         this.KEY_COUNTED = new NamespacedKey(plugin, "itemparty_counted");

@@ -8,11 +8,14 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.event.entity.EntityPickupItemEvent;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class Mission14 implements Mission, Listener {
     private final JavaPlugin plugin;
@@ -20,8 +23,15 @@ public class Mission14 implements Mission, Listener {
     private final SuccessNotification successNotification;
     private final ActionBarHandler actionBarHandler;
 
-    private final Map<UUID, Double> startY = new HashMap<>();
-    private final Map<UUID, Long> startTime = new HashMap<>();
+    private final List<Material> flowers = Arrays.asList(
+            Material.DANDELION, Material.POPPY, Material.BLUE_ORCHID,
+            Material.ALLIUM, Material.AZURE_BLUET, Material.RED_TULIP,
+            Material.ORANGE_TULIP, Material.WHITE_TULIP, Material.PINK_TULIP,
+            Material.OXEYE_DAISY, Material.CORNFLOWER, Material.LILY_OF_THE_VALLEY,
+            Material.WITHER_ROSE, Material.SUNFLOWER, Material.LILAC,
+            Material.ROSE_BUSH, Material.PEONY, Material.TORCHFLOWER,
+            Material.PITCHER_PLANT, Material.PINK_PETALS, Material.SPORE_BLOSSOM
+    );
 
     public Mission14(JavaPlugin plugin, MissionHandler missionHandler) {
         this.plugin = plugin;
@@ -31,10 +41,10 @@ public class Mission14 implements Mission, Listener {
     }
 
     @Override
-    public String getName() { return "¡Sé que puedo volar!"; }
+    public String getName() { return "Stardew Valley"; }
 
     @Override
-    public String getDescription() { return "Sube 300 bloques de altura en menos de 7 segundos."; }
+    public String getDescription() { return "Consigue todas las flores del juego."; }
 
     @Override
     public int getMissionNumber() { return 14; }
@@ -43,10 +53,10 @@ public class Mission14 implements Mission, Listener {
     public List<ItemStack> getRewards() {
         List<ItemStack> rewards = new ArrayList<>();
         ItemStack coins = EconomyItems.createVithiumCoin();
-        coins.setAmount(5);
-        ItemStack goldenApples = new ItemStack(Material.GOLD_INGOT, 25);
-        ItemStack diamonds = new ItemStack(Material.FIREWORK_ROCKET, 64);
-        ItemStack xpFill = new ItemStack(Material.EXPERIENCE_BOTTLE, 3);
+        coins.setAmount(15);
+        ItemStack goldenApples = new ItemStack(Material.BONE_BLOCK, 32);
+        ItemStack diamonds = new ItemStack(Material.DIAMOND, 25);
+        ItemStack xpFill = new ItemStack(Material.EXPERIENCE_BOTTLE, 2);
         for (int i = 0; i < 27; i++) {
             if (i == 11) rewards.add(goldenApples);
             else if (i == 13) rewards.add(coins);
@@ -62,58 +72,60 @@ public class Mission14 implements Mission, Listener {
     @Override
     public void checkCompletion(String playerName) {}
 
+    public List<Material> getRequiredFlowers() { return flowers; }
+
     @EventHandler
-    public void onMove(PlayerMoveEvent event) {
-        if (event.getFrom().getBlockY() == event.getTo().getBlockY()) return;
-
-        Player player = event.getPlayer();
-        if (!missionHandler.isMissionActive(player, 14)) return;
-        if (missionHandler.isMissionCompleted(player, 14)) return;
-
-        if (player.isGliding() || player.isRiptiding() || player.getLocation().getY() > 350) {
-            processFlight(player, event.getFrom().getY(), event.getTo().getY());
-        } else {
-            if (event.getTo().getY() < event.getFrom().getY()) {
-                startY.remove(player.getUniqueId());
-                startTime.remove(player.getUniqueId());
-            }
+    public void onPickup(EntityPickupItemEvent event) {
+        if (event.getEntity() instanceof Player player) {
+            checkFlower(player, event.getItem().getItemStack().getType());
         }
     }
 
-    private void processFlight(Player player, double fromY, double toY) {
-        UUID id = player.getUniqueId();
+    @EventHandler
+    public void onInventoryClick(InventoryClickEvent event) {
+        if (!(event.getWhoClicked() instanceof Player player)) return;
 
-        if (toY < fromY) {
-            startY.remove(id);
-            startTime.remove(id);
-            return;
+        if (event.getCurrentItem() == null || event.getCurrentItem().getType() == Material.AIR) return;
+        Material clickedType = event.getCurrentItem().getType();
+
+        plugin.getServer().getScheduler().runTaskLater(plugin, () ->
+                checkFlower(player, clickedType), 1L);
+    }
+
+    private void checkFlower(Player player, Material type) {
+        if (type == null || type == Material.AIR) return;
+        if (!flowers.contains(type)) return;
+        if (!missionHandler.isMissionActive(player, 14)) return;
+
+        MissionData data = missionHandler.getData(player, 14);
+        if (data.isCompleted()) return;
+
+        String key = "collected_" + type.name();
+        if (data.getProgressBool(key)) return;
+
+        data.setProgressValue(key, true);
+
+        int count = 0;
+        for (Material f : flowers) {
+            if (data.getProgressBool("collected_" + f.name())) count++;
         }
 
-        if (!startY.containsKey(id)) {
-            startY.put(id, fromY);
-            startTime.put(id, System.currentTimeMillis());
-            return;
-        }
+        missionHandler.saveData(player, 14, data);
 
-        long timeElapsed = System.currentTimeMillis() - startTime.get(id);
-
-        if (timeElapsed > 7000) {
-            startY.put(id, fromY);
-            startTime.put(id, System.currentTimeMillis());
-            return;
-        }
-
-        double heightGained = toY - startY.get(id);
-
-        if (heightGained >= 300) {
+        if (count >= flowers.size()) {
             successNotification.showSuccess(player);
-            String msg = ChatColor.GOLD + "۞ " + ChatColor.of("#FFCC99") + "¡Velocidad supersónica alcanzada!";
-            actionBarHandler.sendActionBar(player, msg);
-
             missionHandler.completeMission(player, 14);
+        } else {
+            String flowerName = type.name().toLowerCase().replace('_', ' ');
+            flowerName = flowerName.substring(0, 1).toUpperCase() + flowerName.substring(1);
 
-            startY.remove(id);
-            startTime.remove(id);
+            String msg = ChatColor.GOLD + "۞ " +
+                    ChatColor.of("#FFCC99") + "Flor: " + ChatColor.GREEN + flowerName + " " +
+                    ChatColor.of("#FFA07A") + count +
+                    ChatColor.of("#FFE4B5") + "/" +
+                    ChatColor.of("#FFA07A") + flowers.size();
+            actionBarHandler.sendActionBar(player, msg);
+            player.playSound(player.getLocation(), org.bukkit.Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 0.5f, 1.5f);
         }
     }
 }

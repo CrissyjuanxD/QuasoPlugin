@@ -9,7 +9,6 @@ import org.bukkit.attribute.Attribute;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Player;
 import org.bukkit.entity.Villager;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.MerchantRecipe;
@@ -29,7 +28,7 @@ public class ShopManager {
     public final NamespacedKey shopKey;
     public final NamespacedKey shopIdKey;
 
-    public final Map<UUID, String> editingShops = new ConcurrentHashMap<>();
+    public final Map<UUID, String> activeShops = new ConcurrentHashMap<>();
     public final Map<UUID, Integer> editingTradeIndex = new ConcurrentHashMap<>();
     public final Map<UUID, String> editingSlotType = new ConcurrentHashMap<>();
 
@@ -75,32 +74,53 @@ public class ShopManager {
 
     private void initializeEmptyTrades(Villager villager) {
         List<MerchantRecipe> recipes = new ArrayList<>();
-        for (int i = 0; i < 12; i++) {
-            ItemStack emptyPaper = createEmptyTradeItem();
-            MerchantRecipe recipe = new MerchantRecipe(emptyPaper, Integer.MAX_VALUE);
-            recipe.addIngredient(emptyPaper);
+        for (int i = 0; i < 10; i++) {
+            ItemStack emptyItem = createEmptyTradeItem();
+            MerchantRecipe recipe = new MerchantRecipe(emptyItem, 9999);
+            recipe.addIngredient(emptyItem);
             recipes.add(recipe);
         }
         villager.setRecipes(recipes);
     }
 
     public ItemStack createEmptyTradeItem() {
-        ItemStack paper = new ItemStack(Material.PAPER);
-        ItemMeta meta = paper.getItemMeta();
-        meta.setDisplayName(ChatColor.GRAY + "Vacío");
-        meta.setCustomModelData(100);
-        paper.setItemMeta(meta);
-        return paper;
+        ItemStack item = new ItemStack(Material.STRUCTURE_VOID);
+        ItemMeta meta = item.getItemMeta();
+        if (meta != null) {
+            meta.setDisplayName(ChatColor.GRAY + "Vacío");
+            item.setItemMeta(meta);
+        }
+        return item;
     }
 
-    // Método extraído literalmente de tu código antiguo
+    public boolean isEmpty(ItemStack item) {
+        return item == null || item.getType() == Material.AIR || item.getType() == Material.STRUCTURE_VOID;
+    }
+
+    public boolean isMatch(ItemStack invItem, ItemStack reqItem) {
+        if (isEmpty(invItem) || isEmpty(reqItem)) return false;
+        if (invItem.getType() != reqItem.getType()) return false;
+
+        ItemMeta invMeta = invItem.getItemMeta();
+        ItemMeta reqMeta = reqItem.getItemMeta();
+
+        if (reqMeta != null && reqMeta.hasCustomModelData()) {
+            return invMeta != null && invMeta.hasCustomModelData() && invMeta.getCustomModelData() == reqMeta.getCustomModelData();
+        }
+        if (reqMeta != null && reqMeta.hasDisplayName()) {
+            return invMeta != null && invMeta.hasDisplayName() && invMeta.getDisplayName().equals(reqMeta.getDisplayName());
+        }
+
+        return true;
+    }
+
     public void updateVillagerTrade(Villager villager, int tradeNumber, String slotType, ItemStack item) {
         List<MerchantRecipe> recipes = new ArrayList<>(villager.getRecipes());
 
         while (recipes.size() <= tradeNumber) {
-            ItemStack emptyPaper = createEmptyTradeItem();
-            MerchantRecipe recipe = new MerchantRecipe(emptyPaper, Integer.MAX_VALUE);
-            recipe.addIngredient(emptyPaper);
+            ItemStack emptyItem = createEmptyTradeItem();
+            MerchantRecipe recipe = new MerchantRecipe(emptyItem, 9999);
+            recipe.addIngredient(emptyItem);
             recipes.add(recipe);
         }
 
@@ -110,52 +130,36 @@ public class ShopManager {
 
         switch (slotType) {
             case "Ingrediente 1":
-                if (item.getType() == Material.AIR) {
-                    if (!ingredients.isEmpty()) {
-                        ingredients.set(0, createEmptyTradeItem());
-                    }
+                if (isEmpty(item)) {
+                    if (!ingredients.isEmpty()) ingredients.set(0, createEmptyTradeItem());
                 } else {
-                    if (ingredients.isEmpty()) {
-                        ingredients.add(item);
-                    } else {
-                        ingredients.set(0, item);
-                    }
+                    if (ingredients.isEmpty()) ingredients.add(item);
+                    else ingredients.set(0, item);
                 }
                 break;
             case "Ingrediente 2":
-                if (item.getType() == Material.AIR) {
-                    if (ingredients.size() > 1) {
-                        ingredients.remove(1);
-                    }
+                if (isEmpty(item)) {
+                    if (ingredients.size() > 1) ingredients.remove(1);
                 } else {
                     if (ingredients.size() < 2) {
-                        if (ingredients.isEmpty()) {
-                            ingredients.add(createEmptyTradeItem());
-                        }
+                        if (ingredients.isEmpty()) ingredients.add(createEmptyTradeItem());
                         ingredients.add(item);
                     } else {
                         ingredients.set(1, item);
                     }
                 }
                 break;
-            case "Resultado":
-                result = (item.getType() == Material.AIR) ? createEmptyTradeItem() : item;
+            case "Producto":
+                result = isEmpty(item) ? createEmptyTradeItem() : item;
                 break;
         }
 
-        MerchantRecipe newRecipe = new MerchantRecipe(
-                (result == null || result.getType() == Material.AIR) ? createEmptyTradeItem() : result, Integer.MAX_VALUE
-        );
+        MerchantRecipe newRecipe = new MerchantRecipe(isEmpty(result) ? createEmptyTradeItem() : result, 9999);
 
         for (ItemStack ingredient : ingredients) {
-            if (ingredient != null && !ingredient.getType().isAir()) {
-                newRecipe.addIngredient(ingredient);
-            }
+            if (!isEmpty(ingredient)) newRecipe.addIngredient(ingredient);
         }
-
-        if (newRecipe.getIngredients().isEmpty()) {
-            newRecipe.addIngredient(createEmptyTradeItem());
-        }
+        if (newRecipe.getIngredients().isEmpty()) newRecipe.addIngredient(createEmptyTradeItem());
 
         recipes.set(tradeNumber, newRecipe);
         villager.setRecipes(recipes);
@@ -172,26 +176,17 @@ public class ShopManager {
             List<ItemStack> ingredients = recipe.getIngredients();
             for (int j = 0; j < ingredients.size(); j++) {
                 ItemStack ingredient = ingredients.get(j);
-                if (ingredient != null && !ingredient.getType().isAir()) {
-                    config.set(basePath + ".ingredients." + j, ingredient);
-                }
+                if (!isEmpty(ingredient)) config.set(basePath + ".ingredients." + j, ingredient);
             }
 
             ItemStack result = recipe.getResult();
-            if (result != null && !result.getType().isAir()) {
-                config.set(basePath + ".result", result);
-            } else {
-                config.set(basePath + ".result", createEmptyTradeItem());
-            }
+            if (!isEmpty(result)) config.set(basePath + ".result", result);
+            else config.set(basePath + ".result", createEmptyTradeItem());
 
             config.set(basePath + ".maxUses", recipe.getMaxUses());
         }
 
-        try {
-            config.save(tradesFile);
-        } catch (IOException e) {
-            plugin.getLogger().severe("Error guardando tradeos: " + e.getMessage());
-        }
+        try { config.save(tradesFile); } catch (IOException e) { plugin.getLogger().severe("Error guardando tradeos: " + e.getMessage()); }
     }
 
     public void loadShopTrades(String shopId, Villager villager) {
@@ -200,100 +195,36 @@ public class ShopManager {
 
         List<MerchantRecipe> recipes = new ArrayList<>();
 
-        for (int i = 0; i < 12; i++) {
+        for (int i = 0; i < 10; i++) {
             String basePath = "shops." + shopId + ".trades." + i;
 
             if (config.contains(basePath)) {
                 ItemStack result = config.getItemStack(basePath + ".result");
-                int maxUses = Integer.MAX_VALUE;
 
                 if (result != null) {
-                    MerchantRecipe recipe = new MerchantRecipe(result, maxUses);
-
+                    MerchantRecipe recipe = new MerchantRecipe(result, 9999);
                     for (int j = 0; j < 2; j++) {
                         ItemStack ingredient = config.getItemStack(basePath + ".ingredients." + j);
-                        if (ingredient != null && !ingredient.getType().isAir()) {
-                            recipe.addIngredient(ingredient);
-                        }
+                        if (!isEmpty(ingredient)) recipe.addIngredient(ingredient);
+                    }
+                    if (recipe.getIngredients().isEmpty()) {
+                        recipe.addIngredient(createEmptyTradeItem());
                     }
                     recipes.add(recipe);
                 } else {
-                    ItemStack emptyPaper = createEmptyTradeItem();
-                    MerchantRecipe recipe = new MerchantRecipe(emptyPaper, 999);
-                    recipe.addIngredient(emptyPaper);
+                    ItemStack emptyItem = createEmptyTradeItem();
+                    MerchantRecipe recipe = new MerchantRecipe(emptyItem, 9999);
+                    recipe.addIngredient(emptyItem);
                     recipes.add(recipe);
                 }
             } else {
-                ItemStack emptyPaper = createEmptyTradeItem();
-                MerchantRecipe recipe = new MerchantRecipe(emptyPaper, 999);
-                recipe.addIngredient(emptyPaper);
+                ItemStack emptyItem = createEmptyTradeItem();
+                MerchantRecipe recipe = new MerchantRecipe(emptyItem, 9999);
+                recipe.addIngredient(emptyItem);
                 recipes.add(recipe);
             }
         }
         villager.setRecipes(recipes);
-    }
-
-    // MÉTODO EXACTO DE TU CÓDIGO ANTIGUO
-    public void updateTradesForPlayer(Villager villager, Player player) {
-        List<MerchantRecipe> currentRecipes = new ArrayList<>(villager.getRecipes());
-        boolean needsUpdate = false;
-        List<MerchantRecipe> updatedRecipes = new ArrayList<>();
-
-        for (MerchantRecipe recipe : currentRecipes) {
-            MerchantRecipe newRecipe = new MerchantRecipe(recipe.getResult(), 0, Integer.MAX_VALUE, recipe.hasExperienceReward(), recipe.getVillagerExperience(), recipe.getPriceMultiplier());
-            List<ItemStack> ingredients = recipe.getIngredients();
-            List<ItemStack> newIngredients = new ArrayList<>();
-
-            boolean recipeChanged = false;
-
-            for (ItemStack ingredient : ingredients) {
-                if (hasCustomModelData(ingredient)) {
-                    ItemStack playerMatchingItem = findMatchingItemInPlayerInventory(player, ingredient);
-
-                    if (playerMatchingItem != null) {
-                        ItemStack requirement = playerMatchingItem.clone();
-                        requirement.setAmount(ingredient.getAmount());
-                        newIngredients.add(requirement);
-                        recipeChanged = true;
-                    } else {
-                        newIngredients.add(ingredient);
-                    }
-                } else {
-                    newIngredients.add(ingredient);
-                }
-            }
-
-            if (recipeChanged) {
-                newRecipe.setIngredients(newIngredients);
-                updatedRecipes.add(newRecipe);
-                needsUpdate = true;
-            } else {
-                updatedRecipes.add(recipe);
-            }
-        }
-
-        if (needsUpdate) {
-            villager.setRecipes(updatedRecipes);
-        }
-    }
-
-    private boolean hasCustomModelData(ItemStack item) {
-        return item != null && item.hasItemMeta() && item.getItemMeta().hasCustomModelData();
-    }
-
-    private ItemStack findMatchingItemInPlayerInventory(Player player, ItemStack shopIngredient) {
-        int targetModelData = shopIngredient.getItemMeta().getCustomModelData();
-        Material targetMaterial = shopIngredient.getType();
-
-        for (ItemStack item : player.getInventory().getContents()) {
-            if (item != null && item.getType() == targetMaterial && item.hasItemMeta()) {
-                ItemMeta meta = item.getItemMeta();
-                if (meta.hasCustomModelData() && meta.getCustomModelData() == targetModelData) {
-                    return item;
-                }
-            }
-        }
-        return null;
     }
 
     public void removeShopFromFile(String shopId) {
@@ -303,6 +234,7 @@ public class ShopManager {
     }
 
     public Villager getVillagerById(String shopId) {
+        if (shopId == null) return null;
         for (org.bukkit.World world : Bukkit.getWorlds()) {
             for (Villager v : world.getEntitiesByClass(Villager.class)) {
                 if (shopId.equals(v.getPersistentDataContainer().get(shopIdKey, PersistentDataType.STRING))) {

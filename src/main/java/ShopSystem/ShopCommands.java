@@ -15,6 +15,7 @@ import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.util.RayTraceResult;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -40,42 +41,64 @@ public class ShopCommands implements CommandExecutor, TabCompleter {
         if (command.getName().equalsIgnoreCase("spawnshop")) {
             if (!player.hasPermission("viciont_hardcore3.shop.admin")) return true;
             if (args.length < 1) {
-                player.sendMessage(ChatColor.RED + "Uso: /spawnshop <nombre> [x y z] [bioma] [profesion]");
+                player.sendMessage(ChatColor.RED + "Uso: /spawnshop <\"Nombre\"> [x y z] [bioma] [profesion]");
                 return true;
             }
 
-            String name = args[0].replace("_", " ");
+            // CORRECCIÓN: Parseador de Comillas para permitir nombres separados
+            String fullArgs = String.join(" ", args);
+            String name = "Tienda";
+
+            if (fullArgs.startsWith("\"")) {
+                int endQuote = fullArgs.indexOf("\"", 1);
+                if (endQuote != -1) {
+                    name = fullArgs.substring(1, endQuote);
+                    fullArgs = fullArgs.substring(endQuote + 1).trim();
+                } else {
+                    name = fullArgs.substring(1);
+                    fullArgs = "";
+                }
+            } else {
+                String[] split = fullArgs.split(" ", 2);
+                name = split[0].replace("_", " "); // Soporte retroactivo para guiones bajos
+                fullArgs = split.length > 1 ? split[1] : "";
+            }
+
             Location loc = player.getLocation();
             Villager.Type type = Villager.Type.PLAINS;
             Villager.Profession profession = Villager.Profession.NONE;
 
-            int nextArgIndex = 1;
+            if (!fullArgs.isEmpty()) {
+                String[] remainingArgs = fullArgs.split(" ");
+                int argIndex = 0;
 
-            if (args.length >= 4 && isDouble(args[1])) {
-                try {
-                    double x = Double.parseDouble(args[1]);
-                    double y = Double.parseDouble(args[2]);
-                    double z = Double.parseDouble(args[3]);
-                    loc = new Location(player.getWorld(), x, y, z);
-                    nextArgIndex = 4;
-                } catch (NumberFormatException ignored) {}
-            }
+                // Verificamos si proporcionaron coordenadas
+                if (remainingArgs.length >= 3 && isDouble(remainingArgs[0])) {
+                    try {
+                        double x = Double.parseDouble(remainingArgs[0]);
+                        double y = Double.parseDouble(remainingArgs[1]);
+                        double z = Double.parseDouble(remainingArgs[2]);
+                        loc = new Location(player.getWorld(), x, y, z);
+                        argIndex = 3;
+                    } catch (NumberFormatException ignored) {}
+                }
 
-            if (args.length > nextArgIndex) {
-                try {
-                    type = Villager.Type.valueOf(args[nextArgIndex].toUpperCase());
-                    nextArgIndex++;
-                } catch (IllegalArgumentException ignored) {}
-            }
+                if (remainingArgs.length > argIndex) {
+                    try {
+                        type = Villager.Type.valueOf(remainingArgs[argIndex].toUpperCase());
+                        argIndex++;
+                    } catch (IllegalArgumentException ignored) {}
+                }
 
-            if (args.length > nextArgIndex) {
-                try {
-                    profession = Villager.Profession.valueOf(args[nextArgIndex].toUpperCase());
-                } catch (IllegalArgumentException ignored) {}
+                if (remainingArgs.length > argIndex) {
+                    try {
+                        profession = Villager.Profession.valueOf(remainingArgs[argIndex].toUpperCase());
+                    } catch (IllegalArgumentException ignored) {}
+                }
             }
 
             shopManager.spawnShop(name, loc, type, profession);
-            player.sendMessage(ChatColor.GREEN + "Tienda creada: " + type.name() + " / " + profession.name());
+            player.sendMessage(ChatColor.GREEN + "Tienda creada: " + ChatColor.RESET + ChatColor.translateAlternateColorCodes('&', name) + ChatColor.GREEN + " (" + type.name() + " / " + profession.name() + ")");
             return true;
         }
 
@@ -120,7 +143,7 @@ public class ShopCommands implements CommandExecutor, TabCompleter {
             if (!player.hasPermission("viciont_hardcore3.shop.admin")) return true;
 
             UUID uuid = player.getUniqueId();
-            if (!shopManager.editingShops.containsKey(uuid)) {
+            if (!shopManager.editingTradeIndex.containsKey(uuid)) {
                 player.sendMessage(ChatColor.RED + "No estás editando ninguna tienda.");
                 return true;
             }
@@ -146,7 +169,7 @@ public class ShopCommands implements CommandExecutor, TabCompleter {
                 }
             }
 
-            String shopId = shopManager.editingShops.get(uuid);
+            String shopId = shopManager.activeShops.get(uuid);
             Integer tradeIndex = shopManager.editingTradeIndex.get(uuid);
             String slotType = shopManager.editingSlotType.get(uuid);
 
@@ -161,7 +184,6 @@ public class ShopCommands implements CommandExecutor, TabCompleter {
                 return true;
             }
 
-            // Aplicamos la misma lógica del código antiguo
             shopManager.updateVillagerTrade(villager, tradeIndex, slotType, item);
             shopManager.saveShopTrades(shopId, villager.getRecipes());
 
@@ -200,15 +222,36 @@ public class ShopCommands implements CommandExecutor, TabCompleter {
             }
         }
         if (command.getName().equalsIgnoreCase("spawnshop")) {
-            if (args.length == 1) return null;
-            if (args.length >= 2) {
-                String lastArg = args[args.length - 1].toUpperCase();
-                List<String> suggestions = new ArrayList<>();
-                for (Villager.Type t : Villager.Type.values()) suggestions.add(t.name());
-                for (Villager.Profession p : Villager.Profession.values()) suggestions.add(p.name());
-                return suggestions.stream()
-                        .filter(s -> s.startsWith(lastArg))
-                        .collect(Collectors.toList());
+            if (args.length == 1) return Arrays.asList("\"Nombre de la Tienda\"");
+
+            // Lógica de autocompletado si ya pasamos el nombre
+            String fullArgs = String.join(" ", args);
+            String[] remaining = null;
+            if (fullArgs.startsWith("\"")) {
+                int endQuote = fullArgs.indexOf("\"", 1);
+                if (endQuote != -1 && fullArgs.length() > endQuote + 1) {
+                    remaining = fullArgs.substring(endQuote + 1).trim().split(" ");
+                }
+            } else {
+                String[] split = fullArgs.split(" ");
+                if (split.length > 1) {
+                    remaining = Arrays.copyOfRange(split, 1, split.length);
+                }
+            }
+
+            if (remaining != null && remaining.length > 0) {
+                int currentArgIndex = remaining.length - 1; // 0=coordX, 1=coordY, 2=coordZ, 3=Type, 4=Profession
+                String lastArg = remaining[currentArgIndex].toUpperCase();
+
+                if (currentArgIndex == 3 || currentArgIndex == 0) { // Bioma (Type)
+                    List<String> suggestions = new ArrayList<>();
+                    for (Villager.Type t : Villager.Type.values()) suggestions.add(t.name());
+                    return suggestions.stream().filter(s -> s.startsWith(lastArg)).collect(Collectors.toList());
+                } else if (currentArgIndex == 4 || currentArgIndex == 1) { // Profesión
+                    List<String> suggestions = new ArrayList<>();
+                    for (Villager.Profession p : Villager.Profession.values()) suggestions.add(p.name());
+                    return suggestions.stream().filter(s -> s.startsWith(lastArg)).collect(Collectors.toList());
+                }
             }
         }
         return null;

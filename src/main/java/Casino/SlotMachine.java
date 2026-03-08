@@ -1,7 +1,9 @@
 package Casino;
 
-import items.DoubleLifeTotem;
-import items.EconomyItems;
+import Dificultades.DayOneChanges;
+import Habilidades.HabilidadesBook;
+import items.*;
+import items.IceBow.IceBowItem;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.*;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -33,6 +35,13 @@ import java.util.concurrent.ConcurrentHashMap;
 public class SlotMachine implements Listener {
     private final JavaPlugin plugin;
     private final DoubleLifeTotem doubleLifeTotem;
+    private final EconomyIceTotem economyIceTotem;
+    private final EconomyFlyTotem economyFlyTotem;
+    private final excavatorItem ExcavatorItem;
+    private final AmuletBloodM amuletBloodM;
+    private final AmuletInmortal amuletInmortal;
+    private final LifeCampfire lifeCampfire;
+    private final IceBowItem iceBowItem;
     private final CasinoManager manager;
 
     // Título con colores del código antiguo
@@ -85,6 +94,13 @@ public class SlotMachine implements Listener {
         this.plugin = plugin;
         this.manager = manager;
         this.doubleLifeTotem = new DoubleLifeTotem(plugin);
+        this.economyIceTotem = new EconomyIceTotem(plugin);
+        this.economyFlyTotem = new EconomyFlyTotem(plugin);
+        this.ExcavatorItem = new excavatorItem(plugin);
+        this.amuletBloodM = new AmuletBloodM(plugin);
+        this.amuletInmortal = new AmuletInmortal(plugin);
+        this.lifeCampfire = new LifeCampfire(plugin);
+        this.iceBowItem = new IceBowItem(plugin);
         this.configFile = new File(plugin.getDataFolder(), "SlotMachine.yml");
 
         loadConfig();
@@ -181,9 +197,8 @@ public class SlotMachine implements Listener {
         spin.setItemMeta(sm);
         inv.setItem(spinButton, spin); // Slot 43
 
-        // 2. Líneas de Premio (NUEVO)
         // Izquierda (27, 28, 29) -> Apunta a la derecha
-        ItemStack leftLine = new ItemStack(Material.RED_STAINED_GLASS_PANE);
+        ItemStack leftLine = new ItemStack(Material.RED_DYE);
         ItemMeta leftMeta = leftLine.getItemMeta();
         leftMeta.setDisplayName(ChatColor.GOLD + "" + ChatColor.BOLD + "»» " + ChatColor.RED + "Línea de Premio" + ChatColor.GOLD + " »»");
         leftMeta.setCustomModelData(1000);
@@ -194,7 +209,7 @@ public class SlotMachine implements Listener {
         inv.setItem(29, leftLine);
 
         // Derecha (33, 34, 35) -> Apunta a la izquierda
-        ItemStack rightLine = new ItemStack(Material.RED_STAINED_GLASS_PANE);
+        ItemStack rightLine = new ItemStack(Material.RED_DYE);
         ItemMeta rightMeta = rightLine.getItemMeta();
         rightMeta.setDisplayName(ChatColor.GOLD + "" + ChatColor.BOLD + "«« " + ChatColor.RED + "Línea de Premio" + ChatColor.GOLD + " ««");
         rightMeta.setCustomModelData(1000);
@@ -204,8 +219,7 @@ public class SlotMachine implements Listener {
         inv.setItem(34, rightLine);
         inv.setItem(35, rightLine);
 
-        // 3. Rellenar fondo gris (evitando lo que ya pusimos)
-        ItemStack glass = new ItemStack(Material.GRAY_STAINED_GLASS_PANE);
+        ItemStack glass = new ItemStack(Material.BLACK_DYE);
         ItemMeta gm = glass.getItemMeta();
         gm.setDisplayName(" ");
         gm.setCustomModelData(1000);
@@ -218,18 +232,16 @@ public class SlotMachine implements Listener {
             }
         }
 
-        // 4. Indicadores de Ficha (Alrededor del slot 49)
-        ItemStack tokenIndicator = new ItemStack(Material.GRAY_STAINED_GLASS_PANE);
+        // 4. Indicadores de Ficha (Alrededor del slot 49 - FIX CÁLCULO DE SLOTS)
+        ItemStack tokenIndicator = new ItemStack(Material.ORANGE_DYE);
         ItemMeta tokenMeta = tokenIndicator.getItemMeta();
         tokenMeta.setDisplayName(ChatColor.of("#FFD3A5") + "" + ChatColor.BOLD + "Coloca DinoFicha Aquí");
         tokenMeta.setCustomModelData(1000);
         tokenIndicator.setItemMeta(tokenMeta);
 
-        int[] indicatorSlots = {40, 41, 42, 48, 50, 57, 58};
+        int[] indicatorSlots = {39, 40, 41, 48, 50};
         for (int slot : indicatorSlots) {
-            if (slot < 54 && inv.getItem(slot).getType() == Material.GRAY_STAINED_GLASS_PANE) {
-                inv.setItem(slot, tokenIndicator);
-            }
+            inv.setItem(slot, tokenIndicator);
         }
 
         // 5. Inicializar Rodillos (O recuperar estado)
@@ -294,8 +306,13 @@ public class SlotMachine implements Listener {
 
     @EventHandler
     public void onInventoryClick(InventoryClickEvent e) {
-        if (!e.getView().getTitle().equals(title)) return;
         Player p = (Player) e.getWhoClicked();
+
+        // FIX BEDROCK: Usar Metadata para validar la sesión en lugar del Title
+        if (!p.hasMetadata("slot_machine_location")) return;
+
+        // Prevención extra para asegurar que es un menú de máquina
+        if (e.getView().getTopInventory().getSize() != 54) return;
 
         if (e.getClickedInventory() == p.getInventory()) return;
 
@@ -324,7 +341,6 @@ public class SlotMachine implements Listener {
         }
     }
 
-    // --- AQUÍ ESTÁ LA LÓGICA DE PROBABILIDAD CORREGIDA ---
     private void startSpin(Player p, Inventory inv) {
         if (isSpinning.getOrDefault(p.getUniqueId(), false)) return;
 
@@ -348,30 +364,23 @@ public class SlotMachine implements Listener {
         AnimationState state = new AnimationState();
         Random r = new Random();
 
-        // -------------------------------------------------------------
-        // NUEVA LÓGICA DE PROBABILIDAD (FORCE WIN/LOSS)
-        // -------------------------------------------------------------
         double winChance = config.getDouble("SlotMachine.win_chance", 15.0);
         double roll = r.nextDouble() * 100; // 0.0 a 100.0
         boolean shouldWin = roll <= winChance;
 
         if (shouldWin) {
-            // CASO VICTORIA: Elegir un símbolo y forzarlo en los 3 rodillos
             Material winningSymbol = symbols[r.nextInt(symbols.length)];
             state.finalResults[0] = winningSymbol;
             state.finalResults[1] = winningSymbol;
             state.finalResults[2] = winningSymbol;
         } else {
-            // CASO DERROTA: Generar aleatorio y evitar que sean 3 iguales
             do {
                 state.finalResults[0] = symbols[r.nextInt(symbols.length)];
                 state.finalResults[1] = symbols[r.nextInt(symbols.length)];
                 state.finalResults[2] = symbols[r.nextInt(symbols.length)];
             } while (state.finalResults[0] == state.finalResults[1] && state.finalResults[1] == state.finalResults[2]);
         }
-        // -------------------------------------------------------------
 
-        // Rellenar símbolos iniciales de animación (solo visual)
         for(int i=0; i<3; i++) {
             for(int j=0; j<3; j++) state.currentSymbols[i][j] = symbols[r.nextInt(symbols.length)];
         }
@@ -408,7 +417,8 @@ public class SlotMachine implements Listener {
                         }
                     }
 
-                    if (p.getOpenInventory().getTitle().equals(title)) {
+                    // FIX BEDROCK (Validación visual por metadata en vez de Title)
+                    if (p.hasMetadata("slot_machine_location") && p.getOpenInventory().getTopInventory().getSize() == 54) {
                         updateGUIFromAnimationState(inv, state);
                     }
 
@@ -441,13 +451,11 @@ public class SlotMachine implements Listener {
         isSpinning.put(p.getUniqueId(), false);
         Material[] results = state.finalResults;
 
-        // Mostrar resultados en dorado
         for(int i=0; i<3; i++) {
             int slot = reel1Slots[2] + i;
             setSymbolInSlot(inv, slot, results[i], true);
         }
 
-        // CHECK WIN
         if (results[0] == results[1] && results[1] == results[2]) {
             giveReward(p, results[0], loc);
         } else {
@@ -462,10 +470,16 @@ public class SlotMachine implements Listener {
             new BukkitRunnable() {
                 @Override
                 public void run() {
+                    // Si ya no está girando, procedemos a limpiar
                     if (!isSpinning.getOrDefault(p.getUniqueId(), false)) {
                         cleanupDisplays(loc);
                         animationStates.remove(loc);
                         activeAnimations.remove(loc);
+
+                        // FIX BEDROCK: Liberar la mesa automáticamente al terminar si el jugador cerró el inventario durante el giro
+                        if (!p.hasMetadata("slot_machine_location")) {
+                            forceCleanup(p, loc);
+                        }
                     }
                 }
             }.runTaskLater(plugin, 100L);
@@ -522,20 +536,22 @@ public class SlotMachine implements Listener {
 
     @EventHandler
     public void onClose(InventoryCloseEvent e) {
-        if (!e.getView().getTitle().equals(title)) return;
         Player p = (Player) e.getPlayer();
+
+        // FIX BEDROCK: Validación por Metadata
+        if (!p.hasMetadata("slot_machine_location")) return;
 
         ItemStack tokens = e.getInventory().getItem(tokenSlot);
         if (tokens != null) p.getInventory().addItem(tokens);
 
-        if (p.hasMetadata("slot_machine_location")) {
-            Location loc = (Location) p.getMetadata("slot_machine_location").get(0).value();
+        Location loc = (Location) p.getMetadata("slot_machine_location").get(0).value();
 
-            if (!activeAnimations.containsKey(loc)) {
-                forceCleanup(p, loc);
-            }
+        // FIX BEDROCK: Si el jugador se va, removemos el flag de metadata para que
+        // el timer `finishSpin` sepa que debe limpiar la mesa al terminar la animación.
+        p.removeMetadata("slot_machine_location", plugin);
 
-            p.removeMetadata("slot_machine_location", plugin);
+        if (!activeAnimations.containsKey(loc)) {
+            forceCleanup(p, loc);
         }
     }
 
@@ -627,16 +643,111 @@ public class SlotMachine implements Listener {
         ItemStack item = null;
 
         switch (name.toLowerCase()) {
-            case "dino_fichas":
-                item = EconomyItems.createVithiumToken();
-                break;
-            case "vithiums":
-                item = EconomyItems.createVithiumCoin();
-                break;
             case "doubletotem":
                 item = doubleLifeTotem.createDoubleLifeTotem();
                 break;
-            // Pega aquí tus items custom (DoubleTotem, etc)
+            case "corrupted_steak":
+                item = DayOneChanges.corruptedSteak();
+                break;
+            case "corrupted_golden_apple":
+                item = CorruptedGoldenApple.createCorruptedGoldenApple();
+                break;
+            case "libro_habilidades":
+                item = HabilidadesBook.createHabilidadesBook();
+                break;
+            case "dinocoins":
+                item = EconomyItems.createVithiumCoin();
+                break;
+            case "dinofichas":
+                item = EconomyItems.createVithiumToken();
+                break;
+            case "mochila_nivel_1":
+                item = EconomyItems.createNormalMochila();
+                break;
+            case "mochila_nivel_2":
+                item = EconomyItems.createGreenMochila();
+                break;
+            case "mochila_nivel_3":
+                item = EconomyItems.createRedMochila();
+                break;
+            case "mochila_nivel_4":
+                item = EconomyItems.createBlueMochila();
+                break;
+            case "mochila_nivel_5":
+                item = EconomyItems.createPurpleMochila();
+                break;
+            case "enderbag":
+                item = EconomyItems.createEnderBag();
+                break;
+            case "gancho":
+                item = EconomyItems.createGancho();
+                break;
+            case "panic_apple":
+                item = EconomyItems.createManzanaPanico();
+                break;
+            case "artefacto_nivel_1":
+                item = EconomyItems.createYunqueReparadorNivel1();
+                break;
+            case "artefacto_nivel_2":
+                item = EconomyItems.createYunqueReparadorNivel2();
+                break;
+            case "misiones":
+                item = Misionesitem.createMisiones();
+                break;
+            case "icetotem":
+                item = economyIceTotem.createIceTotem();
+                break;
+            case "flytotem":
+                item = economyFlyTotem.createFlyTotem();
+                break;
+            case "excavator_pickaxe":
+                item = ExcavatorItem.createExcavator();
+                break;
+            case "potion_resistance_2":
+                item = CustomPotions.getResistanceIIPotion();
+                break;
+            case "splash_resistance_3":
+                item = CustomPotions.getSplashResistanceIIIPotion();
+                break;
+            case "potion_slow_falling":
+                item = CustomPotions.getSlowFallingPotion();
+                break;
+            case "splash_regeneration_3":
+                item = CustomPotions.getSplashRegenerationIIIPotion();
+                break;
+            case "potion_haste_3":
+                item = CustomPotions.getHasteIIIPotion();
+                break;
+            case "potion_haste_2":
+                item = CustomPotions.getHasteIIPotion();
+                break;
+            case "splash_absorption_10":
+                item = CustomPotions.getSplashAbsorptionXPotion();
+                break;
+            case "frasco_de_velocidad":
+                item = CustomPotions.getSpeedHoneyBottle();
+                break;
+            case "amulet_bloodmoon":
+                item = amuletBloodM.createAmulet();
+                break;
+            case "amuleto_inmortalidad":
+                item = amuletInmortal.createAmulet();
+                break;
+            case "life_campfire":
+                item = lifeCampfire.createCampfire();
+                break;
+            case "fuel_campfire":
+                item = lifeCampfire.createFuel();
+                break;
+            case "special_totem":
+                item = ItemsTotems.createSpecialTotem();
+                break;
+            case "cristal_hielo":
+                item = ItemsTotems.createIceCrystal();
+                break;
+            case "arco_hielo":
+                item = iceBowItem.createIceBow();
+                break;
         }
 
         if (item != null) {

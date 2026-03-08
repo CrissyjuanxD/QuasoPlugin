@@ -5,16 +5,22 @@ import TitleListener.SuccessNotification;
 import items.EconomyItems;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
+import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.Bee;
+import org.bukkit.entity.Creeper;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.EntityPickupItemEvent;
-import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.EnchantmentStorageMeta;
+import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class Mission13 implements Mission, Listener {
@@ -22,16 +28,6 @@ public class Mission13 implements Mission, Listener {
     private final MissionHandler missionHandler;
     private final SuccessNotification successNotification;
     private final ActionBarHandler actionBarHandler;
-
-    private final List<Material> flowers = Arrays.asList(
-            Material.DANDELION, Material.POPPY, Material.BLUE_ORCHID,
-            Material.ALLIUM, Material.AZURE_BLUET, Material.RED_TULIP,
-            Material.ORANGE_TULIP, Material.WHITE_TULIP, Material.PINK_TULIP,
-            Material.OXEYE_DAISY, Material.CORNFLOWER, Material.LILY_OF_THE_VALLEY,
-            Material.WITHER_ROSE, Material.SUNFLOWER, Material.LILAC,
-            Material.ROSE_BUSH, Material.PEONY, Material.TORCHFLOWER,
-            Material.PITCHER_PLANT, Material.PINK_PETALS, Material.SPORE_BLOSSOM
-    );
 
     public Mission13(JavaPlugin plugin, MissionHandler missionHandler) {
         this.plugin = plugin;
@@ -41,10 +37,10 @@ public class Mission13 implements Mission, Listener {
     }
 
     @Override
-    public String getName() { return "Stardew Valley"; }
+    public String getName() { return "Veneno Explosivo"; }
 
     @Override
-    public String getDescription() { return "Consigue todas las flores del juego."; }
+    public String getDescription() { return "Mata 20 Corrupted Bees y 20 Bombitas."; }
 
     @Override
     public int getMissionNumber() { return 13; }
@@ -53,14 +49,19 @@ public class Mission13 implements Mission, Listener {
     public List<ItemStack> getRewards() {
         List<ItemStack> rewards = new ArrayList<>();
         ItemStack coins = EconomyItems.createVithiumCoin();
-        coins.setAmount(8);
-        ItemStack goldenApples = new ItemStack(Material.GOLDEN_APPLE, 15);
-        ItemStack diamonds = new ItemStack(Material.DIAMOND, 25);
-        ItemStack xpFill = new ItemStack(Material.BONE_MEAL, 2);
+        coins.setAmount(15);
+        ItemStack goldenApples = new ItemStack(Material.ENCHANTED_GOLDEN_APPLE, 5);
+        ItemStack unBook = new ItemStack(Material.ENCHANTED_BOOK);
+        EnchantmentStorageMeta meta = (EnchantmentStorageMeta) unBook.getItemMeta();
+        if (meta != null) {
+            meta.addStoredEnchant(Enchantment.PROTECTION, 5, true);
+            unBook.setItemMeta(meta);
+        }
+        ItemStack xpFill = new ItemStack(Material.EXPERIENCE_BOTTLE, 3);
         for (int i = 0; i < 27; i++) {
             if (i == 11) rewards.add(goldenApples);
             else if (i == 13) rewards.add(coins);
-            else if (i == 15) rewards.add(diamonds);
+            else if (i == 15) rewards.add(unBook);
             else rewards.add(xpFill.clone());
         }
         return rewards;
@@ -72,60 +73,49 @@ public class Mission13 implements Mission, Listener {
     @Override
     public void checkCompletion(String playerName) {}
 
-    public List<Material> getRequiredFlowers() { return flowers; }
-
     @EventHandler
-    public void onPickup(EntityPickupItemEvent event) {
-        if (event.getEntity() instanceof Player player) {
-            checkFlower(player, event.getItem().getItemStack().getType());
-        }
-    }
+    public void onEntityDeath(EntityDeathEvent event) {
+        Entity entity = event.getEntity();
+        Player killer = ((LivingEntity) entity).getKiller();
+        if (killer == null) return;
 
-    @EventHandler
-    public void onInventoryClick(InventoryClickEvent event) {
-        if (!(event.getWhoClicked() instanceof Player player)) return;
+        if (!missionHandler.isMissionActive(killer, 13)) return;
 
-        if (event.getCurrentItem() == null || event.getCurrentItem().getType() == Material.AIR) return;
-        Material clickedType = event.getCurrentItem().getType();
+        boolean isBee = entity instanceof Bee && entity.getPersistentDataContainer().has(new NamespacedKey(plugin, "corrupted_bee"), PersistentDataType.BYTE);
+        boolean isBombita = entity instanceof Creeper && entity.getPersistentDataContainer().has(new NamespacedKey(plugin, "bombita"), PersistentDataType.BYTE);
 
-        plugin.getServer().getScheduler().runTaskLater(plugin, () ->
-                checkFlower(player, clickedType), 1L);
-    }
+        if (!isBee && !isBombita) return;
 
-    private void checkFlower(Player player, Material type) {
-        if (type == null || type == Material.AIR) return;
-        if (!flowers.contains(type)) return;
-        if (!missionHandler.isMissionActive(player, 13)) return;
-
-        MissionData data = missionHandler.getData(player, 13);
+        MissionData data = missionHandler.getData(killer, 13);
         if (data.isCompleted()) return;
 
-        String key = "collected_" + type.name();
-        if (data.getProgressBool(key)) return;
+        boolean updated = false;
+        int bees = data.getProgressInt("bees_killed");
+        int bombs = data.getProgressInt("bombitas_killed");
 
-        data.setProgressValue(key, true);
-
-        int count = 0;
-        for (Material f : flowers) {
-            if (data.getProgressBool("collected_" + f.name())) count++;
+        if (isBee && bees < 30) {
+            bees++;
+            data.setProgressValue("bees_killed", bees);
+            updated = true;
+        } else if (isBombita && bombs < 30) {
+            bombs++;
+            data.setProgressValue("bombitas_killed", bombs);
+            updated = true;
         }
 
-        missionHandler.saveData(player, 13, data);
+        if (updated) {
+            missionHandler.saveData(killer, 13, data);
 
-        if (count >= flowers.size()) {
-            successNotification.showSuccess(player);
-            missionHandler.completeMission(player, 13);
-        } else {
-            String flowerName = type.name().toLowerCase().replace('_', ' ');
-            flowerName = flowerName.substring(0, 1).toUpperCase() + flowerName.substring(1);
-
-            String msg = ChatColor.GOLD + "۞ " +
-                    ChatColor.of("#FFCC99") + "Flor: " + ChatColor.GREEN + flowerName + " " +
-                    ChatColor.of("#FFA07A") + count +
-                    ChatColor.of("#FFE4B5") + "/" +
-                    ChatColor.of("#FFA07A") + flowers.size();
-            actionBarHandler.sendActionBar(player, msg);
-            player.playSound(player.getLocation(), org.bukkit.Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 0.5f, 1.5f);
+            if (bees >= 30 && bombs >= 30) {
+                successNotification.showSuccess(killer);
+                missionHandler.completeMission(killer, 13);
+            } else {
+                String msg = ChatColor.GOLD + "۞ " +
+                        ChatColor.of("#FFCC99") + "Bees: " + ChatColor.of("#FFA07A") + bees + ChatColor.of("#FFE4B5") + "/" + ChatColor.of("#FFA07A") + "30" +
+                        ChatColor.GRAY + " | " +
+                        ChatColor.of("#FFCC99") + "Bombitas: " + ChatColor.of("#FFA07A") + bombs + ChatColor.of("#FFE4B5") + "/" + ChatColor.of("#FFA07A") + "30";
+                actionBarHandler.sendActionBar(killer, msg);
+            }
         }
     }
 }

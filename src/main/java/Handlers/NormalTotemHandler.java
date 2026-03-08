@@ -1,6 +1,8 @@
 package Handlers;
 
-import net.md_5.bungee.api.ChatColor;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.TextColor;
+import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.SoundCategory;
@@ -13,24 +15,17 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.Plugin;
 
-import java.util.Random;
-
 public class NormalTotemHandler implements Listener {
 
     private final Plugin plugin;
-    private final DayHandler dayHandler;
-    private final Random random = new Random();
 
-    public NormalTotemHandler(Plugin plugin, DayHandler handler) {
+    public NormalTotemHandler(Plugin plugin) {
         this.plugin = plugin;
-        this.dayHandler = handler;
     }
 
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerTotemUse(EntityResurrectEvent event) {
-        if (!(event.getEntity() instanceof Player)) return;
-        Player player = (Player) event.getEntity();
-        int currentDay = dayHandler.getCurrentDay();
+        if (!(event.getEntity() instanceof Player player)) return;
 
         ItemStack mainHandItem = player.getInventory().getItemInMainHand();
         ItemStack offHandItem = player.getInventory().getItemInOffHand();
@@ -42,197 +37,32 @@ public class NormalTotemHandler implements Listener {
             ItemStack totem = isMainHandTotem ? mainHandItem : offHandItem;
             ItemMeta meta = totem.getItemMeta();
 
-            if (meta != null && meta.hasCustomModelData()) {
-                // Tótems especiales (con CustomModelData) siempre funcionan
-                int customModelData = meta.getCustomModelData();
-                switch (customModelData) {
-                    case 1:
-                        broadcastTotemMessage2(player);
-                        break;
-                    case 2:
-                        broadcastTotemMessage(player);
-                        break;
-                    case 3:
-                        broadcastTotemMessage3(player);
-                        break;
-                    case 4:
-                        broadcastTotemMessage4(player);
-                        break;
-                    case 5:
-                        broadcastTotemMessage5(player);
-                        break;
-                    default:
-                        broadcastNormalTotemMessage(player, 100, 100);
-                        break;
-                }
+            Component totemNameComp;
+            if (meta != null && meta.hasDisplayName() && meta.displayName() != null) {
+                totemNameComp = meta.displayName();
             } else {
-                if (currentDay >= 7) {
-                    int randomValue = random.nextInt(100); // 0-99
-                    int displayThreshold = 99; // Siempre mostramos X/99
-
-                    if (currentDay >= 11) {
-                        // 10% de probabilidad de fallo (valores 90-99)
-                        if (randomValue >= 90) { // 90,91,...,99 (10 valores)
-                            event.setCancelled(true);
-                            broadcastTotemFail(player, randomValue, displayThreshold);
-                            return;
-                        }
-                    } else {
-                        // Días 7-10: 1% de probabilidad (valor 99)
-                        if (randomValue == 99) {
-                            event.setCancelled(true);
-                            broadcastTotemFail(player, randomValue, displayThreshold);
-                            return;
-                        }
-                    }
-                    broadcastNormalTotemMessage(player, displayThreshold, randomValue);
-                } else {
-                    // Antes del día 7, siempre funciona
-                    broadcastNormalTotemMessage(player, 100, 100);
-                }
+                totemNameComp = Component.text("Tótem", TextColor.color(0xB684E4), TextDecoration.BOLD);
             }
+
+            broadcastTotemMessage(player, totemNameComp);
         }
     }
 
-    private void broadcastNormalTotemMessage(Player player, int successProbability, int randomValue) {
-        int currentDay = dayHandler.getCurrentDay();
-        String baseMessage = ChatColor.translateAlternateColorCodes('&',
-                "\n"
-                        + ChatColor.of("#B684E4") +"۞ "
-                        + ChatColor.of("#F7AD62") + ChatColor.BOLD + player.getName()
-                        + ChatColor.RESET + ChatColor.of("#B684E4") + " ha consumido un tótem.");
+    private void broadcastTotemMessage(Player player, Component totemName) {
+        Component message = Component.text("\n")
+                .append(Component.text("۞ ", TextColor.color(0xB684E4)))
+                .append(Component.text(player.getName(), TextColor.color(0xF7AD62), TextDecoration.BOLD))
+                .append(Component.text(" ha consumido un ", TextColor.color(0xB684E4)))
+                .append(totemName)
+                .append(Component.text(".\n", TextColor.color(0xB684E4)));
 
-        if (currentDay >= 7 && successProbability < 100) {
-            String threshold = (currentDay >= 11) ? "90-99" : "99";
-            baseMessage += "\n"
-                    + ChatColor.of("#F52F6A") + ChatColor.BOLD + " ⚠"
-                    + ChatColor.of("#B228E7") + " Probabilidad de fallo"
-                    + ChatColor.GRAY + " ("
-                    + ChatColor.of("#F7AD62") + ChatColor.BOLD + randomValue
-                    + ChatColor.GRAY + "/"
-                    + ChatColor.of("#F52F6A") + ChatColor.BOLD + threshold
-                    + ChatColor.GRAY + ")";
-        }
-
-        baseMessage += "\n";
-
-        for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-            onlinePlayer.sendMessage(baseMessage);
-            if (!onlinePlayer.equals(player)) {
-                onlinePlayer.playSound(onlinePlayer, "item.trident.return", SoundCategory.VOICE, 2f, 2f);
-                onlinePlayer.playSound(onlinePlayer, "custom.noti", SoundCategory.VOICE, 2f, 2f);
-                onlinePlayer.playSound(onlinePlayer, "entity.allay.item_thrown", SoundCategory.VOICE, 2f, 0.5f);
-            }
-        }
-    }
-
-    private void broadcastTotemMessage(Player player) {
-        String message = ChatColor.translateAlternateColorCodes('&',
-                "\n"
-                + ChatColor.of("#B684E4") +"۞ "
-                + ChatColor.of("#007EB2") + ChatColor.BOLD + player.getName()
-                + ChatColor.RESET + ChatColor.of("#8EBFEC") + " ha " + ChatColor.BOLD + "disminuido un uso "
-                + ChatColor.RESET + ChatColor.of("#8EBFEC") + "su tótem de doble vida."
-                + "\n");
         for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
             onlinePlayer.sendMessage(message);
             if (!onlinePlayer.equals(player)) {
-                onlinePlayer.playSound(onlinePlayer, "item.trident.return", SoundCategory.VOICE, 2f, 2f);
-                onlinePlayer.playSound(onlinePlayer, "custom.noti", SoundCategory.VOICE, 2f, 2f);
-                onlinePlayer.playSound(onlinePlayer, "entity.allay.item_thrown", SoundCategory.VOICE, 2f, 0.5f);
+                onlinePlayer.playSound(onlinePlayer.getLocation(), "item.trident.return", SoundCategory.VOICE, 2f, 2f);
+                onlinePlayer.playSound(onlinePlayer.getLocation(), "custom.noti", SoundCategory.VOICE, 2f, 2f);
+                onlinePlayer.playSound(onlinePlayer.getLocation(), "entity.allay.item_thrown", SoundCategory.VOICE, 2f, 0.5f);
             }
         }
     }
-
-    private void broadcastTotemMessage2(Player player) {
-        String message = ChatColor.translateAlternateColorCodes('&',
-                "\n"
-                + ChatColor.of("#B684E4") +"۞ "
-                + ChatColor.of("#F7AD62") + ChatColor.BOLD + player.getName()
-                + ChatColor.RESET + ChatColor.of("#B684E4") + " ha consumido un " + ChatColor.BOLD + "tótem de doble vida."
-                + "\n");
-        for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-            onlinePlayer.sendMessage(message);
-            if (!onlinePlayer.equals(player)) {
-                onlinePlayer.playSound(onlinePlayer, "item.trident.return", SoundCategory.VOICE, 2f, 2f);
-                onlinePlayer.playSound(onlinePlayer, "custom.noti", SoundCategory.VOICE, 2f, 2f);
-                onlinePlayer.playSound(onlinePlayer, "entity.allay.item_thrown", SoundCategory.VOICE, 2f, 0.5f);
-            }
-        }
-    }
-
-    private void broadcastTotemMessage3(Player player) {
-        String message = ChatColor.translateAlternateColorCodes('&',
-                "\n"
-                + "\uDBE8\uDCF6"
-                + ChatColor.of("#F7AD62") + ChatColor.BOLD + player.getName()
-                + ChatColor.RESET + ChatColor.of("#B684E4") + " ha consumido un " + ChatColor.of("#33ccff") + ChatColor.BOLD + "Life Totem."
-                + "\n");
-        for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-            onlinePlayer.sendMessage(message);
-            if (!onlinePlayer.equals(player)) {
-                onlinePlayer.playSound(onlinePlayer, "item.trident.return", SoundCategory.VOICE, 2f, 2f);
-                onlinePlayer.playSound(onlinePlayer, "custom.noti", SoundCategory.VOICE, 2f, 2f);
-                onlinePlayer.playSound(onlinePlayer, "entity.allay.item_thrown", SoundCategory.VOICE, 2f, 0.5f);
-            }
-        }
-    }
-
-    private void broadcastTotemMessage4(Player player) {
-        String message = ChatColor.translateAlternateColorCodes('&',
-                "\n"
-                        + ChatColor.of("#B684E4") +"۞ "
-                        + ChatColor.of("#F7AD62") + ChatColor.BOLD + player.getName()
-                        + ChatColor.RESET + ChatColor.of("#B684E4") + " ha consumido un " + ChatColor.of("#66ff99") + ChatColor.BOLD + "Spider Totem."
-                        + "\n");
-        for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-            onlinePlayer.sendMessage(message);
-            if (!onlinePlayer.equals(player)) {
-                onlinePlayer.playSound(onlinePlayer, "item.trident.return", SoundCategory.VOICE, 2f, 2f);
-                onlinePlayer.playSound(onlinePlayer, "custom.noti", SoundCategory.VOICE, 2f, 2f);
-                onlinePlayer.playSound(onlinePlayer, "entity.allay.item_thrown", SoundCategory.VOICE, 2f, 0.5f);
-            }
-        }
-    }
-
-    private void broadcastTotemMessage5(Player player) {
-        String message = ChatColor.translateAlternateColorCodes('&',
-                "\n"
-                        + ChatColor.of("#B684E4") +"۞ "
-                        + ChatColor.of("#F7AD62") + ChatColor.BOLD + player.getName()
-                        + ChatColor.RESET + ChatColor.of("#B684E4") + " ha consumido un " + ChatColor.of("#ff3300") + ChatColor.BOLD + "Infernal Totem."
-                        + "\n");
-        for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-            onlinePlayer.sendMessage(message);
-            if (!onlinePlayer.equals(player)) {
-                onlinePlayer.playSound(onlinePlayer, "item.trident.return", SoundCategory.VOICE, 2f, 2f);
-                onlinePlayer.playSound(onlinePlayer, "custom.noti", SoundCategory.VOICE, 2f, 2f);
-                onlinePlayer.playSound(onlinePlayer, "entity.allay.item_thrown", SoundCategory.VOICE, 2f, 0.5f);
-            }
-        }
-    }
-
-    private void broadcastTotemFail(Player player, int randomValue, int expectedValue) {
-        String playerFailed = "\n"
-                + ChatColor.RED + "\uDBE8\uDCF6" + ChatColor.RESET + ChatColor.of("#BE517F") + "El tótem del jugador "
-                + ChatColor.of("#F7AD62") + ChatColor.BOLD + player.getName()
-                + ChatColor.RESET + ChatColor.of("#BE517F") + " ha fallado.";
-        String failureNotice = "\n"
-                + ChatColor.of("#F52F6A") + ChatColor.BOLD + " ⚠" // Icono de advertencia
-                + ChatColor.of("#B228E7") + " Probabilidad de fallo"
-                + ChatColor.GRAY + " ("
-                + ChatColor.of("#F52F6A") + ChatColor.BOLD + randomValue
-                + ChatColor.GRAY + "/"
-                + ChatColor.of("#F52F6A") + ChatColor.BOLD + expectedValue
-                + ChatColor.GRAY + ")";
-        for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-            onlinePlayer.sendMessage("\n" + playerFailed + "\n" + failureNotice + "\n");
-            if (!onlinePlayer.equals(player)) {
-                onlinePlayer.playSound(onlinePlayer, "entity.wither.death", SoundCategory.VOICE, 2f, 0.5f);
-                onlinePlayer.playSound(onlinePlayer, "custom.noti", SoundCategory.VOICE, 2f, 2f);
-
-            }
-        }
-    }
-
 }

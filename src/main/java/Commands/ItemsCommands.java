@@ -29,6 +29,7 @@ public class ItemsCommands implements CommandExecutor, TabCompleter {
     private final AmuletInmortal amuletInmortal;
     private final LifeCampfire lifeCampfire;
     private final IceBowItem iceBowItem;
+    private final HappyGhastEnchant happyGhastEnchant;
 
     public ItemsCommands(QuasoPlugin plugin) {
         this.plugin = plugin;
@@ -40,6 +41,7 @@ public class ItemsCommands implements CommandExecutor, TabCompleter {
         this.amuletInmortal = new AmuletInmortal(plugin);
         this.lifeCampfire = new LifeCampfire(plugin);
         this.iceBowItem = new IceBowItem(plugin);
+        this.happyGhastEnchant = new HappyGhastEnchant(plugin);
         plugin.getCommand("giveqp").setExecutor(this);
         plugin.getCommand("giveqp").setTabCompleter(this);
     }
@@ -230,6 +232,10 @@ public class ItemsCommands implements CommandExecutor, TabCompleter {
                 item = iceBowItem.createIceBow();
                 item.setAmount(cantidad);
                 break;
+            case "happy_ghast_enchant":
+                item = happyGhastEnchant.createFastFlightBook(1);
+                item.setAmount(cantidad);
+                break;
             default:
                 sender.sendMessage("§cEse item no existe.");
                 return true;
@@ -280,6 +286,7 @@ public class ItemsCommands implements CommandExecutor, TabCompleter {
             completions.add("special_totem");
             completions.add("cristal_hielo");
             completions.add("arco_hielo");
+            completions.add("happy_ghast_enchant");
         } else if (args.length == 2) {
             for (Player player : Bukkit.getOnlinePlayers()) {
                 completions.add(player.getName());

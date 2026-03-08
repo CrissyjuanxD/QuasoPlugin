@@ -3,6 +3,7 @@ package Events.Skybattle;
 import Habilidades.HabilidadesEffects;
 import Habilidades.HabilidadesManager;
 import Handlers.Teams.TeamType;
+import TitleListener.EventoAnimation;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.*;
 import org.bukkit.block.Block;
@@ -37,6 +38,7 @@ public class EventoHandler implements Listener {
 
     private final HabilidadesManager habilidadesManager;
     private final HabilidadesEffects habilidadesEffects;
+    private final EventoAnimation eventoAnimation;
 
     private final Set<String> participantes = new HashSet<>();
     private final Map<String, Integer> kills = new HashMap<>();
@@ -75,6 +77,7 @@ public class EventoHandler implements Listener {
         this.habilidadesManager = habilidadesManager;
         this.habilidadesEffects = habilidadesEffects;
         this.cofresHandler = new CofresHandler(plugin);
+        this.eventoAnimation = new EventoAnimation(plugin);
         this.estadoArchivo = new File(plugin.getDataFolder(), "estado_evento.yml");
         verificarEstadoEvento();
     }
@@ -117,9 +120,7 @@ public class EventoHandler implements Listener {
 
         String jsonMessage = "[\"\",{\"text\":\"\\n\"},{\"text\":\"\\u06de Evento\",\"bold\":true,\"color\":\"#F977F9\"},{\"text\":\" \\u27a4\",\"bold\":true,\"color\":\"gray\"},{\"text\":\"\\n\\n\"},{\"text\":\"¡Ha comenzado el evento \",\"color\":\"#c55cf3\"},{\"text\":\"LAVACLASH\",\"bold\":true,\"color\":\"#D98836\"},{\"text\":\"!\\nLos primeros \",\"color\":\"#c55cf3\"},{\"text\":\"20\",\"bold\":true,\"color\":\"#c55cf3\"},{\"text\":\" jugadores en obtener\\nun \",\"color\":\"#c55cf3\"},{\"text\":\"Crosszy Ticket\",\"bold\":true,\"color\":\"#E9BF66\"},{\"text\":\" participarán\\n\\nPara obtener el ticket deberan romper un \",\"color\":\"#c55cf3\"},{\"text\":\"\\n\"},{\"text\":\"" + nombreBloqueActual + "\",\"bold\":true,\"color\":\"#57A9CB\"},{\"text\":\"\\n \"}]";
 
-        // MODIFICADO: Enviar tellraw solo a jugadores en la zona en lugar de usar comando global si es posible,
-        // o iterar el comando para cada jugador. Asumo que ruletavct es broadcast, lo cambio a tellraw individual para respetar la zona.
-        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "ruletavct " + jsonMessage);
+        for (Player p : Bukkit.getOnlinePlayers()) eventoAnimation.playAnimation(p, jsonMessage);
 
         World world = Bukkit.getWorld("world");
         if (world != null) {
@@ -335,7 +336,7 @@ public class EventoHandler implements Listener {
         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "tellraw @a " + tellrawCommand2);
         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "playsound minecraft:block.note_block.pling ambient @a ~ ~ ~ 1 1.3 1");
 
-        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "addtiempo 00:04:00 on"); // Asumo que esto es global del servidor, no lo toco
+        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "timers crear @a tiempo=00:04:00 sonido=on");
 
         Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
             guardarContenidoCofres();

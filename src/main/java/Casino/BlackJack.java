@@ -14,6 +14,7 @@ import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
@@ -30,7 +31,7 @@ public class BlackJack implements Listener {
     private final CasinoManager manager;
     private final String title = ChatColor.of("#228B22") + "" + ChatColor.BOLD + "BlackJack";
 
-    // Slots GUI (Estructura Nueva)
+    // Slots GUI
     private final List<Integer> dealerCardSlots = Arrays.asList(11, 12, 13, 14, 15);
     private final List<Integer> playerCardSlots = Arrays.asList(29, 30, 31, 32, 33);
     private final int dealerHeadSlot = 10;
@@ -49,7 +50,6 @@ public class BlackJack implements Listener {
     private final Map<UUID, Integer> playerBets = new ConcurrentHashMap<>();
     private final Map<Location, UUID> tableUsers = new ConcurrentHashMap<>();
 
-    // Sistema de Reconexión (Nuevo Feature)
     private final Map<UUID, BukkitRunnable> reconnectTimers = new ConcurrentHashMap<>();
 
     private final File configFile;
@@ -97,6 +97,12 @@ public class BlackJack implements Listener {
         } catch (IOException e) { e.printStackTrace(); }
     }
 
+    // Obtenedor de materiales a prueba de errores de versión
+    private Material getSafeMaterial(String name, Material fallback) {
+        Material mat = Material.matchMaterial(name);
+        return mat != null ? mat : fallback;
+    }
+
     // --- INTERACCIÓN Y RECONEXIÓN ---
 
     @EventHandler
@@ -111,11 +117,9 @@ public class BlackJack implements Listener {
         Player player = event.getPlayer();
         UUID playerId = player.getUniqueId();
 
-        // Verificar si la mesa está ocupada
         if (tableUsers.containsKey(loc)) {
             UUID currentUser = tableUsers.get(loc);
 
-            // Si es el MISMO jugador que estaba jugando (Reconexión)
             if (currentUser.equals(playerId)) {
                 if (reconnectTimers.containsKey(playerId)) {
                     cancelReconnectTimer(playerId);
@@ -124,13 +128,11 @@ public class BlackJack implements Listener {
                 openBlackJack(player, loc);
                 return;
             } else {
-                // Es otro jugador
                 player.sendMessage(ChatColor.of("#FF6B6B") + "۞ Esta mesa está ocupada.");
                 return;
             }
         }
 
-        // Mesa libre -> Ocuparla
         tableUsers.put(loc, playerId);
         manager.setGameActive(loc, true);
         openBlackJack(player, loc);
@@ -142,26 +144,22 @@ public class BlackJack implements Listener {
         player.openInventory(inv);
         player.setMetadata("blackjack_loc", new org.bukkit.metadata.FixedMetadataValue(plugin, tableLoc));
 
-        // Sonido del código viejo
         player.playSound(player.getLocation(), Sound.BLOCK_CHEST_OPEN, 1.0f, 0.8f);
     }
 
     private void setupGUI(Inventory inv, Player player) {
-        // Fondo General (Lime)
-        ItemStack pane = new ItemStack(Material.LIME_STAINED_GLASS_PANE);
+        ItemStack pane = new ItemStack(Material.LIME_DYE);
         ItemMeta meta = pane.getItemMeta();
         meta.setDisplayName(" ");
         pane.setItemMeta(meta);
 
         for(int i=0; i<54; i++) {
-            // Saltamos los slots especiales para no sobreescribirlos
             if (dealerCardSlots.contains(i) || playerCardSlots.contains(i) ||
                     i == dealerHeadSlot || i == playerHeadSlot ||
                     i == tokenSlot || i == dealButton || i == hitButton || i == standButton) continue;
             inv.setItem(i, pane);
         }
 
-        // Cabeza Dealer
         ItemStack dealerHead = new ItemStack(Material.PLAYER_HEAD);
         SkullMeta dMeta = (SkullMeta) dealerHead.getItemMeta();
         dMeta.setDisplayName(ChatColor.RED + "Crupier");
@@ -169,7 +167,6 @@ public class BlackJack implements Listener {
         dealerHead.setItemMeta(dMeta);
         inv.setItem(dealerHeadSlot, dealerHead);
 
-        // Cabeza Player
         ItemStack playerHead = new ItemStack(Material.PLAYER_HEAD);
         SkullMeta pMeta = (SkullMeta) playerHead.getItemMeta();
         pMeta.setDisplayName(ChatColor.GREEN + player.getName());
@@ -177,8 +174,8 @@ public class BlackJack implements Listener {
         playerHead.setItemMeta(pMeta);
         inv.setItem(playerHeadSlot, playerHead);
 
-        // Boton Repartir
-        ItemStack deal = new ItemStack(Material.LIME_CONCRETE);
+        // CAMBIO ESTÉTICO: Lingote de Resina (con fallback a Ladrillo si la versión no lo tiene aún)
+        ItemStack deal = new ItemStack(getSafeMaterial("RESIN_BRICK", Material.BRICK));
         ItemMeta dealMeta = deal.getItemMeta();
         dealMeta.setDisplayName(ChatColor.of("#90EE90") + "" + ChatColor.BOLD + "REPARTIR");
         dealMeta.setLore(Arrays.asList(
@@ -190,20 +187,17 @@ public class BlackJack implements Listener {
         deal.setItemMeta(dealMeta);
         inv.setItem(dealButton, deal);
 
-        // LÓGICA DE BOTONES / PANELES DE ESPERA
         if (isPlaying.getOrDefault(player.getUniqueId(), false)) {
-            // Si está jugando: Mostrar Cartas y Botones de Acción
             updateCards(inv, player.getUniqueId());
             setGameButtons(inv);
         } else {
-            // Si NO está jugando: Poner paneles marrones en los sitios de los botones para no confundir
-            ItemStack waitingPane = new ItemStack(Material.BROWN_STAINED_GLASS_PANE);
+            ItemStack waitingPane = new ItemStack(Material.ORANGE_DYE);
             ItemMeta wpMeta = waitingPane.getItemMeta();
             wpMeta.setDisplayName(" ");
             waitingPane.setItemMeta(wpMeta);
 
-            inv.setItem(hitButton, waitingPane);   // Slot 48
-            inv.setItem(standButton, waitingPane); // Slot 50
+            inv.setItem(hitButton, waitingPane);
+            inv.setItem(standButton, waitingPane);
         }
     }
 
@@ -220,10 +214,12 @@ public class BlackJack implements Listener {
         stand.setItemMeta(standM);
         inv.setItem(standButton, stand);
 
-        inv.setItem(dealButton, new ItemStack(Material.LIME_STAINED_GLASS_PANE));
+        ItemStack usedDeal = new ItemStack(Material.LIME_DYE);
+        ItemMeta usedDealMeta = usedDeal.getItemMeta();
+        usedDealMeta.setDisplayName(" ");
+        usedDeal.setItemMeta(usedDealMeta);
+        inv.setItem(dealButton, usedDeal);
     }
-
-    // --- LÓGICA DEL JUEGO ---
 
     private void startGame(Player player, Inventory inv) {
         UUID id = player.getUniqueId();
@@ -267,7 +263,6 @@ public class BlackJack implements Listener {
         updateCards(inv, id);
         setGameButtons(inv);
 
-        // Sonido de repartir (Viejo)
         player.playSound(player.getLocation(), Sound.ENTITY_ITEM_PICKUP, 1.0f, 1.2f);
         player.sendMessage(ChatColor.of("#B5EAD7") + "۞ ¡Partida iniciada! Tu mano: " + calculateValue(playerHands.get(id)));
 
@@ -281,7 +276,6 @@ public class BlackJack implements Listener {
         playerHands.get(id).add(drawCard());
         updateCards(inv, id);
 
-        // Sonido de carta (Viejo)
         player.playSound(player.getLocation(), Sound.ENTITY_ITEM_PICKUP, 0.8f, 1.0f);
 
         int val = calculateValue(playerHands.get(id));
@@ -325,12 +319,10 @@ public class BlackJack implements Listener {
         double multiplier = 0;
         String msg = "";
 
-        // Lógica de Ganador + Mensajes/Efectos del código viejo
         if (naturalBlackjack) {
             multiplier = config.getDouble("BlackJack.payouts.blackjack_multiplier", 2.5);
             msg = ChatColor.of("#B5EAD7") + "۞ ¡BLACKJACK! ¡Ganaste!";
 
-            // Efectos especiales BlackJack
             player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1.0f, 1.0f);
             player.playSound(player.getLocation(), Sound.UI_TOAST_CHALLENGE_COMPLETE, 1.0f, 1.2f);
             player.getWorld().spawnParticle(Particle.TOTEM_OF_UNDYING, player.getLocation().add(0, 1, 0), 15, 0.5, 0.5, 0.5, 0.1);
@@ -395,7 +387,6 @@ public class BlackJack implements Listener {
             if (i >= dealerCardSlots.size()) break;
 
             if (i == 1 && !showAll && calculateValue(pHand) != 21) {
-                // CAMBIO: PAPER para la carta oculta
                 ItemStack hidden = new ItemStack(Material.PAPER);
                 ItemMeta meta = hidden.getItemMeta();
                 meta.setDisplayName(ChatColor.GRAY + "Carta Oculta");
@@ -413,9 +404,17 @@ public class BlackJack implements Listener {
         }
     }
 
+    // CAMBIO ESTÉTICO: Mapeo de palos a Patrones de Banner y ocultar tooltip
     private ItemStack createCardItem(Card card) {
-        // CAMBIO: PAPER para las cartas visibles
-        ItemStack item = new ItemStack(Material.PAPER);
+        Material mat = Material.PAPER;
+        switch (card.suit) {
+            case "♠": mat = getSafeMaterial("BORDURE_INDENTED_BANNER_PATTERN", Material.PAPER); break;
+            case "♥": mat = getSafeMaterial("MOJANG_BANNER_PATTERN", Material.PAPER); break;
+            case "♦": mat = getSafeMaterial("GLOBE_BANNER_PATTERN", Material.PAPER); break;
+            case "♣": mat = getSafeMaterial("CREEPER_BANNER_PATTERN", Material.PAPER); break;
+        }
+
+        ItemStack item = new ItemStack(mat);
         ItemMeta meta = item.getItemMeta();
         meta.setDisplayName(ChatColor.of("#FFD3A5") + card.toString());
 
@@ -423,6 +422,15 @@ public class BlackJack implements Listener {
         if (cardModelData.containsKey(key)) {
             meta.setCustomModelData(cardModelData.get(key));
         }
+
+        // Escondemos los encantamientos/textos extra (Ej: Pattern: Creeper Charge)
+        meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+        try {
+            meta.addItemFlags(ItemFlag.valueOf("HIDE_ADDITIONAL_TOOLTIP")); // 1.20.5+
+        } catch (IllegalArgumentException ignored) {
+            meta.addItemFlags(ItemFlag.valueOf("HIDE_ITEM_SPECIFICS")); // Versiones antiguas
+        }
+
         item.setItemMeta(meta);
         return item;
     }
@@ -449,17 +457,22 @@ public class BlackJack implements Listener {
         return new Card(ranks[r.nextInt(ranks.length)], suits[r.nextInt(suits.length)]);
     }
 
-    // --- EVENTOS DE CLICK Y CIERRE ---
+    // --- EVENTOS DE CLICK Y CIERRE CON FIX PARA BEDROCK ---
 
     @EventHandler
     public void onClick(InventoryClickEvent e) {
-        if (!e.getView().getTitle().equals(title)) return;
+        Player p = (Player) e.getWhoClicked();
+
+        // FIX BEDROCK: En lugar de comprobar el título de la ventana,
+        // comprobamos si el jugador tiene la sesión abierta en metadata.
+        if (!p.hasMetadata("blackjack_loc")) return;
+
+        // Prevención extra para asegurar que es un menú grande de casino
+        if (e.getView().getTopInventory().getSize() != 54) return;
 
         e.setCancelled(true);
-        Player p = (Player) e.getWhoClicked();
         Inventory clickedInv = e.getClickedInventory();
 
-        // 1. Si está jugando, solo permitir botones de juego
         if (isPlaying.getOrDefault(p.getUniqueId(), false)) {
             if (clickedInv == e.getView().getTopInventory()) {
                 if (e.getSlot() == hitButton) hit(p, e.getInventory());
@@ -468,24 +481,20 @@ public class BlackJack implements Listener {
             return;
         }
 
-        // 2. Si NO está jugando (Fase de Apuestas)
-
-        // Permitir mover cosas en su propio inventario
         if (clickedInv == e.getView().getBottomInventory()) {
             e.setCancelled(false);
             return;
         }
 
-        // Slot de Apuestas
         if (e.getSlot() == tokenSlot && clickedInv == e.getView().getTopInventory()) {
             if (e.getCurrentItem() != null && e.getCurrentItem().getType() != Material.AIR) {
-                e.setCancelled(false); // Sacar fichas
+                e.setCancelled(false);
                 return;
             }
             ItemStack cursor = e.getCursor();
             if (cursor != null && cursor.getType() != Material.AIR) {
                 if (cursor.isSimilar(EconomyItems.createVithiumToken())) {
-                    e.setCancelled(false); // Meter fichas
+                    e.setCancelled(false);
                 } else {
                     p.sendMessage(ChatColor.of("#FFB3BA") + "۞ Solo se aceptan DinoFichas.");
                 }
@@ -500,19 +509,18 @@ public class BlackJack implements Listener {
 
     @EventHandler
     public void onClose(InventoryCloseEvent e) {
-        if (!e.getView().getTitle().equals(title)) return;
         Player p = (Player) e.getPlayer();
 
-        // Si hay juego en curso -> Iniciar Timer (NO limpiar nada)
+        // FIX BEDROCK: Geyser a veces distorsiona el título del inventario
+        // Solo revisamos si el jugador está vinculado a una mesa de BlackJack
+        if (!p.hasMetadata("blackjack_loc")) return;
+
         if (isPlaying.getOrDefault(p.getUniqueId(), false)) {
-            if (p.hasMetadata("blackjack_loc")) {
-                Location loc = (Location) p.getMetadata("blackjack_loc").get(0).value();
-                startReconnectTimer(p, loc);
-            }
+            Location loc = (Location) p.getMetadata("blackjack_loc").get(0).value();
+            startReconnectTimer(p, loc);
             return;
         }
 
-        // Si NO hay juego (solo estaba apostando) -> Devolver y limpiar
         ItemStack tokens = e.getInventory().getItem(tokenSlot);
         if (tokens != null) p.getInventory().addItem(tokens);
 
@@ -521,8 +529,16 @@ public class BlackJack implements Listener {
 
     @EventHandler
     public void onQuit(PlayerQuitEvent e) {
-        // Si se desconecta, el timer eventualmente limpiará la mesa
-        // Opcional: Podrías forzar el inicio del timer aquí si no se disparó onClose
+        Player p = e.getPlayer();
+        if (!p.hasMetadata("blackjack_loc")) return;
+
+        // Si se sale del server mientras juega, forzamos el inicio del timer
+        if (isPlaying.getOrDefault(p.getUniqueId(), false)) {
+            Location loc = (Location) p.getMetadata("blackjack_loc").get(0).value();
+            startReconnectTimer(p, loc);
+        } else {
+            cleanupTable(p);
+        }
     }
 
     // --- FUNCIONES DE LIMPIEZA Y TIMER ---
@@ -544,7 +560,7 @@ public class BlackJack implements Listener {
         if (p.hasMetadata("blackjack_loc")) {
             Location loc = (Location) p.getMetadata("blackjack_loc").get(0).value();
             tableUsers.remove(loc);
-            manager.setGameActive(loc, false); // Restaura el holograma
+            manager.setGameActive(loc, false);
             p.removeMetadata("blackjack_loc", plugin);
         }
         cleanUpGame(p.getUniqueId());
@@ -553,7 +569,6 @@ public class BlackJack implements Listener {
     private void startReconnectTimer(Player player, Location loc) {
         UUID id = player.getUniqueId();
 
-        // Cancelar timer previo si existe
         if (reconnectTimers.containsKey(id)) reconnectTimers.get(id).cancel();
 
         player.sendMessage(ChatColor.of("#FFD3A5") + "۞ Tienes 60 segundos para volver a la mesa o perderás tu sesión.");
@@ -561,11 +576,9 @@ public class BlackJack implements Listener {
         BukkitRunnable timer = new BukkitRunnable() {
             @Override
             public void run() {
-                // El tiempo se acabó
                 if (isPlaying.getOrDefault(id, false)) {
                     Player onlineP = Bukkit.getPlayer(id);
 
-                    // Reembolsar apuesta por cortesía (lógica del código viejo)
                     int bet = playerBets.getOrDefault(id, 0);
                     if (bet > 0 && onlineP != null && onlineP.isOnline()) {
                         ItemStack refund = EconomyItems.createVithiumToken();
@@ -574,7 +587,6 @@ public class BlackJack implements Listener {
                         onlineP.sendMessage(ChatColor.of("#FFD3A5") + "۞ Tiempo agotado. Se te ha devuelto la apuesta.");
                     }
 
-                    // Liberar mesa
                     tableUsers.remove(loc);
                     manager.setGameActive(loc, false);
 
@@ -586,7 +598,7 @@ public class BlackJack implements Listener {
         };
 
         reconnectTimers.put(id, timer);
-        timer.runTaskLater(plugin, 1200L); // 60 segundos (20 ticks * 60)
+        timer.runTaskLater(plugin, 1200L); // 60 segundos
     }
 
     private void cancelReconnectTimer(UUID id) {

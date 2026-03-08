@@ -2,7 +2,7 @@ package Events.MissionSystem;
 
 import Handlers.DatabaseManager;
 import Handlers.DayHandler;
-import TitleListener.RuletaAnimation;
+import TitleListener.MisionAnimation;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -28,20 +28,21 @@ public class MissionHandler implements Listener {
     private final Map<UUID, Map<Integer, MissionData>> playerCache = new ConcurrentHashMap<>();
     private final Map<Integer, Mission> missions = new HashMap<>();
     private final Set<Integer> activeMissions = new HashSet<>();
-    private final RuletaAnimation ruletaAnimation;
+    private final Set<Integer> globalActiveMissions = ConcurrentHashMap.newKeySet();
+    private final MisionAnimation ruletaAnimation;
 
     public MissionHandler(JavaPlugin plugin, DatabaseManager dbManager, DayHandler dayHandler) {
         this.plugin = plugin;
         this.dbManager = dbManager;
         this.dayHandler = dayHandler;
-        this.ruletaAnimation = new RuletaAnimation(plugin);
+        this.ruletaAnimation = new MisionAnimation(plugin);
 
         registerMissions();
 
         Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
             Set<Integer> dbActiveMissions = dbManager.getGlobalActiveMissions();
-            activeMissions.addAll(dbActiveMissions);
-            plugin.getLogger().info("Se han restaurado " + activeMissions.size() + " misiones activas desde la BD.");
+            globalActiveMissions.addAll(dbActiveMissions);
+            plugin.getLogger().info("Se han restaurado " + globalActiveMissions.size() + " misiones globales activas desde la BD.");
         });
 
         Bukkit.getScheduler().runTaskTimerAsynchronously(plugin, this::autoSaveAll, 3600L, 3600L);
@@ -49,58 +50,35 @@ public class MissionHandler implements Listener {
 
     private void registerMissions() {
         missions.put(1, new Mission1(plugin, this));
-
         missions.put(2, new Mission2(plugin, this));
-
         missions.put(3, new Mission3(plugin, this));
-
         missions.put(4, new Mission4(plugin, this));
-
         missions.put(5, new Mission5(plugin, this));
-
         missions.put(6, new Mission6(plugin, this));
-
         missions.put(7, new Mission7(plugin, this));
-
         missions.put(8, new Mission8(plugin, this));
-
         missions.put(9, new Mission9(plugin, this));
-
         missions.put(10, new Mission10(plugin, this));
-
         missions.put(11, new Mission11(plugin, this));
-
         missions.put(12, new Mission12(plugin, this));
-
         missions.put(13, new Mission13(plugin, this));
-
         missions.put(14, new Mission14(plugin, this));
-
         missions.put(15, new Mission15(plugin, this));
-
         missions.put(16, new Mission16(plugin, this));
-
         missions.put(17, new Mission17(plugin, this));
-
         missions.put(18, new Mission18(plugin, this));
-
         missions.put(19, new Mission19(plugin, this));
-
         missions.put(20, new Mission20(plugin, this));
-
         missions.put(21, new Mission21(plugin, this));
-
         missions.put(22, new Mission22(plugin, this));
-
         missions.put(23, new Mission23(plugin, this));
-
         missions.put(24, new Mission24(plugin, this));
-
         missions.put(25, new Mission25(plugin, this));
-
         missions.put(26, new Mission26(plugin, this));
-
         missions.put(27, new Mission27(plugin, this));
+        missions.put(28, new Mission28(plugin, this));
+        missions.put(29, new Mission29(plugin, this));
+        missions.put(30, new Mission30(plugin, this));
     }
 
     public void registerAllMissionListeners() {
@@ -119,16 +97,37 @@ public class MissionHandler implements Listener {
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {
         UUID uuid = event.getPlayer().getUniqueId();
-        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
-            Map<Integer, MissionData> data = dbManager.loadPlayerMissions(uuid);
-            playerCache.put(uuid, data);
 
-            // Opcional: Si hay misiones activas globales que el jugador no tiene iniciadas, iniciarlas aquí
-            for (int activeId : activeMissions) {
-                if (!data.containsKey(activeId) || !data.get(activeId).isActive()) {
-                    Bukkit.getScheduler().runTask(plugin, () -> initializePlayerMissionData(event.getPlayer().getName(), activeId));
+        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
+            // Cargar datos previos del jugador
+            Map<Integer, MissionData> data = dbManager.loadPlayerMissions(uuid);
+
+            // Sincronizar con el estado GLOBAL
+            for (int missionId : globalActiveMissions) {
+                // Si el jugador no tenía la misión registrada en su BD, la creamos
+                if (!data.containsKey(missionId)) {
+                    MissionData newMission = new MissionData(true, false, false, "{}");
+                    newMission.setDirty(true); // Forzamos que se guarde en la próxima sincronización
+                    data.put(missionId, newMission);
+                } else {
+                    MissionData existingMission = data.get(missionId);
+                    if (!existingMission.isActive()) {
+                        existingMission.setActive(true);
+                        existingMission.setDirty(true);
+                    }
                 }
             }
+
+            for (Map.Entry<Integer, MissionData> entry : data.entrySet()) {
+                if (!globalActiveMissions.contains(entry.getKey())) {
+                    if (entry.getValue().isActive()) {
+                        entry.getValue().setActive(false);
+                        entry.getValue().setDirty(true);
+                    }
+                }
+            }
+
+            playerCache.put(uuid, data);
         });
     }
 
@@ -159,7 +158,10 @@ public class MissionHandler implements Listener {
 
     public MissionData getData(Player player, int missionId) {
         Map<Integer, MissionData> pData = playerCache.computeIfAbsent(player.getUniqueId(), k -> new HashMap<>());
-        return pData.computeIfAbsent(missionId, k -> new MissionData());
+        MissionData data = pData.computeIfAbsent(missionId, k -> new MissionData());
+
+        data.setActive(globalActiveMissions.contains(missionId));
+        return data;
     }
 
     public void saveData(Player player, int missionId, MissionData data) {
@@ -205,18 +207,25 @@ public class MissionHandler implements Listener {
             return;
         }
 
-        if (activeMissions.contains(missionNumber)) {
-            sender.sendMessage(ChatColor.RED + "La misión " + missionNumber + " ya está activada.");
+        if (globalActiveMissions.contains(missionNumber)) {
+            sender.sendMessage(ChatColor.RED + "La misión " + missionNumber + " ya está activada globalmente.");
             return;
         }
 
-        activeMissions.add(missionNumber);
+        // Activación Global
+        globalActiveMissions.add(missionNumber);
 
+        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
+            dbManager.setMissionGlobalState(missionNumber, true);
+        });
+
+        // Actualizar en vivo a los jugadores online
         for (Player online : Bukkit.getOnlinePlayers()) {
-            initializePlayerMissionData(online.getName(), missionNumber);
+            MissionData data = getData(online, missionNumber);
+            saveData(online, missionNumber, data);
         }
 
-        sender.sendMessage(ChatColor.GREEN + "Misión " + missionNumber + " activada y distribuida a jugadores online.");
+        sender.sendMessage(ChatColor.GREEN + "Misión " + missionNumber + " activada globalmente.");
 
         String missionName = missions.get(missionNumber).getName();
         String missionDesc = missions.get(missionNumber).getDescription();
@@ -246,33 +255,31 @@ public class MissionHandler implements Listener {
             return false;
         }
 
-        if (!activeMissions.contains(missionNumber)) {
-            sender.sendMessage(ChatColor.RED + "La misión " + missionNumber + " no está activa, por lo que no se puede desactivar.");
+        if (!globalActiveMissions.contains(missionNumber)) {
+            sender.sendMessage(ChatColor.RED + "La misión " + missionNumber + " no está activa globalmente.");
             return false;
         }
 
-        activeMissions.remove(missionNumber);
+        globalActiveMissions.remove(missionNumber);
+
+        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
+            dbManager.setMissionGlobalState(missionNumber, false);
+        });
 
         for (Player online : Bukkit.getOnlinePlayers()) {
             MissionData data = getData(online, missionNumber);
-            if (data.isActive()) {
-                data.setActive(false);
-                saveData(online, missionNumber, data);
-            }
+            data.setActive(false);
+            saveData(online, missionNumber, data);
         }
-        dbManager.deactivateMissionGlobally(missionNumber);
-        sender.sendMessage(ChatColor.GREEN + "Misión " + missionNumber + " desactivada correctamente.");
+
+        sender.sendMessage(ChatColor.GREEN + "Misión " + missionNumber + " desactivada globalmente.");
         return true;
     }
 
     public void initializePlayerMissionData(String playerName, int missionNumber) {
         Player p = Bukkit.getPlayer(playerName);
         if (p != null) {
-            MissionData data = getData(p, missionNumber);
-            if (!data.isActive()) {
-                data.setActive(true);
-                saveData(p, missionNumber, data);
-            }
+            getData(p, missionNumber);
         }
     }
 
@@ -389,7 +396,6 @@ public class MissionHandler implements Listener {
 
         MissionData data = getData(target, missionNumber);
 
-
         data.setActive(true);
         data.setCompleted(false);
         data.setRewardClaimed(false);
@@ -404,19 +410,18 @@ public class MissionHandler implements Listener {
 
     public Map<Integer, Mission> getMissions() { return missions; }
 
-    public Set<Integer> getActiveMissions() { return activeMissions; }
+    public Set<Integer> getActiveMissions() { return globalActiveMissions; }
 
     public DayHandler getDayHandler() { return dayHandler; }
 
     public boolean isMissionActive(Player player, int missionId) {
-        return getData(player, missionId).isActive();
+        return globalActiveMissions.contains(missionId);
     }
 
     public boolean isMissionCompleted(Player player, int missionId) {
         return getData(player, missionId).isCompleted();
     }
 
-    // Método auxiliar para completar misión pasando Player directo (usado internamente por listeners)
     public void completeMission(Player player, int missionId) {
         completeMission(player.getName(), missionId);
     }

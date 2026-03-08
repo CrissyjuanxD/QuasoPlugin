@@ -73,6 +73,8 @@ public class QuasoPlugin extends JavaPlugin implements Listener {
 
     private TiempoCommand tiempoCommand;
     private RuletaAnimation ruletaAnimation;
+    private MisionAnimation misionAnimation;
+    private EventoAnimation eventoAnimation;
 
     private SuccessNotification successNotif;
     private CustomEffectManager effectManager;
@@ -105,6 +107,7 @@ public class QuasoPlugin extends JavaPlugin implements Listener {
     private AmuletBloodM amuletBloodM;
     private AmuletInmortal amuletInmortal;
     private LifeCampfire lifeCampfire;
+    private HappyGhastEnchant happyGhastEnchant;
 
     // ------------------------------------------------------------------------
     //  Ping / Sonidos / Spawners
@@ -267,18 +270,14 @@ public class QuasoPlugin extends JavaPlugin implements Listener {
         // Registrar el comando para el temporizador
         tiempoCommand = new TiempoCommand(this);
 
-        Objects.requireNonNull(getCommand("addtiempo")).setExecutor(tiempoCommand);
-        Objects.requireNonNull(getCommand("removetiempo")).setExecutor(tiempoCommand);
-        Objects.requireNonNull(getCommand("tiempoview")).setExecutor(tiempoCommand);
+        Objects.requireNonNull(getCommand("timers")).setExecutor(tiempoCommand);
+        Objects.requireNonNull(getCommand("timers")).setTabCompleter(tiempoCommand);
 
-        Objects.requireNonNull(getCommand("addtiempo")).setTabCompleter(tiempoCommand);
-        Objects.requireNonNull(getCommand("removetiempo")).setTabCompleter(tiempoCommand);
-        Objects.requireNonNull(getCommand("tiempoview")).setTabCompleter(tiempoCommand);
     }
 
     private void initItemsSystem() {
         // Tótems protección de ítems Armor y Herramientas
-        normalTotemHandler = new NormalTotemHandler(this, dayHandler);
+        normalTotemHandler = new NormalTotemHandler(this);
         doubleLifeTotemHandler = new DoubleLifeTotem(this);
         economyItemsFunctions = new EconomyItemsFunctions(this, databaseManager);
         economyIceTotem = new EconomyIceTotem(this);
@@ -287,6 +286,7 @@ public class QuasoPlugin extends JavaPlugin implements Listener {
         amuletBloodM = new AmuletBloodM(this);
         amuletInmortal = new AmuletInmortal(this);
         lifeCampfire = new LifeCampfire(this);
+        happyGhastEnchant = new HappyGhastEnchant(this);
 
         Bukkit.getPluginManager().registerEvents(normalTotemHandler, this);
         Bukkit.getPluginManager().registerEvents(economyItemsFunctions, this);
@@ -297,6 +297,7 @@ public class QuasoPlugin extends JavaPlugin implements Listener {
         Bukkit.getPluginManager().registerEvents(amuletBloodM, this);
         Bukkit.getPluginManager().registerEvents(amuletInmortal, this);
         Bukkit.getPluginManager().registerEvents(lifeCampfire, this);
+        Bukkit.getPluginManager().registerEvents(happyGhastEnchant, this);
 
         getCommand("mochilas").setExecutor(new MochilaCommand(economyItemsFunctions));
         getCommand("delmochilas").setExecutor(new MochilaCommand(economyItemsFunctions));
@@ -310,16 +311,10 @@ public class QuasoPlugin extends JavaPlugin implements Listener {
 
         MissionCommands missionCommands = new MissionCommands(missionHandler, missionGUI);
 
-        Objects.requireNonNull(getCommand("activarmision")).setExecutor(missionCommands);
-        Objects.requireNonNull(getCommand("desactivarmision")).setExecutor(missionCommands);
-        Objects.requireNonNull(getCommand("addmision")).setExecutor(missionCommands);
-        Objects.requireNonNull(getCommand("removemision")).setExecutor(missionCommands);
+        Objects.requireNonNull(getCommand("missions")).setExecutor(missionCommands);
         Objects.requireNonNull(getCommand("misiones")).setExecutor(missionCommands);
 
-        Objects.requireNonNull(getCommand("activarmision")).setTabCompleter(missionCommands);
-        Objects.requireNonNull(getCommand("desactivarmision")).setTabCompleter(missionCommands);
-        Objects.requireNonNull(getCommand("addmision")).setTabCompleter(missionCommands);
-        Objects.requireNonNull(getCommand("removemision")).setTabCompleter(missionCommands);
+        Objects.requireNonNull(getCommand("missions")).setTabCompleter(missionCommands);
 
         // 4. Registrar la recompensa (usando el MISMO handler)
         this.missionRewardHandler = new MissionRewardHandler(this, missionHandler);
@@ -362,7 +357,7 @@ public class QuasoPlugin extends JavaPlugin implements Listener {
 
         Bukkit.getPluginManager().registerEvents(customSpawnerHandler, this);
 
-        getCommand("bosstp").setExecutor(new BossTPCommand(this, dayHandler));
+        getCommand("bosstp").setExecutor(new BossTPCommand(this, missionHandler));
         getCommand("setbossspawn").setExecutor(new SetBossSpawnCommand(this));
         getCommand("quasoreload").setExecutor(new QuasoReloadCommand(this, databaseManager));
     }
@@ -381,6 +376,8 @@ public class QuasoPlugin extends JavaPlugin implements Listener {
     private void initAnimationAndTitleSystem() {
         // Animaciones
         ruletaAnimation = new RuletaAnimation(this);
+        misionAnimation = new MisionAnimation(this);
+        eventoAnimation = new EventoAnimation(this);
         successNotif = new SuccessNotification(this);
 
         // MuerteHandler
@@ -392,7 +389,7 @@ public class QuasoPlugin extends JavaPlugin implements Listener {
         Bukkit.getPluginManager().registerEvents(muertehandler, this);
 
         // Comandos de ruleta / muerte / bonus
-        Objects.requireNonNull(this.getCommand("ruletavct"))
+        Objects.requireNonNull(this.getCommand("ruletaqp"))
                 .setExecutor(new RuletaCommand(ruletaAnimation));
 
         // Listeners adicionales

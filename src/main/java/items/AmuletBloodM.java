@@ -12,7 +12,6 @@ import org.bukkit.World;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Monster;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -22,15 +21,12 @@ import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.event.inventory.InventoryType;
-import org.bukkit.event.inventory.PrepareAnvilEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerItemDamageEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
@@ -50,52 +46,63 @@ public class AmuletBloodM implements Listener {
     private final JavaPlugin plugin;
     private final NamespacedKey amuletIdKey;
     private final NamespacedKey diamondTicksKey;
+    private final NamespacedKey usosKey; // Nueva llave para usos virtuales
 
     private final Map<UUID, AmuletSession> activeSessions = new HashMap<>();
     private final Map<UUID, Long> hordeMessageCooldown = new HashMap<>();
+
+    private final int MAX_USOS = 250;
 
     public AmuletBloodM(JavaPlugin plugin) {
         this.plugin = plugin;
         this.amuletIdKey = new NamespacedKey(plugin, "amulet_bloodmoon");
         this.diamondTicksKey = new NamespacedKey(plugin, "amulet_diamond_ticks");
+        this.usosKey = new NamespacedKey(plugin, "amulet_usos");
     }
 
     public ItemStack createAmulet() {
-        ItemStack item = new ItemStack(Material.IRON_HOE);
+        ItemStack item = new ItemStack(Material.TORCHFLOWER_SEEDS);
         ItemMeta meta = item.getItemMeta();
 
         if (meta != null) {
             meta.setDisplayName(ChatColor.of("#e17575") + ChatColor.BOLD.toString() + "Amuleto Luna de Sangre");
 
-            List<String> lore = new ArrayList<>();
-            lore.add("");
-            lore.add(ChatColor.of("#da765d") + "Un amuleto ancestral que impide");
-            lore.add(ChatColor.of("#da765d") + "la aparición de hordas de mobs");
-            lore.add(ChatColor.of("#da765d") + "cerca de su portador durante");
-            lore.add(ChatColor.of("#da765d") + "una " + ChatColor.DARK_RED + ChatColor.BOLD + "BloodMoon" + ChatColor.of("#da765d") + ".");
-            lore.add("");
-            lore.add(ChatColor.of("#c23d3d") + ChatColor.BOLD.toString() + "⊗ " + ChatColor.of("#488bad") + "Consume " + ChatColor.of("#81b9d5") + ChatColor.BOLD + "1 uso" + ChatColor.of("#488bad") + " cada 7.2 segundos.");
-            lore.add(ChatColor.of("#c23d3d") + ChatColor.BOLD.toString() + "⊗ " + ChatColor.of("#488bad") + "Consume " + ChatColor.of("#81b9d5") + ChatColor.BOLD + "1 diamante" + ChatColor.of("#488bad") + " por minuto.");
-            lore.add("");
-            lore.add(ChatColor.of("#999999") + "Si no hay diamantes,");
-            lore.add(ChatColor.of("#999999") + "el efecto se cancelará.");
-            lore.add("");
-            lore.add(ChatColor.GRAY + "> " + ChatColor.WHITE + ChatColor.BOLD + "Uso: " + ChatColor.WHITE + "Click Derecho usar o cancelar");
-
-            meta.setLore(lore);
-            meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
-
             PersistentDataContainer data = meta.getPersistentDataContainer();
             data.set(amuletIdKey, PersistentDataType.BYTE, (byte) 1);
             data.set(diamondTicksKey, PersistentDataType.INTEGER, 0);
+            data.set(usosKey, PersistentDataType.INTEGER, MAX_USOS);
 
+            updateLore(meta, MAX_USOS);
+
+            meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
             item.setItemMeta(meta);
         }
         return item;
     }
 
+    private void updateLore(ItemMeta meta, int usosActuales) {
+        List<String> lore = new ArrayList<>();
+        lore.add("");
+        lore.add(ChatColor.of("#da765d") + "Un amuleto ancestral que impide");
+        lore.add(ChatColor.of("#da765d") + "la aparición de hordas de mobs");
+        lore.add(ChatColor.of("#da765d") + "cerca de su portador durante");
+        lore.add(ChatColor.of("#da765d") + "una " + ChatColor.DARK_RED + ChatColor.BOLD + "BloodMoon" + ChatColor.of("#da765d") + ".");
+        lore.add("");
+        lore.add(ChatColor.of("#c23d3d") + ChatColor.BOLD.toString() + "⊗ " + ChatColor.of("#488bad") + "Consume " + ChatColor.of("#81b9d5") + ChatColor.BOLD + "1 uso" + ChatColor.of("#488bad") + " cada 7.2 segundos.");
+        lore.add(ChatColor.of("#c23d3d") + ChatColor.BOLD.toString() + "⊗ " + ChatColor.of("#488bad") + "Consume " + ChatColor.of("#81b9d5") + ChatColor.BOLD + "1 diamante" + ChatColor.of("#488bad") + " por minuto.");
+        lore.add("");
+        lore.add(ChatColor.of("#999999") + "Si no hay diamantes,");
+        lore.add(ChatColor.of("#999999") + "el efecto se cancelará.");
+        lore.add("");
+        lore.add(ChatColor.of("#e18b75") + ChatColor.BOLD.toString() + "Usos restantes: " + ChatColor.WHITE + usosActuales + ChatColor.GRAY + " / " + MAX_USOS);
+        lore.add("");
+        lore.add(ChatColor.GRAY + "> " + ChatColor.WHITE + ChatColor.BOLD + "Uso: " + ChatColor.WHITE + "Click Derecho usar o cancelar");
+
+        meta.setLore(lore);
+    }
+
     public boolean isAmulet(ItemStack item) {
-        if (item == null || item.getType() != Material.IRON_HOE || !item.hasItemMeta()) return false;
+        if (item == null || item.getType() != Material.TORCHFLOWER_SEEDS || !item.hasItemMeta()) return false;
         return item.getItemMeta().getPersistentDataContainer().has(amuletIdKey, PersistentDataType.BYTE);
     }
 
@@ -109,7 +116,6 @@ public class AmuletBloodM implements Listener {
         return false;
     }
 
-    // Lista de mobs básicos que queremos eliminar
     private boolean isBasicHordeMob(EntityType type) {
         switch (type) {
             case ZOMBIE:
@@ -126,7 +132,6 @@ public class AmuletBloodM implements Listener {
             case PHANTOM:
                 return true;
             default:
-                // Compatibilidad en caso de Bogged en 1.21
                 if (type.name().equals("BOGGED")) return true;
                 return false;
         }
@@ -150,7 +155,7 @@ public class AmuletBloodM implements Listener {
         if (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
             event.setCancelled(true);
 
-            if (player.hasCooldown(Material.IRON_HOE)) {
+            if (player.hasCooldown(Material.TORCHFLOWER_SEEDS)) {
                 return;
             }
 
@@ -181,8 +186,15 @@ public class AmuletBloodM implements Listener {
         if (meta == null) return;
 
         int savedDiamondTicks = meta.getPersistentDataContainer().getOrDefault(diamondTicksKey, PersistentDataType.INTEGER, 0);
-        boolean justPaid = false;
+        int usosActuales = meta.getPersistentDataContainer().getOrDefault(usosKey, PersistentDataType.INTEGER, MAX_USOS);
 
+        if (usosActuales <= 0) {
+            player.sendMessage("§c¡El amuleto está gastado y ya no tiene usos!");
+            amulet.setAmount(0);
+            return;
+        }
+
+        boolean justPaid = false;
         if (savedDiamondTicks == 0) {
             if (!consumeDiamond(player)) {
                 player.sendMessage("§c¡No tienes diamantes para activar el amuleto!");
@@ -200,8 +212,7 @@ public class AmuletBloodM implements Listener {
         }
         activeSessions.put(player.getUniqueId(), session);
 
-        // APLICAR COOLDOWN Y ANIMACIÓN DE SUBIDA (Verde)
-        player.setCooldown(Material.IRON_HOE, 600);
+        player.setCooldown(Material.TORCHFLOWER_SEEDS, 60);
         playAuraAnimation(player, true);
 
         player.playSound(player.getLocation(), Sound.BLOCK_BEACON_ACTIVATE, 1f, 2f);
@@ -225,7 +236,7 @@ public class AmuletBloodM implements Listener {
 
         if (notify) {
             playAuraAnimation(player, false);
-            player.setCooldown(Material.IRON_HOE, 80);
+            player.setCooldown(Material.TORCHFLOWER_SEEDS, 80);
             player.playSound(player.getLocation(), Sound.BLOCK_BEACON_DEACTIVATE, 1f, 1.5f);
             player.sendMessage("§cHas desactivado el Amuleto Luna de Sangre.");
             player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(""));
@@ -244,7 +255,6 @@ public class AmuletBloodM implements Listener {
             final double step = 0.15;
             final double radius = 1.0;
 
-            // Verde si se activa, Rojo si se desactiva
             Particle.DustOptions color1 = new Particle.DustOptions(isActivation ? org.bukkit.Color.LIME : org.bukkit.Color.RED, 1.2f);
             Particle.DustOptions color2 = new Particle.DustOptions(org.bukkit.Color.WHITE, 1.2f);
 
@@ -263,14 +273,12 @@ public class AmuletBloodM implements Listener {
 
                     loc.add(x, 0, z);
 
-                    // Alternar colores en el aro
                     Particle.DustOptions dust = (i % 2 == 0) ? color1 : color2;
                     player.getWorld().spawnParticle(Particle.DUST, loc, 1, 0, 0, 0, 0, dust);
 
                     loc.subtract(x, 0, z);
                 }
 
-                // Subir o bajar dependiendo del estado
                 if (isActivation) {
                     yOffset += step;
                     if (yOffset > 2.2) this.cancel();
@@ -279,7 +287,7 @@ public class AmuletBloodM implements Listener {
                     if (yOffset < 0.0) this.cancel();
                 }
             }
-        }.runTaskTimer(plugin, 0L, 1L); // Corre cada tick para que el aro se mueva fluido
+        }.runTaskTimer(plugin, 0L, 1L);
     }
 
     // ========================================================================================
@@ -304,7 +312,7 @@ public class AmuletBloodM implements Listener {
         }
 
         public void triggerDiamondMessage() {
-            this.showDiamondMessageTicks = 40; // 2 segundos (40 ticks)
+            this.showDiamondMessageTicks = 40;
         }
 
         private void startTask() {
@@ -315,10 +323,10 @@ public class AmuletBloodM implements Listener {
 
                     if (amulet == null) {
                         missingTicks += 4;
-                        if (missingTicks >= 80) { // Tolerancia de 4 segundos
+                        if (missingTicks >= 80) {
                             deactivateAmulet(player, null, true);
                         }
-                        return; // Se pausa mientras no lo tenga
+                        return;
                     } else {
                         missingTicks = 0;
                     }
@@ -330,18 +338,13 @@ public class AmuletBloodM implements Listener {
                         return;
                     }
 
-                    // Limpieza Activa
                     for (Entity entity : player.getNearbyEntities(20, 20, 20)) {
                         if (isBasicHordeMob(entity.getType())) {
-
-                            // Si el mob tiene nombre custom, revisamos si tiene códigos de color
                             if (entity.getCustomName() != null) {
-                                // Si NO tiene '§', asumimos que es una NameTag blanca, por ende lo ignoramos.
                                 if (!entity.getCustomName().contains("§")) {
                                     continue;
                                 }
                             }
-
                             entity.getWorld().spawnParticle(Particle.SMOKE, entity.getLocation(), 10, 0.2, 0.5, 0.2, 0.05);
                             entity.remove();
                         }
@@ -350,27 +353,25 @@ public class AmuletBloodM implements Listener {
                     durabilityTicks += 4;
                     diamondTicks += 4;
 
-                    // Manejo del Action Bar
                     if (showDiamondMessageTicks > 0) {
                         showDiamondMessageTicks -= 4;
                         if (showDiamondMessageTicks % 20 == 0 || showDiamondMessageTicks <= 0) {
                             sendActionBar(player, showDiamondMessageTicks > 0);
                         }
-                    } else if (durabilityTicks % 20 == 0) { // Refrescar el "Activado" cada segundo
+                    } else if (durabilityTicks % 20 == 0) {
                         sendActionBar(player, false);
                     }
 
-                    // Desgaste de herramienta (Cada 7.2s = 144 ticks)
+                    // Desgaste virtual (Cada 7.2s = 144 ticks)
                     if (durabilityTicks >= 144) {
                         durabilityTicks = 0;
-                        if (!consumeDurability(player, amulet)) {
+                        if (!consumeVirtualDurability(player, amulet)) {
                             deactivateAmulet(player, null, false);
-                            player.sendMessage("§c¡Tu Amuleto Luna de Sangre se ha roto por falta de usos!");
+                            player.sendMessage("§c¡Tu Amuleto Luna de Sangre se ha desintegrado por falta de usos!");
                             return;
                         }
                     }
 
-                    // Cobra diamante tras 60s (1200 ticks) de uso
                     if (diamondTicks >= 1200) {
                         diamondTicks = 0;
                         if (!consumeDiamond(player)) {
@@ -392,20 +393,24 @@ public class AmuletBloodM implements Listener {
             return diamondTicks;
         }
 
-        private boolean consumeDurability(Player player, ItemStack amulet) {
+        // LÓGICA VIRTUAL DE USOS
+        private boolean consumeVirtualDurability(Player player, ItemStack amulet) {
             ItemMeta meta = amulet.getItemMeta();
-            if (meta instanceof Damageable damageable) {
-                int newDamage = damageable.getDamage() + 1;
-                if (newDamage >= amulet.getType().getMaxDurability()) {
-                    amulet.setAmount(0);
-                    player.playSound(player.getLocation(), Sound.ENTITY_ITEM_BREAK, 1f, 1f);
-                    return false;
-                }
-                damageable.setDamage(newDamage);
-                amulet.setItemMeta(damageable);
-                return true;
+            if (meta == null) return false;
+
+            int usos = meta.getPersistentDataContainer().getOrDefault(usosKey, PersistentDataType.INTEGER, MAX_USOS);
+            usos -= 1;
+
+            if (usos <= 0) {
+                amulet.setAmount(0); // Se rompe el ítem
+                player.playSound(player.getLocation(), Sound.ENTITY_ITEM_BREAK, 1f, 1f);
+                return false;
             }
-            return false;
+
+            meta.getPersistentDataContainer().set(usosKey, PersistentDataType.INTEGER, usos);
+            updateLore(meta, usos);
+            amulet.setItemMeta(meta);
+            return true;
         }
     }
 
@@ -461,32 +466,17 @@ public class AmuletBloodM implements Listener {
     // ANTI-EXPLOITS Y EVENTOS EXTERNOS
     // ========================================================================================
 
-    // Bloquear encantamiento de Mending (Reparación) en el Yunque
-    @EventHandler
-    public void onPrepareAnvil(PrepareAnvilEvent event) {
-        ItemStack firstItem = event.getInventory().getItem(0);
-        if (isAmulet(firstItem)) {
-            ItemStack result = event.getResult();
-            if (result != null && result.getItemMeta() != null) {
-                if (result.getItemMeta().hasEnchant(Enchantment.MENDING)) {
-                    event.setResult(null);
-                }
-            }
-        }
-    }
-
     @EventHandler
     public void onInventoryClick(InventoryClickEvent event) {
         Player player = (Player) event.getWhoClicked();
         if (!activeSessions.containsKey(player.getUniqueId())) return;
 
         Inventory topInv = event.getView().getTopInventory();
-        if (topInv.getType() == InventoryType.CRAFTING) return; // Permitir movimiento dentro del inv del jugador
+        if (topInv.getType() == InventoryType.CRAFTING) return;
 
         ItemStack clicked = event.getCurrentItem();
         ItemStack cursor = event.getCursor();
 
-        // 1. Prevenir Shift-Click desde el inventario del jugador hacia el cofre externo
         if (event.getClickedInventory() != null && event.getClickedInventory().equals(event.getView().getBottomInventory())) {
             if (event.isShiftClick() && isAmulet(clicked)) {
                 event.setCancelled(true);
@@ -494,14 +484,12 @@ public class AmuletBloodM implements Listener {
             }
         }
 
-        // 2. Prevenir click en el inventario externo si lleva el amuleto en el cursor
         if (event.getClickedInventory() != null && event.getClickedInventory().equals(topInv)) {
             if (isAmulet(cursor) || isAmulet(clicked)) {
                 event.setCancelled(true);
                 player.sendMessage("§cNo puedes guardar el amuleto mientras esté activado.");
             }
 
-            // 3. Prevenir el uso de teclas numéricas (Ej: pulsar '1' sobre una ranura del cofre)
             if (event.getClick() == org.bukkit.event.inventory.ClickType.NUMBER_KEY) {
                 ItemStack hotbarItem = player.getInventory().getItem(event.getHotbarButton());
                 if (isAmulet(hotbarItem)) {
@@ -512,7 +500,6 @@ public class AmuletBloodM implements Listener {
         }
     }
 
-    // Prevenir arrastrar el ítem (drag & drop) hacia inventarios externos
     @EventHandler
     public void onInventoryDrag(InventoryDragEvent event) {
         Player player = (Player) event.getWhoClicked();
@@ -523,7 +510,7 @@ public class AmuletBloodM implements Listener {
             if (topInv.getType() == InventoryType.CRAFTING) return;
 
             for (int slot : event.getRawSlots()) {
-                if (slot < topInv.getSize()) { // Si el slot pertenece al inventario de arriba
+                if (slot < topInv.getSize()) {
                     event.setCancelled(true);
                     player.sendMessage("§cNo puedes guardar el amuleto mientras esté activado.");
                     return;
@@ -547,13 +534,6 @@ public class AmuletBloodM implements Listener {
                     }
                 }
             }, 50L);
-        }
-    }
-
-    @EventHandler
-    public void onItemDamage(PlayerItemDamageEvent event) {
-        if (isAmulet(event.getItem())) {
-            event.setCancelled(true);
         }
     }
 

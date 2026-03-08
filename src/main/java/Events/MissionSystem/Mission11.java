@@ -9,6 +9,7 @@ import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.inventory.ItemStack;
@@ -51,28 +52,21 @@ public class Mission11 implements Mission, Listener {
 
         ItemStack coins = EconomyItems.createVithiumCoin();
         coins.setAmount(16);
-
-        // 3 Pociones de Regeneración III separadas en slots de 1
         ItemStack potion = CustomPotions.getSplashRegenerationIIIPotion();
         potion.setAmount(1);
-
         ItemStack diamondBlocks = new ItemStack(Material.DIAMOND_BLOCK, 6);
         ItemStack xpFill = new ItemStack(Material.EXPERIENCE_BOTTLE, 1);
 
         for (int i = 0; i < 27; i++) {
-            // Añadimos 3 pociones en slots individuales
             if (i == 10 || i == 11 || i == 12) {
                 rewards.add(potion.clone());
             }
-            // Monedas
             else if (i == 14) {
                 rewards.add(coins);
             }
-            // Bloques de Diamante
             else if (i == 16) {
                 rewards.add(diamondBlocks);
             }
-            // Relleno de experiencia
             else {
                 rewards.add(xpFill.clone());
             }
@@ -86,7 +80,7 @@ public class Mission11 implements Mission, Listener {
     @Override
     public void checkCompletion(String playerName) {}
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onEliteDeath(EntityDeathEvent event) {
         org.bukkit.entity.LivingEntity entity = event.getEntity();
 
@@ -156,9 +150,9 @@ public class Mission11 implements Mission, Listener {
                 String skeletonColor = skeletons >= 10 ? ChatColor.GREEN.toString() : ChatColor.of("#FFA07A").toString();
 
                 String msg = ChatColor.GOLD + "۞ " +
-                        ChatColor.of("#FFCC99") + "Eli. Spiders: " + spiderColor + spiders + ChatColor.of("#FFE4B5") + "/10" +
+                        ChatColor.of("#FFCC99") + "Elite Spiders: " + spiderColor + spiders + ChatColor.of("#FFE4B5") + "/10" +
                         ChatColor.GRAY + " | " +
-                        ChatColor.of("#FFCC99") + "Eli. Skeletons: " + skeletonColor + skeletons + ChatColor.of("#FFE4B5") + "/10";
+                        ChatColor.of("#FFCC99") + "Elite Skeletons: " + skeletonColor + skeletons + ChatColor.of("#FFE4B5") + "/10";
                 actionBarHandler.sendActionBar(killer, msg);
             }
         }

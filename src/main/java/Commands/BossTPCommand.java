@@ -1,6 +1,6 @@
 package Commands;
 
-import Handlers.DayHandler;
+import Events.MissionSystem.MissionHandler;
 import imp.crissyjuanxd.QuasoPlugin;
 import net.md_5.bungee.api.ChatColor; // Importante para colores HEX
 import org.bukkit.Bukkit;
@@ -17,12 +17,12 @@ import org.bukkit.scheduler.BukkitRunnable;
 public class BossTPCommand implements CommandExecutor {
 
     private final QuasoPlugin plugin;
-    private final DayHandler dayHandler; // Añadimos referencia al DayHandler
+    private final MissionHandler missionHandler; // Cambiamos DayHandler por MissionHandler
 
-    // Actualizamos el constructor para pedir el DayHandler
-    public BossTPCommand(QuasoPlugin plugin, DayHandler dayHandler) {
+    // Actualizamos el constructor
+    public BossTPCommand(QuasoPlugin plugin, MissionHandler missionHandler) {
         this.plugin = plugin;
-        this.dayHandler = dayHandler;
+        this.missionHandler = missionHandler;
     }
 
     @Override
@@ -34,18 +34,13 @@ public class BossTPCommand implements CommandExecutor {
 
         Player player = (Player) sender;
 
-        // --- VERIFICACIÓN DE DÍA (NUEVO) ---
-        // Si es antes del día 6, bloqueamos el comando
-        if (dayHandler.getCurrentDay() < 6) {
-            // Construimos el mensaje con los colores exactos que pediste
+        if (!missionHandler.getActiveMissions().contains(10)) {
             String hexColor = "#DC9567";
 
-            // \u06de en Rojo y Negrita + Texto en Hex #DC9567 y Negrita
             String message = ChatColor.RED + "" + ChatColor.BOLD + "\u06de " +
                     ChatColor.of(hexColor) + "" + ChatColor.BOLD + "Este comando aun no se puede ejecutar hasta que se habilite";
 
             player.sendMessage(message);
-            // Reproducimos un sonido de error sutil (opcional, pero queda bien)
             player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 1.0f, 0.5f);
             return true;
         }
@@ -73,7 +68,6 @@ public class BossTPCommand implements CommandExecutor {
 
         Location bossLocation = new Location(world, x, y, z, yaw, pitch);
 
-        // --- LÓGICA DE TELETRANSPORTE ---
 
         player.playSound(player.getLocation(), Sound.BLOCK_AMETHYST_BLOCK_CHIME, 2.0f, 0.6f);
         player.playSound(player.getLocation(), Sound.BLOCK_AMETHYST_BLOCK_RESONATE, 2.0f, 0.6f);

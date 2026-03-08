@@ -1,0 +1,43 @@
+SlotMachine:
+  win_chance: 09.0
+  minerales:
+    three_out_of_three:
+      - diamond 32
+      - gold_ingot 32
+      - emerald 32
+      - netherite_scrap 6
+  itemsvarios:
+    three_out_of_three:
+      - golden_carrot 64
+      - experience_bottle 64
+      - experience_bottle 32
+      - artefacto_nivel_1 6
+      - artefacto_nivel_2 3
+      - panic_apple 6
+  pociones:
+    three_out_of_three:
+      - enchanted_golden_apple 5
+      - golden_apple 15
+      - potion_resistance_2 3
+      - splash_resistance_3 3
+      - potion_slow_falling 3
+      - splash_regeneration_3 3
+      - potion_haste_3 3
+      - potion_haste_2 3
+      - splash_absorption_10 3
+      - frasco_de_velocidad 3
+  vithiums_fichas:
+    three_out_of_three:
+      - dinofichas 32
+      - dinocoins 6
+      - gold_ingot 64
+      - golden_apple 32
+      - enchanted_golden_apple 6
+  totems:
+    three_out_of_three:
+      - totem_of_undying 1
+      - doubletotem 1
+      - totem_of_undying 2
+      - icetotem 2
+      - flytotem 2
+

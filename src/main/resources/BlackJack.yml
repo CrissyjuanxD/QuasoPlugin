@@ -1,0 +1,6 @@
+BlackJack:
+  min_bet: 5
+  max_bet: 16
+  payouts:
+    blackjack_multiplier: 2.3
+    win_multiplier: 2

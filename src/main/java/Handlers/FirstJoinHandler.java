@@ -2,14 +2,10 @@ package Handlers;
 
 import Events.MissionSystem.MissionHandler;
 import Handlers.Teams.TeamType;
-import items.Misionesitem;
-import org.bukkit.Bukkit;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class FirstJoinHandler implements Listener {
@@ -34,28 +30,9 @@ public class FirstJoinHandler implements Listener {
 
             handleWelcomeLogistics(player);
         }
-        for (int missionId : missionHandler.getActiveMissions()) {
-            missionHandler.initializePlayerMissionData(player.getName(), missionId);
-        }
     }
 
     private void handleWelcomeLogistics(Player player) {
-        /*giveWelcomeKit(player);*/
-
-/*        Bukkit.getScheduler().runTaskLater(this.plugin, () -> {
-            player.sendMessage("§e۞ Has recibido tu kit de bienvenida!");
-        }, 40);*/
+        // Tu lógica de bienvenida (kits, msgs) va aquí
     }
-
-/*    private void giveWelcomeKit(Player player) {
-        ItemStack cookedBeef = new ItemStack(Material.COOKED_BEEF, 25);
-        ItemStack misiones = Misionesitem.createMisiones();
-
-        player.getInventory().addItem(cookedBeef);
-        player.getInventory().addItem(misiones);
-
-        if (player.getInventory().firstEmpty() == -1) {
-            player.getWorld().dropItemNaturally(player.getLocation(), cookedBeef);
-        }
-    }*/
 }

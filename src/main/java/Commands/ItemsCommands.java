@@ -116,6 +116,10 @@ public class ItemsCommands implements CommandExecutor, TabCompleter {
                 item = EconomyItems.createVithiumToken();
                 item.setAmount(cantidad);
                 break;
+            case "blood_fragment":
+                item = EconomyItems.createBloodFragment();
+                item.setAmount(cantidad);
+                break;
             case "mochila_nivel_1":
                 item = EconomyItems.createNormalMochila();
                 item.setAmount(cantidad);
@@ -236,6 +240,58 @@ public class ItemsCommands implements CommandExecutor, TabCompleter {
                 item = happyGhastEnchant.createFastFlightBook(1);
                 item.setAmount(cantidad);
                 break;
+            case "tarta_calabaza_mejorada":
+                item = DayOneChanges.improvedPumpkinPie();
+                item.setAmount(cantidad);
+                break;
+            case "bar_tequila":
+                item = CustomPotions.getTequila();
+                item.setAmount(cantidad);
+                break;
+            case "bar_margarita":
+                item = CustomPotions.getMargarita();
+                item.setAmount(cantidad);
+                break;
+            case "bar_mezcal":
+                item = CustomPotions.getMezcal();
+                item.setAmount(cantidad);
+                break;
+            case "bar_pulque":
+                item = CustomPotions.getPulque();
+                item.setAmount(cantidad);
+                break;
+            case "bar_cerveza":
+                item = CustomPotions.getBeer();
+                item.setAmount(cantidad);
+                break;
+            case "bar_ron":
+                item = CustomPotions.getRum();
+                item.setAmount(cantidad);
+                break;
+            case "bar_vodka":
+                item = CustomPotions.getVodka();
+                item.setAmount(cantidad);
+                break;
+            case "bar_whisky":
+                item = CustomPotions.getWhisky();
+                item.setAmount(cantidad);
+                break;
+            case "bar_sake":
+                item = CustomPotions.getSake();
+                item.setAmount(cantidad);
+                break;
+            case "bar_ginebra":
+                item = CustomPotions.getGin();
+                item.setAmount(cantidad);
+                break;
+            case "bar_azulito":
+                item = CustomPotions.getAzulito();
+                item.setAmount(cantidad);
+                break;
+            case "bar_michelada":
+                item = CustomPotions.getMichelada();
+                item.setAmount(cantidad);
+                break;
             default:
                 sender.sendMessage("§cEse item no existe.");
                 return true;
@@ -257,6 +313,7 @@ public class ItemsCommands implements CommandExecutor, TabCompleter {
             completions.add("libro_habilidades");
             completions.add("dinocoins");
             completions.add("dinofichas");
+            completions.add("blood_fragment");
             completions.add("mochila_nivel_1");
             completions.add("mochila_nivel_2");
             completions.add("mochila_nivel_3");
@@ -287,6 +344,19 @@ public class ItemsCommands implements CommandExecutor, TabCompleter {
             completions.add("cristal_hielo");
             completions.add("arco_hielo");
             completions.add("happy_ghast_enchant");
+            completions.add("tarta_calabaza_mejorada");
+            completions.add("bar_tequila");
+            completions.add("bar_margarita");
+            completions.add("bar_mezcal");
+            completions.add("bar_pulque");
+            completions.add("bar_cerveza");
+            completions.add("bar_ron");
+            completions.add("bar_vodka");
+            completions.add("bar_whisky");
+            completions.add("bar_sake");
+            completions.add("bar_ginebra");
+            completions.add("bar_azulito");
+            completions.add("bar_michelada");
         } else if (args.length == 2) {
             for (Player player : Bukkit.getOnlinePlayers()) {
                 completions.add(player.getName());

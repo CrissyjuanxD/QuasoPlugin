@@ -71,6 +71,21 @@ public class CustomItemRegistry {
             case "cristal_hielo": item = ItemsTotems.createIceCrystal();break;
             case "arco_hielo": item = iceBowItem.createIceBow();break;
             case "happy_ghast_enchant": item = happyGhastEnchant.createFastFlightBook(1);break;
+            case "tarta_calabaza_mejorada": item = DayOneChanges.improvedPumpkinPie();break;
+            //bebidas bar
+            case "bar_tequila": item = CustomPotions.getTequila();break;
+            case "bar_margarita": item = CustomPotions.getMargarita();break;
+            case "bar_mezcal": item = CustomPotions.getMezcal();break;
+            case "bar_pulque": item = CustomPotions.getPulque();break;
+            case "bar_cerveza": item = CustomPotions.getBeer();break;
+            case "bar_ron": item = CustomPotions.getRum();break;
+            case "bar_vodka": item = CustomPotions.getVodka();break;
+            case "bar_whisky": item = CustomPotions.getWhisky();break;
+            case "bar_sake": item = CustomPotions.getSake();break;
+            case "bar_ginebra": item = CustomPotions.getGin();break;
+            case "bar_azulito": item = CustomPotions.getAzulito();break;
+            case "bar_michelada": item = CustomPotions.getMichelada();break;
+
             default:
                 try {
                     item = new ItemStack(Material.valueOf(name.toUpperCase()));
@@ -121,6 +136,20 @@ public class CustomItemRegistry {
         list.add("cristal_hielo");
         list.add("arco_hielo");
         list.add("happy_ghast_enchant");
+        list.add("tarta_calabaza_mejorada");
+        //bebidas bar
+        list.add("bar_tequila");
+        list.add("bar_margarita");
+        list.add("bar_mezcal");
+        list.add("bar_pulque");
+        list.add("bar_cerveza");
+        list.add("bar_ron");
+        list.add("bar_vodka");
+        list.add("bar_whisky");
+        list.add("bar_sake");
+        list.add("bar_ginebra");
+        list.add("bar_azulito");
+        list.add("bar_michelada");
         return list;
     }
 }

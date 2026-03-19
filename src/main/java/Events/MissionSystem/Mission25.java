@@ -39,7 +39,7 @@ public class Mission25 implements Mission, Listener {
 
     @Override
     public String getDescription() {
-        return "Mata a 10 Elite Wither Skeletons\ny 10 Elite Piglins.";
+        return "Mata a 35 Elite Wither Skeletons\ny 40 Elite Piglins.";
     }
 
     @Override
@@ -52,7 +52,7 @@ public class Mission25 implements Mission, Listener {
         List<ItemStack> rewards = new ArrayList<>();
 
         ItemStack coins = EconomyItems.createVithiumCoin();
-        coins.setAmount(17);
+        coins.setAmount(25);
 
         ItemStack panicApples = EconomyItems.createManzanaPanico();
         panicApples.setAmount(8);
@@ -135,11 +135,11 @@ public class Mission25 implements Mission, Listener {
         int piglins = data.getProgressInt("elite_piglins_killed");
         boolean updated = false;
 
-        if (isWitherSkeleton && witherSkeletons < 10) {
+        if (isWitherSkeleton && witherSkeletons < 35) {
             witherSkeletons++;
             data.setProgressValue("elite_wither_skeletons_killed", witherSkeletons);
             updated = true;
-        } else if (isPiglin && piglins < 10) {
+        } else if (isPiglin && piglins < 40) {
             piglins++;
             data.setProgressValue("elite_piglins_killed", piglins);
             updated = true;
@@ -148,17 +148,17 @@ public class Mission25 implements Mission, Listener {
         if (updated) {
             missionHandler.saveData(killer, 25, data);
 
-            if (witherSkeletons >= 10 && piglins >= 10) {
+            if (witherSkeletons >= 35 && piglins >= 40) {
                 successNotification.showSuccess(killer);
                 missionHandler.completeMission(killer, 25);
             } else {
-                String wsColor = witherSkeletons >= 10 ? ChatColor.GREEN.toString() : ChatColor.of("#FFA07A").toString();
-                String pigColor = piglins >= 10 ? ChatColor.GREEN.toString() : ChatColor.of("#FFA07A").toString();
+                String wsColor = witherSkeletons >= 35 ? ChatColor.GREEN.toString() : ChatColor.of("#FFA07A").toString();
+                String pigColor = piglins >= 40 ? ChatColor.GREEN.toString() : ChatColor.of("#FFA07A").toString();
 
                 String msg = ChatColor.GOLD + "۞ " +
-                        ChatColor.of("#FFCC99") + "Wither Skeleton: " + wsColor + witherSkeletons + ChatColor.of("#FFE4B5") + "/10" +
+                        ChatColor.of("#FFCC99") + "Wither Skeleton: " + wsColor + witherSkeletons + ChatColor.of("#FFE4B5") + "/35" +
                         ChatColor.GRAY + " | " +
-                        ChatColor.of("#FFCC99") + "Piglins: " + pigColor + piglins + ChatColor.of("#FFE4B5") + "/10";
+                        ChatColor.of("#FFCC99") + "Piglins: " + pigColor + piglins + ChatColor.of("#FFE4B5") + "/40";
                 actionBarHandler.sendActionBar(killer, msg);
             }
         }

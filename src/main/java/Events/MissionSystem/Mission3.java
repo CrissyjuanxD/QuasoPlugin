@@ -3,6 +3,7 @@ package Events.MissionSystem;
 import Handlers.ActionBarHandler;
 import TitleListener.SuccessNotification;
 import items.CustomPotions;
+import items.EconomyFlyTotem;
 import items.EconomyItems;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Material;
@@ -22,10 +23,12 @@ public class Mission3 implements Mission, Listener {
     private final MissionHandler missionHandler;
     private final SuccessNotification successNotification;
     private final ActionBarHandler actionBarHandler;
+    private final EconomyFlyTotem economyFlyTotem;
 
     public Mission3(JavaPlugin plugin, MissionHandler missionHandler) {
         this.plugin = plugin;
         this.missionHandler = missionHandler;
+        this.economyFlyTotem = new EconomyFlyTotem(plugin);
         this.successNotification = new SuccessNotification(plugin);
         this.actionBarHandler = new ActionBarHandler(plugin);
     }
@@ -37,7 +40,7 @@ public class Mission3 implements Mission, Listener {
 
     @Override
     public String getDescription() {
-        return "Completa una Raid y fabrica\n20 manzanas de oro.";
+        return "Completa 5 Raids y fabrica\n64 manzanas de oro.";
     }
 
     @Override
@@ -50,13 +53,14 @@ public class Mission3 implements Mission, Listener {
         List<ItemStack> rewards = new ArrayList<>();
 
         ItemStack coins = EconomyItems.createVithiumCoin();
-        coins.setAmount(10);
+        coins.setAmount(15);
 
         ItemStack totem = new ItemStack(Material.TOTEM_OF_UNDYING, 1);
         ItemStack potion = CustomPotions.getResistanceIIPotion();
         potion.setAmount(1);
         ItemStack potion2 = CustomPotions.getSplashAbsorptionXPotion();
         potion.setAmount(1);
+        ItemStack flyTotem = economyFlyTotem.createFlyTotem();
 
         ItemStack xpFill = new ItemStack(Material.EXPERIENCE_BOTTLE, 1);
 
@@ -70,8 +74,11 @@ public class Mission3 implements Mission, Listener {
             else if (i == 13) {
                 rewards.add(coins);
             }
-            else if (i == 14 || i == 15 || i == 16) {
+            else if (i == 14 || i == 16) {
                 rewards.add(totem.clone());
+            }
+            else if (i == 15) {
+                rewards.add(flyTotem.clone());
             }
             else {
                 rewards.add(xpFill.clone());
@@ -92,7 +99,7 @@ public class Mission3 implements Mission, Listener {
 
         for (Player player : event.getWinners()) {
             if (missionHandler.isMissionActive(player, 3)) {
-                updateProgress(player, "raid_completed", true);
+                updateProgress(player, "raids_completed", 1);
             }
         }
     }
@@ -120,22 +127,22 @@ public class Mission3 implements Mission, Listener {
         }
     }
 
-    private void updateProgress(Player player, String type, Object value) {
+    private void updateProgress(Player player, String type, int value) {
         MissionData data = missionHandler.getData(player, 3);
         if (data.isCompleted()) return;
 
         boolean updated = false;
 
-        if (type.equals("raid_completed")) {
-            if (!data.getProgressBool("raid_completed")) {
-                data.setProgressValue("raid_completed", true);
+        if (type.equals("raids_completed")) {
+            int current = data.getProgressInt("raids_completed");
+            if (current < 5) {
+                data.setProgressValue("raids_completed", Math.min(5, current + value));
                 updated = true;
             }
         } else if (type.equals("apples_crafted")) {
             int current = data.getProgressInt("apples_crafted");
-            int amount = (int) value;
-            if (current < 20) {
-                int newTotal = Math.min(20, current + amount);
+            if (current < 64) {
+                int newTotal = Math.min(64, current + value);
                 data.setProgressValue("apples_crafted", newTotal);
                 updated = true;
             }
@@ -144,18 +151,18 @@ public class Mission3 implements Mission, Listener {
         if (updated) {
             missionHandler.saveData(player, 3, data);
 
-            boolean raidDone = data.getProgressBool("raid_completed");
+            int raidsDone = data.getProgressInt("raids_completed");
             int apples = data.getProgressInt("apples_crafted");
 
-            if (raidDone && apples >= 20) {
+            if (raidsDone >= 5 && apples >= 64) {
                 successNotification.showSuccess(player);
                 missionHandler.completeMission(player, 3);
             } else {
-                String raidStatus = raidDone ? ChatColor.GREEN + "✔" : ChatColor.RED + "✖";
-                String appleStatus = (apples >= 20 ? ChatColor.GREEN : ChatColor.of("#FFA07A")) + String.valueOf(apples) + "/20";
+                String raidStatus = (raidsDone >= 5 ? ChatColor.GREEN : ChatColor.of("#FFA07A")) + String.valueOf(raidsDone) + "/5";
+                String appleStatus = (apples >= 64 ? ChatColor.GREEN : ChatColor.of("#FFA07A")) + String.valueOf(apples) + "/64";
 
                 String msg = ChatColor.GOLD + "۞ " +
-                        ChatColor.of("#FFCC99") + "Raid: " + raidStatus +
+                        ChatColor.of("#FFCC99") + "Raids: " + raidStatus +
                         ChatColor.GRAY + " | " +
                         ChatColor.of("#FFCC99") + "Manzanas: " + appleStatus;
 

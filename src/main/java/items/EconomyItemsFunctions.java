@@ -57,23 +57,32 @@ public class EconomyItemsFunctions implements Listener {
     public void onBlockPlace(BlockPlaceEvent event) {
         ItemStack item = event.getItemInHand();
 
-        if (isMochila(item)) {
-            event.setCancelled(true);
-            event.getPlayer().updateInventory();
-            return;
-        }
-
         if (item.getType() == Material.SUNFLOWER && item.hasItemMeta() &&
                 item.getItemMeta().hasCustomModelData() && item.getItemMeta().getCustomModelData() == 2000) {
             event.setCancelled(true);
         }
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
-    public void onDispense(BlockDispenseEvent event) {
-        ItemStack item = event.getItem();
-        if (isMochila(item)) {
-            event.setCancelled(true);
+    @EventHandler
+    public void onAnvilPrepare(PrepareAnvilEvent event) {
+        ItemStack leftItem = event.getInventory().getItem(0);
+        if (leftItem == null || leftItem.getType() == Material.AIR) return;
+
+        // Mantener el color y la negrita al renombrar la mochila
+        if (isMochila(leftItem)) {
+            String renameText = event.getInventory().getRenameText();
+            ItemStack result = event.getResult();
+
+            if (result != null && renameText != null && !renameText.isEmpty()) {
+                ItemMeta meta = result.getItemMeta();
+                ChatColor color = getMochilaColor(leftItem);
+
+                String cleanName = ChatColor.stripColor(renameText);
+                meta.setDisplayName(color + "" + ChatColor.BOLD + cleanName);
+
+                result.setItemMeta(meta);
+                event.setResult(result);
+            }
         }
     }
 
@@ -584,11 +593,11 @@ public class EconomyItemsFunctions implements Listener {
     public ChatColor getMochilaColor(ItemStack mochila) {
         int cmd = mochila.getItemMeta().getCustomModelData();
         switch (cmd) {
-            case 2021: return ChatColor.GREEN;
-            case 2022: return ChatColor.RED;
-            case 2023: return ChatColor.BLUE;
+            case 2021: return ChatColor.BLUE;
+            case 2022: return ChatColor.GOLD;
+            case 2023: return ChatColor.RED;
             case 2024: return ChatColor.DARK_PURPLE;
-            default: return ChatColor.of("#ffffcc");
+            default: return ChatColor.GREEN;
         }
     }
 

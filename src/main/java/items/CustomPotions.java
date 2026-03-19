@@ -2,11 +2,13 @@ package items;
 
 import org.bukkit.Color;
 import org.bukkit.Material;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import net.md_5.bungee.api.ChatColor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -116,30 +118,176 @@ public class CustomPotions {
         return honey;
     }
 
-    /**
-     * Método constructor base para no repetir código
-     * * @param material   Material.POTION (Tomable) o Material.SPLASH_POTION (Lanzable)
-     * @param name       Nombre customizado con códigos de color
-     * @param effectType Tipo de efecto de poción
-     * @param duration   Duración en Ticks (Segundos * 20)
-     * @param amplifier  Amplificador (Nivel real - 1)
-     * @param color      Color del líquido de la poción
-     * @return ItemStack configurado
-     */
+    // =========================================
+    //         BEBIDAS ALCOHÓLICAS (ROLEPLAY)
+    // =========================================
+
+    public static ItemStack getTequila() {
+        return createDrink("§6§lCaballito de Tequila", Color.fromRGB(220, 180, 50),
+                new PotionEffect(PotionEffectType.NAUSEA, 200, 1),
+                new PotionEffect(PotionEffectType.SATURATION, 200, 2),
+                new PotionEffect(PotionEffectType.MINING_FATIGUE, 240, 1)
+        );
+    }
+
+    public static ItemStack getMargarita() {
+        return createDrink("§a§lMargarita de Limón", Color.fromRGB(150, 255, 100),
+                new PotionEffect(PotionEffectType.NAUSEA, 240, 1),
+                new PotionEffect(PotionEffectType.NIGHT_VISION, 300, 1)
+        );
+    }
+
+    public static ItemStack getMezcal() {
+        return createDrink("§8§lTrago de Mezcal", Color.fromRGB(200, 200, 200),
+                new PotionEffect(PotionEffectType.DARKNESS, 200, 1),
+                new PotionEffect(PotionEffectType.SLOWNESS, 300, 2),
+                new PotionEffect(PotionEffectType.SATURATION, 240, 1)
+        );
+    }
+
+    public static ItemStack getPulque() {
+        return createDrink("§f§lJarrito de Pulque", Color.fromRGB(255, 245, 230),
+                new PotionEffect(PotionEffectType.DARKNESS, 300, 1),
+                new PotionEffect(PotionEffectType.SATURATION, 300, 2),
+                new PotionEffect(PotionEffectType.NAUSEA, 240, 2)
+        );
+    }
+
+    public static ItemStack getBeer() {
+        return createDrink("§c§lJarra de Cerveza", Color.fromRGB(102, 51, 0),
+                new PotionEffect(PotionEffectType.SATURATION, 200, 2),
+                new PotionEffect(PotionEffectType.MINING_FATIGUE, 300, 1),
+                new PotionEffect(PotionEffectType.SLOWNESS, 200, 1)
+        );
+    }
+
+    public static ItemStack getRum() {
+        return createDrink("§4§lRon Añejo", Color.fromRGB(139, 69, 19),
+                new PotionEffect(PotionEffectType.NAUSEA, 300, 2),
+                new PotionEffect(PotionEffectType.DARKNESS, 240, 1)
+        );
+    }
+
+    public static ItemStack getVodka() {
+        return createDrink("§b§lVaso de Vodka", Color.fromRGB(220, 240, 255),
+                new PotionEffect(PotionEffectType.SLOWNESS, 200, 2),
+                new PotionEffect(PotionEffectType.NAUSEA, 240, 1)
+        );
+    }
+
+    public static ItemStack getWhisky() {
+        return createDrink("§e§lVaso de Whisky", Color.fromRGB(205, 133, 63),
+                new PotionEffect(PotionEffectType.SLOWNESS, 240, 2),
+                new PotionEffect(PotionEffectType.MINING_FATIGUE, 240, 2),
+                new PotionEffect(PotionEffectType.NIGHT_VISION, 200, 1)
+        );
+    }
+
+    public static ItemStack getSake() {
+        return createDrink("§f§lVasito de Sake", Color.fromRGB(245, 255, 255),
+                new PotionEffect(PotionEffectType.SATURATION, 200, 2),
+                new PotionEffect(PotionEffectType.NAUSEA, 300, 1),
+                new PotionEffect(PotionEffectType.DARKNESS, 200, 1)
+        );
+    }
+
+    public static ItemStack getGin() {
+        return createDrink("§3§lCopa de Ginebra", Color.fromRGB(190, 255, 240),
+                new PotionEffect(PotionEffectType.NIGHT_VISION, 300, 1),
+                new PotionEffect(PotionEffectType.SLOWNESS, 300, 1),
+                new PotionEffect(PotionEffectType.MINING_FATIGUE, 200, 2)
+        );
+    }
+
+    public static ItemStack getAzulito() {
+        return createDrink("§b§lAzulito", Color.fromRGB(0, 200, 255),
+                new PotionEffect(PotionEffectType.NIGHT_VISION, 300, 1),
+                new PotionEffect(PotionEffectType.SATURATION, 240, 2),
+                new PotionEffect(PotionEffectType.NAUSEA, 200, 1)
+        );
+    }
+
+    public static ItemStack getMichelada() {
+        return createDrink("§4§lVaso de Michelada", Color.fromRGB(150, 30, 0),
+                new PotionEffect(PotionEffectType.MINING_FATIGUE, 300, 1),
+                new PotionEffect(PotionEffectType.SLOWNESS, 200, 1),
+                new PotionEffect(PotionEffectType.SATURATION, 240, 1)
+        );
+    }
+
+
+    // =========================================
+    //             MÉTODOS CREADORES
+    // =========================================
+
     private static ItemStack createPotion(Material material, String name, PotionEffectType effectType, int duration, int amplifier, Color color) {
         ItemStack potion = new ItemStack(material);
         PotionMeta meta = (PotionMeta) potion.getItemMeta();
 
         if (meta != null) {
             meta.setDisplayName(name);
-
             meta.addCustomEffect(new PotionEffect(effectType, duration, amplifier), true);
-
             meta.setColor(color);
+            potion.setItemMeta(meta);
+        }
+        return potion;
+    }
+
+    private static ItemStack createDrink(String name, Color color, PotionEffect... effects) {
+        ItemStack potion = new ItemStack(Material.POTION);
+        PotionMeta meta = (PotionMeta) potion.getItemMeta();
+
+        if (meta != null) {
+            meta.setDisplayName(name);
+
+            List<String> lore = new ArrayList<>();
+            lore.add("");
+            lore.add(ChatColor.of("#ffcc99") + "Esta bebida te otorga estos");
+            lore.add(ChatColor.of("#ffcc99") + "efectos" + ChatColor.GRAY + ":");
+            lore.add("");
+
+            for (PotionEffect effect : effects) {
+                // Aplicamos el efecto real a la poción
+                meta.addCustomEffect(effect, true);
+
+                // Traducimos el nombre del efecto y le asignamos un color bonito
+                String effectName = effect.getType().getName();
+                String hexColor = "#FFFFFF";
+
+                if (effectName.equals("NAUSEA") || effectName.equals("CONFUSION")) {
+                    effectName = "Náuseas"; hexColor = "#99cc33";
+                } else if (effectName.equals("SATURATION")) {
+                    effectName = "Saturación"; hexColor = "#cc3300";
+                } else if (effectName.equals("MINING_FATIGUE") || effectName.equals("SLOW_DIGGING")) {
+                    effectName = "Fatiga Minera"; hexColor = "#8B4513";
+                } else if (effectName.equals("NIGHT_VISION")) {
+                    effectName = "Visión Nocturna"; hexColor = "#1E90FF";
+                } else if (effectName.equals("DARKNESS")) {
+                    effectName = "Oscuridad"; hexColor = "#4B0082";
+                } else if (effectName.equals("SLOW") || effectName.equals("SLOWNESS")) {
+                    effectName = "Lentitud"; hexColor = "#FFA500";
+                }
+
+                int level = effect.getAmplifier() + 1; // Nivel interno + 1 = Nivel Real
+                int seconds = effect.getDuration() / 20; // Ticks a Segundos
+
+                // Creamos la línea estilizada (> Lentitud 1 (15 s))
+                lore.add(ChatColor.GRAY + "> " + ChatColor.of(hexColor) + effectName + " " + level +
+                        ChatColor.GRAY + " (" + ChatColor.of("#0099cc") + seconds + " s" + ChatColor.GRAY + ")");
+            }
+
+            lore.add("");
+            meta.setLore(lore);
+            meta.setColor(color);
+
+            // Ocultamos la asquerosa tooltip default de Vanilla
+            meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+            try {
+                meta.addItemFlags(ItemFlag.valueOf("HIDE_ADDITIONAL_TOOLTIP"));
+            } catch (Exception ignored) {}
 
             potion.setItemMeta(meta);
         }
-
         return potion;
     }
 }

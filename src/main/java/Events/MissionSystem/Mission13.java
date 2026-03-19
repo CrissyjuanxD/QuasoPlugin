@@ -40,7 +40,7 @@ public class Mission13 implements Mission, Listener {
     public String getName() { return "Veneno Explosivo"; }
 
     @Override
-    public String getDescription() { return "Mata 20 Corrupted Bees y 20 Bombitas."; }
+    public String getDescription() { return "Mata 30 Corrupted Bees y 30 Bombitas."; }
 
     @Override
     public int getMissionNumber() { return 13; }
@@ -49,7 +49,7 @@ public class Mission13 implements Mission, Listener {
     public List<ItemStack> getRewards() {
         List<ItemStack> rewards = new ArrayList<>();
         ItemStack coins = EconomyItems.createVithiumCoin();
-        coins.setAmount(15);
+        coins.setAmount(18);
         ItemStack goldenApples = new ItemStack(Material.ENCHANTED_GOLDEN_APPLE, 5);
         ItemStack unBook = new ItemStack(Material.ENCHANTED_BOOK);
         EnchantmentStorageMeta meta = (EnchantmentStorageMeta) unBook.getItemMeta();

@@ -122,9 +122,9 @@ public class HabilidadesCommand implements CommandExecutor, TabCompleter {
             int level;
             try {
                 level = Integer.parseInt(args[3]);
-                if (level < 1 || level > 4) throw new NumberFormatException();
+                if (level < 1 || level > 8) throw new NumberFormatException();
             } catch (NumberFormatException e) {
-                sender.sendMessage(ChatColor.RED + "Nivel debe ser 1-4.");
+                sender.sendMessage(ChatColor.RED + "Nivel debe ser del 1 al 8.");
                 return true;
             }
 
@@ -223,7 +223,7 @@ public class HabilidadesCommand implements CommandExecutor, TabCompleter {
             return StringUtil.copyPartialMatches(args[2], types, new ArrayList<>());
         }
         if (args.length == 4 && (args[0].equalsIgnoreCase("add") || args[0].equalsIgnoreCase("remove"))) {
-            return List.of("1", "2", "3", "4");
+            return List.of("1", "2", "3", "4", "5", "6", "7", "8");
         }
         return new ArrayList<>();
     }

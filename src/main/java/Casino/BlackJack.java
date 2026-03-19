@@ -360,7 +360,7 @@ public class BlackJack implements Listener {
             player.getInventory().addItem(win).forEach((k,v) -> player.getWorld().dropItemNaturally(player.getLocation(), v));
 
             if (multiplier > 1) {
-                player.sendMessage(ChatColor.of("#B5EAD7") + "۞ Recibes " + ChatColor.of("#FFD3A5") + winAmount + ChatColor.of("#B5EAD7") + " Vithium Fichas.");
+                player.sendMessage(ChatColor.of("#B5EAD7") + "۞ Recibes " + ChatColor.of("#FFD3A5") + winAmount + ChatColor.of("#B5EAD7") + " DinoFichas.");
             }
         }
 

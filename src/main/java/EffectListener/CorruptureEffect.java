@@ -1,5 +1,6 @@
 package EffectListener;
 
+import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -25,7 +26,7 @@ public class CorruptureEffect implements CustomEffect, Listener {
     @Override
     public void applyEffect(Player player, int durationSeconds, int amplifier) {
         if (amplifier < 99) {
-            removeEffect(player); // Aseguramos que no se quede pegado si baja de nivel
+            removeEffect(player);
             return;
         }
 
@@ -64,7 +65,7 @@ public class CorruptureEffect implements CustomEffect, Listener {
 
     @Override
     public PotionEffectType getTriggerEffectType() {
-        return PotionEffectType.WEAVING;
+        return PotionEffectType.LUCK; // ¡Efecto base cambiado a LUCK!
     }
 
     @Override
@@ -77,7 +78,11 @@ public class CorruptureEffect implements CustomEffect, Listener {
         Player player = event.getPlayer();
         if (playersWithEffect.contains(player.getUniqueId())) {
 
-            // --- CAMBIO 2: EXCEPCIÓN DE SPAWNERS ---
+            // Permitir en creativo
+            if (player.getGameMode() == GameMode.CREATIVE) {
+                return;
+            }
+
             Material blockType = event.getBlock().getType();
             if (blockType == Material.SPAWNER || blockType == Material.TRIAL_SPAWNER) {
                 return; // Permitir romper si es un spawner
@@ -93,10 +98,14 @@ public class CorruptureEffect implements CustomEffect, Listener {
         Player player = event.getPlayer();
         if (playersWithEffect.contains(player.getUniqueId())) {
 
-            // --- CAMBIO 2: EXCEPCIÓN DE SPAWNERS ---
+            // Permitir en creativo
+            if (player.getGameMode() == GameMode.CREATIVE) {
+                return;
+            }
+
             Material blockType = event.getBlock().getType();
             if (blockType == Material.SPAWNER || blockType == Material.TRIAL_SPAWNER) {
-                return; // Permitir colocar si es un spawner
+                return;
             }
 
             event.setCancelled(true);

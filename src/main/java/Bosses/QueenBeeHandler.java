@@ -45,6 +45,28 @@ public class QueenBeeHandler extends BaseBoss implements Listener {
     private int requiredMeleeBetweenSpecials = 1;
     private int regenCooldown = 0;
 
+    // --- SISTEMA DE MÚSICA ---
+    private static class BossTrack {
+        Sound sound;
+        float pitch;
+        int durationTicks;
+
+        BossTrack(Sound sound, float pitch, int durationTicks) {
+            this.sound = sound;
+            this.pitch = pitch;
+            this.durationTicks = durationTicks;
+        }
+    }
+
+    private final List<BossTrack> playlist = Arrays.asList(
+            new BossTrack(Sound.MUSIC_DISC_TEARS, 0.8f, 4550),   // 182s / 0.8 = 227.5s (4550 ticks)
+            new BossTrack(Sound.MUSIC_DISC_PIGSTEP, 0.8f, 3700), // 148s / 0.8 = 185s (3700 ticks)
+            new BossTrack(Sound.MUSIC_DISC_CREATOR, 1.2f, 2966)  // 178s / 1.2 = 148.3s (2966 ticks)
+    );
+
+    private BukkitRunnable musicTask;
+    // -------------------------
+
     // Curación
     private final List<Bee> healTotems = new ArrayList<>();
     private BukkitRunnable regenTask;
@@ -57,6 +79,7 @@ public class QueenBeeHandler extends BaseBoss implements Listener {
     private final NamespacedKey arenaCenterY;
     private final NamespacedKey arenaCenterZ;
 
+    private final NamespacedKey musicKey;
 
     public QueenBeeHandler(JavaPlugin plugin, Bee bee) {
         super(plugin, bee);
@@ -66,6 +89,7 @@ public class QueenBeeHandler extends BaseBoss implements Listener {
         this.arenaCenterX = new NamespacedKey(plugin, "arena_x");
         this.arenaCenterY = new NamespacedKey(plugin, "arena_y");
         this.arenaCenterZ = new NamespacedKey(plugin, "arena_z");
+        this.musicKey = new NamespacedKey(plugin, "musica_iniciada");
 
         this.corruptedBee = new CorruptedBee(plugin);
 
@@ -111,12 +135,12 @@ public class QueenBeeHandler extends BaseBoss implements Listener {
             b.setAnger(999999);
             b.setAI(true);
 
-            Objects.requireNonNull(b.getAttribute(Attribute.MAX_HEALTH)).setBaseValue(800);
+            Objects.requireNonNull(b.getAttribute(Attribute.MAX_HEALTH)).setBaseValue(1000);
             Objects.requireNonNull(b.getAttribute(Attribute.MOVEMENT_SPEED)).setBaseValue(0.35);
             Objects.requireNonNull(b.getAttribute(Attribute.FOLLOW_RANGE)).setBaseValue(50);
             Objects.requireNonNull(b.getAttribute(Attribute.SCALE)).setBaseValue(3);
 
-            b.setHealth(800);
+            b.setHealth(1000);
             b.setHasStung(false);
             b.setCannotEnterHiveTicks(Integer.MAX_VALUE);
 
@@ -161,6 +185,8 @@ public class QueenBeeHandler extends BaseBoss implements Listener {
     @Override
     protected void onStart() {
         requiredMeleeBetweenSpecials = random.nextInt(3) + 1;
+
+        iniciarFlujoMusica();
     }
 
     @Override
@@ -204,17 +230,22 @@ public class QueenBeeHandler extends BaseBoss implements Listener {
     @Override
     protected void onDeath() {
         bee.getPersistentDataContainer().remove(bossKey);
-
+        stopAllBossMusic();
         cleanupResources();
     }
 
     @Override
     protected void onUnload() {
+        stopAllBossMusic();
         cleanupResources();
     }
 
     private void cleanupResources() {
         if (regenTask != null) regenTask.cancel();
+
+        if (musicTask != null && !musicTask.isCancelled()) {
+            musicTask.cancel();
+        }
 
         for (Bee hive : healTotems) {
             if (hive.isValid()) hive.remove();
@@ -222,6 +253,23 @@ public class QueenBeeHandler extends BaseBoss implements Listener {
         healTotems.clear();
 
         ACTIVE_BOSSES.remove(bee.getUniqueId());
+    }
+
+    private void stopAllBossMusic() {
+        World w = spawnLocation.getWorld();
+        if (w == null) return;
+
+        for (Player p : w.getPlayers()) {
+            if (p.getLocation().distanceSquared(spawnLocation) <= 160 * 160) {
+                p.stopSound(Sound.MUSIC_DISC_TEARS, SoundCategory.RECORDS);
+                p.stopSound(Sound.MUSIC_DISC_PIGSTEP, SoundCategory.RECORDS);
+                p.stopSound(Sound.MUSIC_DISC_CREATOR, SoundCategory.RECORDS);
+                try {
+                    p.stopSound(Sound.valueOf("MUSIC_DISC_CREATOR"), SoundCategory.RECORDS);
+                } catch (Exception ignored) {
+                }
+            }
+        }
     }
 
     // ==============================
@@ -257,6 +305,49 @@ public class QueenBeeHandler extends BaseBoss implements Listener {
             }
         }
         return near;
+    }
+
+    private void iniciarFlujoMusica() {
+        PersistentDataContainer pdc = bee.getPersistentDataContainer();
+
+        if (pdc.has(musicKey, PersistentDataType.BYTE)) {
+            return;
+        }
+
+        pdc.set(musicKey, PersistentDataType.BYTE, (byte) 1);
+
+        musicTask = new BukkitRunnable() {
+            int ticksElapsed = 0;
+            int trackIndex = 0;
+            int nextTrackTick = 0;
+
+            @Override
+            public void run() {
+                if (!bee.isValid() || bee.isDead() || isFinalDeath) {
+                    cancel();
+                    return;
+                }
+
+                if (ticksElapsed == nextTrackTick) {
+                    if (trackIndex >= playlist.size()) {
+                        trackIndex = 0;
+                    }
+
+                    BossTrack track = playlist.get(trackIndex);
+                    World w = spawnLocation.getWorld();
+                    if (w != null) {
+                        stopAllBossMusic();
+                        w.playSound(spawnLocation, track.sound, SoundCategory.RECORDS, 15.0f, track.pitch);
+                    }
+
+                    nextTrackTick += track.durationTicks + 100;
+                    trackIndex++;
+                }
+
+                ticksElapsed++;
+            }
+        };
+        musicTask.runTaskTimer(plugin, 0L, 1L);
     }
 
     // ==============================
@@ -1101,6 +1192,14 @@ public class QueenBeeHandler extends BaseBoss implements Listener {
         Entity damager = e.getDamager();
 
         if (damaged.equals(bee)) {
+            if (damager instanceof Player p) {
+                addAttacker(p);
+            } else if (damager instanceof Projectile proj && proj.getShooter() instanceof Player p) {
+                addAttacker(p);
+            }
+        }
+
+        if (damaged.equals(bee)) {
             if (isFinalDeath) return;
 
             if (isDying) {
@@ -1167,8 +1266,10 @@ public class QueenBeeHandler extends BaseBoss implements Listener {
         mainBar.removeAll();
         staticBar.removeAll();
 
+        // Paramos la música por si estaba sonando justo al morir
+        stopAllBossMusic();
+
         World w = bee.getWorld();
-        for (Player p : w.getPlayers()) p.stopSound(Sound.MUSIC_DISC_TEARS, SoundCategory.RECORDS);
         w.playSound(bee.getLocation(), Sound.ENTITY_ENDER_DRAGON_DEATH, 5.0f, 0.8f);
 
         new BukkitRunnable() {
@@ -1228,11 +1329,17 @@ public class QueenBeeHandler extends BaseBoss implements Listener {
         onDeath();
 
         ExperienceOrb orb = (ExperienceOrb) bee.getWorld().spawnEntity(bee.getLocation(), EntityType.EXPERIENCE_ORB);
-        orb.setExperience(3000);
+        orb.setExperience(3500);
 
         NamespacedKey killsKey = new NamespacedKey(plugin, "queen_bee_kills");
 
-        for (Player p : getActivePlayers()) {
+        Set<UUID> rewardPlayers = new HashSet<>(currentPlayers);
+        rewardPlayers.addAll(attackers);
+
+        for (UUID uuid : rewardPlayers) {
+            Player p = Bukkit.getPlayer(uuid);
+            if (p == null || !p.isOnline() || (p.getGameMode() != GameMode.SURVIVAL && p.getGameMode() != GameMode.ADVENTURE)) continue;
+
             int kills = p.getPersistentDataContainer().getOrDefault(killsKey, PersistentDataType.INTEGER, 0);
             kills++;
             p.getPersistentDataContainer().set(killsKey, PersistentDataType.INTEGER, kills);
@@ -1242,7 +1349,7 @@ public class QueenBeeHandler extends BaseBoss implements Listener {
                 org.bukkit.inventory.meta.BundleMeta meta = (org.bukkit.inventory.meta.BundleMeta) bundle.getItemMeta();
 
                 ItemStack coins = items.EconomyItems.createVithiumCoin();
-                coins.setAmount(15);
+                coins.setAmount(20);
                 meta.addItem(coins);
 
                 meta.addItem(new ItemStack(Material.ENCHANTED_GOLDEN_APPLE, 5));
@@ -1258,7 +1365,7 @@ public class QueenBeeHandler extends BaseBoss implements Listener {
 
             } else if (kills == 2) {
                 ItemStack coins = items.EconomyItems.createVithiumCoin();
-                coins.setAmount(10);
+                coins.setAmount(15);
                 giveOrDropItem(p, coins);
 
                 giveOrDropItem(p, new ItemStack(Material.ENCHANTED_GOLDEN_APPLE, 3));
@@ -1271,7 +1378,7 @@ public class QueenBeeHandler extends BaseBoss implements Listener {
 
             } else {
                 ItemStack coins = items.EconomyItems.createVithiumCoin();
-                coins.setAmount(5);
+                coins.setAmount(10);
                 giveOrDropItem(p, coins);
 
                 ItemStack speed = items.CustomPotions.getSpeedHoneyBottle();

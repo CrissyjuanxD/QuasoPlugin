@@ -589,13 +589,13 @@ public class QuasoPlugin extends JavaPlugin implements Listener {
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
-        String message = ChatColor.of("#FF009F") + "۞ " + ChatColor.RESET + ChatColor.of("#B83EFF") + ChatColor.BOLD + event.getPlayer().getName() + ChatColor.RESET + ChatColor.of("#FF009F") + " se ha conectado.";
+        String message = ChatColor.of("#FFD700") + "\uD83E\uDD50 " + ChatColor.RESET + ChatColor.of("#B0E0E6") + ChatColor.BOLD + event.getPlayer().getName() + ChatColor.RESET + ChatColor.of("#B0E0E6") + " se ha conectado a " + ChatColor.of("#FCE68D") + ChatColor.BOLD + "Croissants";
         event.setJoinMessage(message);
     }
 
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event) {
-        String message = ChatColor.of("#7C7981") + "۞ " + ChatColor.RESET + ChatColor.of("#B8B8B8") + ChatColor.BOLD + event.getPlayer().getName() + ChatColor.RESET + ChatColor.of("#7C7981") + " se ha desconectado.";
+        String message = ChatColor.of("#7C7981") + "\uD83E\uDD50 " + ChatColor.RESET + ChatColor.of("#B8B8B8") + ChatColor.BOLD + event.getPlayer().getName() + ChatColor.RESET + ChatColor.of("#7C7981") + " se ha desconectado.";
         event.setQuitMessage(message);
     }
     @EventHandler

@@ -35,7 +35,7 @@ public class Mission6 implements Mission, Listener {
     public String getName() { return "Cazador de Corruptos"; }
 
     @Override
-    public String getDescription() { return "Mata a 10 Corrupted Zombies\ny 10 Corrupted Spiders."; }
+    public String getDescription() { return "Mata a 30 Corrupted Zombies\ny 30 Corrupted Spiders.\nAparecen en oleadas en las raids con prob. muy baja."; }
 
     @Override
     public int getMissionNumber() { return 6; }
@@ -45,12 +45,12 @@ public class Mission6 implements Mission, Listener {
         List<ItemStack> rewards = new ArrayList<>();
 
         ItemStack coins = EconomyItems.createVithiumCoin();
-        coins.setAmount(15);
+        coins.setAmount(18);
 
         ItemStack potion = CustomPotions.getHasteIIPotion();
         potion.setAmount(1);
 
-        ItemStack goldenApples = new ItemStack(Material.ENCHANTED_GOLDEN_APPLE, 3);
+        ItemStack goldenApples = new ItemStack(Material.ENCHANTED_GOLDEN_APPLE, 4);
 
         ItemStack xpFill = new ItemStack(Material.EXPERIENCE_BOTTLE, 1);
 
@@ -88,11 +88,11 @@ public class Mission6 implements Mission, Listener {
         int zKilled = data.getProgressInt("zombies_killed");
         int sKilled = data.getProgressInt("spiders_killed");
 
-        if (isZ && zKilled < 10) {
+        if (isZ && zKilled < 30) {
             zKilled++;
             data.setProgressValue("zombies_killed", zKilled);
             updated = true;
-        } else if (isS && sKilled < 10) {
+        } else if (isS && sKilled < 30) {
             sKilled++;
             data.setProgressValue("spiders_killed", sKilled);
             updated = true;
@@ -101,14 +101,14 @@ public class Mission6 implements Mission, Listener {
         if (updated) {
             missionHandler.saveData(killer, 6, data);
 
-            if (zKilled >= 10 && sKilled >= 10) {
+            if (zKilled >= 30 && sKilled >= 30) {
                 successNotification.showSuccess(killer);
                 missionHandler.completeMission(killer, 6);
             } else {
                 String msg = ChatColor.GOLD + "۞ " +
-                        ChatColor.of("#FFCC99") + "Corr. Zombies: " + ChatColor.of("#FFA07A") + zKilled + ChatColor.of("#FFE4B5") + "/" + ChatColor.of("#FFA07A") + "10" +
+                        ChatColor.of("#FFCC99") + "Corr. Zombies: " + ChatColor.of("#FFA07A") + zKilled + ChatColor.of("#FFE4B5") + "/" + ChatColor.of("#FFA07A") + "30" +
                         ChatColor.GRAY + " | " +
-                        ChatColor.of("#FFCC99") + "Corr. Arañas: " + ChatColor.of("#FFA07A") + sKilled + ChatColor.of("#FFE4B5") + "/" + ChatColor.of("#FFA07A") + "10";
+                        ChatColor.of("#FFCC99") + "Corr. Arañas: " + ChatColor.of("#FFA07A") + sKilled + ChatColor.of("#FFE4B5") + "/" + ChatColor.of("#FFA07A") + "30";
                 actionBarHandler.sendActionBar(killer, msg);
             }
         }

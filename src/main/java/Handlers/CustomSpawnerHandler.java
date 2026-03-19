@@ -41,7 +41,6 @@ public class CustomSpawnerHandler implements Listener {
     private final Map<UUID, String> editingProperties = new ConcurrentHashMap<>();
     private final Map<UUID, String> playersWaitingForInput = new ConcurrentHashMap<>();
 
-    // Nuevo: Mapa para trackear spawners con spawn_custom activo
     private final Map<Location, CustomSpawnerData> activeCustomSpawners = new ConcurrentHashMap<>();
     private BukkitRunnable customSpawnTask;
 
@@ -86,7 +85,6 @@ public class CustomSpawnerHandler implements Listener {
         }
     }
 
-    // Clase interna para almacenar datos del spawner personalizado
     private static class CustomSpawnerData {
         String mobType;
         int spawnCount;
@@ -112,7 +110,7 @@ public class CustomSpawnerHandler implements Listener {
             this.spawnRange = config.get("spawn_range");
             this.spawnMode = spawnMode;
             this.lastSpawnTime = System.currentTimeMillis();
-            this.nextSpawnTime = this.lastSpawnTime + (this.delay * 50L); // Convertir ticks a ms
+            this.nextSpawnTime = this.lastSpawnTime + (this.delay * 50L);
             this.hasSpawnedOnce = false;
         }
     }
@@ -134,16 +132,12 @@ public class CustomSpawnerHandler implements Listener {
         this.corruptedBee = new CorruptedBee(plugin);
 
         startCustomSpawnTask();
-
         Bukkit.getScheduler().runTaskLater(plugin, this::loadAllCustomSpawners, 100L);
     }
 
-    // NUEVO: Evento para cargar spawners cuando se cargan chunks
     @EventHandler
     public void onChunkLoad(ChunkLoadEvent event) {
-        // Solo procesar chunks recién cargados, no chunks generados por primera vez
         if (event.isNewChunk()) return;
-
         Chunk chunk = event.getChunk();
 
         new BukkitRunnable() {
@@ -155,7 +149,6 @@ public class CustomSpawnerHandler implements Listener {
                         CreatureSpawner spawner = (CreatureSpawner) blockState;
                         if (isCustomSpawner(spawner)) {
                             Location loc = spawner.getLocation();
-                            // Verificar si el spawner ya está registrado
                             if (!activeCustomSpawners.containsKey(loc)) {
                                 registerCustomSpawner(spawner);
                                 spawnersFound++;
@@ -163,29 +156,23 @@ public class CustomSpawnerHandler implements Listener {
                         }
                     }
                 }
-
-                if (spawnersFound > 0) {
-                    plugin.getLogger().info("Registrados " + spawnersFound + " spawners custom en chunk cargado: " +
-                            chunk.getX() + ", " + chunk.getZ());
-                }
             }
         }.runTaskLater(plugin, 1L);
     }
 
     @EventHandler
     public void onChunkUnload(ChunkUnloadEvent event) {
-        Chunk chunk = event.getChunk();
+        int chunkX = event.getChunk().getX();
+        int chunkZ = event.getChunk().getZ();
+        World world = event.getChunk().getWorld();
 
-        for (BlockState blockState : chunk.getTileEntities()) {
-            if (blockState instanceof CreatureSpawner) {
-                CreatureSpawner spawner = (CreatureSpawner) blockState;
-                Location loc = spawner.getLocation();
-                activeCustomSpawners.remove(loc);
-            }
-        }
+        activeCustomSpawners.keySet().removeIf(loc ->
+                loc.getWorld().equals(world) &&
+                        (loc.getBlockX() >> 4) == chunkX &&
+                        (loc.getBlockZ() >> 4) == chunkZ
+        );
     }
 
-    // Iniciar la tarea que maneja los spawns personalizados
     private void startCustomSpawnTask() {
         customSpawnTask = new BukkitRunnable() {
             @Override
@@ -196,11 +183,9 @@ public class CustomSpawnerHandler implements Listener {
         customSpawnTask.runTaskTimer(plugin, 20L, 20L);
     }
 
-    // Procesar todos los spawners con spawn_custom activo
     private void processCustomSpawners() {
         long timelimp = System.currentTimeMillis();
 
-        // Realizar limpieza periódica cada CLEANUP_INTERVAL
         if (timelimp - lastCleanupTime > CLEANUP_INTERVAL) {
             cleanupInvalidSpawners();
             lastCleanupTime = timelimp;
@@ -211,61 +196,50 @@ public class CustomSpawnerHandler implements Listener {
         }
 
         Iterator<Map.Entry<Location, CustomSpawnerData>> iterator = activeCustomSpawners.entrySet().iterator();
+        long currentTime = System.currentTimeMillis();
 
         while (iterator.hasNext()) {
             Map.Entry<Location, CustomSpawnerData> entry = iterator.next();
             Location spawnerLoc = entry.getKey();
             CustomSpawnerData data = entry.getValue();
 
-            // Verificar si el bloque sigue siendo un spawner
+            int chunkX = spawnerLoc.getBlockX() >> 4;
+            int chunkZ = spawnerLoc.getBlockZ() >> 4;
+            if (!spawnerLoc.getWorld().isChunkLoaded(chunkX, chunkZ)) {
+                continue;
+            }
+
             if (spawnerLoc.getBlock().getType() != Material.SPAWNER) {
                 iterator.remove();
                 continue;
             }
 
-            // NUEVO: Verificar si tiene antorcha de alma (solo afecta a SPAWN_CUSTOM_INFINITE)
             if (data.spawnMode == SpawnMode.SPAWN_CUSTOM_INFINITE && hasSoulTorchAbove(spawnerLoc)) {
                 showDeactivatedParticles(spawnerLoc);
                 continue;
             }
 
-            // NUEVO: Para ONE_SPAWN, si ya spawnearon una vez, remover y romper spawner
             if (data.spawnMode == SpawnMode.ONE_SPAWN && data.hasSpawnedOnce) {
                 spawnerLoc.getBlock().breakNaturally();
                 iterator.remove();
                 continue;
             }
 
-            // Verificar si es momento de spawn
-            long currentTime = System.currentTimeMillis();
             if (currentTime < data.nextSpawnTime) continue;
 
-            // Verificar si hay jugadores en rango
             if (!isPlayerInRange(spawnerLoc, data.playerRange)) continue;
 
-            // NUEVO: Verificar límite de entidades cercanas según el modo
-            boolean shouldCheckNearby = true;
-            if (data.spawnMode == SpawnMode.SPAWN_CUSTOM_INFINITE || data.spawnMode == SpawnMode.ONE_SPAWN) {
-                shouldCheckNearby = false; // Estos modos ignoran Max Nearby
-            }
+            boolean shouldCheckNearby = (data.spawnMode != SpawnMode.SPAWN_CUSTOM_INFINITE && data.spawnMode != SpawnMode.ONE_SPAWN);
 
             if (shouldCheckNearby && getNearbyEntitiesCount(spawnerLoc, data, data.spawnRange) >= data.maxNearby) continue;
 
-            // Realizar spawn personalizado
             performCustomSpawn(spawnerLoc, data);
 
-            // NUEVO: Marcar como spawnedo para ONE_SPAWN
             if (data.spawnMode == SpawnMode.ONE_SPAWN) {
                 data.hasSpawnedOnce = true;
             }
 
-            // Actualizar próximo tiempo de spawn
-            int randomDelay;
-            if (data.spawnMode == SpawnMode.ONE_SPAWN) {
-                randomDelay = 0; // Para ONE_SPAWN, no hay delay después del spawn
-            } else {
-                randomDelay = data.minDelay + (int)(Math.random() * (data.maxDelay - data.minDelay));
-            }
+            int randomDelay = (data.spawnMode == SpawnMode.ONE_SPAWN) ? 0 : data.minDelay + (int)(Math.random() * (data.maxDelay - data.minDelay));
             data.nextSpawnTime = currentTime + (randomDelay * 50L);
         }
     }
@@ -278,14 +252,13 @@ public class CustomSpawnerHandler implements Listener {
             Map.Entry<Location, CustomSpawnerData> entry = iterator.next();
             Location loc = entry.getKey();
 
-            // Verificar si el chunk está cargado
-            if (!loc.getWorld().isChunkLoaded(loc.getBlockX() >> 4, loc.getBlockZ() >> 4)) {
-                iterator.remove();
-                removedCount++;
+            int cx = loc.getBlockX() >> 4;
+            int cz = loc.getBlockZ() >> 4;
+
+            if (!loc.getWorld().isChunkLoaded(cx, cz)) {
                 continue;
             }
 
-            // Verificar si el bloque sigue siendo un spawner
             if (loc.getBlock().getType() != Material.SPAWNER) {
                 iterator.remove();
                 removedCount++;
@@ -298,43 +271,39 @@ public class CustomSpawnerHandler implements Listener {
     }
 
     private boolean hasSoulTorchAbove(Location spawnerLoc) {
-        Block blockAbove = spawnerLoc.getBlock().getRelative(0, 1, 0);
+        Block blockAbove = spawnerLoc.clone().add(0, 1, 0).getBlock();
         return blockAbove.getType() == Material.SOUL_TORCH || blockAbove.getType() == Material.SOUL_WALL_TORCH;
     }
 
-    // NUEVO: Mostrar partículas de desactivación
     private void showDeactivatedParticles(Location spawnerLoc) {
         World world = spawnerLoc.getWorld();
         if (world == null) return;
 
         Location particleLoc = spawnerLoc.clone().add(0.5, 0.5, 0.5);
 
-        // Partículas de desactivación (humo gris y partículas de alma)
         world.spawnParticle(Particle.LARGE_SMOKE, particleLoc, 3, 0.3, 0.3, 0.3, 0.01);
         world.spawnParticle(Particle.SOUL, particleLoc, 5, 0.2, 0.2, 0.2, 0.02);
         world.spawnParticle(Particle.TRIAL_SPAWNER_DETECTION, particleLoc, 5, 0.2, 0.2, 0.2, 0.02);
 
-        // Sonido sutil de desactivación cada cierto tiempo
         Random random = new Random();
-        if (random.nextInt(20) == 0) { // 5% de probabilidad cada segundo
+        if (random.nextInt(20) == 0) {
             world.playSound(spawnerLoc, Sound.BLOCK_SOUL_SAND_BREAK, 0.3f, 0.8f);
         }
     }
 
-    // Verificar si hay jugadores en rango
     private boolean isPlayerInRange(Location spawnerLoc, int range) {
         World world = spawnerLoc.getWorld();
         if (world == null) return false;
 
+        double rangeSquared = range * range;
         for (Player player : world.getPlayers()) {
-            if (player.getLocation().distance(spawnerLoc) <= range) {
+            if (player.getLocation().distanceSquared(spawnerLoc) <= rangeSquared) {
                 return true;
             }
         }
         return false;
     }
 
-    // Contar entidades cercanas
     private int getNearbyEntitiesCount(Location spawnerLoc, CustomSpawnerData data, int range) {
         World world = spawnerLoc.getWorld();
         if (world == null) return 0;
@@ -343,22 +312,18 @@ public class CustomSpawnerHandler implements Listener {
         EntityType targetType = getTargetEntityType(data.mobType);
         if (targetType == null) return 0;
 
-        // Radio de verificación fijo de 9 bloques (comportamiento vanilla)
         double checkRadius = 9.0;
 
         for (Entity entity : world.getNearbyEntities(spawnerLoc, checkRadius, checkRadius, checkRadius)) {
             if (entity instanceof LivingEntity && !(entity instanceof Player)) {
                 LivingEntity living = (LivingEntity) entity;
 
-                // Verificar tipo exacto Y que no esté muerto
                 if (entity.getType() == targetType && !living.isDead()) {
-                    // Verificación adicional de distancia cúbica (comportamiento vanilla)
                     Location entityLoc = entity.getLocation();
                     double deltaX = Math.abs(entityLoc.getX() - spawnerLoc.getX());
                     double deltaY = Math.abs(entityLoc.getY() - spawnerLoc.getY());
                     double deltaZ = Math.abs(entityLoc.getZ() - spawnerLoc.getZ());
 
-                    // Solo contar si está dentro del cubo 9x9x9
                     if (deltaX <= checkRadius && deltaY <= checkRadius && deltaZ <= checkRadius) {
                         count++;
                     }
@@ -368,29 +333,24 @@ public class CustomSpawnerHandler implements Listener {
         return count;
     }
 
-    // Realizar spawn personalizado
     private void performCustomSpawn(Location spawnerLoc, CustomSpawnerData data) {
-        // NUEVO: Determinar spawn count según el modo
         int spawnCount;
         if (data.spawnMode == SpawnMode.ONE_SPAWN) {
-            spawnCount = data.spawnCount; // Spawn exacto para ONE_SPAWN
+            spawnCount = data.spawnCount;
         } else {
-            spawnCount = 1 + (int)(Math.random() * data.spawnCount); // Aleatorio para otros modos
+            spawnCount = 1 + (int)(Math.random() * data.spawnCount);
         }
 
         for (int i = 0; i < spawnCount; i++) {
-            // Encontrar una ubicación válida para spawn dentro del rango
             Location spawnLoc = findValidSpawnLocation(spawnerLoc, data.spawnRange);
             if (spawnLoc == null) continue;
 
-            // Spawn del mob
             if (data.mobType.startsWith("vanilla_")) {
                 spawnVanillaMob(data.mobType, spawnLoc);
             } else {
                 spawnCustomMob(data.mobType, spawnLoc);
             }
 
-            // Efectos visuales según el modo
             switch (data.spawnMode) {
                 case ONE_SPAWN:
                     spawnLoc.getWorld().spawnParticle(Particle.EXPLOSION_EMITTER, spawnLoc, 5, 0.5, 0.5, 0.5, 0.1);
@@ -407,7 +367,6 @@ public class CustomSpawnerHandler implements Listener {
             }
         }
 
-        // NUEVO: Efectos especiales en el spawner después del spawn
         Location spawnerParticleLoc = spawnerLoc.clone().add(0.5, 0.5, 0.5);
         switch (data.spawnMode) {
             case ONE_SPAWN:
@@ -419,8 +378,6 @@ public class CustomSpawnerHandler implements Listener {
         }
     }
 
-
-    // Encontrar ubicación válida para spawn
     private Location findValidSpawnLocation(Location spawnerLoc, int range) {
         World world = spawnerLoc.getWorld();
         if (world == null) return null;
@@ -434,16 +391,14 @@ public class CustomSpawnerHandler implements Listener {
 
             Location testLoc = new Location(world, x, y, z);
 
-            // Verificar que la ubicación sea válida
             if (isValidSpawnLocation(testLoc)) {
                 return testLoc;
             }
         }
 
-        return spawnerLoc.clone().add(0.5, 1, 0.5); // Fallback a encima del spawner
+        return spawnerLoc.clone().add(0.5, 1, 0.5);
     }
 
-    // Verificar si la ubicación es válida para spawn
     private boolean isValidSpawnLocation(Location loc) {
         World world = loc.getWorld();
         if (world == null) return false;
@@ -482,38 +437,32 @@ public class CustomSpawnerHandler implements Listener {
                     Map<String, Integer> config = readSpawnerConfig(item);
                     SpawnMode spawnMode = readSpawnModeConfig(item);
 
-                    // Configurar el tipo base
                     EntityType baseType;
                     if (mobType.startsWith("vanilla_")) {
-                        // Extraer el tipo de mob vanilla (ej: "vanilla_zombie" -> "zombie")
                         String vanillaType = mobType.substring(8);
                         try {
                             baseType = EntityType.valueOf(vanillaType.toUpperCase());
                         } catch (IllegalArgumentException e) {
-                            baseType = EntityType.PIG; // Fallback si el tipo no es válido
+                            baseType = EntityType.PIG;
                         }
                     } else {
                         baseType = getBaseEntityType(mobType);
                     }
                     spawner.setSpawnedType(baseType != null ? baseType : EntityType.PIG);
 
-                    // Guardar todos los datos en el bloque
                     saveSpawnerData(spawner, mobType, config, spawnMode);
 
-                    // Configurar nombre custom si es necesario
                     String customName = getCustomMobName(mobType);
                     if (customName != null) {
                         applyCustomNameToSpawner(spawner, customName);
                     }
 
-                    // Añadir al sistema de spawn personalizado si está activo
                     if (spawnMode != SpawnMode.VANILLA) {
                         activeCustomSpawners.put(block.getLocation(), new CustomSpawnerData(mobType, config, spawnMode));
                     }
 
                     player.sendMessage(ChatColor.GREEN + "¡Spawner de " + mobType + " (" + spawnMode.getDisplayName() + ") colocado correctamente!");
 
-                    // Efectos visuales
                     Location loc = block.getLocation().add(0.5, 0.5, 0.5);
                     loc.getWorld().spawnParticle(Particle.PORTAL, loc, 50, 0.5, 0.5, 0.5, 0.1);
                     loc.getWorld().playSound(loc, Sound.BLOCK_BEACON_ACTIVATE, 1.0f, 1.5f);
@@ -523,7 +472,6 @@ public class CustomSpawnerHandler implements Listener {
     }
 
     public void loadAllCustomSpawners() {
-        plugin.getLogger().info("Cargando spawners custom...");
         int totalSpawners = 0;
 
         for (World world : Bukkit.getWorlds()) {
@@ -539,9 +487,6 @@ public class CustomSpawnerHandler implements Listener {
                 }
             }
         }
-
-        plugin.getLogger().info("Cargados " + totalSpawners + " spawners custom desde chunks cargados");
-        plugin.getLogger().info("Los spawners en chunks no cargados se registrarán automáticamente cuando los chunks se carguen");
     }
 
     private void registerCustomSpawner(CreatureSpawner spawner) {
@@ -557,7 +502,6 @@ public class CustomSpawnerHandler implements Listener {
         if (mobType != null && spawnModeStr != null) {
             try {
                 SpawnMode spawnMode = SpawnMode.valueOf(spawnModeStr);
-                // Solo registrar si no es VANILLA
                 if (spawnMode != SpawnMode.VANILLA) {
                     Map<String, Integer> config = loadSpawnerData(spawner);
                     activeCustomSpawners.put(loc, new CustomSpawnerData(mobType, config, spawnMode));
@@ -570,7 +514,6 @@ public class CustomSpawnerHandler implements Listener {
 
     private Map<String, Integer> readSpawnerConfig(ItemStack spawnerItem) {
         Map<String, Integer> config = new HashMap<>();
-        // Valores por defecto (solo si no se encuentran en el lore)
         config.put("spawn_count", 4);
         config.put("max_nearby", 6);
         config.put("player_range", 20);
@@ -624,7 +567,6 @@ public class CustomSpawnerHandler implements Listener {
         return config;
     }
 
-    // Nuevo método para leer configuración de spawn_custom
     private SpawnMode readSpawnModeConfig(ItemStack spawnerItem) {
         if (spawnerItem.hasItemMeta() && spawnerItem.getItemMeta().hasLore()) {
             for (String line : spawnerItem.getItemMeta().getLore()) {
@@ -642,7 +584,7 @@ public class CustomSpawnerHandler implements Listener {
                 }
             }
         }
-        return SpawnMode.VANILLA; // Por defecto Vanilla
+        return SpawnMode.VANILLA;
     }
 
     private void updateSpawnModeConfig(ItemStack spawner, SpawnMode spawnMode) {
@@ -664,7 +606,6 @@ public class CustomSpawnerHandler implements Listener {
         }
 
         if (!found) {
-            // Insertar después de Spawn Custom si existe, sino al final
             int insertIndex = -1;
             for (int i = 0; i < lore.size(); i++) {
                 if (ChatColor.stripColor(lore.get(i)).contains("Spawn Custom:")) {
@@ -693,27 +634,23 @@ public class CustomSpawnerHandler implements Listener {
             try {
                 SpawnMode spawnMode = SpawnMode.valueOf(spawnModeStr);
 
-                // Cancelar evento para modos custom
                 if (spawnMode != SpawnMode.VANILLA) {
                     event.setCancelled(true);
 
-                    // Para ONE_SPAWN, verificar si ya spawnearon
                     if (spawnMode == SpawnMode.ONE_SPAWN) {
                         Location loc = spawner.getLocation();
                         CustomSpawnerData data = activeCustomSpawners.get(loc);
                         if (data != null && data.hasSpawnedOnce) {
-                            return; // Ya spawnearon, no hacer nada
+                            return;
                         }
                     }
-
-                    return; // Los modos custom son manejados por nuestro sistema
+                    return;
                 }
             } catch (IllegalArgumentException e) {
                 plugin.getLogger().warning("Modo de spawn inválido: " + spawnModeStr);
             }
         }
 
-        // Comportamiento vanilla
         event.setCancelled(true);
         Location location = event.getLocation();
 
@@ -729,13 +666,9 @@ public class CustomSpawnerHandler implements Listener {
 
     private void spawnVanillaMob(String mobType, Location location) {
         String vanillaType = mobType.substring(8);
-
         try {
             EntityType entityType = EntityType.valueOf(vanillaType.toUpperCase());
-
-            // Spawnear el mob vanilla con nombre personalizado si es necesario
             LivingEntity entity = (LivingEntity) location.getWorld().spawnEntity(location, entityType);
-
         } catch (IllegalArgumentException e) {
             plugin.getLogger().warning("Tipo de mob vanilla no válido: " + vanillaType);
         }
@@ -756,186 +689,91 @@ public class CustomSpawnerHandler implements Listener {
 
     private void spawnCustomMob(String mobType, Location location) {
         switch (mobType.toLowerCase()) {
-            case "bombita":
-                bombitaSpawner.spawnBombita(location);
-                break;
-            case "iceologer":
-                iceologerSpawner.spawnIceologer(location);
-                break;
-            case "corruptedzombie":
-                corruptedZombieSpawner.spawnCorruptedZombie(location);
-                break;
-            case "corruptedspider":
-                corruptedSpider.spawnCorruptedSpider(location);
-                break;
-            case "queenbee":
-                QueenBeeHandler.spawn(plugin, location);
-                break;
-            case "infestedbee":
-                infestedBeeHandler.spawnInfestedBee(location);
-                break;
-            case "guardianblaze":
-                guardianBlaze.spawnGuardianBlaze(location);
-                break;
-            case "guardiancorruptedskeleton":
-                guardianCorruptedSkeleton.spawnGuardianCorruptedSkeleton(location);
-                break;
-            case "corruptedinfernalspider":
-                corruptedInfernalSpider.spawnCorruptedInfernalSpider(location);
-                break;
-            case "corruptedbee":
-                corruptedBee.spawnCorruptedBee(location);
-                break;
-            default:
-                plugin.getLogger().warning("Tipo de mob desconocido en spawner: " + mobType);
-                break;
+            case "bombita": bombitaSpawner.spawnBombita(location); break;
+            case "iceologer": iceologerSpawner.spawnIceologer(location); break;
+            case "corruptedzombie": corruptedZombieSpawner.spawnCorruptedZombie(location); break;
+            case "corruptedspider": corruptedSpider.spawnCorruptedSpider(location); break;
+            case "queenbee": QueenBeeHandler.spawn(plugin, location); break;
+            case "infestedbee": infestedBeeHandler.spawnInfestedBee(location); break;
+            case "guardianblaze": guardianBlaze.spawnGuardianBlaze(location); break;
+            case "guardiancorruptedskeleton": guardianCorruptedSkeleton.spawnGuardianCorruptedSkeleton(location); break;
+            case "corruptedinfernalspider": corruptedInfernalSpider.spawnCorruptedInfernalSpider(location); break;
+            case "corruptedbee": corruptedBee.spawnCorruptedBee(location); break;
+            default: plugin.getLogger().warning("Tipo de mob desconocido en spawner: " + mobType); break;
         }
     }
 
     private EntityType getBaseEntityType(String mobType) {
         switch (mobType.toLowerCase()) {
-            case "bombita":
-            case "corruptedcreeper":
-            case "infernalcreeper":
-            case "endercreeper":
-            case "darkcreeper":
-                return EntityType.CREEPER;
-            case "iceologer":
-                return EntityType.ILLUSIONER;
-            case "corruptedzombie":
-                return EntityType.ZOMBIE;
-            case "corruptedspider":
-            case "corruptedinfernalspider":
-                return EntityType.SPIDER;
-            case "toxicspider":
-                return EntityType.CAVE_SPIDER;
-            case "queenbee":
-            case "hellishbee":
-            case "infestedbee":
-            case "corruptedbee":
-                return EntityType.BEE;
-            case "guardianblaze":
-                return EntityType.BLAZE;
-            case "guardiancorruptedskeleton":
-                return EntityType.WITHER_SKELETON;
-            case "corruptedskeleton":
-            case "darkskeleton":
-                return EntityType.SKELETON;
-            case "buffbreeze":
-                return EntityType.BREEZE;
-            case "invertedghast":
-            case "enderghast":
-            case "piglinglobo":
-                return EntityType.GHAST;
-            case "netheritevexguardian":
-            case "darkvex":
-                return EntityType.VEX;
-            case "ultrawitherboss":
-                return EntityType.WITHER;
-            case "whiteenderman":
-                return EntityType.ENDERMAN;
-            case "fastravager":
-                return EntityType.RAVAGER;
-            case "bruteimperial":
-                return EntityType.PIGLIN_BRUTE;
-            case "infernalbeast":
-                return EntityType.HOGLIN;
-            case "batboom":
-                return EntityType.BAT;
-            case "endersilverfish":
-                return EntityType.SILVERFISH;
-            case "guardianshulker":
-                return EntityType.SHULKER;
-            case "spectraleeye":
-                return EntityType.PHANTOM;
-            case "corrupteddrowned":
-                return EntityType.DROWNED;
-            default:
-                return null;
+            case "bombita": case "corruptedcreeper": case "infernalcreeper": case "endercreeper": case "darkcreeper": return EntityType.CREEPER;
+            case "iceologer": return EntityType.ILLUSIONER;
+            case "corruptedzombie": return EntityType.ZOMBIE;
+            case "corruptedspider": case "corruptedinfernalspider": return EntityType.SPIDER;
+            case "toxicspider": return EntityType.CAVE_SPIDER;
+            case "queenbee": case "hellishbee": case "infestedbee": case "corruptedbee": return EntityType.BEE;
+            case "guardianblaze": return EntityType.BLAZE;
+            case "guardiancorruptedskeleton": return EntityType.WITHER_SKELETON;
+            case "corruptedskeleton": case "darkskeleton": return EntityType.SKELETON;
+            case "buffbreeze": return EntityType.BREEZE;
+            case "invertedghast": case "enderghast": case "piglinglobo": return EntityType.GHAST;
+            case "netheritevexguardian": case "darkvex": return EntityType.VEX;
+            case "ultrawitherboss": return EntityType.WITHER;
+            case "whiteenderman": return EntityType.ENDERMAN;
+            case "fastravager": return EntityType.RAVAGER;
+            case "bruteimperial": return EntityType.PIGLIN_BRUTE;
+            case "infernalbeast": return EntityType.HOGLIN;
+            case "batboom": return EntityType.BAT;
+            case "endersilverfish": return EntityType.SILVERFISH;
+            case "guardianshulker": return EntityType.SHULKER;
+            case "spectraleeye": return EntityType.PHANTOM;
+            case "corrupteddrowned": return EntityType.DROWNED;
+            default: return null;
         }
     }
 
     private String getCustomMobName(String mobType) {
         switch (mobType.toLowerCase()) {
-            case "bombita":
-                return "Bombita";
-            case "iceologer":
-                return "Iceologer";
-            case "corruptedzombie":
-                return "Corrupted Zombie";
-            case "corruptedspider":
-                return "Corrupted Spider";
-            case "queenbee":
-                return "Abeja Reina";
-            case "hellishbee":
-                return "Abeja Infernal";
-            case "infestedbee":
-                return "Infested Bee";
-            case "guardianblaze":
-                return "Guardian Blaze";
-            case "guardiancorruptedskeleton":
-                return "Guardian Corrupted Skeleton";
-            case "corruptedskeleton":
-                return "Corrupted Skeleton";
-            case "corruptedinfernalspider":
-                return "Corrupted Infernal Spider";
-            case "corruptedcreeper":
-                return "Corrupted Creeper";
-            case "corruptedmagma":
-                return "Corrupted Magma Cube";
-            case "piglinglobo":
-                return "Piglin Globo";
-            case "buffbreeze":
-                return "Buff Breeze";
-            case "invertedghast":
-                return "Inverted Ghast";
-            case "netheritevexguardian":
-                return "Netherite Vex Guardian";
-            case "ultrawitherboss":
-                return "Corrupted Wither Boss";
-            case "whiteenderman":
-                return "White Enderman";
-            case "infernalcreeper":
-                return "Infernal Creeper";
-            case "toxicspider":
-                return "Toxic Spider";
-            case "fastravager":
-                return "Fast Ravager";
-            case "bruteimperial":
-                return "Brute Imperial";
-            case "batboom":
-                return "Bat Boom";
-            case "spectraleeye":
-                return "Ojo Espectral";
-            case "enderghast":
-                return "Ender Ghast";
-            case "endercreeper":
-                return "Ender Creeper";
-            case "endersilverfish":
-                return "Ender Silverfish";
-            case "guardianshulker":
-                return "Guardian Shulker";
-            case "darkphantom":
-                return "Dark Phantom";
-            case "darkcreeper":
-                return "Dark Creeper";
-            case "darkvex":
-                return "Dark Vex";
-            case "darkskeleton":
-                return "Dark Skeleton";
-            case "infernalbeast":
-                return "Infernal Beast";
-            case "corrupteddrowned":
-                return "Corrupted Drowned";
-            case "corruptedbee":
-                return "Corrupted Bee";
-            default:
-                return null;
+            case "bombita": return "Bombita";
+            case "iceologer": return "Iceologer";
+            case "corruptedzombie": return "Corrupted Zombie";
+            case "corruptedspider": return "Corrupted Spider";
+            case "queenbee": return "Abeja Reina";
+            case "hellishbee": return "Abeja Infernal";
+            case "infestedbee": return "Infested Bee";
+            case "guardianblaze": return "Guardian Blaze";
+            case "guardiancorruptedskeleton": return "Guardian Corrupted Skeleton";
+            case "corruptedskeleton": return "Corrupted Skeleton";
+            case "corruptedinfernalspider": return "Corrupted Infernal Spider";
+            case "corruptedcreeper": return "Corrupted Creeper";
+            case "corruptedmagma": return "Corrupted Magma Cube";
+            case "piglinglobo": return "Piglin Globo";
+            case "buffbreeze": return "Buff Breeze";
+            case "invertedghast": return "Inverted Ghast";
+            case "netheritevexguardian": return "Netherite Vex Guardian";
+            case "ultrawitherboss": return "Corrupted Wither Boss";
+            case "whiteenderman": return "White Enderman";
+            case "infernalcreeper": return "Infernal Creeper";
+            case "toxicspider": return "Toxic Spider";
+            case "fastravager": return "Fast Ravager";
+            case "bruteimperial": return "Brute Imperial";
+            case "batboom": return "Bat Boom";
+            case "spectraleeye": return "Ojo Espectral";
+            case "enderghast": return "Ender Ghast";
+            case "endercreeper": return "Ender Creeper";
+            case "endersilverfish": return "Ender Silverfish";
+            case "guardianshulker": return "Guardian Shulker";
+            case "darkphantom": return "Dark Phantom";
+            case "darkcreeper": return "Dark Creeper";
+            case "darkvex": return "Dark Vex";
+            case "darkskeleton": return "Dark Skeleton";
+            case "infernalbeast": return "Infernal Beast";
+            case "corrupteddrowned": return "Corrupted Drowned";
+            case "corruptedbee": return "Corrupted Bee";
+            default: return null;
         }
     }
 
     private void applyCustomNameToSpawner(CreatureSpawner spawner, String customName) {
-        // Usar comandos para aplicar el nombre personalizado al spawner
         Location loc = spawner.getLocation();
         String command = String.format(
                 "data merge block %d %d %d {SpawnData:{entity:{CustomName:'[{\"text\":\"%s\"}]'}}}",
@@ -963,9 +801,8 @@ public class CustomSpawnerHandler implements Listener {
         openConfigGUI(event.getPlayer(), item);
     }
 
-    // GUI Methods
     public void openConfigGUI(Player player, ItemStack spawnerItem) {
-        Inventory gui = Bukkit.createInventory(player, 27, "Configuración del Spawner"); // Aumentado para más opciones
+        Inventory gui = Bukkit.createInventory(player, 27, "Configuración del Spawner");
 
         editingSpawners.put(player.getUniqueId(), spawnerItem);
 
@@ -979,9 +816,8 @@ public class CustomSpawnerHandler implements Listener {
         gui.setItem(4, createConfigItem("Min Delay", currentConfig.get("min_delay")));
         gui.setItem(5, createConfigItem("Max Delay", currentConfig.get("max_delay")));
         gui.setItem(6, createConfigItem("Spawn Range", currentConfig.get("spawn_range")));
-        gui.setItem(7, createSpawnModeItem(currentSpawnMode)); // Nuevo item para modo de spawn
+        gui.setItem(7, createSpawnModeItem(currentSpawnMode));
 
-        // Info items
         gui.setItem(18, createInfoItem(SpawnMode.VANILLA));
         gui.setItem(19, createInfoItem(SpawnMode.SPAWN_CUSTOM));
         gui.setItem(20, createInfoItem(SpawnMode.SPAWN_CUSTOM_INFINITE));
@@ -997,7 +833,6 @@ public class CustomSpawnerHandler implements Listener {
         Map<String, Integer> currentConfig = readSpawnerConfig(spawnerItem);
         SpawnMode currentSpawnMode = readSpawnModeConfig(spawnerItem);
 
-        // Actualizar todos los items de configuración
         gui.setItem(0, createConfigItem("Spawn Count", currentConfig.get("spawn_count")));
         gui.setItem(1, createConfigItem("Max Nearby", currentConfig.get("max_nearby")));
         gui.setItem(2, createConfigItem("Player Range", currentConfig.get("player_range")));
@@ -1007,13 +842,11 @@ public class CustomSpawnerHandler implements Listener {
         gui.setItem(6, createConfigItem("Spawn Range", currentConfig.get("spawn_range")));
         gui.setItem(7, createSpawnModeItem(currentSpawnMode));
 
-        // Los items de información se mantienen igual
         gui.setItem(18, createInfoItem(SpawnMode.VANILLA));
         gui.setItem(19, createInfoItem(SpawnMode.SPAWN_CUSTOM));
         gui.setItem(20, createInfoItem(SpawnMode.SPAWN_CUSTOM_INFINITE));
         gui.setItem(21, createInfoItem(SpawnMode.ONE_SPAWN));
 
-        // Actualizar el inventario
         player.updateInventory();
     }
 
@@ -1123,15 +956,13 @@ public class CustomSpawnerHandler implements Listener {
         if (event.getClickedInventory() == null) return;
 
         int slot = event.getSlot();
-        if (slot < 0 || slot > 21) return; // Ajustado para los nuevos slots
+        if (slot < 0 || slot > 21) return;
 
         if (slot == 7) {
-            // Manejar cambio de modo de spawn
             handleSpawnModeChange(player);
             return;
         }
 
-        // Slots 18-21 son items de información, no hacer nada
         if (slot >= 18 && slot <= 21) return;
 
         String[] propertyNames = {
@@ -1142,7 +973,6 @@ public class CustomSpawnerHandler implements Listener {
         String property = propertyNames[slot];
         editingProperties.put(player.getUniqueId(), property);
 
-        // Preparar al jugador para recibir input por chat
         playersWaitingForInput.put(player.getUniqueId(), property);
         player.closeInventory();
 
@@ -1166,7 +996,6 @@ public class CustomSpawnerHandler implements Listener {
                 ChatColor.WHITE + newMode.getDisplayName());
         player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1.0f, 1.5f);
 
-        // Reabrir la GUI
         updateGUI(player, spawner);
     }
 
@@ -1204,7 +1033,6 @@ public class CustomSpawnerHandler implements Listener {
                 return;
             }
 
-            // Actualizar el spawner
             updateSpawnerConfig(spawner, property, newValue);
             player.sendMessage(ChatColor.GREEN + getPropertyDisplayName(property) +
                     " actualizado a " + newValue);
@@ -1213,7 +1041,6 @@ public class CustomSpawnerHandler implements Listener {
             playersWaitingForInput.remove(uuid);
             editingProperties.remove(uuid);
 
-            // Reabrir la GUI
             Bukkit.getScheduler().runTask(plugin, () -> {
                 openConfigGUI(player, spawner);
             });
@@ -1265,7 +1092,6 @@ public class CustomSpawnerHandler implements Listener {
         String title = event.getView().getTitle();
 
         if (title.equals("Configuración del Spawner")) {
-            // Solo limpiar si no estamos esperando input por chat
             if (!playersWaitingForInput.containsKey(uuid)) {
                 editingSpawners.remove(uuid);
                 editingProperties.remove(uuid);
@@ -1299,18 +1125,12 @@ public class CustomSpawnerHandler implements Listener {
         spawner.setItemMeta(meta);
     }
 
-    //DATOS
-
     private void saveSpawnerData(CreatureSpawner spawner, String mobType, Map<String, Integer> config, SpawnMode spawnMode) {
         PersistentDataContainer container = spawner.getPersistentDataContainer();
 
-        // Guardar el tipo de mob
         container.set(spawnerKey, PersistentDataType.STRING, mobType);
-
-        // Guardar modo de spawn
         container.set(spawnModeKey, PersistentDataType.STRING, spawnMode.name());
 
-        // Guardar todas las configuraciones
         for (Map.Entry<String, Integer> entry : config.entrySet()) {
             container.set(new NamespacedKey(plugin, entry.getKey()), PersistentDataType.INTEGER, entry.getValue());
         }
@@ -1322,7 +1142,6 @@ public class CustomSpawnerHandler implements Listener {
         Map<String, Integer> config = new HashMap<>();
         PersistentDataContainer container = spawner.getPersistentDataContainer();
 
-        // Cargar todas las configuraciones guardadas
         String[] keys = {"spawn_count", "max_nearby", "player_range", "delay",
                 "min_delay", "max_delay", "spawn_range"};
 
@@ -1344,18 +1163,6 @@ public class CustomSpawnerHandler implements Listener {
         activeCustomSpawners.clear();
     }
 
-    private void debugSpawnerItem(ItemStack spawner) {
-        if (spawner.hasItemMeta() && spawner.getItemMeta().hasLore()) {
-            plugin.getLogger().info("Lore actual del spawner:");
-            for (String line : spawner.getItemMeta().getLore()) {
-                plugin.getLogger().info(line);
-            }
-        } else {
-            plugin.getLogger().info("El spawner no tiene lore");
-        }
-    }
-
-    // Método para limpiar recursos al desactivar el plugin
     public void shutdown() {
         if (customSpawnTask != null && !customSpawnTask.isCancelled()) {
             customSpawnTask.cancel();

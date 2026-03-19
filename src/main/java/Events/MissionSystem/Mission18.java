@@ -37,7 +37,7 @@ public class Mission18 implements Mission, Listener {
     public String getName() { return "Jugando a ser Dios"; }
 
     @Override
-    public String getDescription() { return "Activa 8 Tótems de la Inmortalidad."; }
+    public String getDescription() { return "Activa 10 Tótems de la Inmortalidad."; }
 
     @Override
     public int getMissionNumber() { return 18; }
@@ -46,7 +46,7 @@ public class Mission18 implements Mission, Listener {
     public List<ItemStack> getRewards() {
         List<ItemStack> rewards = new ArrayList<>();
         ItemStack coins = EconomyItems.createVithiumCoin();
-        coins.setAmount(14);
+        coins.setAmount(15);
         ItemStack proBook = new ItemStack(Material.ENCHANTED_BOOK);
         EnchantmentStorageMeta meta = (EnchantmentStorageMeta) proBook.getItemMeta();
         if (meta != null) {
@@ -83,12 +83,12 @@ public class Mission18 implements Mission, Listener {
 
         int popped = data.getProgressInt("totems_popped");
 
-        if (popped < 8) {
+        if (popped < 10) {
             popped++;
             data.setProgressValue("totems_popped", popped);
             missionHandler.saveData(player, 18, data);
 
-            if (popped >= 8) {
+            if (popped >= 10) {
                 successNotification.showSuccess(player);
                 missionHandler.completeMission(player, 18);
             } else {
@@ -96,7 +96,7 @@ public class Mission18 implements Mission, Listener {
                         ChatColor.of("#FFCC99") + "Tótems activados: " +
                         ChatColor.of("#FFA07A") + popped +
                         ChatColor.of("#FFE4B5") + "/" +
-                        ChatColor.of("#FFA07A") + "8";
+                        ChatColor.of("#FFA07A") + "10";
                 actionBarHandler.sendActionBar(player, msg);
             }
         }

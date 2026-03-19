@@ -33,7 +33,7 @@ public class Mission22 implements Mission, Listener {
     public String getName() { return "Cazador de Guardianes Acuáticos"; }
 
     @Override
-    public String getDescription() { return "Elimina a 3 Elder Guardians."; }
+    public String getDescription() { return "Elimina a 5 Elder Guardians."; }
 
     @Override
     public int getMissionNumber() { return 22; }
@@ -42,8 +42,8 @@ public class Mission22 implements Mission, Listener {
     public List<ItemStack> getRewards() {
         List<ItemStack> rewards = new ArrayList<>();
         ItemStack coins = EconomyItems.createVithiumCoin();
-        coins.setAmount(18);
-        ItemStack goldblock = new ItemStack(Material.GOLD_BLOCK, 12);
+        coins.setAmount(19);
+        ItemStack goldblock = new ItemStack(Material.GOLD_BLOCK, 15);
         ItemStack spongei = new ItemStack(Material.SPONGE, 32);
         ItemStack xpFill = new ItemStack(Material.EXPERIENCE_BOTTLE, 2);
         for (int i = 0; i < 27; i++) {
@@ -74,12 +74,12 @@ public class Mission22 implements Mission, Listener {
 
         int killed = data.getProgressInt("guardians_killed");
 
-        if (killed < 3) {
+        if (killed < 5) {
             killed++;
             data.setProgressValue("guardians_killed", killed);
             missionHandler.saveData(killer, 22, data);
 
-            if (killed >= 3) {
+            if (killed >= 5) {
                 successNotification.showSuccess(killer);
                 missionHandler.completeMission(killer, 22);
             } else {
@@ -87,7 +87,7 @@ public class Mission22 implements Mission, Listener {
                         ChatColor.of("#FFCC99") + "Elder Guardians: " +
                         ChatColor.of("#FFA07A") + killed +
                         ChatColor.of("#FFE4B5") + "/" +
-                        ChatColor.of("#FFA07A") + "3";
+                        ChatColor.of("#FFA07A") + "5";
                 actionBarHandler.sendActionBar(killer, msg);
             }
         }

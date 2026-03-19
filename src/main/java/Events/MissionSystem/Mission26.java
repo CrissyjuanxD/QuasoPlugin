@@ -24,11 +24,13 @@ public class Mission26 implements Mission, Listener {
     private final SuccessNotification successNotification;
     private final ActionBarHandler actionBarHandler;
 
-    private final Set<Material> requiredBlocks = new HashSet<>(Arrays.asList(
+    private final Set<Material> requiredBlocks = new LinkedHashSet<>(Arrays.asList(
             Material.IRON_BLOCK,
             Material.GOLD_BLOCK,
             Material.EMERALD_BLOCK,
-            Material.DIAMOND_BLOCK
+            Material.DIAMOND_BLOCK,
+            Material.COPPER_BLOCK,
+            Material.NETHERITE_BLOCK
     ));
 
     public Mission26(JavaPlugin plugin, MissionHandler missionHandler) {
@@ -42,7 +44,7 @@ public class Mission26 implements Mission, Listener {
     public String getName() { return "Ve a tocar pasto"; }
 
     @Override
-    public String getDescription() { return "Rompe bloques de Hierro, Oro, Esmeralda y Diamante con Fatiga Minera III."; }
+    public String getDescription() { return "Rompe bloques de Hierro, Oro,\nEsmeralda, Diamante, Cobre y\nNetherite con Fatiga Minera III."; }
 
     @Override
     public int getMissionNumber() { return 26; }
@@ -52,10 +54,10 @@ public class Mission26 implements Mission, Listener {
         List<ItemStack> rewards = new ArrayList<>();
 
         ItemStack coins = EconomyItems.createVithiumCoin();
-        coins.setAmount(14);
+        coins.setAmount(16);
         ItemStack potion = CustomPotions.getHasteIIIPotion();
         potion.setAmount(1);
-        ItemStack diamondBlocks = new ItemStack(Material.DIAMOND_BLOCK, 5);
+        ItemStack diamondBlocks = new ItemStack(Material.DIAMOND_BLOCK, 10);
         ItemStack xpFill = new ItemStack(Material.EXPERIENCE_BOTTLE, 1);
 
         for (int i = 0; i < 27; i++) {
@@ -125,7 +127,7 @@ public class Mission26 implements Mission, Listener {
                             ChatColor.of("#FFCC99") + "Roto: " + ChatColor.GREEN + blockName + " " +
                             ChatColor.of("#FFA07A") + count +
                             ChatColor.of("#FFE4B5") + "/" +
-                            ChatColor.of("#FFA07A") + "4";
+                            ChatColor.of("#FFA07A") + requiredBlocks.size();
                     actionBarHandler.sendActionBar(player, msg);
                     player.playSound(player.getLocation(), org.bukkit.Sound.BLOCK_NOTE_BLOCK_PLING, 1f, 2f);
                 }

@@ -36,7 +36,7 @@ public class Mission24 implements Mission, Listener {
     public String getName() { return "¡Jugando con Fuego!"; }
 
     @Override
-    public String getDescription() { return "Sobrevive 1 minuto con medio corazón y la mano secundaria vacía."; }
+    public String getDescription() { return "Sobrevive 10 minutos con medio\ncorazón y la mano secundaria vacía."; }
 
     @Override
     public int getMissionNumber() { return 24; }
@@ -46,10 +46,10 @@ public class Mission24 implements Mission, Listener {
         List<ItemStack> rewards = new ArrayList<>();
 
         ItemStack coins = EconomyItems.createVithiumCoin();
-        coins.setAmount(14);
+        coins.setAmount(17);
         ItemStack potion = CustomPotions.getSplashRegenerationIIIPotion();
         potion.setAmount(1);
-        ItemStack diamondBlocks = new ItemStack(Material.DIAMOND_BLOCK, 8);
+        ItemStack diamondBlocks = new ItemStack(Material.DIAMOND_BLOCK, 15);
         ItemStack xpFill = new ItemStack(Material.EXPERIENCE_BOTTLE, 1);
 
         for (int i = 0; i < 27; i++) {
@@ -93,10 +93,11 @@ public class Mission24 implements Mission, Listener {
     private void startSurvivalTimer(Player player) {
         if (missionHandler.isMissionCompleted(player, 24)) return;
 
-        player.sendMessage(ChatColor.RED + "⚠ " + ChatColor.of("#FFA07A") + "¡Sobrevive 1 minuto!");
+        player.sendMessage(ChatColor.RED + "⚠ " + ChatColor.of("#FFA07A") + "¡Sobrevive 10 minutos!");
 
         BukkitTask task = new BukkitRunnable() {
-            int secondsLeft = 60;
+            int secondsElapsed = 0;
+            final int targetSeconds = 600;
 
             @Override
             public void run() {
@@ -110,19 +111,26 @@ public class Mission24 implements Mission, Listener {
                     return;
                 }
 
-                String msg = ChatColor.GOLD + "۞ " + ChatColor.of("#FFCC99") + "Aguanta: " +
-                        ChatColor.of("#FFA07A") + secondsLeft + "s";
+                int minutes = secondsElapsed / 60;
+                int seconds = secondsElapsed % 60;
+                String timeFormatted = String.format("%02d:%02d", minutes, seconds);
+
+                String msg = ChatColor.GOLD + "۞ " + ChatColor.of("#FFCC99") + "Tiempo sobrevivido: " +
+                        ChatColor.of("#FFA07A") + timeFormatted + ChatColor.of("#FFE4B5") + " / 10:00";
                 actionBarHandler.sendActionBar(player, msg);
-                player.playSound(player.getLocation(), org.bukkit.Sound.BLOCK_NOTE_BLOCK_HAT, 1f, 2f);
 
-                secondsLeft--;
+                player.playSound(player.getLocation(), org.bukkit.Sound.BLOCK_NOTE_BLOCK_HAT, 0.3f, 2f);
 
-                if (secondsLeft < 0) {
+                // Condición de victoria
+                if (secondsElapsed >= targetSeconds) {
                     successNotification.showSuccess(player);
                     missionHandler.completeMission(player, 24);
                     activeTimers.remove(player.getUniqueId());
                     this.cancel();
+                    return;
                 }
+
+                secondsElapsed++;
             }
         }.runTaskTimer(plugin, 0L, 20L);
 

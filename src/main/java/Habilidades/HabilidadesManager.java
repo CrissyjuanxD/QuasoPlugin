@@ -105,7 +105,7 @@ public class HabilidadesManager {
     }
 
     public int getHighestLevel(UUID playerUUID, HabilidadesType type) {
-        for (int level = 4; level >= 1; level--) {
+        for (int level = 8; level >= 1; level--) {
             if (hasHabilidad(playerUUID, type, level)) {
                 return level;
             }
@@ -118,7 +118,7 @@ public class HabilidadesManager {
 
         for (HabilidadesType type : HabilidadesType.values()) {
             List<Integer> levels = new ArrayList<>();
-            for (int level = 1; level <= 4; level++) {
+            for (int level = 1; level <= 8; level++) {
                 if (hasHabilidadPurchased(playerUUID, type, level)) {
                     levels.add(level);
                 }

@@ -34,7 +34,7 @@ public class Mission23 implements Mission, Listener {
     public String getName() { return "Con su propia medicina"; }
 
     @Override
-    public String getDescription() { return "Mata a un Piglin Brute usando un Hacha de Oro y llevando al menos una pieza de oro."; }
+    public String getDescription() { return "Mata a 10 Piglin Brutes usando un\nHacha de Oro y llevando al menos\nuna pieza de armadura de oro."; }
 
     @Override
     public int getMissionNumber() { return 23; }
@@ -43,7 +43,7 @@ public class Mission23 implements Mission, Listener {
     public List<ItemStack> getRewards() {
         List<ItemStack> rewards = new ArrayList<>();
         ItemStack coins = EconomyItems.createVithiumCoin();
-        coins.setAmount(12);
+        coins.setAmount(16);
         ItemStack goldenApples = new ItemStack(Material.GOLDEN_APPLE, 20);
         ItemStack diamonds = new ItemStack(Material.NETHERITE_INGOT, 2);
         ItemStack xpFill = new ItemStack(Material.EXPERIENCE_BOTTLE, 2);
@@ -69,16 +69,36 @@ public class Mission23 implements Mission, Listener {
         Player killer = event.getEntity().getKiller();
         if (killer == null) return;
         if (!missionHandler.isMissionActive(killer, 23)) return;
-        if (missionHandler.isMissionCompleted(killer, 23)) return;
+
+        MissionData data = missionHandler.getData(killer, 23);
+        if (data.isCompleted()) return;
 
         ItemStack weapon = killer.getInventory().getItemInMainHand();
         if (weapon.getType() != Material.GOLDEN_AXE) return;
 
         if (hasGoldenArmor(killer)) {
-            successNotification.showSuccess(killer);
-            String msg = ChatColor.GOLD + "۞ " + ChatColor.of("#FFCC99") + "¡Justicia dorada!";
-            actionBarHandler.sendActionBar(killer, msg);
-            missionHandler.completeMission(killer, 23);
+            int current = data.getProgressInt("piglin_brutes_killed");
+
+            if (current < 10) {
+                current++;
+                data.setProgressValue("piglin_brutes_killed", current);
+                missionHandler.saveData(killer, 23, data);
+
+                if (current >= 10) {
+                    successNotification.showSuccess(killer);
+                    String msg = ChatColor.GOLD + "۞ " + ChatColor.of("#FFCC99") + "Justicia completa!";
+                    actionBarHandler.sendActionBar(killer, msg);
+                    missionHandler.completeMission(killer, 23);
+                } else {
+                    String color = (current >= 10 ? ChatColor.GREEN.toString() : ChatColor.of("#FFA07A").toString());
+                    String msg = ChatColor.GOLD + "۞ " +
+                            ChatColor.of("#FFCC99") + "Piglin Brute Eliminado: " +
+                            color + current +
+                            ChatColor.of("#FFE4B5") + "/" +
+                            ChatColor.of("#FFA07A") + "10";
+                    actionBarHandler.sendActionBar(killer, msg);
+                }
+            }
         }
     }
 

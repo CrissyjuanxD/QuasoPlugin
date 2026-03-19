@@ -34,7 +34,7 @@ public class Mission16 implements Mission, Listener {
     public String getName() { return "Estado en Descomposición"; }
 
     @Override
-    public String getDescription() { return "Derrota a 3 Withers."; }
+    public String getDescription() { return "Derrota a 5 Withers."; }
 
     @Override
     public int getMissionNumber() { return 16; }
@@ -44,8 +44,8 @@ public class Mission16 implements Mission, Listener {
         List<ItemStack> rewards = new ArrayList<>();
 
         ItemStack coins = EconomyItems.createVithiumCoin();
-        coins.setAmount(17);
-        ItemStack goldenApples = new ItemStack(Material.ENCHANTED_GOLDEN_APPLE, 5);
+        coins.setAmount(18);
+        ItemStack goldenApples = new ItemStack(Material.ENCHANTED_GOLDEN_APPLE, 7);
         ItemStack potion = CustomPotions.getHasteIIIPotion();
         potion.setAmount(1);
 
@@ -80,12 +80,12 @@ public class Mission16 implements Mission, Listener {
 
         int killed = data.getProgressInt("withers_killed");
 
-        if (killed < 3) {
+        if (killed < 5) {
             killed++;
             data.setProgressValue("withers_killed", killed);
             missionHandler.saveData(killer, 16, data);
 
-            if (killed >= 3) {
+            if (killed >= 5) {
                 successNotification.showSuccess(killer);
                 missionHandler.completeMission(killer, 16);
             } else {
@@ -93,7 +93,7 @@ public class Mission16 implements Mission, Listener {
                         ChatColor.of("#FFCC99") + "Withers: " +
                         ChatColor.of("#FFA07A") + killed +
                         ChatColor.of("#FFE4B5") + "/" +
-                        ChatColor.of("#FFA07A") + "3";
+                        ChatColor.of("#FFA07A") + "5";
                 actionBarHandler.sendActionBar(killer, msg);
             }
         }

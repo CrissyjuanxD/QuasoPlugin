@@ -25,6 +25,7 @@ public abstract class BaseBoss {
 
     // ---- Sistema de Jugadores ----
     protected final Set<UUID> currentPlayers = new HashSet<>();
+    protected final Set<UUID> attackers = new HashSet<>();
 
     // ---- Sistema de Arena ----
     protected AreaZone areaZone;
@@ -210,6 +211,12 @@ public abstract class BaseBoss {
         }
     }
 
+    public void addAttacker(Player p) {
+        if (p.getGameMode() == org.bukkit.GameMode.SURVIVAL || p.getGameMode() == org.bukkit.GameMode.ADVENTURE) {
+            attackers.add(p.getUniqueId());
+        }
+    }
+
     public void toggleDebug(Player player) {
         if (debugPlayers.contains(player.getUniqueId())) {
             debugPlayers.remove(player.getUniqueId());
@@ -263,8 +270,12 @@ public abstract class BaseBoss {
         if (currentPlayers.isEmpty()) return;
 
         List<String> names = currentPlayers.stream()
-                .map(id -> Bukkit.getPlayer(id) != null ? Bukkit.getPlayer(id).getName() : "")
+                .map(id -> Bukkit.getPlayer(id))
+                .filter(p -> p != null && (p.getGameMode() == org.bukkit.GameMode.SURVIVAL || p.getGameMode() == org.bukkit.GameMode.ADVENTURE))
+                .map(Player::getName)
                 .toList();
+
+        if (names.isEmpty()) return;
 
         String prefix = ChatColor.of("#88F1BC") + "" + ChatColor.BOLD + "\u06de";
         String colorText = ChatColor.of("#74A3D2").toString();
@@ -284,9 +295,17 @@ public abstract class BaseBoss {
         Bukkit.broadcastMessage(msg);
     }
 
+    // ===========================
+    //      MENSAJES GLOBALES
+    // ===========================
     private void sendDeathMessage() {
-        List<String> names = currentPlayers.stream()
-                .map(id -> Bukkit.getPlayer(id) != null ? Bukkit.getPlayer(id).getName() : "")
+        Set<UUID> involvedUUIDs = new HashSet<>(currentPlayers);
+        involvedUUIDs.addAll(attackers);
+
+        List<String> names = involvedUUIDs.stream()
+                .map(id -> Bukkit.getPlayer(id))
+                .filter(p -> p != null && (p.getGameMode() == org.bukkit.GameMode.SURVIVAL || p.getGameMode() == org.bukkit.GameMode.ADVENTURE))
+                .map(Player::getName)
                 .toList();
 
         if (names.isEmpty()) return;

@@ -27,7 +27,6 @@ public class EconomyItems {
         List<String> lore = new ArrayList<>();
         lore.add(" ");
         lore.add(ChatColor.GRAY + "Moneda oficial del servidor.");
-        lore.add(ChatColor.DARK_GRAY + "Usada en la economia de la ciudad.");
         lore.add(" ");
         lore.add(ChatColor.GRAY + "> Cambiala por DinoFichas en el spawn.");
 
@@ -60,12 +59,34 @@ public class EconomyItems {
         return item;
     }
 
-    public static ItemStack createNormalMochila() {
-        ItemStack item = new ItemStack(Material.LIME_SHULKER_BOX);
+    public static ItemStack createBloodFragment() {
+        ItemStack item = new ItemStack(Material.COPPER_NUGGET);
         ItemMeta meta = item.getItemMeta();
 
-        meta.setDisplayName(ChatColor.of("#ffffcc") + "" + ChatColor.BOLD + "Mochila Nivel 1");
+        meta.setDisplayName(ChatColor.of("#d46868") + "Fragmento de " + ChatColor.of("#d46868") + ChatColor.BOLD + "BloodMoon");
+        meta.setCustomModelData(2060);
+
+        List<String> lore = new ArrayList<>();
+        lore.add("");
+        lore.add(ChatColor.GRAY + "> " + ChatColor.of("#b86b42") + "Este fragmento lo puedes");
+        lore.add(ChatColor.of("#b86b42") + "cambiar por " + ChatColor.of("#ffcc80") + "DinoCoins " + ChatColor.GRAY + "۞");
+        lore.add(ChatColor.of("#b86b42") + "en la tienda de Monedas.");
+
+        meta.setLore(lore);
+        meta.setRarity(ItemRarity.EPIC);
+        meta.addEnchant(Enchantment.UNBREAKING, 1, true); // Brillo escondido
+        meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+        item.setItemMeta(meta);
+        return item;
+    }
+
+    public static ItemStack createNormalMochila() {
+        ItemStack item = new ItemStack(Material.ECHO_SHARD);
+        ItemMeta meta = item.getItemMeta();
+
+        meta.setDisplayName(ChatColor.GREEN + "" + ChatColor.BOLD + "Mochila Nivel 1");
         meta.setCustomModelData(2020);
+        meta.setItemModel(NamespacedKey.minecraft("lime_bundle"));
 
         List<String> lore = new ArrayList<>();
         lore.add(" ");
@@ -82,11 +103,12 @@ public class EconomyItems {
     }
 
     public static ItemStack createGreenMochila() {
-        ItemStack item = new ItemStack(Material.YELLOW_SHULKER_BOX);
+        ItemStack item = new ItemStack(Material.ECHO_SHARD);
         ItemMeta meta = item.getItemMeta();
 
-        meta.setDisplayName(ChatColor.GREEN + "" + ChatColor.BOLD + "Mochila Nivel 2");
+        meta.setDisplayName(ChatColor.BLUE + "" + ChatColor.BOLD + "Mochila Nivel 2");
         meta.setCustomModelData(2021);
+        meta.setItemModel(NamespacedKey.minecraft("blue_bundle"));
 
         List<String> lore = new ArrayList<>();
         lore.add(" ");
@@ -103,11 +125,12 @@ public class EconomyItems {
     }
 
     public static ItemStack createRedMochila() {
-        ItemStack item = new ItemStack(Material.ORANGE_SHULKER_BOX);
+        ItemStack item = new ItemStack(Material.ECHO_SHARD);
         ItemMeta meta = item.getItemMeta();
 
-        meta.setDisplayName(ChatColor.RED + "" + ChatColor.BOLD + "Mochila Nivel 3");
+        meta.setDisplayName(ChatColor.GOLD + "" + ChatColor.BOLD + "Mochila Nivel 3");
         meta.setCustomModelData(2022);
+        meta.setItemModel(NamespacedKey.minecraft("orange_bundle"));
 
         List<String> lore = new ArrayList<>();
         lore.add(" ");
@@ -124,11 +147,12 @@ public class EconomyItems {
     }
 
     public static ItemStack createBlueMochila() {
-        ItemStack item = new ItemStack(Material.RED_SHULKER_BOX);
+        ItemStack item = new ItemStack(Material.ECHO_SHARD);
         ItemMeta meta = item.getItemMeta();
 
-        meta.setDisplayName(ChatColor.BLUE + "" + ChatColor.BOLD + "Mochila Nivel 4");
+        meta.setDisplayName(ChatColor.RED + "" + ChatColor.BOLD + "Mochila Nivel 4");
         meta.setCustomModelData(2023);
+        meta.setItemModel(NamespacedKey.minecraft("red_bundle"));
 
         List<String> lore = new ArrayList<>();
         lore.add(" ");
@@ -145,11 +169,12 @@ public class EconomyItems {
     }
 
     public static ItemStack createPurpleMochila() {
-        ItemStack item = new ItemStack(Material.PURPLE_SHULKER_BOX);
+        ItemStack item = new ItemStack(Material.ECHO_SHARD);
         ItemMeta meta = item.getItemMeta();
 
         meta.setDisplayName(ChatColor.DARK_PURPLE + "" + ChatColor.BOLD + "Mochila Nivel 5");
         meta.setCustomModelData(2024);
+        meta.setItemModel(NamespacedKey.minecraft("purple_bundle"));
 
         List<String> lore = new ArrayList<>();
         lore.add(" ");
@@ -287,16 +312,7 @@ public class EconomyItems {
     }
 
     public static boolean isMaterialMochila(org.bukkit.Material material) {
-        switch (material) {
-            case LIME_SHULKER_BOX:
-            case YELLOW_SHULKER_BOX:
-            case ORANGE_SHULKER_BOX:
-            case RED_SHULKER_BOX:
-            case PURPLE_SHULKER_BOX:
-                return true;
-            default:
-                return false;
-        }
+        return material == Material.ECHO_SHARD;
     }
 
     public static void applyPanicAppleEffects(Player player) {

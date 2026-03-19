@@ -245,15 +245,15 @@ public class MissionGUI implements Listener {
             lore.add(ChatColor.GRAY + "- Mobs en BloodMoon: " + (kills >= 125 ? ChatColor.GREEN : ChatColor.of("#FFA07A")) + kills + "/125");
         } else if (mission instanceof Mission3) {
             lore.add("");
-            boolean raid = data.getProgressBool("raid_completed");
+            int raids = data.getProgressInt("raids_completed");
             int apples = data.getProgressInt("apples_crafted");
-            lore.add(ChatColor.GRAY + "- Raid: " + (raid ? ChatColor.GREEN + "✔" : ChatColor.RED + "✖"));
-            lore.add(ChatColor.GRAY + "- Manzanas: " + (apples >= 20 ? ChatColor.GREEN : ChatColor.of("#FFA07A")) + apples + "/20");
+            lore.add(ChatColor.GRAY + "- Raids: " + (raids >= 5 ? ChatColor.GREEN : ChatColor.of("#FFA07A")) + raids + "/5");
+            lore.add(ChatColor.GRAY + "- Manzanas: " + (apples >= 64 ? ChatColor.GREEN : ChatColor.of("#FFA07A")) + apples + "/64");
         } else if (mission instanceof Mission4) {
             lore.add("");
             lore.add(ChatColor.of("#FFCC99") + "Progreso:");
-            String[] types = {"LEATHER", "GOLDEN", "CHAINMAIL", "IRON", "DIAMOND", "NETHERITE"};
-            String[] names = {"Cuero", "Oro", "Malla", "Hierro", "Diamante", "Netherite"};
+            String[] types = {"LEATHER", "GOLDEN", "CHAINMAIL", "IRON", "DIAMOND", "NETHERITE", "COPPER"};
+            String[] names = {"Cuero", "Oro", "Malla", "Hierro", "Diamante", "Netherite", "Cobre"};
             String[] parts = {"_HELMET", "_CHESTPLATE", "_LEGGINGS", "_BOOTS"};
             int totalEquipped = 0;
             for (int i = 0; i < types.length; i++) {
@@ -268,35 +268,32 @@ public class MissionGUI implements Listener {
                 lore.add(color + "- " + names[i] + ": " + typeCount + "/4");
             }
             lore.add("");
-            lore.add(ChatColor.of("#FFA07A") + "Total: " + totalEquipped + "/24");
+            lore.add(ChatColor.of("#FFA07A") + "Total: " + totalEquipped + "/28");
         } else if (mission instanceof Mission5) {
             lore.add("");
             lore.add(ChatColor.of("#FFCC99") + "Progreso:");
             int killed = data.getProgressInt("elite_zombies_killed");
-            lore.add(ChatColor.GRAY + "- Elite Zombies: " + (killed >= 15 ? ChatColor.GREEN : ChatColor.of("#FFA07A")) + killed + "/15");
+            lore.add(ChatColor.GRAY + "- Elite Zombies: " + (killed >= 25 ? ChatColor.GREEN : ChatColor.of("#FFA07A")) + killed + "/25");
         } else if (mission instanceof Mission6) {
             lore.add("");
             lore.add(ChatColor.of("#FFCC99") + "Progreso:");
             int z = data.getProgressInt("zombies_killed");
             int s = data.getProgressInt("spiders_killed");
-            lore.add(ChatColor.GRAY + "- Zombies Corr.: " + (z >= 10 ? ChatColor.GREEN : ChatColor.of("#FFA07A")) + z + "/10");
-            lore.add(ChatColor.GRAY + "- Arañas Corr.: " + (s >= 10 ? ChatColor.GREEN : ChatColor.of("#FFA07A")) + s + "/10");
+            lore.add(ChatColor.GRAY + "- Zombies Corr.: " + (z >= 30 ? ChatColor.GREEN : ChatColor.of("#FFA07A")) + z + "/30");
+            lore.add(ChatColor.GRAY + "- Arañas Corr.: " + (s >= 30 ? ChatColor.GREEN : ChatColor.of("#FFA07A")) + s + "/30");
         } else if (mission instanceof Mission7) {
             lore.add("");
             lore.add(ChatColor.GRAY + "- Salto: " + (data.isCompleted() ? ChatColor.GREEN + "Completado" : ChatColor.RED + "Pendiente"));
         } else if (mission instanceof Mission8) {
             lore.add("");
-            boolean hit = data.getProgressBool("hit_projectile");
-            boolean killed = data.getProgressBool("killed_warden");
-            boolean completed = data.isCompleted();
-            lore.add(ChatColor.GRAY + "- Hit Proyectil: " + (hit || completed ? ChatColor.GREEN + "✔" : ChatColor.RED + "✖"));
-            lore.add(ChatColor.GRAY + "- Eliminar Warden: " + (killed || completed ? ChatColor.GREEN + "✔" : ChatColor.RED + "✖"));
+            lore.add(ChatColor.of("#FFCC99") + "Progreso:");
+            int killed = data.getProgressInt("wardens_snowballed_killed");
+            lore.add(ChatColor.GRAY + "- Wardens Eliminados: " + (killed >= 5 ? ChatColor.GREEN : ChatColor.of("#FFA07A")) + killed + "/5");
         } else if (mission instanceof Mission9) {
             lore.add("");
-            boolean spotted = data.getProgressBool("spotted");
-            boolean completed = data.isCompleted();
-            lore.add(ChatColor.GRAY + "- Avistado: " + (spotted || completed ? ChatColor.GREEN + "✔" : ChatColor.RED + "✖"));
-            lore.add(ChatColor.GRAY + "- Eliminado: " + (completed ? ChatColor.GREEN + "✔" : ChatColor.RED + "✖"));
+            lore.add(ChatColor.of("#FFCC99") + "Progreso:");
+            int killed = data.getProgressInt("iceologers_spotted_killed");
+            lore.add(ChatColor.GRAY + "- Iceologers Eliminados: " + (killed >= 10 ? ChatColor.GREEN : ChatColor.of("#FFA07A")) + killed + "/10");
         } else if (mission instanceof Mission10) {
             lore.add("");
             lore.add(ChatColor.GRAY + "- Reina Derrotada: " + (data.isCompleted() ? ChatColor.GREEN + "✔" : ChatColor.RED + "✖"));
@@ -305,11 +302,13 @@ public class MissionGUI implements Listener {
             lore.add(ChatColor.of("#FFCC99") + "Progreso:");
             int spiders = data.getProgressInt("elite_spiders_killed");
             int skeletons = data.getProgressInt("elite_skeletons_killed");
-            lore.add(ChatColor.GRAY + "- Elite Spiders: " + (spiders >= 10 ? ChatColor.GREEN : ChatColor.of("#FFA07A")) + spiders + "/10");
-            lore.add(ChatColor.GRAY + "- Elite Skeletons: " + (skeletons >= 10 ? ChatColor.GREEN : ChatColor.of("#FFA07A")) + skeletons + "/10");
+            lore.add(ChatColor.GRAY + "- Elite Spiders: " + (spiders >= 30 ? ChatColor.GREEN : ChatColor.of("#FFA07A")) + spiders + "/30");
+            lore.add(ChatColor.GRAY + "- Elite Skeletons: " + (skeletons >= 30 ? ChatColor.GREEN : ChatColor.of("#FFA07A")) + skeletons + "/30");
         } else if (mission instanceof Mission12) {
             lore.add("");
-            lore.add(ChatColor.GRAY + "- Sacrificio de Amistad: " + (data.isCompleted() ? ChatColor.GREEN + "✔" : ChatColor.RED + "✖"));
+            lore.add(ChatColor.of("#FFCC99") + "Progreso:");
+            int melted = data.getProgressInt("snowmen_melted");
+            lore.add(ChatColor.GRAY + "- Golems Derretidos: " + (melted >= 10 ? ChatColor.GREEN : ChatColor.of("#FFA07A")) + melted + "/10");
         } else if (mission instanceof Mission13) {
             lore.add("");
             int bees = data.getProgressInt("bees_killed");
@@ -320,52 +319,93 @@ public class MissionGUI implements Listener {
             lore.add("");
             lore.add(ChatColor.of("#FFCC99") + "Progreso de flores:");
 
-            int collectedCount = 0;
-            for (Material flower : m14.getRequiredFlowers()) {
-                boolean has = data.getProgressBool("collected_" + flower.name());
-                if (has) collectedCount++;
-                String name = flower.name().toLowerCase().replace('_', ' ');
-                name = name.substring(0, 1).toUpperCase() + name.substring(1);
-                lore.add((has ? ChatColor.GREEN : ChatColor.GRAY) + "- " + name);
+            List<Material> flowers = m14.getRequiredFlowers();
+            int completedTypes = 0;
+            StringBuilder currentLine = new StringBuilder();
+
+            for (int i = 0; i < flowers.size(); i++) {
+                Material flower = flowers.get(i);
+                int count = data.getProgressInt("collected_" + flower.name());
+                if (count >= 25) completedTypes++;
+
+                String name = flower.name();
+                name = name.replace("DANDELION", "Diente de León");
+                name = name.replace("POPPY", "Amapola");
+                name = name.replace("BLUE_ORCHID", "Orquídea Azul");
+                name = name.replace("ALLIUM", "Allium");
+                name = name.replace("AZURE_BLUET", "Bluet Azur");
+                name = name.replace("RED_TULIP", "Tulipán Rojo");
+                name = name.replace("ORANGE_TULIP", "Tulipán Naranja");
+                name = name.replace("WHITE_TULIP", "Tulipán Blanco");
+                name = name.replace("PINK_TULIP", "Tulipán Rosa");
+                name = name.replace("OXEYE_DAISY", "Margarita");
+                name = name.replace("CORNFLOWER", "Aciano");
+                name = name.replace("LILY_OF_THE_VALLEY", "Lirio de los Valles");
+                name = name.replace("WITHER_ROSE", "Rosa Wither");
+                name = name.replace("SUNFLOWER", "Girasol");
+                name = name.replace("LILAC", "Lila");
+                name = name.replace("ROSE_BUSH", "Rosal");
+                name = name.replace("PEONY", "Peonía");
+                name = name.replace("TORCHFLOWER", "Flor Antorcha");
+                name = name.replace("PITCHER_PLANT", "Planta Jarra");
+                name = name.replace("PINK_PETALS", "Pétalos Rosas");
+                name = name.replace("SPORE_BLOSSOM", "Flor de Esporas");
+
+                String color = (count >= 25 ? ChatColor.GREEN.toString() : ChatColor.GRAY.toString());
+                String countColor = (count >= 25 ? ChatColor.GREEN.toString() : ChatColor.of("#FFA07A").toString());
+                String formattedFlower = color + "- " + name + " " + countColor + count + ChatColor.GRAY + "/25";
+
+                if (i % 2 == 0) {
+                    currentLine.append(formattedFlower);
+                    if (i == flowers.size() - 1) {
+                        lore.add(currentLine.toString());
+                    }
+                } else {
+                    currentLine.append(ChatColor.DARK_GRAY).append(" │ ").append(formattedFlower);
+                    lore.add(currentLine.toString());
+                    currentLine = new StringBuilder();
+                }
             }
             lore.add("");
-            lore.add(ChatColor.of("#FFA07A") + "Total: " + collectedCount + "/" + m14.getRequiredFlowers().size());
+            String totalColor = completedTypes >= flowers.size() ? ChatColor.GREEN.toString() : ChatColor.of("#FFA07A").toString();
+            lore.add(ChatColor.of("#FFCC99") + "Tipos Completados: " + totalColor + completedTypes + ChatColor.of("#FFE4B5") + "/" + flowers.size());
         } else if (mission instanceof Mission15) {
             lore.add("");
-            lore.add(ChatColor.GRAY + "- 300 Bloques en 7s: " + (data.isCompleted() ? ChatColor.GREEN + "✔" : ChatColor.RED + "✖"));
+            lore.add(ChatColor.GRAY + "- 400 Bloques en 7s: " + (data.isCompleted() ? ChatColor.GREEN + "✔" : ChatColor.RED + "✖"));
         } else if (mission instanceof Mission16) {
             lore.add("");
             int killed = data.getProgressInt("withers_killed");
-            lore.add(ChatColor.GRAY + "- Withers: " + (killed >= 3 ? ChatColor.GREEN : ChatColor.of("#FFA07A")) + killed + "/3");
+            lore.add(ChatColor.GRAY + "- Withers: " + (killed >= 5 ? ChatColor.GREEN : ChatColor.of("#FFA07A")) + killed + "/5");
         } else if (mission instanceof Mission17) {
             lore.add("");
             lore.add(ChatColor.of("#FFCC99") + "Progreso:");
             int endermen = data.getProgressInt("elite_endermen_killed");
             int creepers = data.getProgressInt("elite_creepers_killed");
-            lore.add(ChatColor.GRAY + "- Elite Endermans: " + (endermen >= 20 ? ChatColor.GREEN : ChatColor.of("#FFA07A")) + endermen + "/20");
-            lore.add(ChatColor.GRAY + "- Elite Creepers: " + (creepers >= 20 ? ChatColor.GREEN : ChatColor.of("#FFA07A")) + creepers + "/20");
+            lore.add(ChatColor.GRAY + "- Elite Endermans: " + (endermen >= 40 ? ChatColor.GREEN : ChatColor.of("#FFA07A")) + endermen + "/40");
+            lore.add(ChatColor.GRAY + "- Elite Creepers: " + (creepers >= 40 ? ChatColor.GREEN : ChatColor.of("#FFA07A")) + creepers + "/40");
         } else if (mission instanceof Mission18) {
             lore.add("");
             int popped = data.getProgressInt("totems_popped");
-            lore.add(ChatColor.GRAY + "- Totems Usados: " + (popped >= 8 ? ChatColor.GREEN : ChatColor.of("#FFA07A")) + popped + "/8");
+            lore.add(ChatColor.GRAY + "- Totems Usados: " + (popped >= 10 ? ChatColor.GREEN : ChatColor.of("#FFA07A")) + popped + "/10");
         } else if (mission instanceof Mission19) {
             lore.add("");
             int hearts = data.getProgressInt("hearts_broken");
-            lore.add(ChatColor.GRAY + "- Corazones Rotos: " + (hearts >= 15 ? ChatColor.GREEN : ChatColor.of("#FFA07A")) + hearts + "/15");
+            lore.add(ChatColor.GRAY + "- Corazones de Creaking Rotos: " + (hearts >= 35 ? ChatColor.GREEN : ChatColor.of("#FFA07A")) + hearts + "/35");
         } else if (mission instanceof Mission20) {
             lore.add("");
             int broken = data.getProgressInt("shriekers_broken");
-            lore.add(ChatColor.GRAY + "- Chilladores: " + (broken >= 20 ? ChatColor.GREEN : ChatColor.of("#FFA07A")) + broken + "/20");
+            lore.add(ChatColor.GRAY + "- Chilladores: " + (broken >= 35 ? ChatColor.GREEN : ChatColor.of("#FFA07A")) + broken + "/35");
         } else if (mission instanceof Mission21) {
             lore.add("");
             lore.add(ChatColor.GRAY + "- Desafío: " + (data.isCompleted() ? ChatColor.GREEN + "✔" : ChatColor.RED + "✖"));
         } else if (mission instanceof Mission22) {
             lore.add("");
             int killed = data.getProgressInt("guardians_killed");
-            lore.add(ChatColor.GRAY + "- Elders Guardians: " + (killed >= 3 ? ChatColor.GREEN : ChatColor.of("#FFA07A")) + killed + "/3");
+            lore.add(ChatColor.GRAY + "- Elders Guardians: " + (killed >= 5 ? ChatColor.GREEN : ChatColor.of("#FFA07A")) + killed + "/5");
         } else if (mission instanceof Mission23) {
             lore.add("");
-            lore.add(ChatColor.GRAY + "- Venganza: " + (data.isCompleted() ? ChatColor.GREEN + "✔" : ChatColor.RED + "✖"));
+            int killed = data.getProgressInt("piglin_brutes_killed");
+            lore.add(ChatColor.GRAY + "- Piglin Brutes: " + (killed >= 10 ? ChatColor.GREEN : ChatColor.of("#FFA07A")) + killed + "/10");
         } else if (mission instanceof Mission24) {
             lore.add("");
             lore.add(ChatColor.GRAY + "- Riesgo Mortal: " + (data.isCompleted() ? ChatColor.GREEN + "✔" : ChatColor.RED + "✖"));
@@ -374,8 +414,8 @@ public class MissionGUI implements Listener {
             lore.add(ChatColor.of("#FFCC99") + "Progreso:");
             int witherSkeletons = data.getProgressInt("elite_wither_skeletons_killed");
             int piglins = data.getProgressInt("elite_piglins_killed");
-            lore.add(ChatColor.GRAY + "- Elite Wither Skeletons: " + (witherSkeletons >= 10 ? ChatColor.GREEN : ChatColor.of("#FFA07A")) + witherSkeletons + "/10");
-            lore.add(ChatColor.GRAY + "- Elite Piglins: " + (piglins >= 10 ? ChatColor.GREEN : ChatColor.of("#FFA07A")) + piglins + "/10");
+            lore.add(ChatColor.GRAY + "- Elite Wither Skeletons: " + (witherSkeletons >= 35 ? ChatColor.GREEN : ChatColor.of("#FFA07A")) + witherSkeletons + "/35");
+            lore.add(ChatColor.GRAY + "- Elite Piglins: " + (piglins >= 40 ? ChatColor.GREEN : ChatColor.of("#FFA07A")) + piglins + "/40");
         } else if (mission instanceof Mission26 m26) {
             lore.add("");
             lore.add(ChatColor.of("#FFCC99") + "Bloques Rotos:");
@@ -387,7 +427,7 @@ public class MissionGUI implements Listener {
             }
         } else if (mission instanceof Mission27) {
             lore.add("");
-            lore.add(ChatColor.GRAY + "- Objetivo Eliminado: " + (data.isCompleted() ? ChatColor.GREEN + "✔" : ChatColor.RED + "✖"));
+            lore.add(ChatColor.GRAY + "- Prieto Eliminado: " + (data.isCompleted() ? ChatColor.GREEN + "✔" : ChatColor.RED + "✖"));
         } else if (mission instanceof Mission28) {
             lore.add("");
             lore.add(ChatColor.of("#FFCC99") + "Progreso de armadura:");
@@ -416,9 +456,9 @@ public class MissionGUI implements Listener {
             long ticks = player.getStatistic(Statistic.PLAY_ONE_MINUTE);
             long hoursPlayed = ticks / (20 * 60 * 60);
 
-            String color = hoursPlayed >= 200 ? ChatColor.GREEN.toString() : ChatColor.of("#FFA07A").toString();
+            String color = hoursPlayed >= 300 ? ChatColor.GREEN.toString() : ChatColor.of("#FFA07A").toString();
 
-            lore.add(ChatColor.GRAY + "- Horas jugadas: " + color + hoursPlayed + ChatColor.of("#FFE4B5") + "/160");
+            lore.add(ChatColor.GRAY + "- Horas jugadas: " + color + hoursPlayed + ChatColor.of("#FFE4B5") + "/300");
         } else if (mission instanceof Mission30) {
             lore.add("");
             lore.add(ChatColor.of("#FFCC99") + "Progreso:");

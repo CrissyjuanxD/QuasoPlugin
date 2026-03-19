@@ -40,7 +40,13 @@ public class MissionRewardHandler implements Listener {
         Player player = event.getPlayer();
         ItemStack item = player.getInventory().getItemInMainHand();
 
-        if (!isMissionToken(item)) return;
+        if (!isMissionToken(item)) {
+            player.sendMessage(ChatColor.RED + "✖ " + ChatColor.GRAY + "Solo puedes interactuar usando una " +
+                    ChatColor.GOLD + ChatColor.BOLD + "Ficha de Misión" + ChatColor.GRAY +
+                    ", las cuales se consiguen completando misiones, para recibir tu recompensa.");
+            player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_GUITAR, 1.0f, 0.6f);
+            return;
+        }
 
         int missionNumber = getMissionNumberFromToken(item);
         if (missionNumber == -1) return;

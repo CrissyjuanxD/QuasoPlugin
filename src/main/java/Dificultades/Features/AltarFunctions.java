@@ -52,7 +52,7 @@ public class AltarFunctions implements Listener, CommandExecutor, TabCompleter {
             { // Layer 1
                     {Material.HONEY_BLOCK, Material.HONEYCOMB_BLOCK, Material.HONEYCOMB_BLOCK, Material.HONEYCOMB_BLOCK, Material.HONEY_BLOCK},
                     {Material.HONEYCOMB_BLOCK, Material.HONEY_BLOCK, Material.HONEYCOMB_BLOCK, Material.HONEY_BLOCK, Material.HONEYCOMB_BLOCK},
-                    {Material.HONEYCOMB_BLOCK, Material.HONEYCOMB_BLOCK, Material.HONEYCOMB_BLOCK, Material.HONEYCOMB_BLOCK, Material.HONEYCOMB_BLOCK},
+                    {Material.HONEYCOMB_BLOCK, Material.HONEYCOMB_BLOCK, Material.BEDROCK, Material.HONEYCOMB_BLOCK, Material.HONEYCOMB_BLOCK},
                     {Material.HONEYCOMB_BLOCK, Material.HONEY_BLOCK, Material.HONEYCOMB_BLOCK, Material.HONEY_BLOCK, Material.HONEYCOMB_BLOCK},
                     {Material.HONEY_BLOCK, Material.HONEYCOMB_BLOCK, Material.HONEYCOMB_BLOCK, Material.HONEYCOMB_BLOCK, Material.HONEY_BLOCK}
             },

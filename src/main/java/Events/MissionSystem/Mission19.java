@@ -34,7 +34,7 @@ public class Mission19 implements Mission, Listener {
     public String getName() { return "Vida Opaca"; }
 
     @Override
-    public String getDescription() { return "Rompe 10 Creaking Hearts en un Pale Garden."; }
+    public String getDescription() { return "Rompe 35 Creaking Hearts en un Pale Garden."; }
 
     @Override
     public int getMissionNumber() { return 19; }
@@ -44,10 +44,10 @@ public class Mission19 implements Mission, Listener {
         List<ItemStack> rewards = new ArrayList<>();
 
         ItemStack coins = EconomyItems.createVithiumCoin();
-        coins.setAmount(12);
+        coins.setAmount(14);
         ItemStack potion = CustomPotions.getSplashAbsorptionXPotion();
         potion.setAmount(1);
-        ItemStack gapple = new ItemStack(Material.GOLDEN_APPLE, 12);
+        ItemStack gapple = new ItemStack(Material.GOLDEN_APPLE, 20);
         ItemStack xpFill = new ItemStack(Material.EXPERIENCE_BOTTLE, 1);
 
         for (int i = 0; i < 27; i++) {
@@ -86,12 +86,13 @@ public class Mission19 implements Mission, Listener {
 
         int broken = data.getProgressInt("hearts_broken");
 
-        if (broken < 15) {
+        if (broken < 35) {
             broken++;
             data.setProgressValue("hearts_broken", broken);
+            event.setDropItems(false);
             missionHandler.saveData(player, 19, data);
 
-            if (broken >= 15) {
+            if (broken >= 35) {
                 successNotification.showSuccess(player);
                 missionHandler.completeMission(player, 19);
             } else {
@@ -99,7 +100,7 @@ public class Mission19 implements Mission, Listener {
                         ChatColor.of("#FFCC99") + "Creaking Hearts: " +
                         ChatColor.of("#FFA07A") + broken +
                         ChatColor.of("#FFE4B5") + "/" +
-                        ChatColor.of("#FFA07A") + "15";
+                        ChatColor.of("#FFA07A") + "35";
                 actionBarHandler.sendActionBar(player, msg);
             }
         }

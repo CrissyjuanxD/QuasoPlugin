@@ -7,6 +7,7 @@ import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Sound;
+import org.bukkit.SoundCategory;
 import org.bukkit.command.CommandSender;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
@@ -307,8 +308,27 @@ public class MissionHandler implements Listener {
                 missionName
         );
 
-        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "tellraw @a " + jsonMessage);
-        player.playSound(player.getLocation(), Sound.UI_TOAST_CHALLENGE_COMPLETE, 1.0f, 1.0f);
+        String consoleMessage = player.getName() + " ha completado la misión [" + missionName + "]";
+        plugin.getLogger().info(consoleMessage);
+        for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
+            try {
+                Bukkit.dispatchCommand(Bukkit.getConsoleSender(),
+                        "tellraw " + onlinePlayer.getName() + " " + jsonMessage);
+
+                if (onlinePlayer.equals(player)) {
+                    onlinePlayer.playSound(player.getLocation(),
+                            Sound.UI_TOAST_CHALLENGE_COMPLETE, 1.0f, 1.0f);
+                } else {
+                    try {
+                        onlinePlayer.playSound(onlinePlayer.getLocation(), Sound.BLOCK_NOTE_BLOCK_IRON_XYLOPHONE, SoundCategory.MASTER, 1f, 2.0f);
+                    } catch (Exception ex) {
+                        plugin.getLogger().warning("Error al reproducir sonido personalizado: " + ex.getMessage());
+                    }
+                }
+            } catch (Exception e) {
+                plugin.getLogger().warning("Error al notificar al jugador: " + e.getMessage());
+            }
+        }
 
         long completedCount = playerCache.get(player.getUniqueId()).values().stream()
                 .filter(MissionData::isCompleted).count();

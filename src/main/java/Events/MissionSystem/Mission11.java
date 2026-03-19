@@ -38,7 +38,7 @@ public class Mission11 implements Mission, Listener {
 
     @Override
     public String getDescription() {
-        return "Mata a 10 Elite Spider y\n10 Elite Skeletons.";
+        return "Mata a 30 Elite Spider y\n30 Elite Skeletons.";
     }
 
     @Override
@@ -51,10 +51,10 @@ public class Mission11 implements Mission, Listener {
         List<ItemStack> rewards = new ArrayList<>();
 
         ItemStack coins = EconomyItems.createVithiumCoin();
-        coins.setAmount(16);
+        coins.setAmount(18);
         ItemStack potion = CustomPotions.getSplashRegenerationIIIPotion();
         potion.setAmount(1);
-        ItemStack diamondBlocks = new ItemStack(Material.DIAMOND_BLOCK, 6);
+        ItemStack diamondBlocks = new ItemStack(Material.DIAMOND_BLOCK, 8);
         ItemStack xpFill = new ItemStack(Material.EXPERIENCE_BOTTLE, 1);
 
         for (int i = 0; i < 27; i++) {
@@ -129,11 +129,11 @@ public class Mission11 implements Mission, Listener {
         int skeletons = data.getProgressInt("elite_skeletons_killed");
         boolean updated = false;
 
-        if (isSpider && spiders < 10) {
+        if (isSpider && spiders < 30) {
             spiders++;
             data.setProgressValue("elite_spiders_killed", spiders);
             updated = true;
-        } else if (isSkeleton && skeletons < 10) {
+        } else if (isSkeleton && skeletons < 30) {
             skeletons++;
             data.setProgressValue("elite_skeletons_killed", skeletons);
             updated = true;
@@ -142,17 +142,17 @@ public class Mission11 implements Mission, Listener {
         if (updated) {
             missionHandler.saveData(killer, 11, data);
 
-            if (spiders >= 10 && skeletons >= 10) {
+            if (spiders >= 30 && skeletons >= 30) {
                 successNotification.showSuccess(killer);
                 missionHandler.completeMission(killer, 11);
             } else {
-                String spiderColor = spiders >= 10 ? ChatColor.GREEN.toString() : ChatColor.of("#FFA07A").toString();
-                String skeletonColor = skeletons >= 10 ? ChatColor.GREEN.toString() : ChatColor.of("#FFA07A").toString();
+                String spiderColor = spiders >= 30 ? ChatColor.GREEN.toString() : ChatColor.of("#FFA07A").toString();
+                String skeletonColor = skeletons >= 30 ? ChatColor.GREEN.toString() : ChatColor.of("#FFA07A").toString();
 
                 String msg = ChatColor.GOLD + "۞ " +
-                        ChatColor.of("#FFCC99") + "Elite Spiders: " + spiderColor + spiders + ChatColor.of("#FFE4B5") + "/10" +
+                        ChatColor.of("#FFCC99") + "Elite Spiders: " + spiderColor + spiders + ChatColor.of("#FFE4B5") + "/30" +
                         ChatColor.GRAY + " | " +
-                        ChatColor.of("#FFCC99") + "Elite Skeletons: " + skeletonColor + skeletons + ChatColor.of("#FFE4B5") + "/10";
+                        ChatColor.of("#FFCC99") + "Elite Skeletons: " + skeletonColor + skeletons + ChatColor.of("#FFE4B5") + "/30";
                 actionBarHandler.sendActionBar(killer, msg);
             }
         }

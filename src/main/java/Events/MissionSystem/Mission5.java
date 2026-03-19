@@ -38,7 +38,7 @@ public class Mission5 implements Mission, Listener {
 
     @Override
     public String getDescription() {
-        return "Mata a 15 Elite Zombies.";
+        return "Mata a 25 Elite Zombies.";
     }
 
     @Override
@@ -51,7 +51,7 @@ public class Mission5 implements Mission, Listener {
         List<ItemStack> rewards = new ArrayList<>();
 
         ItemStack coins = EconomyItems.createVithiumCoin();
-        coins.setAmount(13);
+        coins.setAmount(17);
 
         ItemStack corruptedSteak = DayOneChanges.corruptedSteak();
         corruptedSteak.setAmount(25);
@@ -107,7 +107,7 @@ public class Mission5 implements Mission, Listener {
         MissionData data = missionHandler.getData(killer, 5);
         if (!data.isActive() || data.isCompleted()) return;
         int killed = data.getProgressInt("elite_zombies_killed");
-        int target = 15;
+        int target = 25;
         if (killed < target) {
             killed++;
             data.setProgressValue("elite_zombies_killed", killed);

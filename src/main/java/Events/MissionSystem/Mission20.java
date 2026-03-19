@@ -23,7 +23,7 @@ public class Mission20 implements Mission, Listener {
     private final SuccessNotification successNotification;
     private final ActionBarHandler actionBarHandler;
 
-    private static final int REQUIRED_AMOUNT = 20;
+    private static final int REQUIRED_AMOUNT = 35;
 
     public Mission20(JavaPlugin plugin, MissionHandler missionHandler) {
         this.plugin = plugin;
@@ -36,7 +36,7 @@ public class Mission20 implements Mission, Listener {
     public String getName() { return "Jugando a ser músico"; }
 
     @Override
-    public String getDescription() { return "Rompe 20 chilladores (Sculk Shriekers) en el bioma Deep Dark."; }
+    public String getDescription() { return "Rompe 35 chilladores (Sculk Shriekers) en el bioma Deep Dark."; }
 
     @Override
     public int getMissionNumber() { return 20; }
@@ -45,7 +45,7 @@ public class Mission20 implements Mission, Listener {
     public List<ItemStack> getRewards() {
         List<ItemStack> rewards = new ArrayList<>();
         ItemStack coins = EconomyItems.createVithiumCoin();
-        coins.setAmount(15);
+        coins.setAmount(16);
         ItemStack goldenApples = new ItemStack(Material.ENCHANTED_GOLDEN_APPLE, 5);
         ItemStack artefact = EconomyItems.createYunqueReparadorNivel2();
         artefact.setAmount(1);

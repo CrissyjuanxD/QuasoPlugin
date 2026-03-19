@@ -69,9 +69,9 @@ public class Mission1 implements Mission, Listener {
         List<ItemStack> rewards = new ArrayList<>();
 
         ItemStack coins = EconomyItems.createVithiumCoin();
-        coins.setAmount(16);
+        coins.setAmount(20);
         ItemStack excavator = new ItemStack(ExcavatorItem.createExcavator());
-        ItemStack en_goldenapple = new ItemStack(Material.ENCHANTED_GOLDEN_APPLE, 3);
+        ItemStack en_goldenapple = new ItemStack(Material.ENCHANTED_GOLDEN_APPLE, 5);
 
         ItemStack xpFill = new ItemStack(Material.EXPERIENCE_BOTTLE, 1);
         for (int i = 0; i < 27; i++) {
@@ -96,6 +96,43 @@ public class Mission1 implements Mission, Listener {
     @Override
     public void checkCompletion(String playerName) {}
 
+    private ItemStack getRawDrop(Material oreType) {
+        switch (oreType) {
+            case COAL_ORE:
+            case DEEPSLATE_COAL_ORE:
+                return new ItemStack(Material.COAL, 1);
+            case COPPER_ORE:
+            case DEEPSLATE_COPPER_ORE:
+                return new ItemStack(Material.RAW_COPPER, 1);
+            case IRON_ORE:
+            case DEEPSLATE_IRON_ORE:
+                return new ItemStack(Material.RAW_IRON, 1);
+            case GOLD_ORE:
+            case DEEPSLATE_GOLD_ORE:
+                return new ItemStack(Material.RAW_GOLD, 1);
+            case LAPIS_ORE:
+            case DEEPSLATE_LAPIS_ORE:
+                return new ItemStack(Material.LAPIS_LAZULI, 4 + (int)(Math.random() * 5));
+            case REDSTONE_ORE:
+            case DEEPSLATE_REDSTONE_ORE:
+                return new ItemStack(Material.REDSTONE, 4 + (int)(Math.random() * 2));
+            case DIAMOND_ORE:
+            case DEEPSLATE_DIAMOND_ORE:
+                return new ItemStack(Material.DIAMOND, 1);
+            case EMERALD_ORE:
+            case DEEPSLATE_EMERALD_ORE:
+                return new ItemStack(Material.EMERALD, 1);
+            case NETHER_QUARTZ_ORE:
+                return new ItemStack(Material.QUARTZ, 1);
+            case NETHER_GOLD_ORE:
+                return new ItemStack(Material.GOLD_NUGGET, 2 + (int)(Math.random() * 5));
+            case ANCIENT_DEBRIS:
+                return new ItemStack(Material.NETHERITE_SCRAP, 1);
+            default:
+                return null;
+        }
+    }
+
     @EventHandler
     public void onBlockBreak(BlockBreakEvent event) {
         Player player = event.getPlayer();
@@ -103,7 +140,6 @@ public class Mission1 implements Mission, Listener {
 
         if (!data.isActive() || data.isCompleted()) return;
 
-        // Verificar si está usando Toque de Seda
         ItemStack tool = player.getInventory().getItemInMainHand();
         if (tool == null || !tool.hasItemMeta() || !tool.getItemMeta().hasEnchant(Enchantment.SILK_TOUCH)) {
             return;
@@ -111,17 +147,21 @@ public class Mission1 implements Mission, Listener {
 
         Material type = event.getBlock().getType();
 
-        // Verificar si el bloque es uno de los 19 ores
         if (!getRequiredOres().contains(type)) return;
 
         int current = data.getProgressInt("ore_" + type.name());
         int target = 10;
 
         if (current < target) {
+            event.setDropItems(false);
+            ItemStack rawDrop = getRawDrop(type);
+            if (rawDrop != null) {
+                event.getBlock().getWorld().dropItemNaturally(event.getBlock().getLocation(), rawDrop);
+            }
+
             current++;
             data.setProgressValue("ore_" + type.name(), current);
 
-            // Comprobar si TODOS los ores ya llegaron a 10
             boolean allCompleted = true;
             for (Material ore : getRequiredOres()) {
                 if (data.getProgressInt("ore_" + ore.name()) < target) {
@@ -137,8 +177,7 @@ public class Mission1 implements Mission, Listener {
             } else {
                 missionHandler.saveData(player, 1, data);
 
-                // Mensaje en Action Bar dinámico y limpio
-                String oreName = type.name().toLowerCase().replace("deepslate_", "d. ").replace("_ore", "").replace("_", " ");
+                String oreName = type.name().toLowerCase().replace("deepslate_", "deep. ").replace("_ore", "").replace("_", " ");
                 oreName = oreName.substring(0, 1).toUpperCase() + oreName.substring(1);
 
                 String msg = ChatColor.GOLD + "۞ " +

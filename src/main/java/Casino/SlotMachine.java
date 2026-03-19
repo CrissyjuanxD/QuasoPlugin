@@ -26,6 +26,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Transformation;
+import org.joml.Quaternionf;
 
 import java.io.File;
 import java.io.IOException;
@@ -64,6 +65,7 @@ public class SlotMachine implements Listener {
     private final Map<Location, List<ItemDisplay>> activeDisplays = new ConcurrentHashMap<>();
     private final Map<Location, BukkitRunnable> activeAnimations = new ConcurrentHashMap<>();
     private final Map<Location, AnimationState> animationStates = new ConcurrentHashMap<>();
+    private final Map<Location, Long> animationStartTimes = new ConcurrentHashMap<>();
 
     private final File configFile;
     private FileConfiguration config;
@@ -147,6 +149,13 @@ public class SlotMachine implements Listener {
         event.setCancelled(true);
         Player player = event.getPlayer();
 
+        if (activeAnimations.containsKey(loc) && animationStartTimes.containsKey(loc)) {
+            long timeElapsed = System.currentTimeMillis() - animationStartTimes.get(loc);
+            if (timeElapsed > 8000) {
+                forceCleanup(null, loc);
+            }
+        }
+
         if (machineUsers.containsKey(loc) && !machineUsers.get(loc).equals(player.getUniqueId())) {
             Player user = Bukkit.getPlayer(machineUsers.get(loc));
             String name = (user != null) ? user.getName() : "otro jugador";
@@ -155,7 +164,7 @@ public class SlotMachine implements Listener {
         }
 
         if (activeAnimations.containsKey(loc) && !isSpinning.getOrDefault(player.getUniqueId(), false)) {
-            player.sendMessage(ChatColor.of("#FF6B6B") + "۞ La máquina está terminando una animación.");
+            player.sendMessage(ChatColor.of("#FF6B6B") + "۞ La máquina está terminando una animación. Espera un momento.");
             return;
         }
 
@@ -249,10 +258,6 @@ public class SlotMachine implements Listener {
                 }
             }
         }
-
-        if (!activeDisplays.containsKey(machineLoc)) {
-            createItemDisplays(machineLoc);
-        }
     }
 
     private boolean isReelSlot(int slot) {
@@ -300,11 +305,8 @@ public class SlotMachine implements Listener {
     public void onInventoryClick(InventoryClickEvent e) {
         Player p = (Player) e.getWhoClicked();
 
-        // FIX BEDROCK: Usar Metadata para validar la sesión en lugar del Title
         if (!p.hasMetadata("slot_machine_location")) return;
-
         if (e.getView().getTopInventory().getSize() != 54) return;
-
         if (e.getClickedInventory() == p.getInventory()) return;
 
         if (e.getSlot() == tokenSlot) {
@@ -376,12 +378,15 @@ public class SlotMachine implements Listener {
             for(int j=0; j<3; j++) state.currentSymbols[i][j] = symbols[r.nextInt(symbols.length)];
         }
 
-        if (machineLoc != null) animationStates.put(machineLoc, state);
-
         if (machineLoc != null) {
+            // Asegurarnos de borrar CUALQUIER display viejo antes de empezar uno nuevo
+            cleanupDisplays(machineLoc);
+
+            animationStates.put(machineLoc, state);
+            animationStartTimes.put(machineLoc, System.currentTimeMillis());
             machineLoc.getWorld().playSound(machineLoc, Sound.BLOCK_PISTON_EXTEND, 1.0f, 1.0f);
             machineLoc.getWorld().playSound(machineLoc, Sound.BLOCK_NOTE_BLOCK_PLING, 1.0f, 1.2f);
-            createItemDisplays(machineLoc);
+            createItemDisplays(machineLoc, p);
         }
 
         BukkitRunnable task = new BukkitRunnable() {
@@ -408,7 +413,6 @@ public class SlotMachine implements Listener {
                         }
                     }
 
-                    // FIX BEDROCK (Validación visual por metadata en vez de Title)
                     if (p.hasMetadata("slot_machine_location") && p.getOpenInventory().getTopInventory().getSize() == 54) {
                         updateGUIFromAnimationState(inv, state);
                     }
@@ -439,7 +443,6 @@ public class SlotMachine implements Listener {
     }
 
     private void finishSpin(Player p, Inventory inv, Location loc, AnimationState state) {
-        isSpinning.put(p.getUniqueId(), false);
         Material[] results = state.finalResults;
 
         for(int i=0; i<3; i++) {
@@ -461,18 +464,19 @@ public class SlotMachine implements Listener {
             new BukkitRunnable() {
                 @Override
                 public void run() {
-                    if (!isSpinning.getOrDefault(p.getUniqueId(), false)) {
-                        cleanupDisplays(loc);
-                        animationStates.remove(loc);
-                        activeAnimations.remove(loc);
+                    cleanupDisplays(loc); // Limpiar al instante
+                    animationStates.remove(loc);
+                    activeAnimations.remove(loc);
+                    animationStartTimes.remove(loc);
+                    isSpinning.put(p.getUniqueId(), false); // Liberar giro AL FINAL
 
-                        // FIX BEDROCK: Liberar la mesa automáticamente al terminar si el jugador cerró el inventario durante el giro
-                        if (!p.hasMetadata("slot_machine_location")) {
-                            forceCleanup(p, loc);
-                        }
+                    if (!p.hasMetadata("slot_machine_location")) {
+                        forceCleanup(p, loc);
                     }
                 }
-            }.runTaskLater(plugin, 100L);
+            }.runTaskLater(plugin, 40L); // Reducido a 2 segundos exactos para que la transición sea fluida
+        } else {
+            isSpinning.put(p.getUniqueId(), false);
         }
     }
 
@@ -535,8 +539,6 @@ public class SlotMachine implements Listener {
 
         Location loc = (Location) p.getMetadata("slot_machine_location").get(0).value();
 
-        // FIX BEDROCK: Si el jugador se va, removemos el flag de metadata para que
-        // el timer `finishSpin` sepa que debe limpiar la mesa al terminar la animación.
         p.removeMetadata("slot_machine_location", plugin);
 
         if (!activeAnimations.containsKey(loc)) {
@@ -570,38 +572,85 @@ public class SlotMachine implements Listener {
             if (activeAnimations.containsKey(l)) activeAnimations.get(l).cancel();
         });
         toRemove.forEach(activeAnimations::remove);
+        toRemove.forEach(animationStartTimes::remove);
     }
 
     private void forceCleanup(Player p, Location loc) {
+        if (p != null) isSpinning.remove(p.getUniqueId());
         machineUsers.remove(loc);
-        isSpinning.remove(p.getUniqueId());
         if (activeAnimations.containsKey(loc)) activeAnimations.get(loc).cancel();
         activeAnimations.remove(loc);
         animationStates.remove(loc);
+        animationStartTimes.remove(loc);
         cleanupDisplays(loc);
         manager.setGameActive(loc, false);
     }
 
-    private void createItemDisplays(Location machineLoc) {
-        if (activeDisplays.containsKey(machineLoc)) cleanupDisplays(machineLoc);
+    private void createItemDisplays(Location machineLoc, Player player) {
         if (!machineLoc.getChunk().isLoaded()) machineLoc.getChunk().load();
 
         List<ItemDisplay> displays = new ArrayList<>();
-        double[] xOffsets = {-0.7, 0.0, 0.7};
 
-        for(int i=0; i<3; i++) {
-            Location dLoc = machineLoc.clone().add(0.5 + xOffsets[i], 2.0, 0.5);
+        // Normalizamos el Yaw del jugador (0 a 360)
+        double yaw = player.getLocation().getYaw();
+        yaw = (yaw % 360 + 360) % 360;
+
+        // "Redondear" a la dirección cardinal más cercana (Norte, Sur, Este, Oeste)
+        double cardinalYaw;
+        if (yaw >= 45 && yaw < 135) {
+            cardinalYaw = 90.0;  // Oeste
+        } else if (yaw >= 135 && yaw < 225) {
+            cardinalYaw = 180.0; // Norte
+        } else if (yaw >= 225 && yaw < 315) {
+            cardinalYaw = 270.0; // Este
+        } else {
+            cardinalYaw = 0.0;   // Sur
+        }
+
+        // Usamos el Yaw redondeado para los cálculos
+        double radYaw = Math.toRadians(cardinalYaw);
+
+        // Vector horizontal (derecha/izquierda relativos a la cara del bloque)
+        double dx = Math.cos(radYaw);
+        double dz = Math.sin(radYaw);
+
+        // Vector de profundidad (empujar "adentro" del bloque)
+        double pushBack = 0.2;
+        double px = -Math.sin(radYaw) * pushBack;
+        double pz = Math.cos(radYaw) * pushBack;
+
+        // Rotación exacta fijada a los ejes
+        float displayYaw = (float) (Math.toRadians(-cardinalYaw + 180));
+        Quaternionf rotation = new Quaternionf().rotateY(displayYaw);
+
+        double spacing = 0.325;
+        double heightY = 1.525;
+        float scaleSize = 0.275f;
+
+        for(int i = 0; i < 3; i++) {
+            int multiplier = i - 1;
+
+            Location dLoc = machineLoc.clone().add(
+                    0.5 + (dx * spacing * multiplier) + px,
+                    heightY,
+                    0.5 + (dz * spacing * multiplier) + pz
+            );
+
             ItemDisplay d = machineLoc.getWorld().spawn(dLoc, ItemDisplay.class, display -> {
                 display.setItemStack(new ItemStack(symbols[0]));
-                display.setBillboard(Display.Billboard.VERTICAL);
+                display.setBillboard(Display.Billboard.FIXED); // Debe mantenerse en FIXED para respetar nuestra rotación manual
+
                 Transformation t = display.getTransformation();
-                t.getScale().set(0.5f);
+                t.getScale().set(scaleSize);
+                t.getLeftRotation().set(rotation);
                 display.setTransformation(t);
 
                 display.setPersistent(true);
                 display.setInvulnerable(true);
                 display.setGlowing(true);
                 display.setBrightness(new Display.Brightness(15, 15));
+
+                display.addScoreboardTag("slot_display");
             });
             displays.add(d);
         }
@@ -625,6 +674,18 @@ public class SlotMachine implements Listener {
         if (activeDisplays.containsKey(loc)) {
             activeDisplays.get(loc).forEach(Entity::remove);
             activeDisplays.remove(loc);
+        }
+
+        // LIMPIEZA ABSOLUTA MEDIANTE TAGS
+        if (loc.getWorld() != null && loc.getChunk().isLoaded()) {
+            Location searchLoc = loc.clone().add(0.5, 2.0, 0.5);
+            for (Entity e : loc.getChunk().getEntities()) {
+                if (e instanceof ItemDisplay && e.getScoreboardTags().contains("slot_display")) {
+                    if (e.getLocation().distanceSquared(searchLoc) < 4.0) {
+                        e.remove();
+                    }
+                }
+            }
         }
     }
 
@@ -736,6 +797,9 @@ public class SlotMachine implements Listener {
                 break;
             case "arco_hielo":
                 item = iceBowItem.createIceBow();
+                break;
+            case "tarta_calabaza_mejorada":
+                item = DayOneChanges.improvedPumpkinPie();
                 break;
         }
 

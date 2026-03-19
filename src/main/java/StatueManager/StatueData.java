@@ -20,9 +20,11 @@ public class StatueData {
     private static final NamespacedKey KEY_EFF_TYPE = new NamespacedKey("viciont", "statue_eff_type");
     private static final NamespacedKey KEY_EFF_AMP = new NamespacedKey("viciont", "statue_eff_amp");
 
-    // Nuevas Keys
     private static final NamespacedKey KEY_VISIBLE = new NamespacedKey("viciont", "statue_visible");
     private static final NamespacedKey KEY_INVULNERABLE = new NamespacedKey("viciont", "statue_invulnerable");
+
+    // Nueva Key para el Anti-Grief
+    private static final NamespacedKey KEY_ANTI_GRIEF = new NamespacedKey("viciont", "statue_anti_grief");
 
     private PersistentDataContainer container;
 
@@ -50,7 +52,7 @@ public class StatueData {
         setHpMax(10);
         setHpCurrent(10);
         setGlowColor(ChatColor.WHITE); // Default
-        setEffect(PotionEffectType.SPEED, 0);
+        setEffect(PotionEffectType.SPEED, 0); // Esto automáticamente desactiva el AntiGrief
         setVisible(true);
         setInvulnerable(false);
     }
@@ -69,7 +71,6 @@ public class StatueData {
     public void setHpCurrent(int val) { container.set(KEY_HP_CUR, PersistentDataType.INTEGER, val); }
     public int getHpCurrent() { return container.getOrDefault(KEY_HP_CUR, PersistentDataType.INTEGER, 10); }
 
-    // Color: Si es null, significa OFF
     public void setGlowColor(ChatColor color) {
         String val = (color == null) ? "OFF" : color.name();
         container.set(KEY_COLOR, PersistentDataType.STRING, val);
@@ -77,17 +78,18 @@ public class StatueData {
 
     public ChatColor getGlowColor() {
         String val = container.getOrDefault(KEY_COLOR, PersistentDataType.STRING, "WHITE");
-        if (val.equals("OFF")) return null; // Retorna null si está desactivado
+        if (val.equals("OFF")) return null;
         try { return ChatColor.valueOf(val); }
         catch (Exception e) { return ChatColor.WHITE; }
     }
 
+    // Al asignar un efecto de poción, se desactiva el AntiGrief por seguridad.
     public void setEffect(PotionEffectType type, int amp) {
         if (type != null) {
             container.set(KEY_EFF_TYPE, PersistentDataType.STRING, type.getName());
             container.set(KEY_EFF_AMP, PersistentDataType.INTEGER, amp);
+            setAntiGrief(false); // Excluyente
         } else {
-            // Si pasamos null, borramos el efecto
             container.set(KEY_EFF_TYPE, PersistentDataType.STRING, "NONE");
             container.set(KEY_EFF_AMP, PersistentDataType.INTEGER, 0);
         }
@@ -102,10 +104,20 @@ public class StatueData {
     public void setEffectAmplifier(int amp) { container.set(KEY_EFF_AMP, PersistentDataType.INTEGER, amp); }
     public int getEffectAmplifier() { return container.getOrDefault(KEY_EFF_AMP, PersistentDataType.INTEGER, 0); }
 
-    // Nuevas Opciones
     public void setVisible(boolean val) { container.set(KEY_VISIBLE, PersistentDataType.BYTE, val ? (byte)1 : (byte)0); }
     public boolean isVisible() { return container.getOrDefault(KEY_VISIBLE, PersistentDataType.BYTE, (byte)1) == 1; }
 
     public void setInvulnerable(boolean val) { container.set(KEY_INVULNERABLE, PersistentDataType.BYTE, val ? (byte)1 : (byte)0); }
     public boolean isInvulnerable() { return container.getOrDefault(KEY_INVULNERABLE, PersistentDataType.BYTE, (byte)0) == 1; }
+
+    // --- NUEVO: Anti Grief ---
+    public void setAntiGrief(boolean val) {
+        container.set(KEY_ANTI_GRIEF, PersistentDataType.BYTE, val ? (byte)1 : (byte)0);
+        if (val) {
+            // Si activamos Anti-Grief, borramos el efecto de poción automáticamente
+            container.set(KEY_EFF_TYPE, PersistentDataType.STRING, "NONE");
+            container.set(KEY_EFF_AMP, PersistentDataType.INTEGER, 0);
+        }
+    }
+    public boolean isAntiGrief() { return container.getOrDefault(KEY_ANTI_GRIEF, PersistentDataType.BYTE, (byte)0) == 1; }
 }

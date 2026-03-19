@@ -39,7 +39,7 @@ public class Mission17 implements Mission, Listener {
 
     @Override
     public String getDescription() {
-        return "Mata a 20 Elite Endermans y\n20 Elite Creepers.";
+        return "Mata a 40 Elite Endermans y\n40 Elite Creepers.";
     }
 
     @Override
@@ -52,7 +52,7 @@ public class Mission17 implements Mission, Listener {
         List<ItemStack> rewards = new ArrayList<>();
 
         ItemStack coins = EconomyItems.createVithiumCoin();
-        coins.setAmount(19);
+        coins.setAmount(20);
 
         ItemStack sharpBook = new ItemStack(Material.ENCHANTED_BOOK);
         EnchantmentStorageMeta meta = (EnchantmentStorageMeta) sharpBook.getItemMeta();
@@ -133,11 +133,11 @@ public class Mission17 implements Mission, Listener {
         int creepers = data.getProgressInt("elite_creepers_killed");
         boolean updated = false;
 
-        if (isEnderman && endermen < 20) {
+        if (isEnderman && endermen < 40) {
             endermen++;
             data.setProgressValue("elite_endermen_killed", endermen);
             updated = true;
-        } else if (isCreeper && creepers < 20) {
+        } else if (isCreeper && creepers < 40) {
             creepers++;
             data.setProgressValue("elite_creepers_killed", creepers);
             updated = true;
@@ -146,17 +146,17 @@ public class Mission17 implements Mission, Listener {
         if (updated) {
             missionHandler.saveData(killer, 17, data);
 
-            if (endermen >= 20 && creepers >= 20) {
+            if (endermen >= 40 && creepers >= 40) {
                 successNotification.showSuccess(killer);
                 missionHandler.completeMission(killer, 17);
             } else {
-                String enderColor = endermen >= 20 ? ChatColor.GREEN.toString() : ChatColor.of("#FFA07A").toString();
-                String creeperColor = creepers >= 20 ? ChatColor.GREEN.toString() : ChatColor.of("#FFA07A").toString();
+                String enderColor = endermen >= 40 ? ChatColor.GREEN.toString() : ChatColor.of("#FFA07A").toString();
+                String creeperColor = creepers >= 40 ? ChatColor.GREEN.toString() : ChatColor.of("#FFA07A").toString();
 
                 String msg = ChatColor.GOLD + "۞ " +
-                        ChatColor.of("#FFCC99") + "Elite Endermans: " + enderColor + endermen + ChatColor.of("#FFE4B5") + "/20" +
+                        ChatColor.of("#FFCC99") + "Elite Endermans: " + enderColor + endermen + ChatColor.of("#FFE4B5") + "/40" +
                         ChatColor.GRAY + " | " +
-                        ChatColor.of("#FFCC99") + "Elite Creepers: " + creeperColor + creepers + ChatColor.of("#FFE4B5") + "/20";
+                        ChatColor.of("#FFCC99") + "Elite Creepers: " + creeperColor + creepers + ChatColor.of("#FFE4B5") + "/40";
                 actionBarHandler.sendActionBar(killer, msg);
             }
         }

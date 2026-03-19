@@ -4,29 +4,28 @@ import Bosses.QueenBeeHandler;
 import Dificultades.CustomMobs.*;
 import Dificultades.Features.AltarActivateEvent;
 import Handlers.DayHandler;
-import imp.crissyjuanxd.QuasoPlugin;
 import items.CorruptedGoldenApple;
-import items.EconomyItems;
+import net.md_5.bungee.api.ChatColor;
 import org.bukkit.*;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
-import org.bukkit.event.player.PlayerPortalEvent;
 import org.bukkit.event.raid.RaidSpawnWaveEvent;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemRarity;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scheduler.BukkitTask;
 import org.spectralmemories.bloodmoon.BloodmoonActuator;
 
 import java.util.*;
@@ -42,6 +41,7 @@ public class DayOneChanges implements Listener {
 
     // FEATURES DEL DÍA 2
     private final Map<LivingEntity, Long> trackedMobs = new HashMap<>();
+    private BukkitTask targetTask;
     // FEATURES DEL DÍA 4
     private final Map<Location, Long> altarCooldowns = new HashMap<>();
     private final GuardianBlaze blazespawmer;
@@ -80,7 +80,7 @@ public class DayOneChanges implements Listener {
             //APPLYS DEL DIA 2
             bombitaSpawner.apply();
             iceologerSpawner.apply();
-            Bukkit.getScheduler().runTaskTimer(plugin, this::updateTargets, 20, 20);
+            startTargetTask();
             //APPLYS DEL DIA 4
             blazespawmer.apply();
             guardianCorruptedSkeleton.apply();
@@ -98,6 +98,10 @@ public class DayOneChanges implements Listener {
             //REVERTS DEL DIA 2
             bombitaSpawner.revert();
             iceologerSpawner.revert();
+            if (targetTask != null && !targetTask.isCancelled()) {
+                targetTask.cancel();
+                targetTask = null;
+            }
             trackedMobs.clear();
             //rEVERTS DEL DIA 4
             blazespawmer.revert();
@@ -114,9 +118,48 @@ public class DayOneChanges implements Listener {
     public static ItemStack corruptedSteak() {
         ItemStack item = new ItemStack(Material.COOKED_BEEF);
         ItemMeta meta = item.getItemMeta();
-        meta.setDisplayName(ChatColor.DARK_PURPLE + "Carne Corrupta");
+        meta.setDisplayName(ChatColor.DARK_PURPLE + "" + ChatColor.BOLD + "Carne Corrupta");
+
+        List<String> lore = new ArrayList<>();
+        lore.add("");
+        lore.add(ChatColor.of("#ffcc99") + "Esta carne te otorga estos");
+        lore.add(ChatColor.of("#ffcc99") + "efectos" + ChatColor.GRAY + ":");
+        lore.add("");
+        lore.add(ChatColor.GRAY + "> " + ChatColor.of("#99cc33") + "Náuseas 1" + ChatColor.GRAY + " (" + ChatColor.of("#0099cc") + "10 s" + ChatColor.GRAY + ")");
+        lore.add(ChatColor.GRAY + "> " + ChatColor.of("#cc3300") + "Saturación 1" + ChatColor.GRAY + " (" + ChatColor.of("#0099cc") + "1.5 s" + ChatColor.GRAY + ")");
+        lore.add("");
+        meta.setLore(lore);
         meta.setCustomModelData(2);
         meta.setRarity(ItemRarity.EPIC);
+        meta.addEnchant(Enchantment.UNBREAKING, 1, true);
+        meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+
+        item.setItemMeta(meta);
+        return item;
+    }
+
+    public static ItemStack improvedPumpkinPie() {
+        ItemStack item = new ItemStack(Material.PUMPKIN_PIE);
+        ItemMeta meta = item.getItemMeta();
+
+        meta.setDisplayName(ChatColor.of("#FF8C00") + "" + ChatColor.BOLD + "Tarta de Calabaza Mejorada");
+
+        List<String> lore = new ArrayList<>();
+        lore.add("");
+        lore.add(ChatColor.of("#FFCC99") + "Esta tarta te otorga estos");
+        lore.add(ChatColor.of("#FFCC99") + "efectos" + ChatColor.GRAY + ":");
+        lore.add("");
+        lore.add(ChatColor.GRAY + "> " + ChatColor.of("#FFA500") + "Lentitud 1" + ChatColor.GRAY + " (" + ChatColor.of("#FFD700") + "10 s" + ChatColor.GRAY + ")");
+        lore.add(ChatColor.GRAY + "> " + ChatColor.of("#FF4500") + "Saturación 1" + ChatColor.GRAY + " (" + ChatColor.of("#FFD700") + "2.5 s" + ChatColor.GRAY + ")");
+        lore.add("");
+
+        meta.setLore(lore);
+        meta.setCustomModelData(3);
+        meta.setRarity(ItemRarity.EPIC);
+
+        meta.addEnchant(Enchantment.UNBREAKING, 1, true);
+        meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+
         item.setItemMeta(meta);
         return item;
     }
@@ -150,6 +193,26 @@ public class DayOneChanges implements Listener {
         Player player = event.getPlayer();
         player.addPotionEffect(new PotionEffect(PotionEffectType.NAUSEA, 200, 0, false, false, true));
         player.addPotionEffect(new PotionEffect(PotionEffectType.SATURATION, 30, 0, false, false, true));
+    }
+
+    @EventHandler
+    public void onPlayerEatPie(PlayerItemConsumeEvent event) {
+        if (!isApplied) return;
+
+        ItemStack item = event.getItem();
+        if (item.getType() != Material.PUMPKIN_PIE) return;
+
+        ItemMeta meta = item.getItemMeta();
+        // Verificamos que sea nuestra tarta (CustomModelData 3)
+        if (meta == null || !meta.hasCustomModelData() || meta.getCustomModelData() != 3) return;
+
+        Player player = event.getPlayer();
+
+        // Lentitud 1 por 10 segundos (200 ticks)
+        player.addPotionEffect(new PotionEffect(PotionEffectType.SLOWNESS, 200, 0, false, false, true));
+
+        // Saturación 1 por 2.5 segundos (50 ticks)
+        player.addPotionEffect(new PotionEffect(PotionEffectType.SATURATION, 50, 0, false, false, true));
     }
 
     @EventHandler
@@ -233,7 +296,7 @@ public class DayOneChanges implements Listener {
             }
 
             if (amount > 0) {
-                ItemStack tokens = items.EconomyItems.createVithiumToken();
+                ItemStack tokens = items.EconomyItems.createBloodFragment();
                 tokens.setAmount(amount);
                 event.getDrops().add(tokens);
             }
@@ -259,15 +322,9 @@ public class DayOneChanges implements Listener {
                     return;
                 }
 
-                for (Player p : loc.getWorld().getPlayers()) {
-                    if (p.getLocation().distanceSquared(loc) <= 40 * 40) {
-                        p.playSound(loc, Sound.MUSIC_DISC_TEARS, SoundCategory.RECORDS, 10.0f, 0.8f);
-                    }
-                }
-
                 spawnQueenBee(loc);
                 player.removePotionEffect(PotionEffectType.BAD_OMEN);
-                event.setCooldownSeconds(7200);
+                event.setCooldownSeconds(10800);
 
             } else {
                 player.sendMessage(net.md_5.bungee.api.ChatColor.RED + "۞ Necesitas Bad Omen para activar este altar.");
@@ -343,66 +400,104 @@ public class DayOneChanges implements Listener {
     // SISTEMA DE RAIDS
     //----------------------
 
+    private void startTargetTask() {
+        targetTask = new BukkitRunnable() {
+            @Override
+            public void run() {
+                if (trackedMobs.isEmpty()) return;
+                updateTargets();
+            }
+        }.runTaskTimer(plugin, 20L, 20L);
+    }
+
     @EventHandler
     public void onRaidWaveSpawn(RaidSpawnWaveEvent event) {
         if (!isApplied) return;
 
         int currentWave = event.getRaid().getSpawnedGroups();
 
-        if (random.nextDouble() <= 0.15) {
+        if (random.nextDouble() <= 0.16) {
             Bukkit.getScheduler().runTaskLater(plugin, () -> {
+                if (!isApplied) return;
+
                 sendRaidWarning(event);
-                spawnCorruptedMobs(event, "corruptedzombie", 12);
-                spawnCorruptedMobs(event, "corruptedspider", 10);
+                spawnCorruptedMobs(event, "corruptedzombie", 10);
+                spawnCorruptedMobs(event, "corruptedspider", 8);
             }, 40L);
         }
 
-        for (int i = 0; i < currentWave; i++) {
+        // 2. Reemplazo seguro de mobs por Bombitas
+        // Esperamos 1 tick para que la Raid se genere completamente antes de tocarla
+        Bukkit.getScheduler().runTaskLater(plugin, () -> {
+            if (!isApplied) return;
+
+            int replacedCount = 0;
+            // Evitamos reemplazar a los bosses de la raid (Evokers/Ravagers) si no es necesario, preferimos a los Vindicators/Pillagers
             for (Entity entity : event.getRaiders()) {
-                if (entity instanceof Raider) {
-                    Location spawnLocation = entity.getLocation();
-                    Creeper bombita = bombitaSpawner.spawnBombita(spawnLocation);
-                    trackedMobs.put(bombita, System.currentTimeMillis());
-                    break;
+                if (entity instanceof Raider && entity.isValid() && !entity.isDead()) {
+                    if (replacedCount < currentWave) {
+                        Location spawnLocation = entity.getLocation();
+                        Creeper bombita = bombitaSpawner.spawnBombita(spawnLocation);
+                        trackedMobs.put(bombita, System.currentTimeMillis());
+                        entity.remove();
+                        replacedCount++;
+                    } else {
+                        break;
+                    }
                 }
             }
-        }
+        }, 1L);
 
+        // 3. Iceologers a partir de la oleada 2
         if (currentWave >= 2) {
             int iceologerCount = random.nextInt(2) + 1;
 
             Bukkit.getScheduler().runTaskLater(plugin, () -> {
-                for (int i = 0; i < iceologerCount; i++) {
-                    for (Entity entity : event.getRaiders()) {
-                        if (entity instanceof Pillager) {
-                            Location spawnLocation = entity.getLocation();
+                if (!isApplied) return;
 
-                            Bukkit.dispatchCommand(Bukkit.getConsoleSender(),
-                                    "spawnvct iceologer " +
-                                            spawnLocation.getBlockX() + " " +
-                                            spawnLocation.getBlockY() + " " +
-                                            spawnLocation.getBlockZ());
+                int spawned = 0;
+                for (Entity entity : event.getRaiders()) {
+                    if (entity instanceof Pillager && entity.isValid() && !entity.isDead()) {
+                        if (spawned < iceologerCount) {
+                            Location spawnLocation = entity.getLocation();
+                            iceologerSpawner.spawnIceologer(spawnLocation);
+                            entity.remove();
+                            spawned++;
+                        } else {
                             break;
                         }
                     }
                 }
-            }, 80L);
+            }, 20L);
         }
     }
 
+    // Actualiza los objetivos dinámicamente
     private void updateTargets() {
-        for (Iterator<Map.Entry<LivingEntity, Long>> iterator = trackedMobs.entrySet().iterator(); iterator.hasNext(); ) {
+        Iterator<Map.Entry<LivingEntity, Long>> iterator = trackedMobs.entrySet().iterator();
+        while (iterator.hasNext()) {
             Map.Entry<LivingEntity, Long> entry = iterator.next();
             LivingEntity mob = entry.getKey();
 
-            if (mob.isDead() || !mob.isValid()) {
+            // Limpieza automática si el mob murió
+            if (mob == null || !mob.isValid() || mob.isDead()) {
                 iterator.remove();
                 continue;
             }
 
-            LivingEntity target = findTarget(mob);
-            if (target != null && mob instanceof Mob) {
-                ((Mob) mob).setTarget(target);
+            // Solo forzamos target si es un Mob con IA
+            if (mob instanceof Mob activeMob) {
+                LivingEntity currentTarget = activeMob.getTarget();
+
+                if (currentTarget != null && currentTarget.isValid() && !currentTarget.isDead()
+                        && (currentTarget instanceof Player || currentTarget instanceof Villager)) {
+                    continue;
+                }
+
+                LivingEntity newTarget = findTarget(mob);
+                if (newTarget != null) {
+                    activeMob.setTarget(newTarget);
+                }
             }
         }
     }
@@ -410,15 +505,25 @@ public class DayOneChanges implements Listener {
     private LivingEntity findTarget(Entity mob) {
         World world = mob.getWorld();
 
-        Player closestPlayer = world.getPlayers().stream()
-                .filter(p -> !p.isDead() && p.getGameMode() == GameMode.SURVIVAL)
-                .min(Comparator.comparingDouble(p -> p.getLocation().distanceSquared(mob.getLocation())))
-                .orElse(null);
+        // 1. Prioridad: Jugadores (Búsqueda rápida)
+        Player closestPlayer = null;
+        double minDistanceSq = Double.MAX_VALUE;
+
+        for (Player p : world.getPlayers()) {
+            if (p.getGameMode() == GameMode.SURVIVAL || p.getGameMode() == GameMode.ADVENTURE) {
+                double distSq = p.getLocation().distanceSquared(mob.getLocation());
+                if (distSq < minDistanceSq && distSq <= 2500) {
+                    minDistanceSq = distSq;
+                    closestPlayer = p;
+                }
+            }
+        }
 
         if (closestPlayer != null) {
             return closestPlayer;
         }
 
+        // 2. Secundaria: Aldeanos (Búsqueda lenta - solo si no hay jugadores)
         return world.getNearbyEntities(mob.getLocation(), 50, 50, 50).stream()
                 .filter(e -> e instanceof Villager && !e.isDead())
                 .map(e -> (LivingEntity) e)
@@ -444,16 +549,24 @@ public class DayOneChanges implements Listener {
         }
     }
 
-
+    // Obtener ubicaciones de spawn cerca de los Raiders
     private List<Location> getSpawnLocations(RaidSpawnWaveEvent event, int count) {
         List<Location> locations = new ArrayList<>();
         List<Entity> raiders = new ArrayList<>(event.getRaiders());
 
-        for (int i = 0; i < count && !raiders.isEmpty(); i++) {
+        if (raiders.isEmpty()) return locations;
+
+        for (int i = 0; i < count; i++) {
             Entity raider = raiders.get(random.nextInt(raiders.size()));
             Location spawnLocation = raider.getLocation().clone();
 
+            // Añade un pequeño desplazamiento aleatorio para dispersar los mobs
             spawnLocation.add(random.nextInt(6) - 3, 0, random.nextInt(6) - 3);
+
+            // Validar que no spawnee en bloque solido
+            int y = spawnLocation.getWorld().getHighestBlockYAt(spawnLocation);
+            spawnLocation.setY(y + 1);
+
             locations.add(spawnLocation);
         }
 
@@ -468,8 +581,9 @@ public class DayOneChanges implements Listener {
                 "{\"text\":\" Corrupted Mobs \",\"bold\":true,\"color\":\"dark_purple\"}," +
                 "{\"text\":\"\\u26a0\",\"bold\":true,\"color\":\"dark_red\"}]";
 
-        for (Player player : event.getRaid().getLocation().getWorld().getPlayers()) {
-            if (event.getRaid().getLocation().distanceSquared(player.getLocation()) <= 10000) {
+        Location raidLoc = event.getRaid().getLocation();
+        for (Player player : raidLoc.getWorld().getPlayers()) {
+            if (raidLoc.distanceSquared(player.getLocation()) <= 10000) {
                 Bukkit.dispatchCommand(Bukkit.getConsoleSender(),
                         "tellraw " + player.getName() + " " + jsonMessage);
 

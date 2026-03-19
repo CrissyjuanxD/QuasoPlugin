@@ -27,9 +27,7 @@ public class HabilidadesListener implements Listener {
     private final ActionBarHandler actionBar;
 
     private final Map<UUID, Integer> jumpCount = new HashMap<>();
-
     private final Set<UUID> protectNextLanding = new HashSet<>();
-    private final Map<UUID, Double> storedFallDistance = new HashMap<>();
 
     public HabilidadesListener(JavaPlugin plugin, HabilidadesManager manager, HabilidadesEffects effects) {
         this.plugin = plugin;
@@ -68,47 +66,63 @@ public class HabilidadesListener implements Listener {
     }
 
     @EventHandler
+    public void onConsume(PlayerItemConsumeEvent event) {
+        if (event.getItem().getType() == Material.MILK_BUCKET) {
+            Bukkit.getScheduler().runTaskLater(plugin, () -> {
+                effects.reapplyAllEffects(event.getPlayer(), manager);
+            }, 2L);
+        }
+    }
+
+    @EventHandler
     public void onQuit(PlayerQuitEvent event) {
         UUID uuid = event.getPlayer().getUniqueId();
         jumpCount.remove(uuid);
         protectNextLanding.remove(uuid);
-        storedFallDistance.remove(uuid);
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void onDamage(EntityDamageEvent event) {
         if (!(event.getEntity() instanceof Player player)) return;
 
+        // --- SISTEMA DOBLE SALTO (SOLO SI SALTA SE LE PERDONA EL DAÑO) ---
         if (event.getCause() == EntityDamageEvent.DamageCause.FALL) {
             if (protectNextLanding.contains(player.getUniqueId())) {
                 event.setCancelled(true);
+                protectNextLanding.remove(player.getUniqueId());
                 return;
             }
         }
 
         if (event.getCause() == EntityDamageEvent.DamageCause.VOID) return;
 
+        // --- SISTEMA RESISTENCIA ---
         int resLevel = manager.getHighestLevel(player.getUniqueId(), HabilidadesType.RESISTENCIA);
         if (resLevel == 0) return;
 
         boolean blocked = false;
+        double chance = 0.0;
+        boolean canBlock = false;
 
-        if (resLevel >= 3) {
-            if (Math.random() < 0.10) blocked = true;
-        } else if (resLevel == 2) {
-            if (event instanceof EntityDamageByEntityEvent) {
-                EntityDamageByEntityEvent byEntity = (EntityDamageByEntityEvent) event;
-                if (byEntity.getDamager() instanceof Monster) {
-                    if (Math.random() < 0.10) blocked = true;
-                }
-            }
-        } else if (resLevel == 1) {
-            if (event instanceof EntityDamageByEntityEvent) {
-                EntityDamageByEntityEvent byEntity = (EntityDamageByEntityEvent) event;
-                if (byEntity.getDamager() instanceof org.bukkit.entity.Projectile) {
-                    if (Math.random() < 0.10) blocked = true;
-                }
-            }
+        boolean isProjectile = (event instanceof EntityDamageByEntityEvent byEntity && byEntity.getDamager() instanceof org.bukkit.entity.Projectile);
+        boolean isMonster = (event instanceof EntityDamageByEntityEvent byEntity && byEntity.getDamager() instanceof Monster);
+
+        if (isProjectile) {
+            if (resLevel >= 5) chance = 0.14;
+            else chance = 0.08;
+            canBlock = true;
+        } else if (isMonster) {
+            if (resLevel >= 6) chance = 0.14;
+            else if (resLevel >= 2) chance = 0.08;
+            canBlock = chance > 0;
+        } else {
+            if (resLevel >= 7) chance = 0.14;
+            else if (resLevel >= 3) chance = 0.08;
+            canBlock = chance > 0;
+        }
+
+        if (canBlock && Math.random() < chance) {
+            blocked = true;
         }
 
         if (blocked) {
@@ -125,28 +139,12 @@ public class HabilidadesListener implements Listener {
 
         if (player.getGameMode() == GameMode.CREATIVE || player.getGameMode() == GameMode.SPECTATOR) return;
 
-        double fallDistance;
-
-        if (!player.isOnGround() && player.getFallDistance() > 0.0F) {
-            fallDistance = storedFallDistance.getOrDefault(playerId, 0.0);
-            storedFallDistance.put(playerId, Math.max(fallDistance, player.getFallDistance()));
-        }
-
         if (player.isOnGround()) {
-            jumpCount.put(playerId, 0);
+            if (jumpCount.getOrDefault(playerId, 0) > 0) {
+                jumpCount.put(playerId, 0);
+            }
 
-            if (storedFallDistance.containsKey(playerId)) {
-                fallDistance = storedFallDistance.get(playerId);
-                storedFallDistance.remove(playerId);
-
-                boolean isProtected = protectNextLanding.contains(playerId);
-
-                if (!isProtected && fallDistance > 3.0) {
-                    double damage = fallDistance - 3.0;
-                    if (damage > 0.0) {
-                        player.damage(damage);
-                    }
-                }
+            if (player.getFallDistance() == 0.0f) {
                 protectNextLanding.remove(playerId);
             }
 
@@ -154,14 +152,13 @@ public class HabilidadesListener implements Listener {
                 if (!player.getAllowFlight()) {
                     player.setAllowFlight(true);
                 }
-            }
-        }
-        else {
-            if (!protectNextLanding.contains(playerId)
-                    && player.getFallDistance() > 3.0
-                    && player.getAllowFlight()) {
 
-                player.setAllowFlight(false);
+                try {
+                    if (player.hasFlyingFallDamage() != net.kyori.adventure.util.TriState.TRUE) {
+                        player.setFlyingFallDamage(net.kyori.adventure.util.TriState.TRUE);
+                    }
+                } catch (NoSuchMethodError ignored) {
+                }
             }
         }
     }
@@ -178,10 +175,19 @@ public class HabilidadesListener implements Listener {
         player.setFlying(false);
 
         int maxJumps = 0;
-        if (manager.hasHabilidad(playerId, HabilidadesType.AGILIDAD, 4)) maxJumps = 2;
+        if (manager.hasHabilidad(playerId, HabilidadesType.AGILIDAD, 8)) maxJumps = 3;
+        else if (manager.hasHabilidad(playerId, HabilidadesType.AGILIDAD, 4)) maxJumps = 2;
         else if (manager.hasHabilidad(playerId, HabilidadesType.AGILIDAD, 2)) maxJumps = 1;
 
         if (maxJumps == 0) return;
+
+        if (player.isOnGround()) {
+            player.setAllowFlight(true);
+            try {
+                player.setFlyingFallDamage(net.kyori.adventure.util.TriState.TRUE);
+            } catch (NoSuchMethodError ignored) {}
+            return;
+        }
 
         int current = jumpCount.getOrDefault(playerId, 0);
 
@@ -189,8 +195,8 @@ public class HabilidadesListener implements Listener {
             jumpCount.put(playerId, current + 1);
 
             protectNextLanding.add(playerId);
+
             player.setFallDistance(0f);
-            storedFallDistance.put(playerId, 0.0);
 
             Vector velocity = player.getLocation().getDirection().multiply(0.5).setY(0.8);
             player.setVelocity(velocity);
@@ -204,6 +210,9 @@ public class HabilidadesListener implements Listener {
 
             if (current + 1 < maxJumps) {
                 player.setAllowFlight(true);
+                try {
+                    player.setFlyingFallDamage(net.kyori.adventure.util.TriState.TRUE);
+                } catch (NoSuchMethodError ignored) {}
             }
         }
     }

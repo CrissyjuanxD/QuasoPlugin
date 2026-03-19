@@ -45,8 +45,8 @@ public class Mission10 implements Mission, Listener {
     public List<ItemStack> getRewards() {
         List<ItemStack> rewards = new ArrayList<>();
         ItemStack coins = EconomyItems.createVithiumCoin();
-        coins.setAmount(12);
-        ItemStack goldenApples = new ItemStack(Material.GOLD_BLOCK, 10);
+        coins.setAmount(14);
+        ItemStack goldenApples = new ItemStack(Material.GOLD_BLOCK, 15);
         ItemStack unBook = new ItemStack(Material.ENCHANTED_BOOK);
         EnchantmentStorageMeta meta = (EnchantmentStorageMeta) unBook.getItemMeta();
         if (meta != null) {

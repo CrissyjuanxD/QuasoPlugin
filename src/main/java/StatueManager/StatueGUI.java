@@ -39,10 +39,18 @@ public class StatueGUI implements Listener {
         String colorName = (data.getGlowColor() == null) ? "DESACTIVADO" : data.getGlowColor().name();
         inv.setItem(12, createIcon(Material.GLOW_INK_SAC, "Color Glowing", colorName));
 
-        // Fila 2 (Efectos)
-        String effectName = data.getEffectType() != null ? data.getEffectType().getName() : "NINGUNO";
-        inv.setItem(19, createIcon(Material.POTION, "Tipo Efecto", effectName + " (Click para cambiar / escribir)"));
-        inv.setItem(20, createIcon(Material.BREWING_STAND, "Nivel Efecto", "Nivel: " + (data.getEffectAmplifier() + 1)));
+        // Fila 2 (Tipo de Estatua: Efecto vs AntiGrief)
+        if (data.isAntiGrief()) {
+            inv.setItem(19, createIcon(Material.SHIELD, "Modo: ANTI-GRIEF", "Protege bloques de explosiones y mobs"));
+            inv.setItem(20, createIcon(Material.BARRIER, "Nivel Efecto", "N/A (Modo Anti-Grief activo)"));
+        } else {
+            String effectName = data.getEffectType() != null ? data.getEffectType().getName() : "NINGUNO";
+            inv.setItem(19, createIcon(Material.POTION, "Modo: EFECTO DE POCIÓN", effectName + " (Click para cambiar / escribir)"));
+            inv.setItem(20, createIcon(Material.BREWING_STAND, "Nivel Efecto", "Nivel: " + (data.getEffectAmplifier() + 1)));
+        }
+
+        // Botón para alternar entre AntiGrief y Poción
+        inv.setItem(28, createIcon(Material.COMMAND_BLOCK, "Cambiar Tipo de Estatua", "Click para alternar (Poción <-> AntiGrief)"));
 
         // Fila 2 (Propiedades)
         inv.setItem(15, createIcon(Material.ANVIL, "Vida (Golpes)", "" + data.getHpMax()));
@@ -113,7 +121,12 @@ public class StatueGUI implements Listener {
                 }
                 save = true;
                 break;
-            case 19: // Efecto Cycle + CHAT
+            case 19: // Efecto Cycle + CHAT (Solo si no es Anti-Grief)
+                if (data.isAntiGrief()) {
+                    p.sendMessage(ChatColor.RED + "Desactiva el modo Anti-Grief para añadir efectos.");
+                    break;
+                }
+
                 PotionEffectType[] types = {PotionEffectType.SPEED, PotionEffectType.STRENGTH, PotionEffectType.REGENERATION, PotionEffectType.RESISTANCE, PotionEffectType.FIRE_RESISTANCE};
 
                 // Si hace click derecho, escribe en chat
@@ -133,10 +146,21 @@ public class StatueGUI implements Listener {
                     save = true;
                 }
                 break;
-            case 20: // Amplifier
+            case 20: // Amplifier (Solo si no es AntiGrief)
+                if (data.isAntiGrief()) break;
+
                 p.closeInventory();
                 p.sendMessage(ChatColor.GREEN + "Escribe el NIVEL del efecto (1, 2, 3...):");
                 chatInputMode.put(p.getUniqueId(), "EFF_AMP");
+                break;
+            case 28: // Alternar Modo
+                if (data.isAntiGrief()) {
+                    data.setAntiGrief(false);
+                    data.setEffect(PotionEffectType.SPEED, 0); // Vuelve a un efecto base
+                } else {
+                    data.setAntiGrief(true); // Esto borra el efecto automáticamente en la clase de datos
+                }
+                save = true;
                 break;
             case 15: // Vida
                 p.closeInventory();
@@ -190,7 +214,6 @@ public class StatueGUI implements Listener {
                 }
                 if (mode.equals("EFF_AMP")) {
                     int lvl = Integer.parseInt(msg);
-                    // Restamos 1 porque el amplifier 0 es Nivel 1
                     data.setEffectAmplifier(Math.max(0, lvl - 1));
                 }
                 if (mode.equals("EFF_NAME")) {
@@ -217,8 +240,12 @@ public class StatueGUI implements Listener {
         lore.add(ChatColor.GRAY + "Radio: " + ChatColor.WHITE + data.getRadiusX() + "x" + data.getRadiusY());
         lore.add(ChatColor.GRAY + "Vida: " + ChatColor.WHITE + (data.isInvulnerable() ? "INFINITA" : data.getHpMax()));
 
-        String eff = data.getEffectType() != null ? data.getEffectType().getName() + " " + (data.getEffectAmplifier()+1) : "N/A";
-        lore.add(ChatColor.GRAY + "Efecto: " + ChatColor.AQUA + eff);
+        if (data.isAntiGrief()) {
+            lore.add(ChatColor.GRAY + "Modo: " + ChatColor.AQUA + "ANTI-GRIEF ZONA");
+        } else {
+            String eff = data.getEffectType() != null ? data.getEffectType().getName() + " " + (data.getEffectAmplifier()+1) : "N/A";
+            lore.add(ChatColor.GRAY + "Modo: " + ChatColor.AQUA + eff);
+        }
 
         String color = (data.getGlowColor() == null) ? "OFF" : (data.getGlowColor() + data.getGlowColor().name());
         lore.add(ChatColor.GRAY + "Color: " + color);

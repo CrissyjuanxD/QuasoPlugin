@@ -62,9 +62,15 @@ public class StatueListener implements Listener {
         standData.setGlowColor(itemData.getGlowColor());
         standData.setHpMax(itemData.getHpMax());
         standData.setHpCurrent(itemData.getHpMax());
-        standData.setEffect(itemData.getEffectType(), itemData.getEffectAmplifier());
         standData.setVisible(itemData.isVisible());
         standData.setInvulnerable(itemData.isInvulnerable());
+
+        // Conservamos el modo AntiGrief o Efecto
+        if (itemData.isAntiGrief()) {
+            standData.setAntiGrief(true);
+        } else {
+            standData.setEffect(itemData.getEffectType(), itemData.getEffectAmplifier());
+        }
 
         // Aplicar propiedades visuales inmediatas
         stand.setVisible(itemData.isVisible());
@@ -96,7 +102,6 @@ public class StatueListener implements Listener {
 
         // LÓGICA DE INVULNERABILIDAD
         if (data.isInvulnerable()) {
-            // Solo los admins en creativo con shift pueden borrarla si es indestructible
             if (p.getGameMode() == GameMode.CREATIVE && p.isSneaking() && p.hasPermission("viciont.admin")) {
                 p.sendMessage(ChatColor.RED + "Estatua indestructible eliminada por Admin.");
                 removeStatue(stand, p);
@@ -106,10 +111,10 @@ public class StatueListener implements Listener {
             return;
         }
 
-        // Lógica normal de daño (si no es indestructible)
+        // Lógica normal de daño
         ItemStack hand = p.getInventory().getItemInMainHand();
         if (!hand.getType().name().contains("PICKAXE") && p.getGameMode() != GameMode.CREATIVE) {
-            return; // Solo picos o creativo
+            return;
         }
 
         int currentHp = data.getHpCurrent() - 1;

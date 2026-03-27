@@ -532,14 +532,11 @@ public class QuasoPlugin extends JavaPlugin implements Listener {
         this.statueManager = new StatueManager(this);
         this.statueGUI = new StatueGUI(this);
 
-        // Registrar Comandos
-        getCommand("givestatue").setExecutor(new StatueCommand()); // Ajustar import
+        getCommand("givestatue").setExecutor(new StatueCommand());
 
-        // Registrar Eventos
         getServer().getPluginManager().registerEvents(new StatueListener(statueManager, statueGUI), this);
         getServer().getPluginManager().registerEvents(statueGUI, this);
 
-        // Cargar estatuas ya existentes en el mundo (por si hubo reload)
         statueManager.loadStatues();
     }
 

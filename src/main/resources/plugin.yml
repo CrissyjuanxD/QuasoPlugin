@@ -130,6 +130,8 @@ commands:
   habilidades:
     description: Muestra las habilidades desbloqueadas de un jugador
     usage: /habilidades <jugador>
+    permission: viciont_hardcore3.command.habilidades
+    permission-message: No tienes permiso para usar este comando.
   debugarena:
     description: Activa el modo debug de arenas.
     usage: /debugarena

@@ -88,10 +88,18 @@ public class Mission14 implements Mission, Listener {
 
     @EventHandler
     public void onBlockPlace(BlockPlaceEvent event) {
+        // 1. SOLUCIÓN: Siempre limpiamos cualquier metadata "fantasma" que haya quedado en estas coordenadas
+        if (event.getBlockPlaced().hasMetadata("mission14_marked")) {
+            event.getBlockPlaced().removeMetadata("mission14_marked", plugin);
+        }
+
         ItemStack itemInHand = event.getItemInHand();
-        if (flowers.contains(itemInHand.getType())) {
+        Material type = itemInHand.getType();
+
+        // 2. Incluimos las semillas en la validación (TORCHFLOWER_SEEDS, PITCHER_POD)
+        if (flowers.contains(type) || type.name().contains("SEED") || type.name().contains("PITCHER") || type.name().contains("TORCHFLOWER")) {
             ItemMeta meta = itemInHand.getItemMeta();
-            // Si el jugador planta una flor que YA está marcada, le pasamos la marca al bloque temporalmente
+            // Si el jugador planta una flor o semilla que YA está marcada, le pasamos la marca al bloque
             if (meta != null && meta.getPersistentDataContainer().has(markKey, PersistentDataType.BYTE)) {
                 event.getBlockPlaced().setMetadata("mission14_marked", new FixedMetadataValue(plugin, true));
             }
@@ -104,8 +112,10 @@ public class Mission14 implements Mission, Listener {
         if (event.getBlockState().hasMetadata("mission14_marked") || event.getBlock().hasMetadata("mission14_marked")) {
             for (Item itemEntity : event.getItems()) {
                 ItemStack item = itemEntity.getItemStack();
+                Material type = item.getType();
 
-                if (flowers.contains(item.getType())) {
+                // Marcamos también las semillas si caen de un cultivo previamente marcado
+                if (flowers.contains(type) || type.name().contains("SEED") || type.name().contains("PITCHER") || type.name().contains("TORCHFLOWER")) {
                     ItemMeta meta = item.getItemMeta();
                     if (meta != null) {
                         meta.getPersistentDataContainer().set(markKey, PersistentDataType.BYTE, (byte) 1);
@@ -119,6 +129,8 @@ public class Mission14 implements Mission, Listener {
                     }
                 }
             }
+            // SOLUCIÓN: Limpiamos la metadata al romper el bloque por seguridad extra
+            event.getBlock().removeMetadata("mission14_marked", plugin);
         }
     }
 

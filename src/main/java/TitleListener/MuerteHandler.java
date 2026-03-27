@@ -30,9 +30,9 @@ public class MuerteHandler implements Listener {
 
         if (original == null) return;
 
-        Component prefix = Component.text("[", TextColor.color(0xAAAAAA), TextDecoration.BOLD)
-                .append(Component.text("☠", TextColor.color(0xAD3C3C), TextDecoration.BOLD))
-                .append(Component.text("] ", TextColor.color(0xAAAAAA), TextDecoration.BOLD));
+        Component prefix = Component.text("[", TextColor.color(0xAAAAAA))
+                .append(Component.text("☠", TextColor.color(0xAD3C3C)))
+                .append(Component.text("] ", TextColor.color(0xAAAAAA)));
 
         Component formatted;
 
@@ -67,7 +67,7 @@ public class MuerteHandler implements Listener {
     }
 
     private Component forceColor(Component component, TextColor color) {
-        Component base = component.color(color).decorate(TextDecoration.BOLD);
+        Component base = component.color(color);
         if (!component.children().isEmpty()) {
             List<Component> recoloredChildren = new ArrayList<>();
             for (Component child : component.children()) {

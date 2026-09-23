@@ -94,7 +94,7 @@ public class EnderCreeper extends EnderMobs implements Listener {
 
         world.playSound(loc, Sound.ENTITY_ENDERMAN_DEATH, 2.0f, 0.8f);
         world.playSound(loc, Sound.ENTITY_CREEPER_DEATH, 2.0f, 0.8f);
-        world.spawnParticle(Particle.DRAGON_BREATH, loc, 100, 3, 3, 3, 0.5);
+        world.spawnParticle(Particle.DRAGON_BREATH, loc, 100, 3, 3, 3, 0.5, 1.0f);
         world.spawnParticle(Particle.PORTAL, loc, 80, 2, 2, 2, 0.4);
     }
 

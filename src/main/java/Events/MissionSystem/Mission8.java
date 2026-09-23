@@ -1,131 +1,89 @@
 package Events.MissionSystem;
 
-import Handlers.ActionBarHandler;
-import TitleListener.SuccessNotification;
-import items.EconomyItems;
-import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
-import org.bukkit.entity.EntityType;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
-import org.bukkit.entity.Snowball;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.entity.EntityDeathEvent;
-import org.bukkit.event.entity.ProjectileHitEvent;
+import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ThreadLocalRandom;
 
-public class Mission8 implements Mission, Listener {
-    private final JavaPlugin plugin;
-    private final MissionHandler missionHandler;
-    private final SuccessNotification successNotification;
-    private final ActionBarHandler actionBarHandler;
+import static Events.MissionSystem.MissionRewards.*;
 
-    private final NamespacedKey snowballMarkerKey;
+public class Mission8 extends BaseMission {
+    private static final int PER_ORE = 5;
+    private static final Map<Material, String> ORES = new LinkedHashMap<>();
 
-    public Mission8(JavaPlugin plugin, MissionHandler missionHandler) {
-        this.plugin = plugin;
-        this.missionHandler = missionHandler;
-        this.successNotification = new SuccessNotification(plugin);
-        this.actionBarHandler = new ActionBarHandler(plugin);
-        this.snowballMarkerKey = new NamespacedKey(plugin, "mission8_snowball_marker");
+    static {
+        ORES.put(Material.COAL_ORE, "Carbón");
+        ORES.put(Material.DEEPSLATE_COAL_ORE, "Carbón Piz.");
+        ORES.put(Material.COPPER_ORE, "Cobre");
+        ORES.put(Material.DEEPSLATE_COPPER_ORE, "Cobre Piz.");
+        ORES.put(Material.IRON_ORE, "Hierro");
+        ORES.put(Material.DEEPSLATE_IRON_ORE, "Hierro Piz.");
+        ORES.put(Material.GOLD_ORE, "Oro");
+        ORES.put(Material.DEEPSLATE_GOLD_ORE, "Oro Piz.");
+        ORES.put(Material.LAPIS_ORE, "Lapislázuli");
+        ORES.put(Material.DEEPSLATE_LAPIS_ORE, "Lapis Piz.");
+        ORES.put(Material.REDSTONE_ORE, "Redstone");
+        ORES.put(Material.DEEPSLATE_REDSTONE_ORE, "Redstone Piz.");
+        ORES.put(Material.DIAMOND_ORE, "Diamante");
+        ORES.put(Material.DEEPSLATE_DIAMOND_ORE, "Diamante Piz.");
+        ORES.put(Material.EMERALD_ORE, "Esmeralda");
+        ORES.put(Material.DEEPSLATE_EMERALD_ORE, "Esmeralda Piz.");
+        ORES.put(Material.NETHER_QUARTZ_ORE, "Cuarzo");
+        ORES.put(Material.NETHER_GOLD_ORE, "Oro del Nether");
+        ORES.put(Material.ANCIENT_DEBRIS, "Escombros");
+    }
+
+    public Mission8(JavaPlugin plugin, MissionHandler handler) {
+        super(plugin, handler, 8, "¡Si hay que ser minero!", MissionDifficulty.MEDIA, 16,
+                "Junta con Toque de Seda 5 de cada mineral del juego.");
+        ORES.forEach((ore, label) -> counter("ore_" + ore.name(), label, PER_ORE));
     }
 
     @Override
-    public String getName() { return "Nervios de Acero"; }
-
-    @Override
-    public String getDescription() { return "Golpea a un Warden con una bola\nde nieve y luego elimínalo.\nRepite el proceso 5 veces."; }
-
-    @Override
-    public int getMissionNumber() { return 8; }
-
-    @Override
-    public List<ItemStack> getRewards() {
-        List<ItemStack> rewards = new ArrayList<>();
-        ItemStack coins = EconomyItems.createVithiumCoin();
-        coins.setAmount(18);
-        ItemStack goldenApples = new ItemStack(Material.ENCHANTED_GOLDEN_APPLE, 5);
-        ItemStack diamonds = new ItemStack(Material.EMERALD_BLOCK, 30);
-        ItemStack xpFill = new ItemStack(Material.EXPERIENCE_BOTTLE, 1);
-        for (int i = 0; i < 27; i++) {
-            if (i == 11) rewards.add(goldenApples);
-            else if (i == 13) rewards.add(coins);
-            else if (i == 15) rewards.add(diamonds);
-            else rewards.add(xpFill.clone());
-        }
-        return rewards;
+    protected List<List<ItemStack>> rewardItems() {
+        return of(custom("excavator_pickaxe", 1), item(Material.ENCHANTED_GOLDEN_APPLE, 1));
     }
 
-    @Override
-    public void initializePlayerData(String playerName) {}
+    // Mientras cuenta suelta el drop normal en vez del bloque, así no se puede volver a poner y minar
+    @EventHandler(ignoreCancelled = true)
+    public void onBreak(BlockBreakEvent event) {
+        Player player = event.getPlayer();
+        Material type = event.getBlock().getType();
+        if (!ORES.containsKey(type) || !tracking(player)) return;
+        if (!player.getInventory().getItemInMainHand().containsEnchantment(Enchantment.SILK_TOUCH)) return;
 
-    @Override
-    public void checkCompletion(String playerName) {}
+        String key = "ore_" + type.name();
+        if (data(player).getProgressInt(key) >= PER_ORE) return;
 
-    // Marca al Warden con el jugador que le tiró la bola de nieve
-    @EventHandler
-    public void onProjectileHit(ProjectileHitEvent event) {
-        if (!(event.getEntity() instanceof Snowball snowball)) return;
-        if (event.getHitEntity() == null || event.getHitEntity().getType() != EntityType.WARDEN) return;
-
-        if (snowball.getShooter() instanceof Player player) {
-            if (!missionHandler.isMissionActive(player, 8)) return;
-            if (missionHandler.isMissionCompleted(player, 8)) return;
-
-            event.getHitEntity().getPersistentDataContainer().set(snowballMarkerKey, PersistentDataType.STRING, player.getUniqueId().toString());
-
-            actionBarHandler.sendActionBar(player, ChatColor.AQUA + "¡Warden marcado! Ahora elimínalo.");
-            player.playSound(player.getLocation(), org.bukkit.Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1f, 2f);
-        }
+        event.setDropItems(false);
+        ItemStack drop = normalDrop(type);
+        if (drop != null) event.getBlock().getWorld().dropItemNaturally(event.getBlock().getLocation(), drop);
+        add(player, key, 1);
     }
 
-    // Solo cuenta si lo mata el mismo jugador que lo marcó
-    @EventHandler
-    public void onWardenDeath(EntityDeathEvent event) {
-        if (event.getEntityType() != EntityType.WARDEN) return;
-
-        Player killer = event.getEntity().getKiller();
-        if (killer == null) return;
-
-        if (!missionHandler.isMissionActive(killer, 8)) return;
-        if (missionHandler.isMissionCompleted(killer, 8)) return;
-
-        String markedPlayerUUID = event.getEntity().getPersistentDataContainer().get(snowballMarkerKey, PersistentDataType.STRING);
-
-        if (markedPlayerUUID != null && markedPlayerUUID.equals(killer.getUniqueId().toString())) {
-            updateProgress(killer);
-        }
-    }
-
-    private void updateProgress(Player player) {
-        MissionData data = missionHandler.getData(player, 8);
-        if (data.isCompleted()) return;
-
-        int current = data.getProgressInt("wardens_snowballed_killed");
-
-        if (current < 5) {
-            current++;
-            data.setProgressValue("wardens_snowballed_killed", current);
-            missionHandler.saveData(player, 8, data);
-
-            if (current >= 5) {
-                successNotification.showSuccess(player);
-                missionHandler.completeMission(player, 8);
-            } else {
-                String color = (current >= 5 ? ChatColor.GREEN.toString() : ChatColor.of("#FFA07A").toString());
-                String msg = ChatColor.GOLD + "۞ " +
-                        ChatColor.of("#FFCC99") + "Wardens Eliminados: " +
-                        color + current +
-                        ChatColor.of("#FFE4B5") + "/" +
-                        ChatColor.of("#FFA07A") + "5";
-                actionBarHandler.sendActionBar(player, msg);
-            }
-        }
+    private ItemStack normalDrop(Material ore) {
+        ThreadLocalRandom random = ThreadLocalRandom.current();
+        return switch (ore) {
+            case COAL_ORE, DEEPSLATE_COAL_ORE -> new ItemStack(Material.COAL);
+            case COPPER_ORE, DEEPSLATE_COPPER_ORE -> new ItemStack(Material.RAW_COPPER, 2 + random.nextInt(4));
+            case IRON_ORE, DEEPSLATE_IRON_ORE -> new ItemStack(Material.RAW_IRON);
+            case GOLD_ORE, DEEPSLATE_GOLD_ORE -> new ItemStack(Material.RAW_GOLD);
+            case LAPIS_ORE, DEEPSLATE_LAPIS_ORE -> new ItemStack(Material.LAPIS_LAZULI, 4 + random.nextInt(5));
+            case REDSTONE_ORE, DEEPSLATE_REDSTONE_ORE -> new ItemStack(Material.REDSTONE, 4 + random.nextInt(2));
+            case DIAMOND_ORE, DEEPSLATE_DIAMOND_ORE -> new ItemStack(Material.DIAMOND);
+            case EMERALD_ORE, DEEPSLATE_EMERALD_ORE -> new ItemStack(Material.EMERALD);
+            case NETHER_QUARTZ_ORE -> new ItemStack(Material.QUARTZ);
+            case NETHER_GOLD_ORE -> new ItemStack(Material.GOLD_NUGGET, 2 + random.nextInt(5));
+            case ANCIENT_DEBRIS -> new ItemStack(Material.NETHERITE_SCRAP);
+            default -> null;
+        };
     }
 }

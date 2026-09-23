@@ -1,132 +1,65 @@
 package Events.MissionSystem;
 
-import Handlers.ActionBarHandler;
-import TitleListener.SuccessNotification;
-import items.EconomyItems;
-import net.md_5.bungee.api.ChatColor;
-import org.bukkit.Material;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.util.*;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
-public class Mission15 implements Mission, Listener {
-    private final JavaPlugin plugin;
-    private final MissionHandler missionHandler;
-    private final SuccessNotification successNotification;
-    private final ActionBarHandler actionBarHandler;
+import static Events.MissionSystem.MissionRewards.*;
 
-    private final Map<UUID, Double> startY = new HashMap<>();
-    private final Map<UUID, Long> startTime = new HashMap<>();
+public class Mission15 extends BaseMission {
+    private static final Map<String, String> TYPES = new LinkedHashMap<>();
+    private static final String[] PIECES = {"_HELMET", "_CHESTPLATE", "_LEGGINGS", "_BOOTS"};
 
-    public Mission15(JavaPlugin plugin, MissionHandler missionHandler) {
-        this.plugin = plugin;
-        this.missionHandler = missionHandler;
-        this.successNotification = new SuccessNotification(plugin);
-        this.actionBarHandler = new ActionBarHandler(plugin);
+    static {
+        TYPES.put("LEATHER", "Cuero");
+        TYPES.put("GOLDEN", "Oro");
+        TYPES.put("CHAINMAIL", "Malla");
+        TYPES.put("IRON", "Hierro");
+        TYPES.put("DIAMOND", "Diamante");
+        TYPES.put("NETHERITE", "Netherite");
+        TYPES.put("COPPER", "Cobre");
+    }
+
+    public Mission15(JavaPlugin plugin, MissionHandler handler) {
+        super(plugin, handler, 15, "El Mejor Guerrero", MissionDifficulty.MEDIA, 15,
+                "Ponte cada pieza de todas las armaduras del juego.");
+        TYPES.forEach((type, label) -> counter(type, label, PIECES.length));
     }
 
     @Override
-    public String getName() { return "¡Sé que puedo volar!"; }
-
-    @Override
-    public String getDescription() { return "Sube 400 bloques de altura en\nmenos de 7s sin usar Elytras."; }
-
-    @Override
-    public int getMissionNumber() { return 15; }
-
-    @Override
-    public List<ItemStack> getRewards() {
-        List<ItemStack> rewards = new ArrayList<>();
-        ItemStack coins = EconomyItems.createVithiumCoin();
-        coins.setAmount(13);
-        ItemStack goldenApples = new ItemStack(Material.GOLD_INGOT, 25);
-        ItemStack diamonds = new ItemStack(Material.FIREWORK_ROCKET, 64);
-        ItemStack xpFill = new ItemStack(Material.EXPERIENCE_BOTTLE, 3);
-        for (int i = 0; i < 27; i++) {
-            if (i == 11) rewards.add(goldenApples);
-            else if (i == 13) rewards.add(coins);
-            else if (i == 15) rewards.add(diamonds);
-            else rewards.add(xpFill.clone());
-        }
-        return rewards;
+    protected List<List<ItemStack>> rewardItems() {
+        return of(custom("artefacto_nivel_1", 2), book(Enchantment.PROTECTION, 4));
     }
 
     @Override
-    public void initializePlayerData(String playerName) {}
+    protected int tickSeconds() {
+        return 2;
+    }
 
+    // Guarda cada pieza que se puso y suma cuántas lleva de cada armadura
     @Override
-    public void checkCompletion(String playerName) {}
+    protected void tick(Player player) {
+        MissionData data = data(player);
+        for (ItemStack piece : player.getInventory().getArmorContents()) {
+            if (piece == null) continue;
+            String name = piece.getType().name();
+            for (String type : TYPES.keySet()) {
+                if (!name.startsWith(type + "_")) continue;
+                String pieceKey = "pieza_" + name;
+                if (data.getProgressBool(pieceKey)) continue;
 
-    @EventHandler
-    public void onMove(PlayerMoveEvent event) {
-        if (event.getFrom().getBlockY() == event.getTo().getBlockY()) return;
-
-        Player player = event.getPlayer();
-        if (!missionHandler.isMissionActive(player, 15)) return;
-        if (missionHandler.isMissionCompleted(player, 15)) return;
-
-        if (player.isGliding()) {
-            startY.remove(player.getUniqueId());
-            startTime.remove(player.getUniqueId());
-            return;
-        }
-
-        if (event.getTo().getY() > event.getFrom().getY()) {
-            processFlight(player, event.getFrom().getY(), event.getTo().getY());
-        } else {
-            if (event.getTo().getY() < event.getFrom().getY()) {
-                startY.remove(player.getUniqueId());
-                startTime.remove(player.getUniqueId());
+                data.setProgressValue(pieceKey, true);
+                int count = 0;
+                for (String part : PIECES) {
+                    if (data.getProgressBool("pieza_" + type + part)) count++;
+                }
+                set(player, type, count);
             }
-        }
-    }
-
-    // Si en 7 segundos sube 400 bloques sin elytras se completa; si pasa el tiempo empieza a contar de nuevo
-    private void processFlight(Player player, double fromY, double toY) {
-        UUID id = player.getUniqueId();
-
-        if (!startY.containsKey(id)) {
-            startY.put(id, fromY);
-            startTime.put(id, System.currentTimeMillis());
-            return;
-        }
-
-        long timeElapsed = System.currentTimeMillis() - startTime.get(id);
-
-        if (timeElapsed > 7000) {
-            startY.put(id, fromY);
-            startTime.put(id, System.currentTimeMillis());
-            return;
-        }
-
-        double heightGained = toY - startY.get(id);
-
-        if (heightGained >= 400) {
-            successNotification.showSuccess(player);
-            String msg = ChatColor.GOLD + "۞ " + ChatColor.of("#FFCC99") + "¡Velocidad supersónica alcanzada!";
-            actionBarHandler.sendActionBar(player, msg);
-
-            missionHandler.completeMission(player, 15);
-
-            startY.remove(id);
-            startTime.remove(id);
-        } else if (heightGained >= 25) {
-            double timeLeft = (7000 - timeElapsed) / 1000.0;
-
-            String colorAltura = heightGained >= 200 ? ChatColor.GREEN.toString() : ChatColor.of("#FFA07A").toString();
-            String colorTiempo = timeLeft > 2.0 ? ChatColor.GREEN.toString() : ChatColor.RED.toString();
-
-            String msg = ChatColor.GOLD + "۞ " +
-                    ChatColor.of("#FFCC99") + "Ascenso: " + colorAltura + (int)heightGained + ChatColor.of("#FFE4B5") + "/400m" +
-                    ChatColor.GRAY + " | " +
-                    ChatColor.of("#FFCC99") + "Tiempo: " + colorTiempo + String.format(Locale.US, "%.1fs", timeLeft);
-
-            actionBarHandler.sendActionBar(player, msg);
         }
     }
 }

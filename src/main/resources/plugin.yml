@@ -15,14 +15,11 @@ commands:
     usage: /revivecoords <x> <y> <z>
     permission: viciont_hardcore3.revivecoords
     permission-message: No tienes permiso para usar este comando.
-  cambiardia:
-    description: Cambia manualmente al día especificado
-    usage: /cambiardia <día>
-    permission: viciont_hardcore3.cambiardia
+  changes:
+    description: Activa, desactiva o lista los cambios de cada etapa del server
+    usage: /changes <activar|desactivar|list> [cambio]
+    permission: quasoplugin.changes
     permission-message: No tienes permiso para usar este comando.
-  dia:
-    description: Muestra el día actual de Viciont Hardcore 3
-    usage: /dia
   ping:
     description: Muestra tu ping actual en milisegundos.
     usage: /ping

@@ -24,7 +24,7 @@ public class BossTPCommand implements CommandExecutor {
         this.missionHandler = missionHandler;
     }
 
-    // Solo funciona cuando la misión 10 está activa; tepea a la arena del boss después de 4 segundos
+    // Solo funciona cuando la misión 12 (Abeja Reina) está activa; tepea a la arena del boss después de 4 segundos
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!(sender instanceof Player)) {
@@ -34,7 +34,7 @@ public class BossTPCommand implements CommandExecutor {
 
         Player player = (Player) sender;
 
-        if (!missionHandler.getActiveMissions().contains(10)) {
+        if (!missionHandler.getActiveMissions().contains(12)) {
             String hexColor = "#DC9567";
 
             String message = ChatColor.RED + "" + ChatColor.BOLD + "\u06de " +

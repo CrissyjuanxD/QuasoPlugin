@@ -1,6 +1,7 @@
 package Dificultades.CustomMobs;
 
 import Dificultades.Features.InfestedMob;
+import items.InfestedSoulsItems;
 import org.bukkit.*;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.*;
@@ -57,10 +58,15 @@ public class InfestedGhast extends InfestedMob implements Listener {
 
     public Ghast spawnInfestedGhast(Location location) {
         Ghast ghast = (Ghast) location.getWorld().spawnEntity(location, EntityType.GHAST);
+        infest(ghast);
+        return ghast;
+    }
+
+    // Convierte un ghast que ya existe (por ejemplo el que spawnea el juego) en Infested Ghast
+    public void infest(Ghast ghast) {
         applyAttributes(ghast);
         activeMobs.add(ghast.getUniqueId());
         startGlobalParticleTask();
-        return ghast;
     }
 
     private void applyAttributes(Ghast ghast) {
@@ -135,6 +141,13 @@ public class InfestedGhast extends InfestedMob implements Listener {
         if (!isCustomMob(event.getEntity())) return;
         Ghast ghast = (Ghast) event.getEntity();
         event.getDrops().clear();
+        // Vive sobre el vacío del Abismo, así que el alma cae a los pies del que lo mató para no perderse
+        if (Math.random() < SOUL_CHANCE) {
+            org.bukkit.inventory.ItemStack soul = new InfestedSoulsItems(plugin).createInfestedGhastSoul();
+            Player killer = ghast.getKiller();
+            if (killer != null) killer.getWorld().dropItemNaturally(killer.getLocation(), soul);
+            else event.getDrops().add(soul);
+        }
 
         ghast.getWorld().playSound(ghast.getLocation(), Sound.ENTITY_GHAST_DEATH, 2.0f, 0.5f);
         ghast.getWorld().playSound(ghast.getLocation(), Sound.ENTITY_WARDEN_DEATH, 1.5f, 0.7f);

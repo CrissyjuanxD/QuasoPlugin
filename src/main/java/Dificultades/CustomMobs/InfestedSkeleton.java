@@ -1,6 +1,7 @@
 package Dificultades.CustomMobs;
 
 import Dificultades.Features.InfestedMob;
+import items.InfestedSoulsItems;
 import org.bukkit.*;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.enchantments.Enchantment;
@@ -55,10 +56,15 @@ public class InfestedSkeleton extends InfestedMob implements Listener {
 
     public Skeleton spawnInfestedSkeleton(Location location) {
         Skeleton skeleton = (Skeleton) location.getWorld().spawnEntity(location, EntityType.SKELETON);
+        infest(skeleton);
+        return skeleton;
+    }
+
+    // Convierte un esqueleto que ya existe (por ejemplo el que spawnea el juego) en Infested Skeleton
+    public void infest(Skeleton skeleton) {
         applyAttributes(skeleton);
         activeMobs.add(skeleton.getUniqueId());
         startGlobalParticleTask();
-        return skeleton;
     }
 
     // Arco con Power 7 que no se dropea, más resistencia y velocidad
@@ -139,6 +145,9 @@ public class InfestedSkeleton extends InfestedMob implements Listener {
         if (!isCustomMob(event.getEntity())) return;
         Skeleton skeleton = (Skeleton) event.getEntity();
         event.getDrops().clear();
+        if (Math.random() < SOUL_CHANCE) {
+            event.getDrops().add(new InfestedSoulsItems(plugin).createInfestedSkeletonSoul());
+        }
 
         skeleton.getWorld().playSound(skeleton.getLocation(), Sound.ENTITY_WARDEN_DEATH, 1.5f, 1.0f);
         skeleton.getWorld().spawnParticle(Particle.SOUL, skeleton.getLocation(), 40, 0.8, 0.8, 0.8, 0.3);

@@ -33,7 +33,6 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class CustomSpawnerHandler implements Listener {
     private final JavaPlugin plugin;
-    private final DayHandler dayHandler;
     private final NamespacedKey spawnerKey;
     private final NamespacedKey spawnModeKey;
 
@@ -114,16 +113,15 @@ public class CustomSpawnerHandler implements Listener {
         }
     }
 
-    public CustomSpawnerHandler(JavaPlugin plugin, DayHandler dayHandler) {
+    public CustomSpawnerHandler(JavaPlugin plugin) {
         this.plugin = plugin;
-        this.dayHandler = dayHandler;
         this.spawnerKey = new NamespacedKey(plugin, "custom_spawner");
         this.spawnModeKey = new NamespacedKey(plugin, "spawn_mode");
 
         this.bombitaSpawner = new Bombita(plugin);
         this.iceologerSpawner = new Iceologer(plugin);
         this.corruptedZombieSpawner = new CorruptedZombies(plugin);
-        this.corruptedSpider = new CorruptedSpider(plugin, dayHandler);
+        this.corruptedSpider = new CorruptedSpider(plugin);
         this.infestedBeeHandler = new InfestedBeeHandler(plugin);
         this.guardianBlaze = new GuardianBlaze(plugin);
         this.guardianCorruptedSkeleton = new GuardianCorruptedSkeleton(plugin);

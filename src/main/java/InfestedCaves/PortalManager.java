@@ -2,6 +2,8 @@ package InfestedCaves;
 
 import imp.crissyjuanxd.QuasoPlugin;
 import org.bukkit.*;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.entity.BlockDisplay;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
@@ -19,15 +21,25 @@ import org.bukkit.util.Transformation;
 import org.joml.AxisAngle4f;
 import org.joml.Vector3f;
 
-import java.util.Random;
+import java.util.EnumSet;
+import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class PortalManager implements Listener {
+    // La llegada normal cae al azar entre -3000 y 3000 en X y en Z
+    static final int RANDOM_RADIUS = 3000;
+    private static final int RANDOM_ATTEMPTS = 12;
+
+    private static final BlockFace[] HORIZONTAL = {BlockFace.NORTH, BlockFace.EAST, BlockFace.SOUTH, BlockFace.WEST};
+    private static final Set<Material> BAD_GROUND = EnumSet.of(
+            Material.BEDROCK, Material.MAGMA_BLOCK, Material.CACTUS, Material.CAMPFIRE, Material.SOUL_CAMPFIRE,
+            Material.SCULK_SHRIEKER, Material.SCULK_SENSOR, Material.CALIBRATED_SCULK_SENSOR, Material.POINTED_DRIPSTONE);
+    private static final Set<Material> BAD_SPACE = EnumSet.of(
+            Material.FIRE, Material.SOUL_FIRE, Material.COBWEB, Material.SWEET_BERRY_BUSH, Material.POWDER_SNOW);
+
     private final JavaPlugin plugin;
     private final NamespacedKey PORTAL_KEY;
-
-    private static final int ENTRY_X = 1000;
-    private static final int ENTRY_Z = 1500;
 
     public PortalManager(JavaPlugin plugin) {
         this.plugin = plugin;
@@ -36,7 +48,7 @@ public class PortalManager implements Listener {
         startParticleTask();
     }
 
-    // Partículas en todos los portales cada segundo
+    // Partículas en todos los portales cada segundo (desde la 26.2 el dragon breath pide su potencia como dato)
     private void startParticleTask() {
         new BukkitRunnable() {
             @Override
@@ -44,7 +56,7 @@ public class PortalManager implements Listener {
                 for (World world : Bukkit.getWorlds()) {
                     for (Entity entity : world.getEntitiesByClass(BlockDisplay.class)) {
                         if (entity.getPersistentDataContainer().has(PORTAL_KEY, PersistentDataType.BYTE)) {
-                            world.spawnParticle(Particle.DRAGON_BREATH, entity.getLocation().add(0, 0.2, 0), 3, 1.5, 0, 1.5, 0.02);
+                            world.spawnParticle(Particle.DRAGON_BREATH, entity.getLocation().add(0, 0.2, 0), 3, 1.5, 0, 1.5, 0.02, 1.0f);
                             world.spawnParticle(Particle.PORTAL, entity.getLocation().add(0, 0.5, 0), 2, 1.0, 0.5, 1.0, 0.1);
                         }
                     }
@@ -121,13 +133,18 @@ public class PortalManager implements Listener {
         }
     }
 
-    // Lo levita 4 segundos con efectos y después lo manda a la otra dimensión
+    // Lo levita 4 segundos con efectos y después lo manda a la otra dimensión.
+    // Si va a la Warden Cave, el lugar al azar se busca mientras levita
     private void triggerTeleport(Player p) {
         p.setMetadata("Teleporting", new FixedMetadataValue(plugin, true));
 
         p.addPotionEffect(new PotionEffect(PotionEffectType.LEVITATION, 100, 1));
         p.playSound(p.getLocation(), "minecraft:custom.transition_1", 10.0f, 1.3f);
-        p.sendTitle("\uEAA4", "", 50, 80, 20);
+        p.sendTitle("", "", 50, 80, 20);
+
+        boolean leaving = p.getWorld().getName().equals(QuasoPlugin.WORLD_NAME);
+        World infested = Bukkit.getWorld(QuasoPlugin.WORLD_NAME);
+        CompletableFuture<Location> arrival = !leaving && infested != null ? findRandomSpawn(infested) : null;
 
         new BukkitRunnable() {
             int ticks = 0;
@@ -147,31 +164,23 @@ public class PortalManager implements Listener {
             public void run() {
                 p.removeMetadata("Teleporting", plugin);
                 p.removePotionEffect(PotionEffectType.LEVITATION);
+                if (!p.isOnline()) return;
 
-                if (p.isOnline()) {
-                    decideDestination(p);
+                if (leaving) {
+                    teleportToOverworld(p);
+                } else if (arrival == null) {
+                    p.sendMessage(ChatColor.RED + "La dimensión WardenCave no está cargada.");
+                } else {
+                    arrival.thenAccept(location -> teleportToInfested(p, location));
                 }
             }
         }.runTaskLater(plugin, 80L);
     }
 
-    private void decideDestination(Player p) {
-        if (p.getWorld().getName().equals(QuasoPlugin.WORLD_NAME)) {
-            teleportToOverworld(p);
-        } else {
-            teleportToInfested(p);
-        }
-    }
-
-    private void teleportToInfested(Player p) {
-        World infested = Bukkit.getWorld(QuasoPlugin.WORLD_NAME);
-        if (infested == null) {
-            p.sendMessage(ChatColor.RED + "La dimensión WardenCave no está cargada.");
-            return;
-        }
-        Location safe = findSafeSpawn(infested);
-        p.teleport(safe);
-        p.playSound(p.getLocation(), Sound.ENTITY_WARDEN_HEARTBEAT, 1f, 1f);
+    public void teleportToInfested(Player p, Location location) {
+        if (!p.isOnline()) return;
+        p.setFallDistance(0);
+        p.teleportAsync(location).thenAccept(done -> p.playSound(p.getLocation(), Sound.ENTITY_WARDEN_HEARTBEAT, 1f, 1f));
     }
 
     private void teleportToOverworld(Player p) {
@@ -182,20 +191,102 @@ public class PortalManager implements Listener {
         p.playSound(p.getLocation(), Sound.BLOCK_PORTAL_TRAVEL, 0.5f, 1f);
     }
 
-    // Busca un suelo seguro en la entrada fija de la dimensión (1000, 1500)
-    public Location findSafeSpawn(World world) {
-        int x = ENTRY_X;
-        int z = ENTRY_Z;
+    // Llegada normal: un punto al azar a hasta 3.000 bloques del centro, siempre en un suelo seguro.
+    // Los chunks se cargan en async; si en 12 intentos no hay lugar, cae en el centro
+    public CompletableFuture<Location> findRandomSpawn(World world) {
+        CompletableFuture<Location> result = new CompletableFuture<>();
+        tryRandomSpawn(world, result, 0);
+        return result;
+    }
 
-        for (int y = 50; y < 110; y++) {
-            if (world.getBlockAt(x, y, z).getType().isSolid() &&
-                    !world.getBlockAt(x, y+1, z).getType().isSolid() &&
-                    !world.getBlockAt(x, y+2, z).getType().isSolid()) {
+    private void tryRandomSpawn(World world, CompletableFuture<Location> result, int attempt) {
+        if (attempt >= RANDOM_ATTEMPTS) {
+            result.complete(findCenterSpawn(world));
+            return;
+        }
+        ThreadLocalRandom random = ThreadLocalRandom.current();
+        int chunkX = Math.floorDiv(random.nextInt(-RANDOM_RADIUS, RANDOM_RADIUS + 1), 16);
+        int chunkZ = Math.floorDiv(random.nextInt(-RANDOM_RADIUS, RANDOM_RADIUS + 1), 16);
 
-                return new Location(world, x + 0.5, y + 1.0, z + 0.5);
+        world.getChunkAtAsync(chunkX, chunkZ).whenComplete((chunk, error) -> {
+            Location found = error == null ? safeInChunk(world, chunkX, chunkZ) : null;
+            if (found != null) result.complete(found);
+            else tryRandomSpawn(world, result, attempt + 1);
+        });
+    }
+
+    // Recorre las columnas del chunk en un orden mezclado (sin los bordes, así no carga los chunks de al lado)
+    // y se queda con la primera superficie segura bajo el cielo que no esté en una Ancient City
+    private Location safeInChunk(World world, int chunkX, int chunkZ) {
+        int start = ThreadLocalRandom.current().nextInt(196);
+        for (int i = 0; i < 196; i++) {
+            int index = (start + i * 37) % 196;
+            int x = (chunkX << 4) + 1 + index % 14;
+            int z = (chunkZ << 4) + 1 + index / 14;
+
+            AncientCityLocator.CityInfo city = AncientCityLocator.findCityNear(world.getSeed(), x, z);
+            if (city != null && AncientCityLocator.computeInfluence(city, x, z) > 0) continue;
+
+            Location found = highestSafeBelow(world, x, z, WardenGenerator.TOP_Y - 4);
+            if (found != null) return found;
+        }
+        return null;
+    }
+
+    // Spawn administrativo (/wardencave join <jugador> spawn): la meseta del centro en Y 100, donde está la build
+    // con el portal de salida. Busca de 0 101 0 para abajo y alrededor, así no cae arriba del techo de la build
+    public Location findCenterSpawn(World world) {
+        for (int r = 0; r <= 60; r += 2) {
+            for (int dx = -r; dx <= r; dx += 2) {
+                for (int dz = -r; dz <= r; dz += 2) {
+                    if (Math.abs(dx) != r && Math.abs(dz) != r) continue;
+                    Location found = highestSafeBelow(world, dx, dz, WardenGenerator.SPAWN_Y + 1);
+                    if (found != null) return found;
+                }
             }
         }
+        return buildLanding(world, 0, 0);
+    }
 
-        return new Location(world, x + 0.5, 100, z + 0.5);
+    private Location highestSafeBelow(World world, int x, int z, int fromY) {
+        for (int y = Math.min(fromY, WardenGenerator.TOP_Y - 4); y > WardenGenerator.MIN_Y; y--) {
+            if (isSafe(world, x, y, z)) return new Location(world, x + 0.5, y + 1, z + 0.5);
+        }
+        return null;
+    }
+
+    // Suelo firme y sin peligro, apoyado por al menos 3 lados (no la punta de un pico ni el borde de un precipicio),
+    // 3 bloques libres arriba, abierto al menos por 2 lados (no un pozo de 1x1) y sin lava al lado
+    private boolean isSafe(World world, int x, int y, int z) {
+        Block ground = world.getBlockAt(x, y, z);
+        if (!ground.getType().isSolid() || BAD_GROUND.contains(ground.getType())) return false;
+
+        int support = 0;
+        for (BlockFace face : HORIZONTAL) {
+            if (ground.getRelative(face).getType().isSolid()) support++;
+        }
+        if (support < 3) return false;
+
+        for (int dy = 1; dy <= 3; dy++) {
+            Block space = world.getBlockAt(x, y + dy, z);
+            if (!space.isPassable() || space.isLiquid() || BAD_SPACE.contains(space.getType())) return false;
+        }
+
+        int open = 0;
+        Block feet = world.getBlockAt(x, y + 1, z);
+        for (BlockFace face : HORIZONTAL) {
+            Block side = feet.getRelative(face);
+            if (side.getType() == Material.LAVA || side.getRelative(BlockFace.DOWN).getType() == Material.LAVA) return false;
+            if (side.isPassable() && !side.isLiquid()) open++;
+        }
+        return open >= 2;
+    }
+
+    // Si no encontró nada arma un hueco mínimo con piso en la meseta, así nunca aparece adentro de la roca
+    private Location buildLanding(World world, int x, int z) {
+        int floorY = WardenGenerator.SPAWN_Y;
+        world.getBlockAt(x, floorY, z).setType(Material.DEEPSLATE);
+        for (int dy = 1; dy <= 3; dy++) world.getBlockAt(x, floorY + dy, z).setType(Material.AIR);
+        return new Location(world, x + 0.5, floorY + 1, z + 0.5);
     }
 }

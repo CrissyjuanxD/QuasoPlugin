@@ -47,6 +47,7 @@ import mobcap.spawn.CustomSpawnManager;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.WorldCreator;
+import org.bukkit.entity.SpawnCategory;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -67,7 +68,7 @@ public class QuasoPlugin extends JavaPlugin implements Listener {
 
     private static QuasoPlugin instance;
 
-    private DayHandler dayHandler;
+    private ChangesHandler changesHandler;
     private NightmareMechanic nightmareMechanic;
 
     private DatabaseManager databaseManager;
@@ -161,6 +162,7 @@ public class QuasoPlugin extends JavaPlugin implements Listener {
         logStartup();
         registerBaseListeners();
         saveDefaultConfig();
+        ItemModels.load(this);
 
         this.databaseManager = new DatabaseManager(this);
         this.teamsHandler = new TeamsHandler();
@@ -243,12 +245,15 @@ public class QuasoPlugin extends JavaPlugin implements Listener {
         Bukkit.getServer().getPluginManager().registerEvents(this, this);
     }
 
+    // Cada etapa del server (uno, dos...) se prende o se apaga con /changes y queda guardada en cambios.yml
     private void initCoreDayAndDeathStormSystem() {
-        dayHandler = new DayHandler(this);
+        changesHandler = new ChangesHandler(this);
 
-        PluginCommand changeDayCommand = getCommand("cambiardia");
-        if (changeDayCommand != null) {
-            changeDayCommand.setExecutor(new DayCommandHandler(dayHandler));
+        PluginCommand changesCommand = getCommand("changes");
+        if (changesCommand != null) {
+            ChangesCommand executor = new ChangesCommand(changesHandler);
+            changesCommand.setExecutor(executor);
+            changesCommand.setTabCompleter(executor);
         }
     }
 
@@ -266,7 +271,7 @@ public class QuasoPlugin extends JavaPlugin implements Listener {
 
     private void itemandmobManager() {
         itemManager = new ItemManager(this);
-        mobManager = new MobManager(this, dayHandler);
+        mobManager = new MobManager(this);
     }
 
     private void initItemsSystem() {
@@ -301,13 +306,15 @@ public class QuasoPlugin extends JavaPlugin implements Listener {
         Bukkit.getPluginManager().registerEvents(amuletInvisibility, this);
         Bukkit.getPluginManager().registerEvents(explosiveBow, this);
         Bukkit.getPluginManager().registerEvents(wardenArmor, this);
+        Bukkit.getPluginManager().registerEvents(new InfinitePearl(), this);
+        Bukkit.getPluginManager().registerEvents(new WardenReturnItem(), this);
 
         getCommand("mochilas").setExecutor(new MochilaCommand(economyItemsFunctions));
         getCommand("delmochilas").setExecutor(new MochilaCommand(economyItemsFunctions));
     }
 
     private void initMissionSystem() {
-        this.missionHandler = new MissionHandler(this, databaseManager, dayHandler);
+        this.missionHandler = new MissionHandler(this, databaseManager);
 
         MissionGUI missionGUI = new MissionGUI(this, missionHandler);
 
@@ -348,7 +355,7 @@ public class QuasoPlugin extends JavaPlugin implements Listener {
         getCommand("setspawn").setExecutor(new SetSpawnCommand(this));
         getCommand("anuncio").setExecutor(new AnuncioCommand());
 
-        customSpawnerHandler = new CustomSpawnerHandler(this, dayHandler);
+        customSpawnerHandler = new CustomSpawnerHandler(this);
         new GiveSpawnerCommand(this);
 
         Objects.requireNonNull(this.getCommand("reloadcustomspawn"))
@@ -466,7 +473,7 @@ public class QuasoPlugin extends JavaPlugin implements Listener {
     private void initHabilidadesSystem() {
         habilidadesManager = new HabilidadesManager(this);
         habilidadesEffects = new HabilidadesEffects(this);
-        habilidadesGUI = new HabilidadesGUI(this, habilidadesManager, dayHandler);
+        habilidadesGUI = new HabilidadesGUI(this, habilidadesManager);
         habilidadesListener = new HabilidadesListener(this, habilidadesManager, habilidadesEffects);
 
         Bukkit.getPluginManager().registerEvents(habilidadesGUI, this);
@@ -607,10 +614,18 @@ public class QuasoPlugin extends JavaPlugin implements Listener {
 
         this.wardenAmbient = new WardenCaveAmbient(this);
         getServer().getPluginManager().registerEvents(this.wardenAmbient, this);
+        getServer().getPluginManager().registerEvents(new WardenCaveItemGuard(), this);
+
+        if (WardenDatapack.install(this) || !WardenDatapack.biomesLoaded()) {
+            getLogger().warning("El datapack de los biomas de la Warden Cave se acaba de instalar o no está cargado. "
+                    + "Reinicia el server y borra la carpeta del mundo " + WORLD_NAME + " para que se genere con los 4 biomas.");
+        }
 
         createInfestedWorld();
         Bukkit.getScheduler().runTaskLater(this, () -> {
             structureManager.loadSchematics();
+            World world = Bukkit.getWorld(WORLD_NAME);
+            if (world != null) listeners.pasteTempleIfNeeded(world);
         }, 20L);
         getLogger().info("WardenCave ha sido habilitado correctamente.");
     }
@@ -647,26 +662,36 @@ public class QuasoPlugin extends JavaPlugin implements Listener {
         }
     }
 
-    // Crea o carga la dimensión WardenCave con su generador, siempre de noche
+    // Crea o carga la dimensión WardenCave con su generador. El tiempo queda fijo al mediodía: de noche el juego
+    // oscurece la niebla y no se verían los colores de cada bioma (abajo del techo de bedrock igual no entra luz)
     public void createInfestedWorld() {
-        if (Bukkit.getWorld(WORLD_NAME) == null) {
+        World world = Bukkit.getWorld(WORLD_NAME);
+        if (world == null) {
             WorldCreator creator = new WorldCreator(WORLD_NAME);
             creator.generator(generator);
-            World world = creator.createWorld();
+            world = creator.createWorld();
             if (world != null) {
                 world.setGameRule(org.bukkit.GameRules.ADVANCE_TIME, false);
-                world.setTime(18000);
+                world.setTime(6000);
                 getLogger().info("Dimensión " + WORLD_NAME + " cargada/creada.");
             }
         }
+        if (world == null) return;
+
+        // Mobcap de monstruos por jugador en la dimensión (la vanilla es 70); se cambia en config.yml
+        if (!getConfig().isInt("wardencave.limite_mobs")) {
+            getConfig().set("wardencave.limite_mobs", 35);
+            saveConfig();
+        }
+        world.setSpawnLimit(SpawnCategory.MONSTER, getConfig().getInt("wardencave.limite_mobs"));
     }
 
     public static QuasoPlugin getInstance() {
         return instance;
     }
 
-    public DayHandler getDayHandler() {
-        return dayHandler;
+    public ChangesHandler getChangesHandler() {
+        return changesHandler;
     }
 
     public DoubleLifeTotem getDoubleLifeTotemHandler() {
@@ -684,6 +709,10 @@ public class QuasoPlugin extends JavaPlugin implements Listener {
     public SuccessNotification getSuccessNotifier() {
         return successNotif;
     }
+
+    public ItemManager getItemManager() { return itemManager; }
+
+    public HabilidadesManager getHabilidadesManager() { return habilidadesManager; }
 
     public PortalManager getPortalManager() { return portalManager; }
 

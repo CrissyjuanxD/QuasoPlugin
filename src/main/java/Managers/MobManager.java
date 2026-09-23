@@ -2,7 +2,6 @@ package Managers;
 
 import Bosses.QueenBeeHandler;
 import Dificultades.CustomMobs.*;
-import Handlers.DayHandler;
 import imp.crissyjuanxd.QuasoPlugin;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
@@ -14,7 +13,6 @@ import java.util.List;
 public class MobManager {
 
     private final QuasoPlugin plugin;
-    private final DayHandler dayHandler;
 
     private final Bombita bombitaSpawner;
     private final Iceologer iceologerSpawner;
@@ -30,6 +28,7 @@ public class MobManager {
     private final InfestedGhast infestedGhast;
     private final InfestedSkeleton infestedSkeleton;
     private final InfestedCaveSpider infestedCaveSpider;
+    private final WardenZombie wardenZombie;
     private final EnderBlaze enderBlaze;
     private final EnderCreeper enderCreeper;
     private final EnderSpider enderSpider;
@@ -57,14 +56,13 @@ public class MobManager {
         cb.onSpawned(entity);
     }
 
-    public MobManager(QuasoPlugin plugin, DayHandler dayHandler) {
+    public MobManager(QuasoPlugin plugin) {
         this.plugin = plugin;
-        this.dayHandler = dayHandler;
 
         this.bombitaSpawner = new Bombita(plugin);
         this.iceologerSpawner = new Iceologer(plugin);
         this.corruptedZombieSpawner = new CorruptedZombies(plugin);
-        this.corruptedSpider = new CorruptedSpider(plugin, dayHandler);
+        this.corruptedSpider = new CorruptedSpider(plugin);
         this.guardianBlaze = new GuardianBlaze(plugin);
         this.guardianCorruptedSkeleton = new GuardianCorruptedSkeleton(plugin);
         this.corruptedInfernalSpider = new CorruptedInfernalSpider(plugin);
@@ -75,6 +73,7 @@ public class MobManager {
         this.infestedGhast = new InfestedGhast(plugin);
         this.infestedSkeleton = new InfestedSkeleton(plugin);
         this.infestedCaveSpider = new InfestedCaveSpider(plugin);
+        this.wardenZombie = new WardenZombie(plugin);
         this.enderBlaze = new EnderBlaze(plugin);
         this.enderCreeper = new EnderCreeper(plugin);
         this.enderSpider = new EnderSpider(plugin);
@@ -88,7 +87,7 @@ public class MobManager {
                 "bombita", "iceologer", "corruptedzombie", "corruptedspider", "queenbee",
                 "guardianblaze", "guardiancorruptedskeleton", "corruptedinfernalspider",
                 "infestedbee", "estatuarecompensa", "corruptedbee", "infestedcreeper",
-                "infestedghast", "infestedskeleton", "infestedcavespider", "enderblaze",
+                "infestedghast", "infestedskeleton", "infestedcavespider", "wardenzombie", "enderblaze",
                 "endercreeper", "enderspider",
         };
         for (String mob : mobs) {
@@ -114,6 +113,7 @@ public class MobManager {
             case "infestedghast": infestedGhast.spawnInfestedGhast(location); return true;
             case "infestedskeleton": infestedSkeleton.spawnInfestedSkeleton(location); return true;
             case "infestedcavespider": infestedCaveSpider.spawnInfestedCaveSpider(location); return true;
+            case "wardenzombie": wardenZombie.spawnWardenZombie(location); return true;
             case "enderblaze": enderBlaze.spawnEnderBlaze(location); return true;
             case "endercreeper": enderCreeper.spawnEnderCreeper(location); return true;
             case "enderspider": enderSpider.spawnEnderSpider(location); return true;

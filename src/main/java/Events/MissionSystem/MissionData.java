@@ -3,7 +3,10 @@ package Events.MissionSystem;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class MissionData {
@@ -24,7 +27,8 @@ public class MissionData {
             try {
                 Gson gson = new Gson();
                 Type type = new TypeToken<Map<String, Object>>(){}.getType();
-                this.progress = gson.fromJson(jsonProgress, type);
+                Map<String, Object> loaded = gson.fromJson(jsonProgress, type);
+                if (loaded != null) this.progress = loaded;
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -74,6 +78,15 @@ public class MissionData {
             return (Boolean) val;
         }
         return false;
+    }
+
+    // Listas guardadas en el progreso (estructuras visitadas, tipos de mobs, etc.)
+    public List<String> getProgressList(String key) {
+        List<String> list = new ArrayList<>();
+        if (progress.get(key) instanceof Collection<?> values) {
+            for (Object value : values) list.add(String.valueOf(value));
+        }
+        return list;
     }
 
     public String getJsonProgress() {

@@ -95,7 +95,7 @@ public class ItemsCommands implements CommandExecutor, TabCompleter {
             for (Player player : Bukkit.getOnlinePlayers()) {
                 completions.add(player.getName());
             }
-            // Agregamos algunas sugerencias numéricas básicas para la cantidad si no escribe un jugador
+
             completions.add("1");
             completions.add("16");
             completions.add("32");

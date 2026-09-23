@@ -13,7 +13,6 @@ import java.util.List;
 
 public class FishingItems {
 
-    // ─── CMD asignados ───────────────────────────────────────────────────────
     private static final int CMD_CHATARRA            = 1000;
     private static final int CMD_MANZANA_PODRIDA     = 1001;
     private static final int CMD_ZANAHORIA_ENCANTADA = 1002;
@@ -23,7 +22,6 @@ public class FishingItems {
     private static final int CMD_FOSILES_PEQUENOS    = 1006;
     private static final int CMD_LINGOTE_PLATINO     = 1007;
 
-    // ─── Chatarra ────────────────────────────────────────────────────────────
     public static ItemStack createChatarra() {
         ItemStack item = new ItemStack(Material.IRON_NUGGET);
         ItemMeta meta = item.getItemMeta();
@@ -45,7 +43,6 @@ public class FishingItems {
         return item;
     }
 
-    // ─── Manzana Podrida ────────────────────────────────────────────────────
     public static ItemStack createManzanaPodrida() {
         ItemStack item = new ItemStack(Material.IRON_NUGGET);
         ItemMeta meta = item.getItemMeta();
@@ -67,7 +64,6 @@ public class FishingItems {
         return item;
     }
 
-    // ─── Zanahoria Encantada ────────────────────────────────────────────────
     public static ItemStack createZanahoriaEncantada() {
         ItemStack item = new ItemStack(Material.IRON_NUGGET);
         ItemMeta meta = item.getItemMeta();
@@ -91,7 +87,6 @@ public class FishingItems {
         return item;
     }
 
-    // ─── Pepitas de Hierro Oxidadas ─────────────────────────────────────────
     public static ItemStack createPepitasHierroOxidadas() {
         ItemStack item = new ItemStack(Material.IRON_NUGGET);
         ItemMeta meta = item.getItemMeta();
@@ -116,7 +111,6 @@ public class FishingItems {
         return item;
     }
 
-    // ─── Pepitas de Diamante ────────────────────────────────────────────────
     public static ItemStack createPepitasDiamante() {
         ItemStack item = new ItemStack(Material.IRON_NUGGET);
         ItemMeta meta = item.getItemMeta();
@@ -140,7 +134,6 @@ public class FishingItems {
         return item;
     }
 
-    // ─── Fragmentos de Ámbar ────────────────────────────────────────────────
     public static ItemStack createFragmentosAmbar() {
         ItemStack item = new ItemStack(Material.IRON_NUGGET);
         ItemMeta meta = item.getItemMeta();
@@ -165,7 +158,6 @@ public class FishingItems {
         return item;
     }
 
-    // ─── Fósiles Pequeños ───────────────────────────────────────────────────
     public static ItemStack createFosilesP() {
         ItemStack item = new ItemStack(Material.IRON_NUGGET);
         ItemMeta meta = item.getItemMeta();
@@ -190,7 +182,6 @@ public class FishingItems {
         return item;
     }
 
-    // ─── Lingote de Platino ─────────────────────────────────────────────────
     public static ItemStack createLingotePlatino() {
         ItemStack item = new ItemStack(Material.IRON_NUGGET);
         ItemMeta meta = item.getItemMeta();

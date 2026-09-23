@@ -75,16 +75,14 @@ public class BuildBattleHandler implements Listener {
     private BukkitTask entityCleanupTask;
     private int timeLeftBuild = 0;
 
-    // --- LOGICA DE TORNEO ---
     private String modoJuego = "NORMAL";
     private int rondasMaximas = 3;
     private int rondaActual = 1;
     private File puntajesFile;
     private FileConfiguration puntajesConfig;
-    // ------------------------
 
     private boolean isTieBreaker = false;
-    private boolean desempateJugado = false; // Flag de prevención de doble desempate
+    private boolean desempateJugado = false;
     private final List<String> empatadosNames = new ArrayList<>();
 
     private final List<String> cancionesDisponibles = new ArrayList<>();
@@ -110,7 +108,7 @@ public class BuildBattleHandler implements Listener {
         this.plugin = plugin;
         this.tiempoCommand = tiempoCommand;
         this.eventoAnimation = new EventoAnimation(plugin);
-        loadFiles(); // Se ejecuta al iniciar
+        loadFiles();
 
         duracionCanciones.put("minecraft:music_disc.creator", (2 * 60 + 56) * 20);
         duracionCanciones.put("minecraft:music_disc.precipice", (4 * 60 + 59) * 20);
@@ -253,7 +251,6 @@ public class BuildBattleHandler implements Listener {
         if (!dataFile.exists()) {
             try { dataFile.createNewFile(); } catch (IOException ignored) {}
             data = YamlConfiguration.loadConfiguration(dataFile);
-            // CORRECCION DEL MUNDO QUE GENERABA EL ERROR "UNKNOWN WORLD"
             World mundoPrincipal = Bukkit.getWorlds().get(0);
             data.set("centro", new Location(mundoPrincipal, 22000, 101, 22000));
             try { data.save(dataFile); } catch (IOException ignored) {}
@@ -273,8 +270,6 @@ public class BuildBattleHandler implements Listener {
         arenaMinZ = Math.min(config.getInt("zona.minZ"), config.getInt("zona.maxZ"));
         arenaMaxZ = Math.max(config.getInt("zona.minZ"), config.getInt("zona.maxZ"));
 
-        // Proteccion: Si estamos en medio de un evento, no borramos las parcelas ni reseteamos.
-        // Solo actualizamos coordenadas. Si no, las recargamos enteras.
         if (!eventoIniciado) {
             parcelas.clear();
             chunkToParcels.clear();
@@ -641,7 +636,6 @@ public class BuildBattleHandler implements Listener {
             }
         }
 
-        // --- Asegurar que Jueces y Admins no se tepeen a sus parcelas ---
         for (String name : votantes) {
             Player p = Bukkit.getPlayer(name);
             if (p != null) darItemCofreConstruccion(p);
@@ -774,7 +768,6 @@ public class BuildBattleHandler implements Listener {
         }.runTaskLater(plugin, 200L);
     }
 
-    // --- NUEVO METODO PARA MOSTRAR TOP DE RONDA SIN TERMINAR EL EVENTO ---
     private void mostrarTopRonda(List<BuildBattleParcel> validParcels) {
         for (UUID id : playersInArena) {
             Player p = Bukkit.getPlayer(id);
@@ -807,8 +800,6 @@ public class BuildBattleHandler implements Listener {
             p.sendMessage(msjTop.toString());
         }
     }
-    // ----------------------------------------------------------------------
-
 
     public void forzarGanador() {
         if (!fase.equals("Votacion")) {
@@ -864,10 +855,8 @@ public class BuildBattleHandler implements Listener {
             }
         }
 
-        // --- LÓGICA DE MODO TORNEO ---
         if (!isTieBreaker && modoJuego.equalsIgnoreCase("TORNEO")) {
             if (rondaActual < rondasMaximas) {
-                // Es una ronda intermedia
                 Player ganadorRonda = Bukkit.getPlayer(validParcels.get(0).getOwnerUUID());
                 if (ganadorRonda != null) {
                     for(UUID id : playersInArena) {
@@ -879,15 +868,13 @@ public class BuildBattleHandler implements Listener {
                     }
                 }
 
-                mostrarTopRonda(validParcels); // Nuevo: Muestra el chat de puntos
+                mostrarTopRonda(validParcels);
 
-                // Guardar puntos acumulados (para la sig ronda) y registrar en YML
                 for (BuildBattleParcel p : validParcels) {
-                    p.saveRoundPoints(); // Acumula en la base y limpia los votos recientes
+                    p.saveRoundPoints();
                     guardarPuntajeYML(p.getOwnerName(), p.getTotalPoints());
                 }
 
-                // Limpiar parcela física para la nueva ronda
                 for (BuildBattleParcel p : validParcels) {
                     p.clearParcel();
                     p.updateTextDisplay();
@@ -903,23 +890,20 @@ public class BuildBattleHandler implements Listener {
                     }
                 }
 
-                // Configurar el estado al lobby de nuevo, pero sin tepearlos.
                 fase = "Lobby";
                 rondaActual++;
                 categoria = "Ninguna";
 
                 actualizarScoreboards();
                 broadcastEventZona(cPrimary + "§lLa Ronda ha terminado. Puntajes guardados. Preparando la Ronda " + rondaActual + "...");
-                return; // Cortamos aquí para que no termine el evento.
+                return;
             } else {
-                // Es la última ronda del torneo. Guardamos también los totales antes de evaluar ganador/empate
                 for (BuildBattleParcel p : validParcels) {
                     p.saveRoundPoints();
                     guardarPuntajeYML(p.getOwnerName(), p.getTotalPoints());
                 }
             }
         }
-        // -----------------------------
 
         if (isTieBreaker) {
             isTieBreaker = false;

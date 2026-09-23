@@ -19,7 +19,6 @@ public class MagicTP implements CommandExecutor, TabCompleter {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        // Lógica de Viciont: Aceptamos 2, 4 o 5 argumentos
         if (args.length != 4 && args.length != 5 && args.length != 2) {
             sender.sendMessage(ChatColor.RED + "Uso correcto:");
             sender.sendMessage(ChatColor.RED + "/magictp <jugador|@a> <x> <y> <z> [mundo]");
@@ -30,7 +29,6 @@ public class MagicTP implements CommandExecutor, TabCompleter {
         String targetName = args[0];
         boolean useSpawn = args.length == 2 && args[1].equalsIgnoreCase("spawn");
 
-        // Procesar coordenadas y dimensión (Lógica Viciont mejorada)
         final Location targetLocation;
         if (!useSpawn && (args.length == 4 || args.length == 5)) {
             try {
@@ -41,7 +39,6 @@ public class MagicTP implements CommandExecutor, TabCompleter {
                 World targetWorld;
 
                 if (args.length == 5) {
-                    // Si especifican mundo, lo buscamos
                     String worldName = args[4];
                     targetWorld = Bukkit.getWorld(worldName);
 
@@ -50,7 +47,6 @@ public class MagicTP implements CommandExecutor, TabCompleter {
                         return true;
                     }
                 } else {
-                    // Si NO especifican mundo, usamos el del sender (si es jugador) o el default
                     if (sender instanceof Player) {
                         targetWorld = ((Player) sender).getWorld();
                     } else {
@@ -67,7 +63,6 @@ public class MagicTP implements CommandExecutor, TabCompleter {
             targetLocation = null;
         }
 
-        // Obtener jugadores objetivo
         final List<Player> players = new ArrayList<>();
         if (targetName.equalsIgnoreCase("@a")) {
             players.addAll(Bukkit.getOnlinePlayers());
@@ -80,17 +75,13 @@ public class MagicTP implements CommandExecutor, TabCompleter {
             players.add(player);
         }
 
-        // --- ESTÉTICA DE ISMANUSMP (Vanilla Friendly) ---
         for (Player player : players) {
-            // Sonidos de amatista (Vanilla 1.21 compatible)
             player.playSound(player.getLocation(), Sound.BLOCK_AMETHYST_BLOCK_CHIME, 2.0f, 0.6f);
             player.playSound(player.getLocation(), Sound.BLOCK_AMETHYST_BLOCK_RESONATE, 2.0f, 0.6f);
 
-            // Título sin unicodes, solo colores estándar
             player.sendTitle("§b§lTepea§3§lndote§r§l...", "", 20, 40, 20);
         }
 
-        // Tarea diferida (Delay de IsManuSMP: 80 ticks = 4 segundos)
         new BukkitRunnable() {
             @Override
             public void run() {
@@ -109,14 +100,13 @@ public class MagicTP implements CommandExecutor, TabCompleter {
                     }
                 }
             }
-        }.runTaskLater(plugin, 80); // Mantenemos los 80 ticks de IsManuSMP
+        }.runTaskLater(plugin, 80);
 
         return true;
     }
 
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
-        // TabCompleter de Viciont (Más completo)
         List<String> completions = new ArrayList<>();
 
         if (args.length == 1) {
@@ -138,7 +128,6 @@ public class MagicTP implements CommandExecutor, TabCompleter {
                 completions.add(String.valueOf(((Player) sender).getLocation().getBlockZ()));
             }
         } else if (args.length == 5 && !args[1].equalsIgnoreCase("spawn")) {
-            // Sugerencia de mundos (Feature de Viciont)
             for (World world : Bukkit.getWorlds()) {
                 completions.add(world.getName());
             }

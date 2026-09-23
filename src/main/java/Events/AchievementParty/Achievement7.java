@@ -52,7 +52,6 @@ public class Achievement7 implements Achievement, Listener {
             if (projectile.getShooter() instanceof Player) {
                 Player player = (Player) projectile.getShooter();
 
-                // Verifica primero si ya completó el logro
                 FileConfiguration data = YamlConfiguration.loadConfiguration(eventHandler.getAchievementsFile());
                 if (!data.getBoolean("players." + player.getName() + ".achievements.alma_piedra.completed", false)) {
                     if (eventHandler.completeAchievement(player.getName(), "alma_piedra")) {

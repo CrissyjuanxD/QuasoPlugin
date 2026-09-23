@@ -53,19 +53,16 @@ public class MobCapManager {
             return;
         }
 
-        // Cargar configuración
         this.baseMobCap = config.getBaseMobCap();
         this.multiplier = config.getMultiplier();
         this.enabled = config.isEnabled();
 
-        // Guardar límites originales
         for (World world : Bukkit.getWorlds()) {
             int originalLimit = world.getSpawnLimit(SpawnCategory.MONSTER);
             originalLimits.put(world.getName(), originalLimit);
             currentLimits.put(world.getName(), originalLimit);
         }
 
-        // Aplicar configuración inicial si está habilitado
         if (enabled) {
             applyMobCapToWorlds();
             startOptimizationTask();
@@ -84,7 +81,6 @@ public class MobCapManager {
             return;
         }
 
-        // Tarea de optimización cada 30 segundos
         optimizationTask = Bukkit.getScheduler().runTaskTimerAsynchronously(plugin, () -> {
             if (enabled && shouldOptimize()) {
                 optimizer.optimizeMobCap();
@@ -138,7 +134,6 @@ public class MobCapManager {
         String status = multiplier.getDisplayName();
         plugin.getLogger().info("Mob cap multiplier set to: " + status);
 
-        // Mensaje al servidor
         String message = "§e[MobCap] §eMobCap " + status + " activado.";
         Bukkit.broadcastMessage(message);
     }
@@ -208,12 +203,11 @@ public class MobCapManager {
 
     public int getCurrentEffectiveMobCap() {
         if (!enabled) {
-            return 70; // Valor vanilla por defecto
+            return 70;
         }
 
         int effectiveCap = baseMobCap * multiplier.getMultiplier();
 
-        // Aplicar optimización si es necesario - calcular directamente sin llamar a shouldOptimize()
         int playerCount = Bukkit.getOnlinePlayers().size();
         if (config.isOptimizationEnabled() &&
                 playerCount > config.getOptimizationPlayerThreshold() &&
@@ -297,7 +291,6 @@ public class MobCapManager {
         plugin.getLogger().info("MobCapManager shutdown completed");
     }
 
-    // Getters
     public int getBaseMobCap() {
         return baseMobCap;
     }

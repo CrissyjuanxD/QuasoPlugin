@@ -22,7 +22,6 @@ public class DebugArenaCommand implements CommandExecutor {
         World w = player.getWorld();
         BaseBoss foundBoss = null;
 
-        // Buscar cualquier boss activo basado en BaseBoss
         for (Entity e : w.getEntities()) {
             if (QueenBeeHandler.ACTIVE_BOSSES.containsKey(e.getUniqueId())) {
                 foundBoss = QueenBeeHandler.ACTIVE_BOSSES.get(e.getUniqueId());

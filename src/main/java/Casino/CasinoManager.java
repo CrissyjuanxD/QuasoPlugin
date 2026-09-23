@@ -1,7 +1,7 @@
 package Casino;
 
 import Managers.ItemManager;
-import net.md_5.bungee.api.ChatColor; // Importante para colores Hex
+import net.md_5.bungee.api.ChatColor;
 import org.bukkit.*;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -62,7 +62,6 @@ public class CasinoManager {
 
                 World world = Bukkit.getWorld(worldName);
                 if (world != null) {
-                    // Usar coordenadas de bloque exactas para el mapa
                     casinoTables.put(new Location(world, Math.floor(x), Math.floor(y), Math.floor(z)), type);
                 }
             }
@@ -122,8 +121,6 @@ public class CasinoManager {
         slotMachine.reloadConfig();
         blackJack.reloadConfig();
     }
-
-    // --- LÓGICA DE HOLOGRAMAS ---
 
     public void setGameActive(Location loc, boolean active) {
         Location blockLoc = new Location(loc.getWorld(), loc.getBlockX(), loc.getBlockY(), loc.getBlockZ());
@@ -211,8 +208,6 @@ public class CasinoManager {
             }
         }
     }
-
-    // --- PARTICULAS ---
 
     private void startParticleTask() {
         new BukkitRunnable() {

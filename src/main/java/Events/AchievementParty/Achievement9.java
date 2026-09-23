@@ -21,7 +21,7 @@ public class Achievement9 implements Achievement, Listener {
     private final Map<String, Integer> fallStartHeights = new HashMap<>();
     private final Map<String, Long> fallStartTimes = new HashMap<>();
     private final Map<String, Boolean> usedTotem = new HashMap<>();
-    private static final int MAX_FALL_TIME = 10000; // 10 segundos en milisegundos
+    private static final int MAX_FALL_TIME = 10000;
     private static final int MIN_HEIGHT = 1;
     private static final int MAX_HEIGHT = 255;
 
@@ -44,12 +44,10 @@ public class Achievement9 implements Achievement, Listener {
 
     @Override
     public void initializePlayerData(String playerName) {
-        // No necesita inicialización especial
     }
 
     @Override
     public void checkCompletion(String playerName) {
-        // Se verifica durante los eventos
     }
 
     @EventHandler
@@ -60,13 +58,11 @@ public class Achievement9 implements Achievement, Listener {
         World world = player.getWorld();
         String playerName = player.getName();
 
-        // Solo verificar en el Nether
         if (world.getEnvironment() != World.Environment.NETHER) {
             resetPlayerData(playerName);
             return;
         }
 
-        // Verificar si ya completó el logro
         FileConfiguration data = YamlConfiguration.loadConfiguration(eventHandler.getAchievementsFile());
         if (data.getBoolean("players." + playerName + ".achievements.nether_fall.completed", false)) {
             resetPlayerData(playerName);
@@ -76,9 +72,7 @@ public class Achievement9 implements Achievement, Listener {
         int currentY = event.getTo().getBlockY();
         int previousY = event.getFrom().getBlockY();
 
-        // Verificar si el jugador está cayendo
         if (currentY < previousY) {
-            // Solo comenzar a registrar si está en la altura máxima exacta (255)
             if (currentY == MAX_HEIGHT && !fallStartHeights.containsKey(playerName)) {
                 fallStartHeights.put(playerName, currentY);
                 fallStartTimes.put(playerName, System.currentTimeMillis());
@@ -86,14 +80,12 @@ public class Achievement9 implements Achievement, Listener {
                 player.sendMessage("§e¡Comienza el Descenso al Inframundo! Tienes 10 segundos.");
             }
         }
-        // Verificar si tocó cualquier superficie antes de Y=1
         else if (currentY == previousY && fallStartHeights.containsKey(playerName)) {
             if (currentY > MIN_HEIGHT) {
                 player.sendMessage("§c¡Descenso interrumpido! Debes caer directamente hasta Y=1.");
                 resetPlayerData(playerName);
             }
         }
-        // Verificar si llegó a Y=1
         else if (currentY <= MIN_HEIGHT && fallStartHeights.containsKey(playerName)) {
             if (usedTotem.getOrDefault(playerName, false)) {
                 player.sendMessage("§c¡Descenso fallido! No puedes usar totems para sobrevivir.");
@@ -114,7 +106,6 @@ public class Achievement9 implements Achievement, Listener {
             resetPlayerData(playerName);
         }
 
-        // Limpiar datos si el tiempo excede el límite
         if (fallStartTimes.containsKey(playerName)) {
             long fallTime = System.currentTimeMillis() - fallStartTimes.get(playerName);
             if (fallTime > MAX_FALL_TIME) {

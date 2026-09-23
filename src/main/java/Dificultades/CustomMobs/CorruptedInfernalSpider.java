@@ -7,7 +7,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityTargetEvent;
-import org.bukkit.event.player.PlayerMoveEvent; // IMPORT ELIMINADO (Opcional, si limpias imports)
+import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
@@ -110,7 +110,6 @@ public class CorruptedInfernalSpider implements Listener {
         if (event.getEntity() instanceof Spider spider && event.getTarget() instanceof Player) {
 
             if (spider.getPersistentDataContainer().has(corrupedInfernaltedspiderKey, PersistentDataType.BYTE)) {
-                // Dispara UNA VEZ cuando te ve (targetea). Está bien.
                 if (random.nextDouble() < 0.2) {
                     launchFireballAttack(spider, (Player) event.getTarget());
                 }
@@ -172,6 +171,4 @@ public class CorruptedInfernalSpider implements Listener {
 
     private record SpiderEffect(String name, PotionEffectType type, int amplifier) {
     }
-
-    // ELIMINADO: onPlayerMove (Causaba lag severo)
 }

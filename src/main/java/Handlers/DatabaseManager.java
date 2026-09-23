@@ -40,7 +40,7 @@ public class DatabaseManager {
         while (attempt < maxRetries) {
             try {
                 initializeDatabase();
-                return; // Si tiene éxito, salimos del bucle
+                return;
             } catch (SQLException e) {
                 attempt++;
                 plugin.getLogger().warning("Intento " + attempt + " fallido al conectar a MySQL: " + e.getMessage());
@@ -48,7 +48,7 @@ public class DatabaseManager {
                     plugin.getLogger().severe("¡No se pudo conectar a la base de datos después de " + maxRetries + " intentos!");
                 } else {
                     try {
-                        Thread.sleep(2000); // Esperar 2 segundos antes del siguiente intento
+                        Thread.sleep(2000);
                     } catch (InterruptedException ignored) {}
                 }
             }

@@ -36,21 +36,16 @@ public class ChatBubbleManager implements Listener, CommandExecutor, TabComplete
     private final NamespacedKey bubbleKey;
     private boolean enabled = true;
 
-    // Mapa hiper optimizado: Solo guarda datos de jugadores con una burbuja ACTIVA en este momento.
     private final Map<UUID, BubbleData> activeBubbles = new HashMap<>();
 
     public ChatBubbleManager(JavaPlugin plugin) {
         this.plugin = plugin;
         this.bubbleKey = new NamespacedKey(plugin, "is_chat_bubble");
 
-        cleanupOrphanedBubbles(); // Limpieza inicial anti-crasheos
+        cleanupOrphanedBubbles();
         startTickTask();
     }
 
-    /**
-     * IMPORTANTE: Llama a este método en el onDisable() de tu clase Main.
-     * QuasoPlugin.java -> chatBubbleManager.cleanup();
-     */
     public void cleanup() {
         for (BubbleData data : activeBubbles.values()) {
             if (data.display != null && !data.display.isDead()) {
@@ -60,7 +55,6 @@ public class ChatBubbleManager implements Listener, CommandExecutor, TabComplete
         activeBubbles.clear();
     }
 
-    // Busca TextDisplays huérfanos por crasheos/reinicios forzados y los purga.
     private void cleanupOrphanedBubbles() {
         for (World world : Bukkit.getWorlds()) {
             for (Entity entity : world.getEntitiesByClass(TextDisplay.class)) {
@@ -71,7 +65,6 @@ public class ChatBubbleManager implements Listener, CommandExecutor, TabComplete
         }
     }
 
-    // Método para obtener el color HEX del Team del jugador
     private String getPlayerColor(Player p) {
         org.bukkit.scoreboard.Scoreboard board = Bukkit.getScoreboardManager().getMainScoreboard();
         org.bukkit.scoreboard.Team team = board.getEntryTeam(p.getName());
@@ -82,10 +75,9 @@ public class ChatBubbleManager implements Listener, CommandExecutor, TabComplete
                 return type.getBungeeColor().toString();
             }
         }
-        return "§f"; // Blanco por defecto si no tiene team
+        return "§f";
     }
 
-    // Tarea única centralizada. El lag es nulo porque solo procesa entidades en uso.
     private void startTickTask() {
         new BukkitRunnable() {
             @Override
@@ -98,36 +90,31 @@ public class ChatBubbleManager implements Listener, CommandExecutor, TabComplete
                     Player p = Bukkit.getPlayer(entry.getKey());
                     BubbleData data = entry.getValue();
 
-                    // Si el jugador se desconecta o la entidad se destruye, purgar de inmediato.
                     if (p == null || !p.isOnline() || data.display.isDead()) {
                         if (data.display != null && !data.display.isDead()) data.display.remove();
                         it.remove();
                         continue;
                     }
 
-                    // Asegurarnos de que siga montado (por si usa un portal o algo lo desmonta)
                     if (data.display.getVehicle() == null || !data.display.getVehicle().equals(p)) {
                         p.addPassenger(data.display);
                     }
 
                     data.ticks++;
 
-                    // Tiempo de expiración cumplido
                     if (data.ticks > data.maxTicks) {
                         data.display.remove();
                         it.remove();
                         continue;
                     }
 
-                    // 1. Lógica de Flote (CERO LAG): Modificamos la Transformación en vez de teletransportar
                     Transformation transform = data.display.getTransformation();
-                    transform.getTranslation().add(0f, 0.005f, 0f); // Sube extremadamente suave
+                    transform.getTranslation().add(0f, 0.005f, 0f);
 
                     data.display.setInterpolationDelay(0);
-                    data.display.setInterpolationDuration(2); // El cliente suaviza aún más la animación
+                    data.display.setInterpolationDuration(2);
                     data.display.setTransformation(transform);
 
-                    // 2. Lógica de Desvanecimiento (Fade-out): Últimos 20 ticks (1 segundo)
                     int fadeStart = data.maxTicks - 20;
                     if (data.ticks > fadeStart) {
                         int ticksLeft = data.maxTicks - data.ticks;
@@ -151,40 +138,32 @@ public class ChatBubbleManager implements Listener, CommandExecutor, TabComplete
         Player p = e.getPlayer();
         String message = e.getMessage();
 
-        // Formato final de la burbuja: 💬 [Color]Nick: [Blanco]Mensaje
         String bubbleText = "§b💬 " + getPlayerColor(p) + p.getName() + "§7: §f" + message;
 
-        // Calcular tiempo dinámico: Base de 60 ticks (3s) + 15 ticks (0.75s) por palabra.
         int wordCount = message.split("\\s+").length;
         int calculatedTicks = 60 + (wordCount * 15);
-        final int finalMaxTicks = Math.min(calculatedTicks, 200); // Límite máximo de 200 ticks (10s)
+        final int finalMaxTicks = Math.min(calculatedTicks, 200);
 
-        // Al crear o editar entidades SIEMPRE debe ser en el hilo principal
         Bukkit.getScheduler().runTask(plugin, () -> {
             BubbleData data = activeBubbles.get(p.getUniqueId());
 
             if (data != null && data.display != null && !data.display.isDead()) {
-                // Reemplazo de golpe: Restablecemos la vida de la entidad, el nuevo tiempo y actualizamos texto.
                 data.ticks = 0;
                 data.maxTicks = finalMaxTicks;
                 data.display.setTextOpacity((byte) 255);
                 data.display.setBackgroundColor(Color.fromARGB(100, 0, 0, 0));
                 data.display.setText(bubbleText);
 
-                // Reiniciar altura visual al ras de la cabeza
                 Transformation transform = data.display.getTransformation();
                 transform.getTranslation().set(0f, 0.6f, 0f);
-                data.display.setInterpolationDuration(0); // Movimiento instantáneo para el reseteo
+                data.display.setInterpolationDuration(0);
                 data.display.setTransformation(transform);
             } else {
-                // Crear nueva burbuja
                 TextDisplay display = (TextDisplay) p.getWorld().spawnEntity(p.getLocation(), EntityType.TEXT_DISPLAY);
-                p.addPassenger(display); // ¡El truco maestro Anti-Lag!
+                p.addPassenger(display);
 
-                // Marcador de seguridad anti-crasheos
                 display.getPersistentDataContainer().set(bubbleKey, PersistentDataType.BYTE, (byte) 1);
 
-                // Configuración visual
                 display.setBillboard(Display.Billboard.CENTER);
                 display.setAlignment(TextDisplay.TextAlignment.CENTER);
                 display.setBackgroundColor(Color.fromARGB(100, 0, 0, 0));
@@ -194,7 +173,6 @@ public class ChatBubbleManager implements Listener, CommandExecutor, TabComplete
 
                 display.setViewRange(24.0f / 64.0f);
 
-                // Ajustar la posición visual inicial un poco por encima del jugador montado
                 Transformation transform = display.getTransformation();
                 transform.getTranslation().set(0f, 0.6f, 0f);
                 display.setTransformation(transform);
@@ -228,7 +206,7 @@ public class ChatBubbleManager implements Listener, CommandExecutor, TabComplete
                 sender.sendMessage("§eLas burbujas de chat ya están desactivadas.");
             } else {
                 enabled = false;
-                cleanup(); // Borra las existentes al instante para no dejar rastros
+                cleanup();
                 sender.sendMessage("§cBurbujas de chat globales §lDESACTIVADAS.");
             }
         } else {
@@ -248,7 +226,6 @@ public class ChatBubbleManager implements Listener, CommandExecutor, TabComplete
         return new ArrayList<>();
     }
 
-    // Objeto contenedor ligero
     private static class BubbleData {
         TextDisplay display;
         int ticks = 0;

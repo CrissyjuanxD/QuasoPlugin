@@ -29,7 +29,6 @@ public class Mission14 implements Mission, Listener {
     private final SuccessNotification successNotification;
     private final ActionBarHandler actionBarHandler;
 
-    // Única llave necesaria: "Ya se usó para la misión"
     private final NamespacedKey markKey;
 
     private final List<Material> flowers = Arrays.asList(
@@ -84,11 +83,8 @@ public class Mission14 implements Mission, Listener {
 
     public List<Material> getRequiredFlowers() { return flowers; }
 
-    // --- SISTEMA ANTI EXPLOIT (TRASPASO DE MARCA) ---
-
     @EventHandler
     public void onBlockPlace(BlockPlaceEvent event) {
-        // 1. SOLUCIÓN: Siempre limpiamos cualquier metadata "fantasma" que haya quedado en estas coordenadas
         if (event.getBlockPlaced().hasMetadata("mission14_marked")) {
             event.getBlockPlaced().removeMetadata("mission14_marked", plugin);
         }
@@ -96,10 +92,8 @@ public class Mission14 implements Mission, Listener {
         ItemStack itemInHand = event.getItemInHand();
         Material type = itemInHand.getType();
 
-        // 2. Incluimos las semillas en la validación (TORCHFLOWER_SEEDS, PITCHER_POD)
         if (flowers.contains(type) || type.name().contains("SEED") || type.name().contains("PITCHER") || type.name().contains("TORCHFLOWER")) {
             ItemMeta meta = itemInHand.getItemMeta();
-            // Si el jugador planta una flor o semilla que YA está marcada, le pasamos la marca al bloque
             if (meta != null && meta.getPersistentDataContainer().has(markKey, PersistentDataType.BYTE)) {
                 event.getBlockPlaced().setMetadata("mission14_marked", new FixedMetadataValue(plugin, true));
             }
@@ -108,13 +102,11 @@ public class Mission14 implements Mission, Listener {
 
     @EventHandler
     public void onBlockDropItem(BlockDropItemEvent event) {
-        // Si el bloque roto tenía la marca de "ya estaba contado", se la devolvemos al ítem dropeado
         if (event.getBlockState().hasMetadata("mission14_marked") || event.getBlock().hasMetadata("mission14_marked")) {
             for (Item itemEntity : event.getItems()) {
                 ItemStack item = itemEntity.getItemStack();
                 Material type = item.getType();
 
-                // Marcamos también las semillas si caen de un cultivo previamente marcado
                 if (flowers.contains(type) || type.name().contains("SEED") || type.name().contains("PITCHER") || type.name().contains("TORCHFLOWER")) {
                     ItemMeta meta = item.getItemMeta();
                     if (meta != null) {
@@ -129,12 +121,10 @@ public class Mission14 implements Mission, Listener {
                     }
                 }
             }
-            // SOLUCIÓN: Limpiamos la metadata al romper el bloque por seguridad extra
+
             event.getBlock().removeMetadata("mission14_marked", plugin);
         }
     }
-
-    // --- RECOLECCIÓN ---
 
     @EventHandler
     public void onPickup(EntityPickupItemEvent event) {
@@ -152,7 +142,6 @@ public class Mission14 implements Mission, Listener {
         ItemMeta meta = item.getItemMeta();
         if (meta == null) return;
 
-        // Si ya tiene la marca de contada, ignorar
         if (meta.getPersistentDataContainer().has(markKey, PersistentDataType.BYTE)) return;
 
         MissionData data = missionHandler.getData(player, 14);
@@ -161,7 +150,7 @@ public class Mission14 implements Mission, Listener {
         String key = "collected_" + type.name();
         int currentAmount = data.getProgressInt(key);
 
-        if (currentAmount < 25) { // Límite subido a 25
+        if (currentAmount < 25) {
             int amountToAdd = item.getAmount();
             int newAmount = Math.min(25, currentAmount + amountToAdd);
             data.setProgressValue(key, newAmount);
@@ -194,7 +183,6 @@ public class Mission14 implements Mission, Listener {
             }
         }
 
-        // Marcamos la flor como ya usada sin importar si completó la misión o no
         meta.getPersistentDataContainer().set(markKey, PersistentDataType.BYTE, (byte) 1);
         List<String> lore = meta.hasLore() ? meta.getLore() : new ArrayList<>();
         if (!lore.contains(ChatColor.of("#A9A9A9") + "Flor ya recolectada para la misión")) {

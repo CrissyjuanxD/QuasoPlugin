@@ -28,14 +28,12 @@ public class Iceologer implements Listener {
 
     private final JavaPlugin plugin;
 
-    // --- CAMBIO CLAVE: STATIC para compartir datos entre SpawnMobs y DayTwoChanges ---
     private static final Map<UUID, IceologerState> activeIceologers = new HashMap<>();
     private static final Set<Player> frozenPlayers = new HashSet<>();
     private static final Set<UUID> blindnessApplied = new HashSet<>();
     private static final Map<UUID, Long> playerBowCooldowns = new HashMap<>();
     private static boolean eventsRegistered = false;
     private static BukkitTask mainTask;
-    // --------------------------------------------------------------------------------
 
     private final Random random = new Random();
     private final NamespacedKey iceologerKey;
@@ -62,7 +60,6 @@ public class Iceologer implements Listener {
         this.iceFangsKey = new NamespacedKey(plugin, "ice_fangs");
 
         this.iceBowItem = new IceBowItem(plugin);
-        // Pasamos el mapa estático al logic
         this.iceBowLogic = new IceBowLogic(plugin, playerBowCooldowns);
     }
 
@@ -183,8 +180,6 @@ public class Iceologer implements Listener {
 
         return iceologer;
     }
-
-    // === RESTO DEL CÓDIGO ===
 
     private void transformToIceAngel(Vex vex) {
         vex.setCustomName(ChatColor.AQUA + "" + ChatColor.BOLD + "Angel de Hielo");
@@ -502,7 +497,6 @@ public class Iceologer implements Listener {
             iceologer.getWorld().dropItemNaturally(iceologer.getLocation(), ItemsTotems.createIceCrystal());
             iceologer.getWorld().playSound(iceologer.getLocation(), Sound.ENTITY_ILLUSIONER_DEATH, SoundCategory.HOSTILE, 1.0f, 1.5f);
 
-            // Limpieza
             activeIceologers.remove(iceologer.getUniqueId());
             blindnessApplied.remove(iceologer.getUniqueId());
             playerBowCooldowns.entrySet().removeIf(entry -> System.currentTimeMillis() - entry.getValue() > 300000);

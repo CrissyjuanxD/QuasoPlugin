@@ -24,8 +24,6 @@ import java.io.IOException;
             applyCurrentDayChanges();
         }
 
-        // Iniciar o reiniciar el temporizador de día
-
         public void advanceDay() {
             currentDay++;
             for (Player player : Bukkit.getOnlinePlayers()) {

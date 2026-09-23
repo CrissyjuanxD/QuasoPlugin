@@ -117,7 +117,6 @@ public class CorruptedZombies implements Listener {
         Zombie CorruptedZombie = (Zombie) location.getWorld().spawnEntity(location, EntityType.ZOMBIE);
         applyCorruptedZombieAttributes(CorruptedZombie);
 
-        // Registrar en lista estática
         activeZombies.add(CorruptedZombie.getUniqueId());
         startCentralTask();
 
@@ -220,7 +219,6 @@ public class CorruptedZombies implements Listener {
         if (event.getEntity() instanceof Zombie zombie && isCorrupted(zombie)) {
             zombie.getWorld().playSound(zombie.getLocation(), Sound.ENTITY_ZOMBIE_DEATH, SoundCategory.HOSTILE, 1.0f, 0.6f);
 
-            // Limpieza inmediata
             activeZombies.remove(zombie.getUniqueId());
 
             if (Math.random() <= 0.30) {

@@ -63,25 +63,16 @@ public class StructureManager {
         pasteSchematicAsync(templeSchematic, new Location(world, 0, -56, 0), null);
     }
 
-    /**
-     * FIX ESPACIO SIN ESTRUCTURA: el problema anterior era que se usaba la celda
-     * del chunk que disparó el evento, que puede ser diferente a la celda donde está
-     * la ciudad. Ahora buscamos con findCityNear (igual que el generador) y usamos
-     * la clave de la celda de la ciudad encontrada, no la del chunk disparador.
-     */
     public void tryGenerateAncientCity(Chunk chunk) {
         if (ancientCitySchematic == null) return;
 
         int blockX = chunk.getX() * 16 + 8;
         int blockZ = chunk.getZ() * 16 + 8;
 
-        // Usamos findCityNear: igual que el generador, busca en la celda propia
-        // y las 8 vecinas. Si hay ciudad cerca de este chunk, la procesa.
         AncientCityLocator.CityInfo info =
                 AncientCityLocator.findCityNear(chunk.getWorld().getSeed(), blockX, blockZ);
         if (info == null) return;
 
-        // La clave de deduplicación es la CELDA DE LA CIUDAD, no la del chunk.
         long cellKey = AncientCityLocator.cellKey(info.cellX, info.cellZ);
         if (!processedCells.add(cellKey)) return;
 
@@ -134,32 +125,6 @@ public class StructureManager {
         return false;
     }
 
-    /**
-     * Pega el schem centrándolo en loc.
-     *
-     * WorldEdit coloca el ORIGEN del clipboard (clipboard.getOrigin()) en la coordenada
-     * que se le pasa a .to(). El origen es el bloque donde estaba el jugador al hacer
-     * //copy, que normalmente NO es la esquina NW sino algún punto interior.
-     *
-     * Para que el CENTRO GEOMÉTRICO del schem aterrice en (centerX, originY, centerZ)
-     * tenemos que calcular cuánto desplazamiento hay entre la esquina mínima del
-     * clipboard y su origen, y luego restarle la mitad del tamaño para que el centro
-     * quede justo en loc.
-     *
-     * Fórmula:
-     *   pasteTarget = loc - (clipboardOrigin - clipboardMin) - (size/2)
-     *               = clipboardMin + (loc - clipboardOrigin) - (loc - clipboardMin)/2
-     *
-     * Simplificado: pasamos directamente
-     *   pasteTarget = loc + (clipboardMin - clipboardOrigin)
-     * y WorldEdit desplaza el clip entero tal que su origen queda en pasteTarget,
-     * lo que deja la esquina mínima en loc - (clipboardOrigin - clipboardMin).
-     * Queremos que la esquina mínima esté en (centerX - SIZE_X/2, originY, centerZ - SIZE_Z/2),
-     * así que:
-     *   pasteTarget.x = originX + (clipOrigin.x - clipMin.x)
-     *   pasteTarget.z = originZ + (clipOrigin.z - clipMin.z)
-     *   pasteTarget.y = originY + (clipOrigin.y - clipMin.y)
-     */
     private void pasteSchematicAsync(Clipboard clipboard, Location loc, Runnable onComplete) {
         TaskManager.taskManager().async(() -> {
             try (EditSession editSession = WorldEdit.getInstance().newEditSessionBuilder()
@@ -167,20 +132,13 @@ public class StructureManager {
                     .fastMode(true)
                     .build()) {
 
-                // Compensación del origen interno del clipboard:
-                // .to() recibe el punto donde WorldEdit colocará clipboard.getOrigin().
-                // Queremos que la esquina mínima quede en (loc.x, loc.y, loc.z),
-                // así que trasladamos el target sumando el offset origen→min.
                 BlockVector3 clipMin    = clipboard.getMinimumPoint();
                 BlockVector3 clipOrigin = clipboard.getOrigin();
 
-                // offset = origin - min  (cuánto está el origen desplazado respecto a la esquina)
                 int offX = clipOrigin.x() - clipMin.x();
                 int offY = clipOrigin.y() - clipMin.y();
                 int offZ = clipOrigin.z() - clipMin.z();
 
-                // El target es la esquina deseada + el offset → WorldEdit coloca origin ahí,
-                // y la esquina mínima queda exactamente en (loc.x, loc.y, loc.z).
                 BlockVector3 target = BlockVector3.at(
                         (int) loc.getX() + offX,
                         (int) loc.getY() + offY,

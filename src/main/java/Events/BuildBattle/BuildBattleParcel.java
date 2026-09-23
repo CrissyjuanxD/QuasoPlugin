@@ -25,17 +25,14 @@ public class BuildBattleParcel {
     private UUID ownerUUID;
     private String ownerName;
 
-    // Mapas de puntos para no sobreescribir entre votantes
     private final Map<UUID, Integer> votesOriginality = new HashMap<>();
     private final Map<UUID, Integer> votesComplexity = new HashMap<>();
     private final Map<UUID, Integer> votesVisual = new HashMap<>();
 
-    // Puntos acumulados de rondas anteriores (desempate o Torneo)
     private int baseOriginality = 0;
     private int baseComplexity = 0;
     private int baseVisual = 0;
 
-    // Punto de guardado temporal para mantener ranking superior intacto
     private int storedGlobalScore = -1;
 
     private UUID textDisplayUUID;
@@ -64,7 +61,6 @@ public class BuildBattleParcel {
         return isInsideFast(loc.getBlockX(), loc.getBlockY(), loc.getBlockZ());
     }
 
-    // Optimización Extrema: Método matemático sin instanciar objetos Location
     public boolean isInsideFast(int x, int y, int z) {
         return x >= minX && x <= maxX && y >= minY && y <= maxY && z >= minZ && z <= maxZ;
     }
@@ -146,19 +142,15 @@ public class BuildBattleParcel {
         removeTextDisplay();
     }
 
-    // --- NUEVO MÉTODO PARA EL TORNEO ---
     public void saveRoundPoints() {
         baseOriginality += votesOriginality.values().stream().mapToInt(Integer::intValue).sum();
         baseComplexity += votesComplexity.values().stream().mapToInt(Integer::intValue).sum();
         baseVisual += votesVisual.values().stream().mapToInt(Integer::intValue).sum();
 
-        // Limpiamos los votos de la ronda para que los jueces puedan votar de nuevo,
-        // pero el visualizador y el getTotalPoints() incluirán la base guardada de arriba.
         votesOriginality.clear();
         votesComplexity.clear();
         votesVisual.clear();
     }
-    // -----------------------------------
 
     public void prepareForTieBreaker() {
         storedGlobalScore = getTotalPoints();
@@ -235,7 +227,7 @@ public class BuildBattleParcel {
 
     public double getSortPoints() {
         if (storedGlobalScore != -1) {
-            return storedGlobalScore + (getTotalPoints() * 0.001); // Se le añade una fracción imperceptible con los votos extras.
+            return storedGlobalScore + (getTotalPoints() * 0.001);
         }
         return getTotalPoints();
     }

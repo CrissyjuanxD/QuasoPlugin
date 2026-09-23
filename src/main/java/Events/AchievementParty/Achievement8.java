@@ -51,7 +51,6 @@ public class Achievement8 implements Achievement, Listener {
 
     @Override
     public void checkCompletion(String playerName) {
-        // Se verifica durante el evento de romper bloques
     }
 
     @EventHandler
@@ -61,19 +60,16 @@ public class Achievement8 implements Achievement, Listener {
         Block block = event.getBlock();
         Player player = event.getPlayer();
 
-        // Verificar que es un Sculk Shrieker y está en Deep Dark
         if (block.getType() != Material.SCULK_SHRIEKER || block.getBiome() != Biome.DEEP_DARK) {
             return;
         }
 
         FileConfiguration data = YamlConfiguration.loadConfiguration(eventHandler.getAchievementsFile());
 
-        // Verificar si ya completó el logro principal
         if (data.getBoolean("players." + player.getName() + ".achievements.sculk_shrieker.completed", false)) {
             return;
         }
 
-        // Incrementar contador
         int broken = data.getInt("players." + player.getName() + ".achievements.sculk_shrieker.broken", 0);
         broken++;
         data.set("players." + player.getName() + ".achievements.sculk_shrieker.broken", broken);
@@ -83,7 +79,6 @@ public class Achievement8 implements Achievement, Listener {
             player.sendMessage("§eChilladores rotos: §a" + broken + "§e/§a" + REQUIRED_SCULK_SHRIEKERS);
             successNotification.showSuccess(player);
 
-            // Eliminar el bloque para que no pueda ser reutilizado
             block.setType(Material.AIR);
 
             if (broken >= REQUIRED_SCULK_SHRIEKERS) {

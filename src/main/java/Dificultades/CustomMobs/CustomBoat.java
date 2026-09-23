@@ -50,11 +50,9 @@ public class CustomBoat implements Listener {
         this.ownerKey = new NamespacedKey(plugin, "boat_owner");
         this.fuelKey = new NamespacedKey(plugin, "boat_fuel");
 
-        // Inicializar sistema de guardado
         this.fuelFile = new File(plugin.getDataFolder(), "fuel.yml");
         if (!fuelFile.exists()) {
             try {
-                // Crear el archivo si no existe
                 fuelFile.getParentFile().mkdirs();
                 fuelFile.createNewFile();
                 this.fuelData = YamlConfiguration.loadConfiguration(fuelFile);
@@ -101,13 +99,12 @@ public class CustomBoat implements Listener {
         boat.setCustomNameVisible(true);
         boat.getPersistentDataContainer().set(boatKey, PersistentDataType.STRING, "custom_boat");
         boat.getPersistentDataContainer().set(ownerKey, PersistentDataType.STRING, owner.getUniqueId().toString());
-        double savedFuel = 0.1; // Valor por defecto
+        double savedFuel = 0.1;
         if (fuelData != null) {
             savedFuel = fuelData.getDouble(boatName, 0.1);
         }
         boat.getPersistentDataContainer().set(fuelKey, PersistentDataType.DOUBLE, savedFuel);
 
-        // Make boat invulnerable to normal damage
         boat.setInvulnerable(true);
 
         return boat;
@@ -126,7 +123,6 @@ public class CustomBoat implements Listener {
         Player player = event.getPlayer();
         Location spawnLoc = event.getClickedBlock().getRelative(event.getBlockFace()).getLocation().add(0.5, 0, 0.5);
 
-        // Check if item has name, if not set it
         if (!meta.hasDisplayName()) {
             meta.setDisplayName(ChatColor.GOLD + "Nave de " + player.getName());
             item.setItemMeta(meta);
@@ -135,7 +131,6 @@ public class CustomBoat implements Listener {
 
         Boat boat = spawnBoat(spawnLoc, player);
 
-        // Remove one boat from inventory
         if (!player.getGameMode().equals(GameMode.CREATIVE)) {
             item.setAmount(item.getAmount() - 1);
         }
@@ -153,7 +148,6 @@ public class CustomBoat implements Listener {
         Player player = event.getPlayer();
         ItemStack item = player.getInventory().getItem(event.getHand());
 
-        // Handle fuel refill
         if (item != null && item.getType() == Material.ECHO_SHARD && item.getItemMeta() != null &&
                 item.getItemMeta().getCustomModelData() == 350) {
             event.setCancelled(true);
@@ -185,10 +179,9 @@ public class CustomBoat implements Listener {
             }
 
             player.playSound(player.getLocation(), Sound.BLOCK_RESPAWN_ANCHOR_CHARGE, 1.0f, 1.5f);
-            return; // Salimos para evitar montarse en el bote
+            return;
         }
 
-        // Handle pickup with shift right click
         if (player.isSneaking() && event.getHand() == EquipmentSlot.HAND) {
             String ownerIdStr = boat.getPersistentDataContainer().get(ownerKey, PersistentDataType.STRING);
             if (ownerIdStr == null || !ownerIdStr.equals(player.getUniqueId().toString())) {
@@ -246,7 +239,6 @@ public class CustomBoat implements Listener {
             return;
         }
 
-        // Create bossbar for fuel
         BossBar fuelBar = Bukkit.createBossBar(
                 ChatColor.GREEN + "Combustible",
                 BarColor.GREEN,
@@ -256,7 +248,6 @@ public class CustomBoat implements Listener {
         fuelBar.addPlayer(player);
         fuelBars.put(player.getUniqueId(), fuelBar);
 
-        // Start movement task
         startBoatMovementTask(boat, player);
     }
 
@@ -280,19 +271,16 @@ public class CustomBoat implements Listener {
             }
         }
 
-        // Remove bossbar
         if (fuelBars.containsKey(player.getUniqueId())) {
             fuelBars.get(player.getUniqueId()).removePlayer(player);
             fuelBars.remove(player.getUniqueId());
         }
 
-        // Stop movement task
         if (actionBarTasks.containsKey(player.getUniqueId())) {
             Bukkit.getScheduler().cancelTask(actionBarTasks.get(player.getUniqueId()));
             actionBarTasks.remove(player.getUniqueId());
         }
 
-        // Stop engine sound
         player.stopSound(Sound.BLOCK_FURNACE_FIRE_CRACKLE);
     }
 
@@ -321,18 +309,15 @@ public class CustomBoat implements Listener {
 
                 double currentFuel = boat.getPersistentDataContainer().get(fuelKey, PersistentDataType.DOUBLE);
 
-                // Detectar "intento de sprint" (doble pulsación de W o mantenimiento)
                 boolean tryingToSprint = isTryingToSprint(player);
 
                 if (currentFuel > 0) {
-                    // Rotación del bote mejorada
                     Location boatLoc = boat.getLocation();
                     Location playerLoc = player.getLocation();
                     boatLoc.setYaw(playerLoc.getYaw());
-                    boatLoc.setPitch(0); // Mantener el bote nivelado
+                    boatLoc.setPitch(0);
                     boat.teleport(boatLoc);
 
-                    // Cancelar física por defecto
                     boat.setVelocity(new Vector(0, 0, 0));
                     boat.setGravity(false);
 
@@ -341,14 +326,12 @@ public class CustomBoat implements Listener {
                         double speedMultiplier = getBoatSpeedForWorld(boat.getWorld());
                         Vector velocity = direction.clone().multiply(speedMultiplier);
 
-                        // Suavizado de movimiento
                         if (wasMoving) {
                             velocity = lastDirection.multiply(0.3).add(velocity.multiply(0.7));
                         }
 
                         lastDirection = velocity.clone();
 
-                        // Elevación automática cuando se mueve horizontalmente
                         if (direction.getY() < 0.5) {
                             velocity.setY(velocity.getY() + 0.1);
                         }
@@ -356,7 +339,6 @@ public class CustomBoat implements Listener {
                         boat.setVelocity(velocity);
                         wasMoving = true;
 
-                        // Inclinación del bote
                         float pitchAngle = (float) Math.toDegrees(Math.atan(velocity.getY() * 2));
                         pitchAngle = Math.max(-30, Math.min(30, pitchAngle));
                         boatLoc.setPitch(pitchAngle);
@@ -369,7 +351,6 @@ public class CustomBoat implements Listener {
                         boat.getWorld().spawnParticle(Particle.LARGE_SMOKE, particleLoc, 1, 0.2, 0.2, 0.2, 0.05);
                         boat.getWorld().spawnParticle(Particle.POOF, particleLoc, 1, 0.2, 0.2, 0.2, 0.05);
                     } else {
-                        // Descenso suave cuando no se mueve
                         if (wasMoving) {
                             boat.setVelocity(new Vector(0, -0.05, 0));
                             wasMoving = false;
@@ -381,7 +362,6 @@ public class CustomBoat implements Listener {
                         }
                     }
                 } else {
-                    // Comportamiento sin combustible
                     boat.setGravity(true);
                     player.stopSound(Sound.BLOCK_FURNACE_FIRE_CRACKLE);
 
@@ -399,23 +379,20 @@ public class CustomBoat implements Listener {
             }
 
             private boolean isTryingToSprint(Player player) {
-                // Detectar si el jugador está presionando las teclas de movimiento hacia adelante
                 if (player.isSprinting()) {
                     lastSprintPress = System.currentTimeMillis();
                     return true;
                 }
 
-                // Detectar doble pulsación de W (avanzar)
                 if (player.getVelocity().getZ() != 0 || player.getVelocity().getX() != 0) {
                     long now = System.currentTimeMillis();
-                    if (now - lastSprintPress < 300) { // 300ms para doble pulsación
+                    if (now - lastSprintPress < 300) {
                         lastSprintPress = 0;
                         return true;
                     }
                     lastSprintPress = now;
                 }
 
-                // Mantener el sprint activo por un tiempo después de soltar
                 return System.currentTimeMillis() - lastSprintPress < 100;
             }
 
@@ -459,7 +436,7 @@ public class CustomBoat implements Listener {
 
     private double getBoatSpeedForWorld(World world) {
         if (fuelData == null) {
-            return 0.3; // Valor por defecto si no hay configuración
+            return 0.3;
         }
 
         String worldName = world.getName().toLowerCase();
@@ -473,7 +450,6 @@ public class CustomBoat implements Listener {
             return fuelData.getDouble("speed.end", 0.6);
         }
 
-        // Default to overworld speed
         return fuelData.getDouble("speed.overworld", 0.6);
     }
 
@@ -521,7 +497,6 @@ public class CustomBoat implements Listener {
         }
     }
 
-    // Helper method to send action bar messages
     private void sendActionBar(Player player, String message) {
         player.spigot().sendMessage(net.md_5.bungee.api.ChatMessageType.ACTION_BAR,
                 net.md_5.bungee.api.chat.TextComponent.fromLegacyText(message));

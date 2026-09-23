@@ -16,7 +16,6 @@ public class MobManager {
     private final QuasoPlugin plugin;
     private final DayHandler dayHandler;
 
-    // Instancias de Mobs
     private final Bombita bombitaSpawner;
     private final Iceologer iceologerSpawner;
     private final CorruptedZombies corruptedZombieSpawner;

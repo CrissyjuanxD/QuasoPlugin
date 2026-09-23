@@ -49,7 +49,6 @@ public class Achievement5 implements Achievement, Listener {
     public void initializePlayerData(String playerName) {
         FileConfiguration data = YamlConfiguration.loadConfiguration(eventHandler.getAchievementsFile());
 
-        // Inicializar el progreso de bloques rotos
         for (Material block : requiredBlocks) {
             data.set("players." + playerName + ".achievements.touch_grass.broken." + block.name(), false);
         }
@@ -63,7 +62,6 @@ public class Achievement5 implements Achievement, Listener {
 
     @Override
     public void checkCompletion(String playerName) {
-        // Se verifica durante los eventos
     }
 
     public Set<Material> getRequiredBlocks() {
@@ -77,20 +75,16 @@ public class Achievement5 implements Achievement, Listener {
         Player player = event.getPlayer();
         Block block = event.getBlock();
 
-        // Verificar primero si ya completó el logro principal
         FileConfiguration data = YamlConfiguration.loadConfiguration(eventHandler.getAchievementsFile());
         if (data.getBoolean("players." + player.getName() + ".achievements.touch_grass.completed", false)) {
             return;
         }
 
-        // Verificar si el bloque es uno de los requeridos
         if (requiredBlocks.contains(block.getType())) {
-            // Verificar si tiene Mining Fatigue III
             PotionEffect effect = player.getPotionEffect(PotionEffectType.MINING_FATIGUE);
-            if (effect != null && effect.getAmplifier() >= 2) { // Nivel III es amplificador 2
+            if (effect != null && effect.getAmplifier() >= 2) {
                 String path = "players." + player.getName() + ".achievements.touch_grass.broken." + block.getType().name();
 
-                // Marcar el bloque como roto si no lo estaba
                 if (!data.getBoolean(path, false)) {
                     data.set(path, true);
 
@@ -103,7 +97,6 @@ public class Achievement5 implements Achievement, Listener {
                         return;
                     }
 
-                    // Verificar si ha roto todos los bloques requeridos
                     checkBlockCompletion(player, data);
                 }
             }

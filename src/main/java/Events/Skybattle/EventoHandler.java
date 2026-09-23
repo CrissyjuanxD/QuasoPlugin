@@ -61,7 +61,6 @@ public class EventoHandler implements Listener {
     private final CofresHandler cofresHandler;
     private Scoreboard eventoScoreboard;
 
-    // --- CONFIGURACIÓN ---
     private File configFile;
     private FileConfiguration config;
     private String modoIngreso = "block";
@@ -83,14 +82,12 @@ public class EventoHandler implements Listener {
     private BukkitRunnable taskReduccionBorde;
     private BukkitRunnable taskReduccionBordeContinuo;
 
-    // Variables para el monitor de pausa
     private BukkitTask pauseMonitorTask;
     private List<String> ultimosDesconectados = new ArrayList<>();
 
     private Material bloqueActual;
     private String nombreBloqueActual;
 
-    //PLAYLIST
     private final List<String> cancionesDisponibles = new ArrayList<>();
     private final Map<String, Integer> duracionCanciones = new HashMap<>();
     private int indexCancion = 0;
@@ -238,7 +235,6 @@ public class EventoHandler implements Listener {
         inicializarTeamLavaClashMain();
 
         if (modoIngreso.equalsIgnoreCase("random")) {
-            // Se filtran los jugadores excluidos para que no sean elegidos
             List<Player> onlinePlayers = Bukkit.getOnlinePlayers().stream()
                     .filter(p -> !excludedPlayers.contains(p.getName()))
                     .collect(Collectors.toList());
@@ -336,7 +332,6 @@ public class EventoHandler implements Listener {
         Team lcTeam = mainBoard.getTeam(TeamType.LAVACLASH.getId());
         if (lcTeam != null) lcTeam.removeEntry(playerName);
 
-        // También lo removemos del scoreboard del evento si quedó atrapado ahí
         if (eventoScoreboard != null) {
             Team evtLcTeam = eventoScoreboard.getTeam(TeamType.LAVACLASH.getId());
             if (evtLcTeam != null) evtLcTeam.removeEntry(playerName);
@@ -350,7 +345,6 @@ public class EventoHandler implements Listener {
             }
         }
 
-        // Obligamos al jugador a volver a ver el scoreboard principal de los demás
         p.setScoreboard(mainBoard);
     }
 
@@ -374,7 +368,6 @@ public class EventoHandler implements Listener {
             pauseMonitorTask.cancel();
         }
 
-        // 1. Restaurar equipos e inventarios a los que no son el ganador (ya se le devolvió)
         for (String nombre : originalTeams.keySet()) {
             restaurarTeamOriginal(nombre);
             Player p = Bukkit.getPlayer(nombre);
@@ -390,7 +383,6 @@ public class EventoHandler implements Listener {
             }
         }
 
-        // 2. Eliminar todos los items dropeados en la zona
         World world = Bukkit.getWorld("world");
         if (world != null) {
             org.bukkit.util.BoundingBox arenaBox = new org.bukkit.util.BoundingBox(arenaMinX, arenaMinY, arenaMinZ, arenaMaxX, arenaMaxY, arenaMaxZ);
@@ -465,7 +457,6 @@ public class EventoHandler implements Listener {
         Player jugador = event.getPlayer();
         if (participantes.contains(jugador.getName())) return;
 
-        // Bloqueo para jugadores excluidos
         if (excludedPlayers.contains(jugador.getName())) {
             if (event.getBlock().getType() == bloqueActual) {
                 jugador.sendMessage(ChatColor.RED + "Estás excluido de este evento y no puedes participar.");
@@ -607,11 +598,9 @@ public class EventoHandler implements Listener {
                 List<String> offlinePlayers = obtenerJugadoresOffline();
 
                 if (offlinePlayers.isEmpty()) {
-                    // Si ya no hay nadie offline, avisamos y arrancamos
                     enviarMensajeZona("§aTodos los jugadores están conectados.");
                     this.cancel();
                 } else {
-                    // Comparamos: Solo enviamos mensaje si la lista cambió (alguien entró o salió)
                     if (!offlinePlayers.equals(ultimosDesconectados)) {
                         String nombres = String.join(", ", offlinePlayers);
 
@@ -619,12 +608,11 @@ public class EventoHandler implements Listener {
                         enviarMensajeZona("§b" + nombres);
                         enviarMensajeZona("§fEl evento ha sido pausado.");
 
-                        // Actualizamos el registro de desconectados
                         ultimosDesconectados = new ArrayList<>(offlinePlayers);
                     }
                 }
             }
-        }.runTaskTimer(plugin, 0L, 20L); // Chequea de forma silenciosa cada segundo
+        }.runTaskTimer(plugin, 0L, 20L);
     }
 
     public void iniciarSecuenciaInicioSkyBattle() {
@@ -653,17 +641,15 @@ public class EventoHandler implements Listener {
         cancelarTareasActivas();
         getJugadoresEnZona().forEach(p -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "stopsound " + p.getName()));
 
-        // Programar la fase final (Fever Mode) a los 401 segundos (8020 ticks) de haber iniciado la secuencia
         BukkitTask feverTask = Bukkit.getScheduler().runTaskLater(plugin, () -> {
             if (!eventoActivo) return;
 
-            // Acelerar y resetear playlist
             currentMusicPitch = 1.4f;
             iniciarPlaylist(true);
 
-            String colorEmoji = ChatColor.of("#FFB3BA").toString();  // Rojo pastel
-            String colorTexto = ChatColor.of("#AEC6CF").toString();  // Celeste pastel
-            String colorFuerte = ChatColor.of("#FDFD96").toString(); // Dorado pastel
+            String colorEmoji = ChatColor.of("#FFB3BA").toString();
+            String colorTexto = ChatColor.of("#AEC6CF").toString();
+            String colorFuerte = ChatColor.of("#FDFD96").toString();
 
             String msgFever = colorEmoji + "⌚" + colorTexto + " Se ha activado la fase final, a todos se les ha aplicado " + colorFuerte + "velocidad II" + colorTexto + ".";
 
@@ -697,7 +683,6 @@ public class EventoHandler implements Listener {
                         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "difficulty peaceful");
                     } else if (contador == 10) {
                         pitch = 1.1f;
-                        // INICIAR PLAYLIST AL COMENZAR CONTADOR
                         currentMusicPitch = 1.0f;
                         iniciarPlaylist(true);
                     } else if (contador == 9) pitch = 1.2f;
@@ -810,12 +795,11 @@ public class EventoHandler implements Listener {
         String cancion = cancionesDisponibles.get(indexCancion % cancionesDisponibles.size());
         int baseDurationTicks = duracionCanciones.getOrDefault(cancion, 3600);
 
-        // Ajustar la duración basada en el pitch (si va más rápido, dura menos)
         int actualDurationTicks = (int) (baseDurationTicks / currentMusicPitch);
         indexCancion++;
 
         for (Player p : getJugadoresEnZona()) {
-            p.stopSound(SoundCategory.RECORDS); // Quita la canción anterior
+            p.stopSound(SoundCategory.RECORDS);
             p.playSound(p.getLocation(), cancion, SoundCategory.RECORDS, Float.MAX_VALUE, currentMusicPitch);
         }
 
@@ -830,7 +814,6 @@ public class EventoHandler implements Listener {
 
         Scoreboard mainBoard = Bukkit.getScoreboardManager().getMainScoreboard();
 
-        // 1. CLONAR EQUIPOS (Para que espectadores no vean a la gente sin rango)
         for (org.bukkit.scoreboard.Team mainTeam : mainBoard.getTeams()) {
             org.bukkit.scoreboard.Team t = eventoScoreboard.getTeam(mainTeam.getName());
             if (t == null) {
@@ -848,7 +831,6 @@ public class EventoHandler implements Listener {
             }
         }
 
-        // 2. CLONAR CORAZONES DE FORMA SEGURA (Ignorando los read-only)
         for (Objective mainObj : mainBoard.getObjectives()) {
             if (mainObj.getDisplaySlot() == DisplaySlot.PLAYER_LIST || mainObj.getDisplaySlot() == DisplaySlot.BELOW_NAME) {
                 Objective newObj = eventoScoreboard.getObjective(mainObj.getName());
@@ -857,7 +839,6 @@ public class EventoHandler implements Listener {
                     newObj.setDisplaySlot(mainObj.getDisplaySlot());
                 }
 
-                // Aquí está la protección contra el crasheo "Cannot modify read-only score"
                 if (!mainObj.getCriteria().equalsIgnoreCase("health")) {
                     for (String entry : mainBoard.getEntries()) {
                         Score score = mainObj.getScore(entry);
@@ -871,7 +852,6 @@ public class EventoHandler implements Listener {
             }
         }
 
-        // 3. Team LAVACLASH para el Scoreboard de batalla
         TeamType lc = TeamType.LAVACLASH;
         org.bukkit.scoreboard.Team teamLC = eventoScoreboard.getTeam(lc.getId());
         if (teamLC == null) teamLC = eventoScoreboard.registerNewTeam(lc.getId());
@@ -885,7 +865,6 @@ public class EventoHandler implements Listener {
             }
         }
 
-        // 4. Sidebar del evento
         Objective objective = eventoScoreboard.getObjective("skybattle");
         if (objective == null) {
             objective = eventoScoreboard.registerNewObjective("skybattle", "dummy", "§c§lLAVA§6§lCLA§e§lSH");
@@ -1184,15 +1163,12 @@ public class EventoHandler implements Listener {
 
         Player jugador = (Player) event.getEntity();
 
-        // Calcular zona segura (5 bloques debajo del spawn de espectadores)
         double alturaSegura = zonaEspectadores.getY() - 1.0;
 
-        // 1. Evita que los jugadores en la zona de espectadores reciban daño
         if (isInsideArenaGeneral(jugador.getLocation()) && jugador.getLocation().getY() >= alturaSegura) {
             event.setCancelled(true);
         }
 
-        // 2. Evita que los jugadores en la zona de espectadores hagan daño o disparen al foso
         if (event instanceof EntityDamageByEntityEvent) {
             EntityDamageByEntityEvent evt = (EntityDamageByEntityEvent) event;
             if (evt.getDamager() instanceof Player) {
@@ -1213,7 +1189,6 @@ public class EventoHandler implements Listener {
 
         if (event.isCancelled()) return;
 
-        // Lógica normal de eliminación en batalla
         if (participantes.contains(jugador.getName())) {
             if (eventoEnCurso) {
                 double nuevaVida = jugador.getHealth() - event.getFinalDamage();
@@ -1336,7 +1311,6 @@ public class EventoHandler implements Listener {
                 enviarMensajeZona("§d۞§6§l " + ganador.getName() + " §f§lha ganado el evento §e§lLavaClash!§7§l.");
 
                 getJugadoresEnZona().forEach(p -> {
-                    // Limpiar todas las pistas que pudieran estar sonando
                     p.stopSound(SoundCategory.RECORDS);
                     p.stopSound("minecraft:music_disc.lava_chicken", SoundCategory.RECORDS);
                     p.stopSound("minecraft:music_disc.pigstep", SoundCategory.RECORDS);
@@ -1469,10 +1443,8 @@ public class EventoHandler implements Listener {
             return;
         }
 
-        // Solo aplicar restricciones si el jugador está construyendo DENTRO de la arena
         if (isInsideArenaGeneral(block.getLocation())) {
 
-            // 1. Prohibir tapar bloques de lava fuente dentro de la arena
             if (event.getBlockReplacedState().getType() == Material.LAVA) {
                 org.bukkit.block.data.Levelled lava = (org.bukkit.block.data.Levelled) event.getBlockReplacedState().getBlockData();
                 if (lava.getLevel() == 0) {
@@ -1482,14 +1454,12 @@ public class EventoHandler implements Listener {
                 }
             }
 
-            // 2. Si el evento no ha iniciado, nadie puede construir
             if (!eventoActivo) {
                 event.setCancelled(true);
                 player.sendMessage(ChatColor.RED + "No puedes colocar este bloque aquí.");
                 return;
             }
 
-            // 3. Si el evento está activo, solo se permiten estos bloques
             if (block.getType() == Material.PURPLE_CONCRETE || block.getType() == Material.COBWEB || block.getType() == Material.SCAFFOLDING) {
                 Bukkit.getScheduler().runTask(plugin, () -> {
                     EquipmentSlot hand = event.getHand();
@@ -1528,7 +1498,6 @@ public class EventoHandler implements Listener {
         if (eventoActivo && isInsideArenaGeneral(event.getLocation())) {
             if (event.getEntity() instanceof Monster || event.getEntity() instanceof Creature) {
                 if (event instanceof CreatureSpawnEvent creatureEvent) {
-                    // Permitir solo a pets que son convocados por Huevos con el dueño cerca
                     if (creatureEvent.getSpawnReason() == CreatureSpawnEvent.SpawnReason.SPAWNER_EGG) {
                         Player player = creatureEvent.getEntity().getWorld().getNearbyEntities(event.getLocation(), 1, 1, 1).stream()
                                 .filter(e -> e instanceof Player)
@@ -1562,11 +1531,9 @@ public class EventoHandler implements Listener {
         if (eventoActivo) {
             Entity entity = event.getEntity();
 
-            // Si la entidad NO es un jugador
             if (!(entity instanceof Player)) {
-                // Y está intentando teletransportarse hacia adentro de la arena
                 if (event.getTo() != null && isInsideArenaGeneral(event.getTo())) {
-                    event.setCancelled(true); // Se lo prohibimos
+                    event.setCancelled(true);
                 }
             }
         }
@@ -1813,7 +1780,6 @@ public class EventoHandler implements Listener {
         }
         sender.sendMessage(ChatColor.GREEN + "Jugador " + nombreJugador + " agregado al evento");
 
-        // Condicionamos el mensaje de acuerdo al modo de ingreso
         if (modoIngreso.equalsIgnoreCase("block")) {
             String jsonMessage = "[\"\","
                     + "{\"text\":\"\u06de\",\"color\":\"#BA7FD0\"},"
@@ -1842,7 +1808,6 @@ public class EventoHandler implements Listener {
         Player p = Bukkit.getPlayer(nombreJugador);
 
         if (p != null) {
-            // Si el evento ya hizo el TP y les guardó las cosas, restauramos
             if (preparacion || eventoEnCurso) {
                 p.getInventory().clear();
                 if (eventInventoryManager != null) {
@@ -1851,8 +1816,6 @@ public class EventoHandler implements Listener {
                 habilidadesManager.enableHabilidades(p);
                 habilidadesEffects.reapplyAllEffects(p, habilidadesManager);
             } else {
-                // Si estamos en la fase inicial, NO limpiamos el inventario.
-                // Solo le quitamos el ticket de ingreso si lo tiene.
                 for (ItemStack item : p.getInventory().getContents()) {
                     if (item != null && item.getType() == Material.PAPER && item.hasItemMeta() &&
                             item.getItemMeta().getDisplayName() != null &&
@@ -1873,7 +1836,6 @@ public class EventoHandler implements Listener {
             excludedPlayers.add(playerName);
             sender.sendMessage(ChatColor.GREEN + "Jugador " + playerName + " ha sido excluido del evento.");
 
-            // Si el jugador ya había logrado entrar, lo expulsamos automáticamente
             if (participantes.contains(playerName)) {
                 removerParticipante(sender, playerName);
             }

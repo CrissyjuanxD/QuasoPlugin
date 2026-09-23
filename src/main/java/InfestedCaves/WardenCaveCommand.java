@@ -13,14 +13,6 @@ import org.bukkit.entity.Player;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Comando único de la dimensión: /wardencave <subcomando> ...
- *
- * Subcomandos:
- *   /wardencave join <jugador/@a>
- *   /wardencave leave <jugador/@a>
- *   /wardencave portal [remove]
- */
 public class WardenCaveCommand implements CommandExecutor, TabCompleter {
 
     private final QuasoPlugin plugin;
@@ -56,7 +48,6 @@ public class WardenCaveCommand implements CommandExecutor, TabCompleter {
         sender.sendMessage(ChatColor.RED + "Uso: /wardencave <portal [remove] | join <jugador/@a> | leave <jugador/@a>>");
     }
 
-    // --- /wardencave portal [remove] ---
     private boolean handlePortal(CommandSender sender, String[] args) {
         if (!(sender instanceof Player)) {
             sender.sendMessage(ChatColor.RED + "Solo un jugador puede usar este subcomando.");
@@ -74,7 +65,6 @@ public class WardenCaveCommand implements CommandExecutor, TabCompleter {
         return true;
     }
 
-    // --- /wardencave join|leave <jugador/@a> ---
     private boolean handleJoinLeave(CommandSender sender, String action, String[] args) {
         if (!sender.hasPermission("viciont.admin")) {
             sender.sendMessage(ChatColor.RED + "No tienes permiso.");

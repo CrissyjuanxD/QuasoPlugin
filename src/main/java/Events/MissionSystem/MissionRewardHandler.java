@@ -89,7 +89,7 @@ public class MissionRewardHandler implements Listener {
         if (!isMissionToken(item)) return -1;
 
         ItemMeta meta = item.getItemMeta();
-        return meta.getCustomModelData() - 3000; // 3001 -> 1, 3002 -> 2, etc.
+        return meta.getCustomModelData() - 3000;
     }
 
     private void startRewardAnimation(Player player, Location blockLocation, int missionNumber) {

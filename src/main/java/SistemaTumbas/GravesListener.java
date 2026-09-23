@@ -35,7 +35,6 @@ public class GravesListener implements Listener {
 
     @EventHandler
     public void onInteractEntity(PlayerInteractEntityEvent event) {
-        // Detectar si el jugador hizo click en la Hitbox (Interaction Entity)
         if (event.getRightClicked() instanceof org.bukkit.entity.Interaction interaction) {
 
             for (String tag : interaction.getScoreboardTags()) {
@@ -57,7 +56,7 @@ public class GravesListener implements Listener {
 
                         player.openInventory(grave.getInventory());
                     }
-                    return; // Ya encontramos el tag, salir.
+                    return;
                 }
             }
         }

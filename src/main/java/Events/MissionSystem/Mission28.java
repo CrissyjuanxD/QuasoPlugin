@@ -124,7 +124,6 @@ public class Mission28 implements Mission, Listener {
 
         boolean updated = false;
 
-        // Registrar cada pieza
         if (hasHelmet && !data.getProgressBool("netherite_prot5_helmet")) {
             data.setProgressValue("netherite_prot5_helmet", true);
             successNotification.showSuccess(player);

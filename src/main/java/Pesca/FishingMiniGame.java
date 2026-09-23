@@ -12,7 +12,6 @@ import org.bukkit.scheduler.BukkitTask;
 
 public class FishingMiniGame {
 
-    // ─── Constantes de colores ───────────────────────────────────────────────
     private static final String COLOR_RED    = "#F02E3B";
     private static final String COLOR_ORANGE = "#EF911C";
     private static final String COLOR_GREEN  = "#78E58A";
@@ -20,20 +19,18 @@ public class FishingMiniGame {
     private static final String COLOR_GOLD   = "gold";
 
     private static final int TOTAL_SLOTS = 14;
-    private static final int MAX_TICKS = 100; // 5 segundos (20 ticks/seg)
+    private static final int MAX_TICKS = 100;
 
-    // El patrón base: 2 naranjas a la izquierda y 2 a la derecha del verde
-    // 0=red  1=orange  2=green
     private static final int[] BASE_PATTERN = {0, 0, 0, 0, 0, 1, 1, 2, 1, 1, 0, 0, 0, 0};
 
     private final QuasoPlugin plugin;
     private final Player player;
     private final Runnable onComplete;
-    private final ItemStack vanillaLoot; // El botín vanilla guardado del evento
+    private final ItemStack vanillaLoot;
     private final int colorOffset;
 
     private int cursorPos;
-    private int direction; // 1 (derecha) o -1 (izquierda)
+    private int direction;
     private BukkitTask task;
 
     private boolean finished = false;
@@ -50,7 +47,6 @@ public class FishingMiniGame {
         this.colorOffset = globalOffset;
         globalOffset = (globalOffset + 1) % TOTAL_SLOTS;
 
-        // Comienza en el extremo izquierdo y va hacia la derecha
         this.cursorPos = 0;
         this.direction = 1;
     }
@@ -72,10 +68,7 @@ public class FishingMiniGame {
         return failedByTime;
     }
 
-    // ─── Inicio del minijuego ────────────────────────────────────────────────
-
     public void start() {
-        // Velocidad MÁXIMA permanente (1 tick por movimiento = 20 movs/seg)
         int tickSpeed = 1;
 
         task = new BukkitRunnable() {
@@ -90,7 +83,6 @@ public class FishingMiniGame {
 
                 ticksElapsed += tickSpeed;
 
-                // Límite de 5 segundos exactos
                 if (ticksElapsed >= MAX_TICKS) {
                     failedByTime = true;
                     finished = true;
@@ -103,20 +95,17 @@ public class FishingMiniGame {
                 sendActionBar();
                 player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_HAT, 0.2f, 2.0f);
 
-                // Movimiento rebotante
                 cursorPos += direction;
                 if (cursorPos <= 0) {
                     cursorPos = 0;
-                    direction = 1; // Rebota hacia la derecha
+                    direction = 1;
                 } else if (cursorPos >= TOTAL_SLOTS - 1) {
                     cursorPos = TOTAL_SLOTS - 1;
-                    direction = -1; // Rebota hacia la izquierda
+                    direction = -1;
                 }
             }
         }.runTaskTimer(plugin, 0L, tickSpeed);
     }
-
-    // ─── El jugador presiona Saltar ──────────────────────────────────────────
 
     public void playerClick() {
         if (finished) return;
@@ -131,8 +120,6 @@ public class FishingMiniGame {
         return finished;
     }
 
-    // ─── Construcción del action bar ─────────────────────────────────────────
-
     private void sendActionBar() {
         ComponentBuilder cb = new ComponentBuilder();
 
@@ -142,7 +129,6 @@ public class FishingMiniGame {
         int i = 0;
         while (i < TOTAL_SLOTS) {
             if (i == cursorPos) {
-                // Cuadro blanco (el cursor que pidió el usuario)
                 cb.append("■").color(net.md_5.bungee.api.ChatColor.of(COLOR_WHITE)).bold(false);
                 i++;
             } else {

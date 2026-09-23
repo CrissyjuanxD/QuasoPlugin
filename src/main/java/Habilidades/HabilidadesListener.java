@@ -85,7 +85,6 @@ public class HabilidadesListener implements Listener {
     public void onDamage(EntityDamageEvent event) {
         if (!(event.getEntity() instanceof Player player)) return;
 
-        // --- SISTEMA DOBLE SALTO (SOLO SI SALTA SE LE PERDONA EL DAÑO) ---
         if (event.getCause() == EntityDamageEvent.DamageCause.FALL) {
             if (protectNextLanding.contains(player.getUniqueId())) {
                 event.setCancelled(true);
@@ -96,7 +95,6 @@ public class HabilidadesListener implements Listener {
 
         if (event.getCause() == EntityDamageEvent.DamageCause.VOID) return;
 
-        // --- SISTEMA RESISTENCIA ---
         int resLevel = manager.getHighestLevel(player.getUniqueId(), HabilidadesType.RESISTENCIA);
         if (resLevel == 0) return;
 

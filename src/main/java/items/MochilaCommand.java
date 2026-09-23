@@ -31,7 +31,6 @@ public class MochilaCommand implements CommandExecutor {
             return true;
         }
 
-        // --- /delmochilas <nombre> ---
         if (label.equalsIgnoreCase("delmochilas")) {
             if (args.length < 1) {
                 sender.sendMessage(ChatColor.RED + "Uso: /delmochilas <jugador>");
@@ -41,12 +40,11 @@ public class MochilaCommand implements CommandExecutor {
                 sender.sendMessage("Solo jugadores.");
                 return true;
             }
-            // Iniciamos búsqueda en base de datos
+
             buscarJugadorYAbrirMenu((Player) sender, args[0], true);
             return true;
         }
 
-        // --- /mochilas <nombre> [give] ---
         if (args.length < 1) {
             sender.sendMessage(ChatColor.RED + "Uso: /mochilas <jugador> [give]");
             return true;
@@ -69,7 +67,6 @@ public class MochilaCommand implements CommandExecutor {
         return true;
     }
 
-    // --- LÓGICA CENTRALIZADA DE BÚSQUEDA ---
     private void buscarJugadorYAbrirMenu(Player admin, String targetName, boolean isDeleteMode) {
         admin.sendMessage(ChatColor.YELLOW + "🔍 Buscando datos de " + targetName + " en la base de datos...");
 

@@ -14,7 +14,6 @@ import java.util.Set;
 public class ToastHandler {
 
     private final JavaPlugin plugin;
-    // Guardamos las keys para borrarlas SOLO al apagar el server
     private static final Set<NamespacedKey> activeToasts = new HashSet<>();
     private final NamespacedKey rootKey;
 
@@ -22,12 +21,10 @@ public class ToastHandler {
         this.plugin = plugin;
         this.rootKey = new NamespacedKey(plugin, "notification_root");
 
-        // Creamos la "Carpeta" (Root) al iniciar para que la GUI tenga fondo y título
         createRootAdvancement();
     }
 
     private void createRootAdvancement() {
-        // Si ya existe, no lo recreamos
         if (Bukkit.getAdvancement(rootKey) != null) return;
 
         String json = """
@@ -50,7 +47,7 @@ public class ToastHandler {
 
         try {
             Bukkit.getUnsafe().loadAdvancement(rootKey, json);
-            activeToasts.add(rootKey); // Lo añadimos para limpiarlo al reiniciar también
+            activeToasts.add(rootKey);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -80,20 +77,17 @@ public class ToastHandler {
         """.formatted(rootKey.toString(), iconMaterial, title, description);
 
         try {
-            // 1. Cargar
             Bukkit.getUnsafe().loadAdvancement(key, json);
             activeToasts.add(key);
 
             Advancement adv = Bukkit.getAdvancement(key);
             if (adv == null) return;
 
-            // 2. Otorgar (Visual)
             AdvancementProgress progress = player.getAdvancementProgress(adv);
             if (!progress.isDone()) {
                 progress.awardCriteria("trigger");
             }
 
-            // 3. Revocar criterio (Para poder repetirlo)
             Bukkit.getScheduler().runTaskLater(plugin, () -> {
                 if (player.isOnline()) {
                     AdvancementProgress p = player.getAdvancementProgress(adv);
@@ -102,8 +96,6 @@ public class ToastHandler {
                     }
                 }
             }, 1L);
-
-            // NO BORRAMOS EL ADVANCEMENT (Para evitar el lag spike y bugs visuales)
 
         } catch (Exception e) {
             e.printStackTrace();

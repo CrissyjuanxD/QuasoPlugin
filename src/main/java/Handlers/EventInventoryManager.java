@@ -18,8 +18,6 @@ public class EventInventoryManager implements Listener {
     private final JavaPlugin plugin;
     private final DatabaseManager dbManager;
 
-    // Un método dinámico para saber si el jugador sigue en un evento.
-    // Si devuelve true, NO le devolvemos las cosas al conectarse.
     private Predicate<String> isInEventCondition = (name) -> false;
 
     public EventInventoryManager(JavaPlugin plugin, DatabaseManager dbManager) {
@@ -28,17 +26,10 @@ public class EventInventoryManager implements Listener {
         Bukkit.getPluginManager().registerEvents(this, plugin);
     }
 
-    /**
-     * Define la condición para saber si un jugador está en un evento activo.
-     * Ejemplo: (nombre) -> eventoLavaClash.isParticipante(nombre) || hotPotato.isParticipante(nombre)
-     */
     public void setIsInEventCondition(Predicate<String> condition) {
         this.isInEventCondition = condition;
     }
 
-    /**
-     * Guarda el inventario asíncronamente y lo limpia síncronamente.
-     */
     public void saveAndClearInventory(Player player) {
         UUID uuid = player.getUniqueId();
         String name = player.getName();
@@ -57,9 +48,6 @@ public class EventInventoryManager implements Listener {
         });
     }
 
-    /**
-     * Restaura el inventario guardado manualmente (por ejemplo al morir o ganar).
-     */
     public void restoreInventory(Player player) {
         UUID uuid = player.getUniqueId();
 
@@ -83,10 +71,6 @@ public class EventInventoryManager implements Listener {
         });
     }
 
-    /**
-     * Al conectarse: Revisa si tiene un inventario en el limbo.
-     * Si no está en ningún evento activo, se lo devuelve.
-     */
     @EventHandler(priority = EventPriority.LOW)
     public void onPlayerJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
@@ -96,7 +80,6 @@ public class EventInventoryManager implements Listener {
             ItemStack[] contents = dbManager.getEventInventory(player.getUniqueId());
 
             if (contents != null) {
-                // Si sigue registrado en un evento activo, no devolvemos nada
                 if (isInEventCondition.test(name)) {
                     return;
                 }

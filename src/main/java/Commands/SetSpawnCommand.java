@@ -26,7 +26,6 @@ public class SetSpawnCommand implements CommandExecutor {
 
         Player player = (Player) sender;
 
-        // Verificar permisos
         if (!player.isOp() && !player.hasPermission("viciont.admin")) {
             player.sendMessage(ChatColor.RED + "No tienes permiso para usar este comando.");
             return true;
@@ -35,10 +34,8 @@ public class SetSpawnCommand implements CommandExecutor {
         Location loc = player.getLocation();
         World world = loc.getWorld();
 
-        if (world == null) return true; // Seguridad por si el mundo es nulo
+        if (world == null) return true;
 
-        // 1. Guardar en la config de TU plugin (QuasoPlugin)
-        // Guardamos decimales exactos para el TP suave del plugin
         plugin.getConfig().set("spawn.world", world.getName());
         plugin.getConfig().set("spawn.x", loc.getX());
         plugin.getConfig().set("spawn.y", loc.getY());
@@ -48,11 +45,8 @@ public class SetSpawnCommand implements CommandExecutor {
 
         plugin.saveConfig();
 
-        // 2. Establecer el World Spawn Vanilla (Igual que /setworldspawn)
-        // Esto usa coordenadas de bloque (enteros), por eso usamos getBlockX/Y/Z
         world.setSpawnLocation(loc.getBlockX(), loc.getBlockY(), loc.getBlockZ());
 
-        // Mensajes de confirmación
         player.sendMessage(ChatColor.GREEN + "El Spawn del servidor ha sido establecido.");
         player.sendMessage(ChatColor.AQUA + "También se ha actualizado el 'World Spawn' vanilla.");
         player.sendMessage(ChatColor.GRAY + "Coordenadas: " + loc.getBlockX() + ", " + loc.getBlockY() + ", " + loc.getBlockZ());

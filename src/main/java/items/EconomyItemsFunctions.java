@@ -39,7 +39,6 @@ public class EconomyItemsFunctions implements Listener {
     private final DatabaseManager dbManager;
     private final NamespacedKey backpackKey;
 
-    // Mapas de control
     private final Map<UUID, String> mochilasAbiertas = new ConcurrentHashMap<>();
     private final Map<String, ItemStack[]> mochilasCache = new ConcurrentHashMap<>();
     private final Set<UUID> processing = ConcurrentHashMap.newKeySet();
@@ -51,8 +50,6 @@ public class EconomyItemsFunctions implements Listener {
         this.dbManager = dbManager;
         this.backpackKey = new NamespacedKey(plugin, "backpack_uuid");
     }
-
-    // --- EVENTOS PRINCIPALES ---
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onBlockPlace(BlockPlaceEvent event) {
@@ -69,7 +66,6 @@ public class EconomyItemsFunctions implements Listener {
         ItemStack leftItem = event.getInventory().getItem(0);
         if (leftItem == null || leftItem.getType() == Material.AIR) return;
 
-        // Mantener el color y la negrita al renombrar la mochila
         if (isMochila(leftItem)) {
             String renameText = event.getView().getRenameText();
             ItemStack result = event.getResult();
@@ -151,8 +147,6 @@ public class EconomyItemsFunctions implements Listener {
             return;
         }
     }
-
-    // --- LÓGICA CORE DE MOCHILAS ---
 
     private void abrirMochila(Player player, ItemStack mochila) {
         processing.add(player.getUniqueId());
@@ -296,8 +290,6 @@ public class EconomyItemsFunctions implements Listener {
         }
     }
 
-    // --- SEGURIDAD DE INVENTARIO ---
-
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onInventoryClick(InventoryClickEvent event) {
         if (!(event.getWhoClicked() instanceof Player)) return;
@@ -318,7 +310,6 @@ public class EconomyItemsFunctions implements Listener {
         ItemStack current = event.getCurrentItem();
         ItemStack cursor = event.getCursor();
 
-        // --- SEGURIDAD: COLLECT TO CURSOR ---
         if (event.getAction() == InventoryAction.COLLECT_TO_CURSOR) {
             if (isMochila(cursor)) {
                 event.setCancelled(true);
@@ -326,7 +317,6 @@ public class EconomyItemsFunctions implements Listener {
             }
         }
 
-        // --- SEGURIDAD: ANIDAMIENTO ---
         if (mochilasAbiertas.containsKey(player.getUniqueId())) {
 
             if (isMochila(current)) {
@@ -452,8 +442,6 @@ public class EconomyItemsFunctions implements Listener {
 
         processing.remove(player.getUniqueId());
     }
-
-    // --- UTILIDADES ---
 
     public boolean isMochila(ItemStack item) {
         if (item == null || item.getType() == Material.AIR) return false;

@@ -88,7 +88,6 @@ public class HabilidadesGUI implements Listener {
             gui.setItem(slot, nextSkill);
         }
 
-        // --- Flechas de paginación ---
         if (page == 2) {
             gui.setItem(45, createArrow("§e⬅ Anterior Página"));
         }
@@ -359,12 +358,10 @@ public class HabilidadesGUI implements Listener {
             return;
         }
 
-        // Cobrar
         player.setLevel(player.getLevel() - xpCost);
         player.getInventory().removeItem(new ItemStack(matCost, matAmount));
         removeDinoCoins(player, coinCost);
 
-        // Desbloquear
         manager.unlockHabilidad(player.getUniqueId(), type, level);
         player.closeInventory();
 

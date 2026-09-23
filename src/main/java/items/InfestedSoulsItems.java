@@ -25,10 +25,8 @@ public class InfestedSoulsItems {
         ItemMeta meta = essence.getItemMeta();
 
         if (meta != null) {
-            // Nombre con color cyan brillante (Deep Dark)
             meta.setDisplayName(ChatColor.of("#00e6e6") + "" + ChatColor.BOLD + "Alma de Infested Skeletons");
 
-            // Lore con color cyan oscuro / sculk
             List<String> lore = new ArrayList<>();
             lore.add("");
             lore.add(ChatColor.of("#008b8b") + "Esencia corrompida necesaria");

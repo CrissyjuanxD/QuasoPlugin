@@ -18,15 +18,12 @@ public class FishingZoneManager {
     private File configFile;
     private FileConfiguration fishingConfig;
 
-    // Zonas cargadas: nombre → zona
     private final Map<String, FishingZone> zones = new HashMap<>();
 
     public FishingZoneManager(QuasoPlugin plugin) {
         this.plugin = plugin;
         load();
     }
-
-    // ─── Carga / Guardado ────────────────────────────────────────────────────
 
     public void load() {
         configFile = new File(plugin.getDataFolder(), "pesca.yml");
@@ -76,8 +73,6 @@ public class FishingZoneManager {
         plugin.getLogger().info("[Pesca] " + zones.size() + " zona(s) cargada(s).");
     }
 
-    // ─── Registro y Eliminación ──────────────────────────────────────────────
-
     public boolean registerZone(String name, Location pos1, Location pos2) {
         if (pos1 == null || pos2 == null) return false;
         if (!pos1.getWorld().equals(pos2.getWorld())) return false;
@@ -108,8 +103,6 @@ public class FishingZoneManager {
 
         return true;
     }
-
-    // ─── Consultas ───────────────────────────────────────────────────────────
 
     public FishingZone getZoneAt(Location loc) {
         for (FishingZone zone : zones.values()) {

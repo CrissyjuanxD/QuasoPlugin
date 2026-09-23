@@ -37,13 +37,10 @@ public class CustomEffectManager implements Listener {
                     PotionEffect newEffect = event.getNewEffect();
                     if (newEffect != null) {
                         int duration = newEffect.getDuration() / 20;
-                        int amplifier = newEffect.getAmplifier(); // Capturamos el nivel
+                        int amplifier = newEffect.getAmplifier();
 
-                        // Pasamos el amplifier
                         customEffect.applyEffect(player, duration, amplifier);
 
-                        // Solo añadimos al set si el efecto realmente se aplicó (lógica interna del efecto)
-                        // Pero para simplificar el manager, lo marcamos, el efecto decide si hace algo o no.
                         playersWithEffects.add(player.getUniqueId());
                     }
                     break;
@@ -85,7 +82,6 @@ public class CustomEffectManager implements Listener {
         }
     }
 
-    // Métodos manuales actualizados (asumen nivel 100/amp 99 por defecto si es manual)
     public void applyEffectManually(Player player, PotionEffectType effectType, int duration) {
         CustomEffect customEffect = registeredEffects.get(effectType);
         if (customEffect != null) {

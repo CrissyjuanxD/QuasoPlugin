@@ -71,7 +71,6 @@ public class CorruptedBee implements Listener {
     private void startCentralTask() {
         if (mainTask != null && !mainTask.isCancelled()) return;
 
-        // Ejecutar cada 20 ticks (1 segundo) es suficiente para target y resetear estado
         mainTask = new BukkitRunnable() {
             @Override
             public void run() {
@@ -101,7 +100,6 @@ public class CorruptedBee implements Listener {
 
         LivingEntity currentTarget = bee.getTarget();
 
-        // Si no tiene target o el target murió/se alejó mucho, buscar uno nuevo
         if (currentTarget == null || !currentTarget.isValid() || currentTarget.isDead() ||
                 bee.getLocation().distanceSquared(currentTarget.getLocation()) > 400) {
 
@@ -149,7 +147,6 @@ public class CorruptedBee implements Listener {
         bee.setCustomName(ChatColor.DARK_PURPLE + "" + ChatColor.BOLD + "Corrupted Bee");
         bee.setCustomNameVisible(false);
 
-        // Atributos base
         Objects.requireNonNull(bee.getAttribute(Attribute.MAX_HEALTH)).setBaseValue(15.0);
         bee.setHealth(15.0);
 

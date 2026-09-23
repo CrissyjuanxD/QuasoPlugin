@@ -21,18 +21,15 @@ import java.util.*;
 
 public class FishingWandListener implements Listener {
 
-    private static final String WAND_KEY = "§b§lVara de Pesca"; // Quitamos el §r inicial
+    private static final String WAND_KEY = "§b§lVara de Pesca";
 
     private final QuasoPlugin plugin;
-    // Posiciones temporales por jugador
     private final Map<UUID, Location> pos1Map = new HashMap<>();
     private final Map<UUID, Location> pos2Map = new HashMap<>();
 
     public FishingWandListener(QuasoPlugin plugin) {
         this.plugin = plugin;
     }
-
-    // ─── Item ────────────────────────────────────────────────────────────────
 
     public static ItemStack createWand() {
         ItemStack item = new ItemStack(Material.STICK);
@@ -60,16 +57,12 @@ public class FishingWandListener implements Listener {
         ItemMeta meta = item.getItemMeta();
         if (meta == null || !meta.hasDisplayName()) return false;
 
-        // Usamos stripColor para evitar cualquier problema con códigos de formato (§)
         String nombreLimpio = org.bukkit.ChatColor.stripColor(meta.getDisplayName());
         return nombreLimpio.contains("Vara de Pesca");
     }
 
-    // ─── Eventos ─────────────────────────────────────────────────────────────
-
     @EventHandler
     public void onInteract(PlayerInteractEvent event) {
-        // Ignoramos la mano secundaria para evitar que el código se ejecute dos veces
         if (event.getHand() == EquipmentSlot.OFF_HAND) return;
 
         Player player = event.getPlayer();
@@ -77,13 +70,11 @@ public class FishingWandListener implements Listener {
 
         if (!isWand(inHand)) return;
 
-        // Cancelamos la interacción normal de Minecraft
         event.setCancelled(true);
 
         Action action = event.getAction();
         Block b = event.getClickedBlock();
 
-        // Si el bloque es nulo (dio click al aire), buscamos el bloque que esté mirando (máximo 5 bloques)
         if (b == null) {
             b = player.getTargetBlockExact(5);
         }
@@ -104,25 +95,20 @@ public class FishingWandListener implements Listener {
         }
     }
 
-    // Evento de seguridad que garantiza que funcione el Click Izquierdo en modo Creativo
     @EventHandler
     public void onBlockBreak(BlockBreakEvent event) {
         Player player = event.getPlayer();
         ItemStack inHand = player.getInventory().getItemInMainHand();
 
         if (isWand(inHand)) {
-            // Evitamos que se rompa el bloque
             event.setCancelled(true);
 
-            // Fijamos la posición 1 directamente aquí para el modo creativo
             pos1Map.put(player.getUniqueId(), event.getBlock().getLocation());
             player.sendMessage(ChatColor.of("#61B1F2") + "" + ChatColor.BOLD + "[Pesca] "
                     + ChatColor.GRAY + "POS1 fijada en: "
                     + ChatColor.WHITE + formatLoc(event.getBlock().getLocation()));
         }
     }
-
-    // ─── Acceso a posiciones ─────────────────────────────────────────────────
 
     public Location getPos1(UUID uuid) { return pos1Map.get(uuid); }
     public Location getPos2(UUID uuid) { return pos2Map.get(uuid); }

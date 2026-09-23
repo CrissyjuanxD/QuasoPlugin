@@ -36,11 +36,9 @@ public class InfestedBeeHandler implements Listener {
     private final NamespacedKey infestedBeeKey;
     private final NamespacedKey miniWardenKey;
 
-    // Control estricto de procesamiento - CLAVE PARA EVITAR DUPLICACIONES
     private final Set<UUID> processingBees = ConcurrentHashMap.newKeySet();
     private final Set<UUID> fullyInitializedBees = ConcurrentHashMap.newKeySet();
 
-    // SISTEMA INDEPENDIENTE DE BOSSBAR
     private BukkitRunnable globalBossBarManager;
     private static final double BOSSBAR_RANGE = 100.0;
 
@@ -57,8 +55,6 @@ public class InfestedBeeHandler implements Listener {
 
         startGlobalBossBarManager();
     }
-
-    // ==================== SISTEMA INDEPENDIENTE DE BOSSBAR ====================
 
     private void startGlobalBossBarManager() {
         globalBossBarManager = new BukkitRunnable() {
@@ -122,12 +118,9 @@ public class InfestedBeeHandler implements Listener {
         }
     }
 
-    // ==================== SPAWN Y TRANSFORMACIÓN ====================
-
     public Bee spawnInfestedBee(Location location) {
         Bee bee = (Bee) Objects.requireNonNull(location.getWorld()).spawnEntity(location, EntityType.BEE);
 
-        // DELAY CRÍTICO: Esperar 1 tick antes de inicializar para evitar conflictos
         new BukkitRunnable() {
             @Override
             public void run() {
@@ -141,7 +134,6 @@ public class InfestedBeeHandler implements Listener {
     public void transformToInfestedBee(Bee bee) {
         if (!canProcessBee(bee)) return;
 
-        // DELAY CRÍTICO: Esperar 1 tick antes de inicializar
         new BukkitRunnable() {
             @Override
             public void run() {
@@ -155,7 +147,6 @@ public class InfestedBeeHandler implements Listener {
     private boolean canProcessBee(Bee bee) {
         UUID beeId = bee.getUniqueId();
 
-        // VERIFICACIÓN CRÍTICA: Si ya está completamente inicializado, NO procesar
         if (fullyInitializedBees.contains(beeId)) {
             return false;
         }
@@ -174,7 +165,6 @@ public class InfestedBeeHandler implements Listener {
             return;
         }
 
-        // VERIFICACIÓN FINAL: Doble check para evitar duplicaciones
         if (fullyInitializedBees.contains(beeId) || processingBees.contains(beeId)) {
             return;
         }
@@ -231,12 +221,9 @@ public class InfestedBeeHandler implements Listener {
         bee.getPersistentDataContainer().set(infestedBeeKey, PersistentDataType.BYTE, (byte) 1);
     }
 
-    // ==================== COMPORTAMIENTO PRINCIPAL ====================
-
     private void startBehavior(Bee bee) {
         UUID beeId = bee.getUniqueId();
 
-        // VERIFICACIÓN CRÍTICA: Solo un comportamiento por abeja
         if (activeBehaviors.containsKey(beeId)) {
             BukkitRunnable existing = activeBehaviors.get(beeId);
             if (existing != null && !existing.isCancelled()) {
@@ -266,7 +253,6 @@ public class InfestedBeeHandler implements Listener {
     private void executeBehaviorTick(Bee bee) {
         UUID beeId = bee.getUniqueId();
 
-        // VERIFICACIÓN CRÍTICA: Solo un ataque a la vez
         if (isAttacking.getOrDefault(beeId, false)) {
             return;
         }
@@ -344,8 +330,6 @@ public class InfestedBeeHandler implements Listener {
             }
         }.runTaskLater(plugin, 100L);
     }
-
-    // ==================== ATAQUES ====================
 
     private void executeNoMove(Bee bee) {
         bee.getWorld().playSound(bee.getLocation(), Sound.ENTITY_WARDEN_SONIC_CHARGE, 5.0f, 0.5f);
@@ -593,8 +577,6 @@ public class InfestedBeeHandler implements Listener {
         }.runTaskLater(plugin, 100L);
     }
 
-    // ==================== EVENTOS ====================
-
     @EventHandler
     public void onEntityDamage(EntityDamageEvent event) {
         if (!(event.getEntity() instanceof Bee bee) || !isInfestedBee(bee)) return;
@@ -686,7 +668,6 @@ public class InfestedBeeHandler implements Listener {
                     if (!isInfestedBee(bee)) {
                         transformToInfestedBee(bee);
                     } else {
-                        // VERIFICACIÓN ESPECÍFICA: Solo reiniciar si realmente no tiene comportamiento
                         UUID beeId = bee.getUniqueId();
                         if (!activeBehaviors.containsKey(beeId) || activeBehaviors.get(beeId).isCancelled()) {
                             plugin.getLogger().info("Player movement: Restarting behavior for dormant bee: " + beeId);
@@ -715,8 +696,6 @@ public class InfestedBeeHandler implements Listener {
             }
         }.runTaskLater(plugin, 100L);
     }
-
-    // ==================== REINICIO SEGURO ====================
 
     private void restartBehaviorSafely(Bee bee) {
         UUID beeId = bee.getUniqueId();
@@ -747,14 +726,11 @@ public class InfestedBeeHandler implements Listener {
         }
     }
 
-    // ==================== MUERTE Y LIMPIEZA ====================
-
     public void executeBeeDeath(Bee bee) {
         if (!bee.getPersistentDataContainer().has(infestedBeeKey, PersistentDataType.BYTE)) return;
 
         int amount = random.nextInt(2) + 1;
         for (int i = 0; i < amount; i++) {
-           /* bee.getWorld().dropItemNaturally(bee.getLocation(), bootNetheriteEssence.createBootNetheriteEssence());*/
         }
 
         playDeathEffects(bee.getLocation());
@@ -800,8 +776,6 @@ public class InfestedBeeHandler implements Listener {
         fullyInitializedBees.remove(beeId);
     }
 
-    // ==================== UTILIDADES ====================
-
     private boolean isInfestedBee(Bee bee) {
         return bee != null && bee.isValid() && !bee.isDead() &&
                 bee.getCustomName() != null && bee.getCustomName().contains("Infested Bee") &&
@@ -824,8 +798,6 @@ public class InfestedBeeHandler implements Listener {
         int count = Math.min(random.nextInt(max - min + 1) + min, nearby.size());
         return nearby.subList(0, count);
     }
-
-    // ==================== MÉTODOS PÚBLICOS ====================
 
     public void shutdown() {
         if (globalBossBarManager != null && !globalBossBarManager.isCancelled()) {

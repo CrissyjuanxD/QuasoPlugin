@@ -19,24 +19,17 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 
-/**
- * Ambientación simplificada de WardenCave.
- * Cada 1-5 minutos (aleatorio, se repite indefinidamente) se reproduce un sonido
- * de cueva/warden (vanilla) y se le da Darkness al jugador por 20 segundos.
- */
 public class WardenCaveAmbient implements Listener {
 
     private final JavaPlugin plugin;
 
     private final Map<UUID, Long> nextAmbientTrigger = new HashMap<>();
 
-    // Cooldown aleatorio entre 1 y 5 minutos
     private static final long AMBIENT_MIN = 1 * 60 * 1000;
     private static final long AMBIENT_MAX = 5 * 60 * 1000;
 
-    private static final int DARKNESS_DURATION_TICKS = 20 * 20; // 20 segundos
+    private static final int DARKNESS_DURATION_TICKS = 20 * 20;
 
-    // Sonidos vanilla de cueva / warden
     private static final Sound[] AMBIENT_SOUNDS = new Sound[] {
             Sound.AMBIENT_CAVE,
             Sound.ENTITY_WARDEN_AMBIENT,

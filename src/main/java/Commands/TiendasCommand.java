@@ -51,7 +51,6 @@ public class TiendasCommand implements CommandExecutor {
 
         Location tiendasLocation = new Location(world, x, y, z, yaw, pitch);
 
-        // --- LÓGICA DE TELETRANSPORTE ---
         player.playSound(player.getLocation(), Sound.BLOCK_AMETHYST_BLOCK_CHIME, 2.0f, 0.6f);
         player.playSound(player.getLocation(), Sound.BLOCK_AMETHYST_BLOCK_RESONATE, 2.0f, 0.6f);
 
@@ -65,7 +64,7 @@ public class TiendasCommand implements CommandExecutor {
                     player.playSound(player.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 1.0f, 1.0f);
                 }
             }
-        }.runTaskLater(plugin, 80L); // 80 ticks = 4 segundos de espera
+        }.runTaskLater(plugin, 80L);
 
         return true;
     }

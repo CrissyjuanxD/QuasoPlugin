@@ -26,13 +26,11 @@ import java.util.*;
 
 public class QueenBeeHandler extends BaseBoss implements Listener {
 
-    //  /debugarena
     public static final Map<UUID, QueenBeeHandler> ACTIVE_BOSSES = new HashMap<>();
 
     private final Bee bee;
     private final Random random = new Random();
 
-    // Estados
     private int globalTick = 0;
     private boolean runningSpecial = false;
     private boolean runningMelee = false;
@@ -45,7 +43,6 @@ public class QueenBeeHandler extends BaseBoss implements Listener {
     private int requiredMeleeBetweenSpecials = 1;
     private int regenCooldown = 0;
 
-    // --- SISTEMA DE MÚSICA ---
     private static class BossTrack {
         Sound sound;
         float pitch;
@@ -59,15 +56,13 @@ public class QueenBeeHandler extends BaseBoss implements Listener {
     }
 
     private final List<BossTrack> playlist = Arrays.asList(
-            new BossTrack(Sound.MUSIC_DISC_TEARS, 0.8f, 4550),   // 182s / 0.8 = 227.5s (4550 ticks)
-            new BossTrack(Sound.MUSIC_DISC_PIGSTEP, 0.8f, 3700), // 148s / 0.8 = 185s (3700 ticks)
-            new BossTrack(Sound.MUSIC_DISC_CREATOR, 1.2f, 2966)  // 178s / 1.2 = 148.3s (2966 ticks)
+            new BossTrack(Sound.MUSIC_DISC_TEARS, 0.8f, 4550),
+            new BossTrack(Sound.MUSIC_DISC_PIGSTEP, 0.8f, 3700),
+            new BossTrack(Sound.MUSIC_DISC_CREATOR, 1.2f, 2966)
     );
 
     private BukkitRunnable musicTask;
-    // -------------------------
 
-    // Curación
     private final List<Bee> healTotems = new ArrayList<>();
     private BukkitRunnable regenTask;
 
@@ -93,7 +88,6 @@ public class QueenBeeHandler extends BaseBoss implements Listener {
 
         this.corruptedBee = new CorruptedBee(plugin);
 
-        // --- LÓGICA DE PERSISTENCIA ---
         PersistentDataContainer pdc = bee.getPersistentDataContainer();
 
         if (pdc.has(bossKey, PersistentDataType.BYTE)) {
@@ -108,7 +102,6 @@ public class QueenBeeHandler extends BaseBoss implements Listener {
             this.start();
 
         } else {
-            // CASO 2: PRIMER SPAWN
             pdc.set(bossKey, PersistentDataType.BYTE, (byte) 1);
             pdc.set(arenaCenterX, PersistentDataType.DOUBLE, spawnLocation.getX());
             pdc.set(arenaCenterY, PersistentDataType.DOUBLE, spawnLocation.getY());
@@ -119,10 +112,6 @@ public class QueenBeeHandler extends BaseBoss implements Listener {
         ACTIVE_BOSSES.put(bee.getUniqueId(), this);
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
-
-    // ==============================
-    //        SPAWN DEL BOSS
-    // ==============================
 
     public static QueenBeeHandler spawn(JavaPlugin plugin, Location center) {
         World world = center.getWorld();
@@ -152,10 +141,6 @@ public class QueenBeeHandler extends BaseBoss implements Listener {
         handler.start();
         return handler;
     }
-
-    // ==============================
-    //          BASEBOSS OVERRIDES
-    // ==============================
 
     @Override
     protected String getBossTitle() {
@@ -268,10 +253,6 @@ public class QueenBeeHandler extends BaseBoss implements Listener {
         }
     }
 
-    // ==============================
-    //          UTILIDADES
-    // ==============================
-
     private List<Player> getActivePlayers() {
         List<Player> list = new ArrayList<>();
         for (UUID id : currentPlayers) {
@@ -346,10 +327,6 @@ public class QueenBeeHandler extends BaseBoss implements Listener {
         musicTask.runTaskTimer(plugin, 0L, 1L);
     }
 
-    // ==============================
-    //      TELEPORT VISUAL
-    // ==============================
-
     private void teleportWithVisual(Location from, Location to) {
         showSphere(from, 2.5, Particle.ELECTRIC_SPARK, Color.WHITE);
         showSphere(to, 2.5, Particle.ELECTRIC_SPARK, Color.WHITE);
@@ -384,10 +361,6 @@ public class QueenBeeHandler extends BaseBoss implements Listener {
         }
     }
 
-    // ==============================
-    //     SELECCIÓN DE ATAQUES
-    // ==============================
-
     private void decideNextAttack() {
         if (getActivePlayers().isEmpty()) {
             bee.setTarget(null);
@@ -404,10 +377,6 @@ public class QueenBeeHandler extends BaseBoss implements Listener {
         }
     }
 
-    // ==============================
-    //      ATAQUES A MELEE
-    // ==============================
-
     private enum MeleeType { NORMAL, DASH, TP_COMBO }
 
     private void startRandomMelee() {
@@ -423,7 +392,6 @@ public class QueenBeeHandler extends BaseBoss implements Listener {
         }
     }
 
-    // 1) Ataque normal
     private void meleeNormal() {
         Player target = getNearestPlayer();
         if (target == null) {
@@ -462,7 +430,6 @@ public class QueenBeeHandler extends BaseBoss implements Listener {
         }.runTaskTimer(plugin, 0L, 2L);
     }
 
-    // 2) Ataque rápido (DASH)
     private void meleeDash() {
         Player target = getNearestPlayer();
         if (target == null) {
@@ -513,7 +480,6 @@ public class QueenBeeHandler extends BaseBoss implements Listener {
         }.runTaskTimer(plugin, 0L, 1L);
     }
 
-    // 3) TP Combo: TP al jugador, 4 golpes, vuelve al centro
     private void meleeTPCombo() {
         Player target = getNearestPlayer();
         if (target == null) {
@@ -558,10 +524,6 @@ public class QueenBeeHandler extends BaseBoss implements Listener {
         }.runTaskTimer(plugin, 10L, 10L);
     }
 
-    // ==============================
-    //     ATAQUES ESPECIALES
-    // ==============================
-
     private enum SpecialType {
         VENOMOUS_STINGS,
         EXPLOSIVE_STINGS,
@@ -582,10 +544,6 @@ public class QueenBeeHandler extends BaseBoss implements Listener {
             case TOXIC_CLOUD -> specialToxicCloud();
         }
     }
-
-    // =============================================================
-    // 1) Aguijón VENENOSO: 5 en círculo, algunos dirigidos
-    // =============================================================
 
     private void specialVenomousStings() {
         World w = bee.getWorld();
@@ -716,10 +674,6 @@ public class QueenBeeHandler extends BaseBoss implements Listener {
         }.runTaskTimer(plugin, 0L, 4L);
     }
 
-    // =============================================================
-    // 2) Aguijón EXPLOSIVO
-    // =============================================================
-
     private void specialExplosiveStings() {
         World w = bee.getWorld();
         Location origin = bee.getLocation().clone().add(0, 1.5, 0);
@@ -832,10 +786,6 @@ public class QueenBeeHandler extends BaseBoss implements Listener {
         }
     }
 
-    // =============================================================
-    // 3) Refuerzos
-    // =============================================================
-
     private void specialSummonBees() {
         World w = bee.getWorld();
         w.playSound(bee.getLocation(), Sound.ENTITY_BEE_LOOP_AGGRESSIVE, 1.5f, 0.7f);
@@ -897,10 +847,6 @@ public class QueenBeeHandler extends BaseBoss implements Listener {
         }.runTaskLater(plugin, 60L);
     }
 
-    // =============================================================
-    // 4) Nube tóxica
-    // =============================================================
-
     private void specialToxicCloud() {
         World w = bee.getWorld();
 
@@ -952,10 +898,6 @@ public class QueenBeeHandler extends BaseBoss implements Listener {
         }.runTaskTimer(plugin, 0L, 6L);
     }
 
-    // =============================================================
-    // 5) Regeneración (FASE ESPECIAL)
-    // =============================================================
-
     private void startRegenerationPhase() {
         if (inRegenerationPhase) return;
         inRegenerationPhase = true;
@@ -984,7 +926,6 @@ public class QueenBeeHandler extends BaseBoss implements Listener {
         healTotems.clear();
         double radius = 8;
 
-        // --- Spawnear los 4 Tótems ---
         for (int i = 0; i < 4; i++) {
             Location l = center.clone().add(
                     Math.cos(i * Math.PI / 2) * radius,
@@ -1010,7 +951,6 @@ public class QueenBeeHandler extends BaseBoss implements Listener {
             w.spawnParticle(Particle.END_ROD, l, 20, 0.5, 0.5, 0.5, 0.05);
         }
 
-        // --- Tarea de Regeneración ---
         regenTask = new BukkitRunnable() {
             int t = 0;
 
@@ -1142,10 +1082,6 @@ public class QueenBeeHandler extends BaseBoss implements Listener {
         }
     }
 
-    // ==============================
-    //          EVENTOS
-    // ==============================
-
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onGenericDamage(EntityDamageEvent e) {
         if (!e.getEntity().equals(bee)) return;
@@ -1262,7 +1198,6 @@ public class QueenBeeHandler extends BaseBoss implements Listener {
         mainBar.removeAll();
         staticBar.removeAll();
 
-        // Paramos la música por si estaba sonando justo al morir
         stopAllBossMusic();
 
         World w = bee.getWorld();

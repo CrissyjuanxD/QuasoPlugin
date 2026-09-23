@@ -16,7 +16,6 @@ import java.util.Locale;
 
 public class CustomPotions {
 
-    // 1. Poción de Resistencia II por 10 minutos (Tomable)
     public static ItemStack getResistanceIIPotion() {
         return createPotion(
                 Material.POTION,
@@ -28,7 +27,6 @@ public class CustomPotions {
         );
     }
 
-    // 2. Poción de Resistencia III por 6 minutos (Lanzable)
     public static ItemStack getSplashResistanceIIIPotion() {
         return createPotion(
                 Material.SPLASH_POTION,
@@ -40,7 +38,6 @@ public class CustomPotions {
         );
     }
 
-    // 3. Poción de Caída Lenta por 15 minutos (Tomable)
     public static ItemStack getSlowFallingPotion() {
         return createPotion(
                 Material.POTION,
@@ -52,7 +49,6 @@ public class CustomPotions {
         );
     }
 
-    // 4. Poción de Regeneración III por 3 minutos (Lanzable)
     public static ItemStack getSplashRegenerationIIIPotion() {
         return createPotion(
                 Material.SPLASH_POTION,
@@ -64,7 +60,6 @@ public class CustomPotions {
         );
     }
 
-    // 5. Poción de Prisa (Haste) III por 15 minutos (Tomable)
     public static ItemStack getHasteIIIPotion() {
         return createPotion(
                 Material.POTION,
@@ -76,7 +71,6 @@ public class CustomPotions {
         );
     }
 
-    // 6. Poción de Prisa (Haste) II por 15 minutos (Tomable)
     public static ItemStack getHasteIIPotion() {
         return createPotion(
                 Material.POTION,
@@ -88,7 +82,6 @@ public class CustomPotions {
         );
     }
 
-    // 7. Poción de Absorción X por 3 minutos (Lanzable)
     public static ItemStack getSplashAbsorptionXPotion() {
         return createPotion(
                 Material.SPLASH_POTION,
@@ -118,10 +111,6 @@ public class CustomPotions {
 
         return honey;
     }
-
-    // =========================================
-    //         BEBIDAS ALCOHÓLICAS (ROLEPLAY)
-    // =========================================
 
     public static ItemStack getTequila() {
         return createDrink("§6§lCaballito de Tequila", Color.fromRGB(220, 180, 50),
@@ -216,11 +205,6 @@ public class CustomPotions {
         );
     }
 
-
-    // =========================================
-    //             MÉTODOS CREADORES
-    // =========================================
-
     private static ItemStack createPotion(Material material, String name, PotionEffectType effectType, int duration, int amplifier, Color color) {
         ItemStack potion = new ItemStack(material);
         PotionMeta meta = (PotionMeta) potion.getItemMeta();
@@ -248,10 +232,8 @@ public class CustomPotions {
             lore.add("");
 
             for (PotionEffect effect : effects) {
-                // Aplicamos el efecto real a la poción
                 meta.addCustomEffect(effect, true);
 
-                // Traducimos el nombre del efecto y le asignamos un color bonito
                 String effectName = effect.getType().getKey().getKey().toUpperCase(Locale.ROOT);
                 String hexColor = "#FFFFFF";
 
@@ -269,10 +251,9 @@ public class CustomPotions {
                     effectName = "Lentitud"; hexColor = "#FFA500";
                 }
 
-                int level = effect.getAmplifier() + 1; // Nivel interno + 1 = Nivel Real
-                int seconds = effect.getDuration() / 20; // Ticks a Segundos
+                int level = effect.getAmplifier() + 1;
+                int seconds = effect.getDuration() / 20;
 
-                // Creamos la línea estilizada (> Lentitud 1 (15 s))
                 lore.add(ChatColor.GRAY + "> " + ChatColor.of(hexColor) + effectName + " " + level +
                         ChatColor.GRAY + " (" + ChatColor.of("#0099cc") + seconds + " s" + ChatColor.GRAY + ")");
             }
@@ -281,7 +262,6 @@ public class CustomPotions {
             meta.setLore(lore);
             meta.setColor(color);
 
-            // Ocultamos la asquerosa tooltip default de Vanilla
             meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
             try {
                 meta.addItemFlags(ItemFlag.valueOf("HIDE_ADDITIONAL_TOOLTIP"));

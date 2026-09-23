@@ -32,14 +32,12 @@ public class StatueGUI implements Listener {
 
         StatueData data = new StatueData(item.getItemMeta());
 
-        // Fila 1
         inv.setItem(10, createIcon(Material.BEACON, "Radio (Ancho)", "" + data.getRadiusX()));
         inv.setItem(11, createIcon(Material.IRON_BARS, "Radio (Alto)", "" + data.getRadiusY()));
 
         String colorName = (data.getGlowColor() == null) ? "DESACTIVADO" : data.getGlowColor().name();
         inv.setItem(12, createIcon(Material.GLOW_INK_SAC, "Color Glowing", colorName));
 
-        // Fila 2 (Tipo de Estatua: Efecto vs AntiGrief)
         if (data.isAntiGrief()) {
             inv.setItem(19, createIcon(Material.SHIELD, "Modo: ANTI-GRIEF", "Protege bloques de explosiones y mobs"));
             inv.setItem(20, createIcon(Material.BARRIER, "Nivel Efecto", "N/A (Modo Anti-Grief activo)"));
@@ -49,10 +47,8 @@ public class StatueGUI implements Listener {
             inv.setItem(20, createIcon(Material.BREWING_STAND, "Nivel Efecto", "Nivel: " + (data.getEffectAmplifier() + 1)));
         }
 
-        // Botón para alternar entre AntiGrief y Poción
         inv.setItem(28, createIcon(Material.COMMAND_BLOCK, "Cambiar Tipo de Estatua", "Click para alternar (Poción <-> AntiGrief)"));
 
-        // Fila 2 (Propiedades)
         inv.setItem(15, createIcon(Material.ANVIL, "Vida (Golpes)", "" + data.getHpMax()));
 
         inv.setItem(23, createIcon(data.isVisible() ? Material.ENDER_EYE : Material.ENDER_PEARL,
@@ -61,7 +57,6 @@ public class StatueGUI implements Listener {
         inv.setItem(24, createIcon(data.isInvulnerable() ? Material.BEDROCK : Material.GLASS,
                 "Invulnerabilidad", data.isInvulnerable() ? "§aINDESTRUCTIBLE" : "§cVULNERABLE"));
 
-        // Guardar
         inv.setItem(31, createIcon(Material.NETHER_STAR, "GUARDAR Y SALIR", "Click para aplicar cambios"));
 
         player.openInventory(inv);
@@ -93,35 +88,35 @@ public class StatueGUI implements Listener {
         boolean save = false;
 
         switch (e.getSlot()) {
-            case 10: // Radio X
+            case 10:
                 p.closeInventory();
                 p.sendMessage(ChatColor.GREEN + "Escribe el radio X en el chat:");
                 chatInputMode.put(p.getUniqueId(), "RAD_X");
                 break;
-            case 11: // Radio Y
+            case 11:
                 p.closeInventory();
                 p.sendMessage(ChatColor.GREEN + "Escribe el radio Y en el chat:");
                 chatInputMode.put(p.getUniqueId(), "RAD_Y");
                 break;
-            case 12: // Color Cycle + OFF
+            case 12:
                 ChatColor[] colors = {ChatColor.RED, ChatColor.BLUE, ChatColor.GREEN, ChatColor.YELLOW, ChatColor.WHITE, ChatColor.GOLD, ChatColor.LIGHT_PURPLE, ChatColor.AQUA};
                 ChatColor current = data.getGlowColor();
 
                 if (current == null) {
-                    data.setGlowColor(colors[0]); // De OFF pasa al primero
+                    data.setGlowColor(colors[0]);
                 } else {
                     int idx = -1;
                     for(int i=0; i<colors.length; i++) if(colors[i] == current) idx = i;
 
                     if (idx == colors.length - 1) {
-                        data.setGlowColor(null); // Del ultimo pasa a OFF
+                        data.setGlowColor(null);
                     } else {
                         data.setGlowColor(colors[(idx + 1) % colors.length]);
                     }
                 }
                 save = true;
                 break;
-            case 19: // Efecto Cycle + CHAT (Solo si no es Anti-Grief)
+            case 19:
                 if (data.isAntiGrief()) {
                     p.sendMessage(ChatColor.RED + "Desactiva el modo Anti-Grief para añadir efectos.");
                     break;
@@ -129,13 +124,11 @@ public class StatueGUI implements Listener {
 
                 PotionEffectType[] types = {PotionEffectType.SPEED, PotionEffectType.STRENGTH, PotionEffectType.REGENERATION, PotionEffectType.RESISTANCE, PotionEffectType.FIRE_RESISTANCE};
 
-                // Si hace click derecho, escribe en chat
                 if (e.getClick().isRightClick()) {
                     p.closeInventory();
                     p.sendMessage(ChatColor.GREEN + "Escribe el NOMBRE del efecto en el chat (ej: SATURATION, ABSORPTION, LUCK):");
                     chatInputMode.put(p.getUniqueId(), "EFF_NAME");
                 } else {
-                    // Click normal cicla los comunes
                     PotionEffectType curEff = data.getEffectType();
                     int idy = 0;
                     if (curEff != null) {
@@ -146,36 +139,36 @@ public class StatueGUI implements Listener {
                     save = true;
                 }
                 break;
-            case 20: // Amplifier (Solo si no es AntiGrief)
+            case 20:
                 if (data.isAntiGrief()) break;
 
                 p.closeInventory();
                 p.sendMessage(ChatColor.GREEN + "Escribe el NIVEL del efecto (1, 2, 3...):");
                 chatInputMode.put(p.getUniqueId(), "EFF_AMP");
                 break;
-            case 28: // Alternar Modo
+            case 28:
                 if (data.isAntiGrief()) {
                     data.setAntiGrief(false);
-                    data.setEffect(PotionEffectType.SPEED, 0); // Vuelve a un efecto base
+                    data.setEffect(PotionEffectType.SPEED, 0);
                 } else {
-                    data.setAntiGrief(true); // Esto borra el efecto automáticamente en la clase de datos
+                    data.setAntiGrief(true);
                 }
                 save = true;
                 break;
-            case 15: // Vida
+            case 15:
                 p.closeInventory();
                 p.sendMessage(ChatColor.GREEN + "Escribe la vida máxima:");
                 chatInputMode.put(p.getUniqueId(), "HP");
                 break;
-            case 23: // Visibilidad Toggle
+            case 23:
                 data.setVisible(!data.isVisible());
                 save = true;
                 break;
-            case 24: // Invulnerabilidad Toggle
+            case 24:
                 data.setInvulnerable(!data.isInvulnerable());
                 save = true;
                 break;
-            case 31: // GUARDAR
+            case 31:
                 p.closeInventory();
                 p.sendMessage(ChatColor.GREEN + "Configuración guardada.");
                 updateLore(handItem);

@@ -79,7 +79,6 @@ public class Mission12 implements Mission, Listener {
         if (!(event.getEntity() instanceof Snowman snowman)) return;
         if (snowman.getLocation().getBlock().getBiome() != Biome.WARPED_FOREST) return;
 
-        // Bloqueamos COMPLETAMENTE el daño de fuego/calor de Vanilla para controlarlo nosotros
         if (event.getCause() == EntityDamageEvent.DamageCause.MELTING ||
                 event.getCause() == EntityDamageEvent.DamageCause.FIRE ||
                 event.getCause() == EntityDamageEvent.DamageCause.FIRE_TICK ||
@@ -89,7 +88,6 @@ public class Mission12 implements Mission, Listener {
         }
     }
 
-    // Desde la 26.2 la magma ya no da HOT_FLOOR, llega como CONTACT con el bloque
     private boolean esDanoPorMagma(EntityDamageEvent event) {
         if (event.getCause() != EntityDamageEvent.DamageCause.CONTACT) return false;
         if (!(event instanceof EntityDamageByBlockEvent byBlock) || byBlock.getDamager() == null) return false;
@@ -108,17 +106,14 @@ public class Mission12 implements Mission, Listener {
         if (item.getType() != Material.SHEARS) return;
         if (snowman.getLocation().getBlock().getBiome() != Biome.WARPED_FOREST) return;
 
-        // isDerp = true significa que YA NO tiene calabaza. Así evitamos doble ejecución.
         if (snowman.isDerp()) return;
         if (snowman.getPersistentDataContainer().has(friendKey, PersistentDataType.STRING)) return;
 
-        // Guardamos el UUID del jugador para mayor seguridad
         snowman.getPersistentDataContainer().set(friendKey, PersistentDataType.STRING, player.getUniqueId().toString());
 
         String msg = ChatColor.GOLD + "۞ " + ChatColor.of("#FFCC99") + "¡Protege al Golem hasta que se derrita!";
         actionBarHandler.sendActionBar(player, msg);
 
-        // Iniciamos el Custom Melting y el Aggro de los Mobs
         new BukkitRunnable() {
             int ticks = 0;
 
@@ -129,7 +124,6 @@ public class Mission12 implements Mission, Listener {
                     return;
                 }
 
-                // RADAR DE ENEMIGOS: Cada 10 ticks (0.5s) provocamos a los mobs cercanos
                 for (Entity e : snowman.getNearbyEntities(15, 15, 15)) {
                     if (e instanceof Enderman || e instanceof PiglinAbstract || e instanceof Zoglin) {
                         if (e instanceof Mob mob) {
@@ -140,10 +134,9 @@ public class Mission12 implements Mission, Listener {
                     }
                 }
 
-                // DERRETIMIENTO CUSTOM: Cada 6 ciclos (60 ticks = 3 segundos)
                 if (ticks % 6 == 0) {
                     snowman.setMetadata("custom_melt", new FixedMetadataValue(plugin, true));
-                    snowman.damage(1.0); // Le hacemos 1 de daño exacto
+                    snowman.damage(1.0);
                 }
 
                 ticks++;

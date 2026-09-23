@@ -388,12 +388,9 @@ public class ItemPartyHandler implements Listener {
         Objective obj = eventScoreboard.getObjective("itemparty");
         if (obj == null) return;
 
-        // Trabajamos directamente sobre 'eventScoreboard', no sobre viewer.getScoreboard()
-
         int score = 15;
         setSpace(obj, score--, 99);
 
-        // 1. TOP SECTION
         for (int i = 0; i < 6; i++) {
             Map.Entry<String, Integer> e;
             if (i < safeCount && i < sorted.size()) {
@@ -406,7 +403,6 @@ public class ItemPartyHandler implements Listener {
             int valor = e.getValue();
             if (nombre.length() > 10) nombre = nombre.substring(0, 10) + "..";
 
-            // Usamos eventScoreboard aquí
             Team team = getOrCreateTeam(eventScoreboard, "itp_top_" + i);
             String hiddenKey = "§" + (i);
             if (!team.hasEntry(hiddenKey)) team.addEntry(hiddenKey);
@@ -428,7 +424,6 @@ public class ItemPartyHandler implements Listener {
 
         setSpace(obj, score--, 88);
 
-        // 2. DANGER SECTION
         int visualDangerLimit = 3;
         for (int i = 0; i < visualDangerLimit; i++) {
             int index = safeCount + i;
@@ -452,7 +447,6 @@ public class ItemPartyHandler implements Listener {
             obj.getScore(hiddenKey).setScore(score--);
         }
 
-        // Asegurar que los jugadores nuevos ven la scoreboard (por si hubo relogin)
         for (Player p : Bukkit.getOnlinePlayers()) {
             if (participants.contains(p.getName()) && p.getScoreboard() != eventScoreboard) {
                 p.setScoreboard(eventScoreboard);
@@ -461,7 +455,6 @@ public class ItemPartyHandler implements Listener {
     }
 
     private void setSpace(Objective obj, int score, int uniqueId) {
-        // Corrección: Usar eventScoreboard siempre
         Team t = getOrCreateTeam(eventScoreboard, "space_" + uniqueId);
         String entry = "§" + (char)('a' + (uniqueId % 20)) + "§r";
         if (!t.hasEntry(entry)) t.addEntry(entry);
@@ -571,7 +564,6 @@ public class ItemPartyHandler implements Listener {
         playersConfig.set("punishments", null);
         playersConfig.set("players", null);
         savePlayersConfig();
-        /*Bukkit.broadcastMessage("§a[ItemParty] Archivo itempartyplayers.yml (castigos) reiniciado correctamente.");*/
     }
 
     private String getMobType(Entity entity) {

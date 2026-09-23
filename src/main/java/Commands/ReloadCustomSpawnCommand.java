@@ -23,10 +23,8 @@ public class ReloadCustomSpawnCommand implements CommandExecutor {
 
         Player player = (Player) sender;
 
-        // Limpiar spawners existentes en el mapa
         spawnerHandler.clearActiveSpawners();
 
-        // Escanear y recargar todos los spawners
         spawnerHandler.loadAllCustomSpawners();
 
         player.sendMessage(ChatColor.GREEN + "Todos los spawners custom han sido recargados correctamente.");

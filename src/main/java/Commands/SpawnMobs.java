@@ -37,7 +37,7 @@ public class SpawnMobs implements CommandExecutor, TabCompleter {
         String mobType = args[0].toLowerCase();
         Location location = null;
         Player targetPlayer = null;
-        String variantArg = null; // Preparado en caso de usar variantes como en Viciont
+        String variantArg = null;
 
         if (args.length > 1 && Bukkit.getPlayer(args[1]) != null) {
             targetPlayer = Bukkit.getPlayer(args[1]);

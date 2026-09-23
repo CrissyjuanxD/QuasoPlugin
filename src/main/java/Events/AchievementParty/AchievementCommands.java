@@ -47,13 +47,11 @@ public class AchievementCommands implements CommandExecutor, org.bukkit.command.
         String playerName = args[1];
         Player target = Bukkit.getPlayer(playerName);
 
-        // Verificar si el jugador existe (online u offline)
         if (target == null && Bukkit.getOfflinePlayer(playerName).getName() == null) {
             sender.sendMessage(ChatColor.RED + "El jugador " + playerName + " no existe.");
             return true;
         }
 
-        // Usar el nombre correcto (por si el jugador está offline)
         String actualPlayerName = target != null ? target.getName() : Bukkit.getOfflinePlayer(playerName).getName();
 
         if (command.getName().equalsIgnoreCase("addlogro")) {
@@ -79,25 +77,21 @@ public class AchievementCommands implements CommandExecutor, org.bukkit.command.
 
         Achievement achievement = achievementHandler.getAchievements().get(achievementId);
 
-        // Manejar logros con listas (como el de las flores)
         if (achievement instanceof Achievement2 && itemArg != null) {
             Achievement2 flowerAchievement = (Achievement2) achievement;
             FileConfiguration data = YamlConfiguration.loadConfiguration(achievementHandler.getAchievementsFile());
 
             if (itemArg.equalsIgnoreCase("all")) {
-                // Marcar todas las flores como recolectadas
                 for (Material flower : flowerAchievement.getRequiredFlowers()) {
                     data.set("players." + playerName + ".achievements.collect_all_flowers.collected." + flower.name(), true);
                 }
 
-                // Verificar si ya estaba completo antes de marcar todo
                 boolean wasCompleted = data.getBoolean("players." + playerName + ".achievements.collect_all_flowers.completed", false);
 
                 try {
                     data.save(achievementHandler.getAchievementsFile());
                     sender.sendMessage(ChatColor.GREEN + "Todas las flores del logro han sido marcadas como recolectadas para " + playerName);
 
-                    // Completar el logro si no estaba completado antes
                     if (!wasCompleted) {
                         achievementHandler.completeAchievement(playerName, achievementId);
                     }
@@ -107,12 +101,10 @@ public class AchievementCommands implements CommandExecutor, org.bukkit.command.
                     return false;
                 }
             } else {
-                // Intentar encontrar la flor especificada
                 Material flowerMaterial = null;
                 try {
                     flowerMaterial = Material.valueOf(itemArg.toUpperCase());
                 } catch (IllegalArgumentException e) {
-                    // Material no válido
                 }
 
                 if (flowerMaterial == null || !flowerAchievement.getRequiredFlowers().contains(flowerMaterial)) {
@@ -124,14 +116,12 @@ public class AchievementCommands implements CommandExecutor, org.bukkit.command.
                     return true;
                 }
 
-                // Marcar la flor específica como recolectada
                 data.set("players." + playerName + ".achievements.collect_all_flowers.collected." + flowerMaterial.name(), true);
 
                 try {
                     data.save(achievementHandler.getAchievementsFile());
                     sender.sendMessage(ChatColor.GREEN + "Flor " + flowerMaterial.name() + " marcada como recolectada para " + playerName);
 
-                    // Verificar si ahora tiene todas las flores
                     boolean allCollected = true;
                     for (Material flower : flowerAchievement.getRequiredFlowers()) {
                         if (!data.getBoolean("players." + playerName + ".achievements.collect_all_flowers.collected." + flower.name(), false)) {
@@ -151,25 +141,21 @@ public class AchievementCommands implements CommandExecutor, org.bukkit.command.
             }
         }
 
-        // Manejar logros con listas (achievement5)
         if (achievement instanceof Achievement5 && itemArg != null) {
             Achievement5 blockAchievement = (Achievement5) achievement;
             FileConfiguration data = YamlConfiguration.loadConfiguration(achievementHandler.getAchievementsFile());
 
             if (itemArg.equalsIgnoreCase("all")) {
-                // Marcar todos los bloques como rotos
                 for (Material block : blockAchievement.getRequiredBlocks()) {
                     data.set("players." + playerName + ".achievements.touch_grass.broken." + block.name(), true);
                 }
 
-                // Verificar si ya estaba completo antes de marcar todo
                 boolean wasCompleted = data.getBoolean("players." + playerName + ".achievements.touch_grass.completed", false);
 
                 try {
                     data.save(achievementHandler.getAchievementsFile());
                     sender.sendMessage(ChatColor.GREEN + "Todos los bloques del logro han sido marcados como rotos para " + playerName);
 
-                    // Completar el logro si no estaba completado antes
                     if (!wasCompleted) {
                         achievementHandler.completeAchievement(playerName, achievementId);
                     }
@@ -179,12 +165,10 @@ public class AchievementCommands implements CommandExecutor, org.bukkit.command.
                     return false;
                 }
             } else {
-                // Intentar encontrar el bloque especificado
                 Material blockMaterial = null;
                 try {
                     blockMaterial = Material.valueOf(itemArg.toUpperCase());
                 } catch (IllegalArgumentException e) {
-                    // Material no válido
                 }
 
                 if (blockMaterial == null || !blockAchievement.getRequiredBlocks().contains(blockMaterial)) {
@@ -196,14 +180,12 @@ public class AchievementCommands implements CommandExecutor, org.bukkit.command.
                     return true;
                 }
 
-                // Marcar el bloque específico como roto
                 data.set("players." + playerName + ".achievements.touch_grass.broken." + blockMaterial.name(), true);
 
                 try {
                     data.save(achievementHandler.getAchievementsFile());
                     sender.sendMessage(ChatColor.GREEN + "Bloque " + blockMaterial.name() + " marcado como roto para " + playerName);
 
-                    // Verificar si ahora tiene todos los bloques
                     boolean allBroken = true;
                     for (Material block : blockAchievement.getRequiredBlocks()) {
                         if (!data.getBoolean("players." + playerName + ".achievements.touch_grass.broken." + block.name(), false)) {
@@ -222,20 +204,18 @@ public class AchievementCommands implements CommandExecutor, org.bukkit.command.
                 }
             }
         }
-        // En el método handleAddAchievement, añadir este caso:
+
         if (achievement instanceof Achievement8) {
             FileConfiguration data = YamlConfiguration.loadConfiguration(achievementHandler.getAchievementsFile());
             String path = "players." + playerName + ".achievements.sculk_shrieker.broken";
 
             if (itemArg != null && itemArg.equalsIgnoreCase("all")) {
-                // Completar todo el progreso
                 data.set(path, ((Achievement8) achievement).REQUIRED_SCULK_SHRIEKERS);
 
                 try {
                     data.save(achievementHandler.getAchievementsFile());
                     sender.sendMessage(ChatColor.GREEN + "Progreso de chilladores completado para " + playerName);
 
-                    // Completar el logro si no estaba completado
                     if (!data.getBoolean("players." + playerName + ".achievements.sculk_shrieker.completed", false)) {
                         achievementHandler.completeAchievement(playerName, achievementId);
                     }
@@ -245,7 +225,6 @@ public class AchievementCommands implements CommandExecutor, org.bukkit.command.
                     return false;
                 }
             } else if (itemArg != null && itemArg.equalsIgnoreCase("down")) {
-                // Reducir el contador
                 int current = data.getInt(path, 0);
                 if (current > 0) {
                     data.set(path, current - 1);
@@ -263,7 +242,6 @@ public class AchievementCommands implements CommandExecutor, org.bukkit.command.
                     return true;
                 }
             } else {
-                // Incrementar el contador
                 int current = data.getInt(path, 0);
                 data.set(path, current + 1);
 
@@ -271,7 +249,6 @@ public class AchievementCommands implements CommandExecutor, org.bukkit.command.
                     data.save(achievementHandler.getAchievementsFile());
                     sender.sendMessage(ChatColor.GREEN + "Contador de chilladores incrementado a " + (current + 1) + " para " + playerName);
 
-                    // Verificar si ahora tiene todos los chilladores
                     if (current + 1 >= ((Achievement8) achievement).REQUIRED_SCULK_SHRIEKERS &&
                             !data.getBoolean("players." + playerName + ".achievements.sculk_shrieker.completed", false)) {
                         achievementHandler.completeAchievement(playerName, achievementId);
@@ -284,12 +261,10 @@ public class AchievementCommands implements CommandExecutor, org.bukkit.command.
             }
         }
 
-
-        // Para logros normales (sin lista)
         if (itemArg != null) {
             sender.sendMessage(ChatColor.YELLOW + "Este logro no requiere items. Ignorando el parámetro adicional.");
         }
-        // Reemplazar addAchievement por completeAchievement
+
         FileConfiguration data = YamlConfiguration.loadConfiguration(achievementHandler.getAchievementsFile());
         boolean wasCompleted = data.getBoolean("players." + playerName + ".achievements." + achievementId + ".completed", false);
 
@@ -317,18 +292,15 @@ public class AchievementCommands implements CommandExecutor, org.bukkit.command.
 
         Achievement achievement = achievementHandler.getAchievements().get(achievementId);
 
-        // Manejar logros con listas (como el de las flores)
         if (achievement instanceof Achievement2 && itemArg != null) {
             Achievement2 flowerAchievement = (Achievement2) achievement;
             FileConfiguration data = YamlConfiguration.loadConfiguration(achievementHandler.getAchievementsFile());
 
             if (itemArg.equalsIgnoreCase("all")) {
-                // Marcar todas las flores como no recolectadas
                 for (Material flower : flowerAchievement.getRequiredFlowers()) {
                     data.set("players." + playerName + ".achievements.collect_all_flowers.collected." + flower.name(), false);
                 }
 
-                // Quitar el logro completado si lo tenía
                 if (data.getBoolean("players." + playerName + ".achievements.collect_all_flowers.completed", false)) {
                     data.set("players." + playerName + ".achievements.collect_all_flowers.completed", false);
                     int completed = data.getInt("players." + playerName + ".completed", 0);
@@ -344,12 +316,10 @@ public class AchievementCommands implements CommandExecutor, org.bukkit.command.
                     return false;
                 }
             } else {
-                // Intentar encontrar la flor especificada
                 Material flowerMaterial = null;
                 try {
                     flowerMaterial = Material.valueOf(itemArg.toUpperCase());
                 } catch (IllegalArgumentException e) {
-                    // Material no válido
                 }
 
                 if (flowerMaterial == null || !flowerAchievement.getRequiredFlowers().contains(flowerMaterial)) {
@@ -361,10 +331,8 @@ public class AchievementCommands implements CommandExecutor, org.bukkit.command.
                     return true;
                 }
 
-                // Marcar la flor específica como no recolectada
                 data.set("players." + playerName + ".achievements.collect_all_flowers.collected." + flowerMaterial.name(), false);
 
-                // Si el logro estaba completado, quitarlo
                 if (data.getBoolean("players." + playerName + ".achievements.collect_all_flowers.completed", false)) {
                     data.set("players." + playerName + ".achievements.collect_all_flowers.completed", false);
                     int completed = data.getInt("players." + playerName + ".completed", 0);
@@ -382,18 +350,15 @@ public class AchievementCommands implements CommandExecutor, org.bukkit.command.
             }
         }
 
-        // Manejar el remove logros con listas (achievement5)
         if (achievement instanceof Achievement5 && itemArg != null) {
             Achievement5 blockAchievement = (Achievement5) achievement;
             FileConfiguration data = YamlConfiguration.loadConfiguration(achievementHandler.getAchievementsFile());
 
             if (itemArg.equalsIgnoreCase("all")) {
-                // Marcar todos los bloques como no rotos
                 for (Material block : blockAchievement.getRequiredBlocks()) {
                     data.set("players." + playerName + ".achievements.touch_grass.broken." + block.name(), false);
                 }
 
-                // Quitar el logro completado si lo tenía
                 if (data.getBoolean("players." + playerName + ".achievements.touch_grass.completed", false)) {
                     data.set("players." + playerName + ".achievements.touch_grass.completed", false);
                     int completed = data.getInt("players." + playerName + ".completed", 0);
@@ -409,12 +374,10 @@ public class AchievementCommands implements CommandExecutor, org.bukkit.command.
                     return false;
                 }
             } else {
-                // Intentar encontrar el bloque especificado
                 Material blockMaterial = null;
                 try {
                     blockMaterial = Material.valueOf(itemArg.toUpperCase());
                 } catch (IllegalArgumentException e) {
-                    // Material no válido
                 }
 
                 if (blockMaterial == null || !blockAchievement.getRequiredBlocks().contains(blockMaterial)) {
@@ -426,10 +389,8 @@ public class AchievementCommands implements CommandExecutor, org.bukkit.command.
                     return true;
                 }
 
-                // Marcar el bloque específico como no roto
                 data.set("players." + playerName + ".achievements.touch_grass.broken." + blockMaterial.name(), false);
 
-                // Si el logro estaba completado, quitarlo
                 if (data.getBoolean("players." + playerName + ".achievements.touch_grass.completed", false)) {
                     data.set("players." + playerName + ".achievements.touch_grass.completed", false);
                     int completed = data.getInt("players." + playerName + ".completed", 0);
@@ -446,16 +407,14 @@ public class AchievementCommands implements CommandExecutor, org.bukkit.command.
                 }
             }
         }
-        // Manejar el remove logros con listas (achievement8)
+
         if (achievement instanceof Achievement8) {
             FileConfiguration data = YamlConfiguration.loadConfiguration(achievementHandler.getAchievementsFile());
             String path = "players." + playerName + ".achievements.sculk_shrieker.broken";
 
             if (itemArg != null && itemArg.equalsIgnoreCase("all")) {
-                // Resetear todo el progreso
                 data.set(path, 0);
 
-                // Quitar el logro completado si lo tenía
                 if (data.getBoolean("players." + playerName + ".achievements.sculk_shrieker.completed", false)) {
                     data.set("players." + playerName + ".achievements.sculk_shrieker.completed", false);
                     int completed = data.getInt("players." + playerName + ".completed", 0);
@@ -471,12 +430,10 @@ public class AchievementCommands implements CommandExecutor, org.bukkit.command.
                     return false;
                 }
             } else {
-                // Reducir el contador
                 int current = data.getInt(path, 0);
                 if (current > 0) {
                     data.set(path, current - 1);
 
-                    // Si el logro estaba completado, quitarlo
                     if (current >= ((Achievement8) achievement).REQUIRED_SCULK_SHRIEKERS &&
                             data.getBoolean("players." + playerName + ".achievements.sculk_shrieker.completed", false)) {
                         data.set("players." + playerName + ".achievements.sculk_shrieker.completed", false);
@@ -499,7 +456,6 @@ public class AchievementCommands implements CommandExecutor, org.bukkit.command.
             }
         }
 
-        // Para logros normales (sin lista)
         if (itemArg != null) {
             sender.sendMessage(ChatColor.YELLOW + "Este logro no requiere items. Ignorando el parámetro adicional.");
         }
@@ -507,7 +463,6 @@ public class AchievementCommands implements CommandExecutor, org.bukkit.command.
         if (achievementHandler.removeAchievement(playerName, achievementId)) {
             sender.sendMessage(ChatColor.GREEN + "Logro " + achievementId + " removido de " + playerName);
 
-            // Notificar al jugador si está online
             Player target = Bukkit.getPlayer(playerName);
             if (target != null) {
                 target.sendMessage(ChatColor.RED + "Un administrador te ha removido el logro: " +
@@ -528,17 +483,13 @@ public class AchievementCommands implements CommandExecutor, org.bukkit.command.
         List<String> completions = new ArrayList<>();
 
         if (args.length == 1) {
-            // Autocompletar nombres de logros
             List<String> achievementIds = new ArrayList<>(achievementHandler.getAchievementIds());
             StringUtil.copyPartialMatches(args[0], achievementIds, completions);
         } else if (args.length == 2) {
-            // Autocompletar nombres de jugadores (online + algunos offline recientes)
             List<String> playerNames = new ArrayList<>();
 
-            // Jugadores online
             Bukkit.getOnlinePlayers().forEach(p -> playerNames.add(p.getName()));
 
-            // Jugadores offline recientes (últimos 50 jugadores vistos)
             playerNames.addAll(
                     java.util.Arrays.stream(Bukkit.getServer().getOfflinePlayers())
                             .limit(50)
@@ -549,7 +500,6 @@ public class AchievementCommands implements CommandExecutor, org.bukkit.command.
 
             StringUtil.copyPartialMatches(args[1], playerNames, completions);
         } else if (args.length == 3) {
-            // Autocompletar items para logros con listas
             Achievement achievement = achievementHandler.getAchievements().get(args[0]);
 
             if (achievement instanceof Achievement2) {
@@ -558,7 +508,7 @@ public class AchievementCommands implements CommandExecutor, org.bukkit.command.
                         .map(Enum::name)
                         .map(String::toLowerCase)
                         .collect(Collectors.toList());
-                flowerNames.add("all"); // Añadir la opción "all"
+                flowerNames.add("all");
 
                 StringUtil.copyPartialMatches(args[2], flowerNames, completions);
             }
@@ -580,7 +530,6 @@ public class AchievementCommands implements CommandExecutor, org.bukkit.command.
             }
         }
 
-        // Ordenar alfabéticamente
         Collections.sort(completions);
 
         return completions.size() > 50 ? completions.subList(0, 50) : completions;

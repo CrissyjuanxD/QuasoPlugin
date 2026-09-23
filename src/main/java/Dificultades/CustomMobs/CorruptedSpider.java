@@ -90,7 +90,6 @@ public class CorruptedSpider implements Listener {
         }
     }
 
-    //SONIDOS
     @EventHandler
     public void onCorruptedSpiderHurt(EntityDamageEvent event) {
         if (event.getEntity() instanceof Spider spider && isCorruptedSpider(spider)) {

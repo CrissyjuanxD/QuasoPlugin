@@ -73,7 +73,6 @@ public class InfestedGhast extends InfestedMob implements Listener {
         ghast.getPersistentDataContainer().set(mobKey, PersistentDataType.BYTE, (byte) 1);
     }
 
-    // Interceptar fireballs: yield 6, trail sonic boom
     @EventHandler
     public void onGhastFireball(ProjectileLaunchEvent event) {
         if (!(event.getEntity() instanceof Fireball fireball)) return;
@@ -98,7 +97,6 @@ public class InfestedGhast extends InfestedMob implements Listener {
         }.runTaskTimer(plugin, 0L, 1L);
     }
 
-    // Al explotar: Darkness II en el área
     @EventHandler
     public void onFireballExplode(EntityExplodeEvent event) {
         if (!(event.getEntity() instanceof Fireball fireball)) return;

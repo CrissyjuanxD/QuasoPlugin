@@ -59,7 +59,7 @@ public class HotPotatoHandler implements Listener {
     private boolean eventoIniciado = false;
     private boolean enBatalla = false;
     private boolean tpRealizado = false;
-    private boolean rondaEnPausa = false; // NUEVO: Evita que se pasen la papa mientras explotan
+    private boolean rondaEnPausa = false;
 
     private int arenaMinX, arenaMaxX;
     private int arenaMinY, arenaMaxY;
@@ -473,7 +473,6 @@ public class HotPotatoHandler implements Listener {
                 }
                 secuenciaBombas.add(2);
             }
-            // --- MODO RAPIDA/LENTA ---
             else {
                 int cantidadBombasActual = 1;
                 boolean subir = true;
@@ -644,7 +643,6 @@ public class HotPotatoHandler implements Listener {
 
             String mensaje = "";
             if (causa.equals("Bomba")) {
-                // Ya enviado en matarJugadorBomba
             } else if (causa.equals("Entorno")) {
                 mensaje = "§8§l[§c§l☠§8§l]§6§l " + jugador.getName() + " §r§7ha muerto por el daño del evento.";
                 jugador.sendMessage("§c¡Has muerto por daño de entorno!");
@@ -673,7 +671,7 @@ public class HotPotatoHandler implements Listener {
     private void avanzarRondaPrematuramente() {
         if (timerRonda != null) timerRonda.cancel();
 
-        rondaEnPausa = true; // Se adelanta el tiempo muerto
+        rondaEnPausa = true;
         tiempoCommand.removeBossBar(EVENT_TIMER_ID);
 
         for (String pName : participantes) {
@@ -1047,7 +1045,7 @@ public class HotPotatoHandler implements Listener {
 
         enviarMensajeZona(msjTop.toString());
 
-        Bukkit.getScheduler().runTaskLater(plugin, this::terminarEvento, 20 * 20L); // 20s y fin
+        Bukkit.getScheduler().runTaskLater(plugin, this::terminarEvento, 20 * 20L);
     }
 
     public void terminarEvento() {
@@ -1215,7 +1213,7 @@ public class HotPotatoHandler implements Listener {
     private void iniciarReduccionBordeContinuo(int cX, int cZ) {
         taskReduccionBordeContinuo = new BukkitRunnable() {
             int steps = 10;
-            int stepSize = 2; // Cantidad de bloques que se reduce por segundo
+            int stepSize = 2;
 
             @Override
             public void run() {
@@ -1228,7 +1226,6 @@ public class HotPotatoHandler implements Listener {
                     }
                     this.cancel();
                 } else {
-                    // Reducción gradual
                     minX = Math.min(minX + stepSize, cX - 12);
                     maxX = Math.max(maxX - stepSize, cX + 12);
                     minZ = Math.min(minZ + stepSize, cZ - 12);
@@ -1429,8 +1426,6 @@ public class HotPotatoHandler implements Listener {
         }
         tareasActivas.clear();
     }
-
-    //COMANDOS ADMINISTRATIVOS Y HELPER
 
     public void addParticipante(CommandSender sender, String nombre) {
         Player p = Bukkit.getPlayerExact(nombre);

@@ -70,19 +70,15 @@ public class Mission15 implements Mission, Listener {
         if (!missionHandler.isMissionActive(player, 15)) return;
         if (missionHandler.isMissionCompleted(player, 15)) return;
 
-        // --- ANTI-ELYTRAS ---
-        // Si el jugador intenta usar elytras, el contador se reinicia.
         if (player.isGliding()) {
             startY.remove(player.getUniqueId());
             startTime.remove(player.getUniqueId());
             return;
         }
 
-        // Si está subiendo, calculamos el vuelo
         if (event.getTo().getY() > event.getFrom().getY()) {
             processFlight(player, event.getFrom().getY(), event.getTo().getY());
         } else {
-            // Si empieza a caer, reiniciamos el reto
             if (event.getTo().getY() < event.getFrom().getY()) {
                 startY.remove(player.getUniqueId());
                 startTime.remove(player.getUniqueId());
@@ -93,7 +89,6 @@ public class Mission15 implements Mission, Listener {
     private void processFlight(Player player, double fromY, double toY) {
         UUID id = player.getUniqueId();
 
-        // Registrar el punto y tiempo de inicio
         if (!startY.containsKey(id)) {
             startY.put(id, fromY);
             startTime.put(id, System.currentTimeMillis());
@@ -102,7 +97,6 @@ public class Mission15 implements Mission, Listener {
 
         long timeElapsed = System.currentTimeMillis() - startTime.get(id);
 
-        // Si pasan los 7 segundos, se resetea la marca al bloque actual
         if (timeElapsed > 7000) {
             startY.put(id, fromY);
             startTime.put(id, System.currentTimeMillis());
@@ -111,7 +105,6 @@ public class Mission15 implements Mission, Listener {
 
         double heightGained = toY - startY.get(id);
 
-        // Meta: 400 Bloques
         if (heightGained >= 400) {
             successNotification.showSuccess(player);
             String msg = ChatColor.GOLD + "۞ " + ChatColor.of("#FFCC99") + "¡Velocidad supersónica alcanzada!";
@@ -122,7 +115,6 @@ public class Mission15 implements Mission, Listener {
             startY.remove(id);
             startTime.remove(id);
         } else if (heightGained >= 25) {
-            // Mostrar progreso a partir de los 25 bloques
             double timeLeft = (7000 - timeElapsed) / 1000.0;
 
             String colorAltura = heightGained >= 200 ? ChatColor.GREEN.toString() : ChatColor.of("#FFA07A").toString();

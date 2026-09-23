@@ -55,7 +55,6 @@ public class Mission30 implements Mission, Listener {
                             if (team != null) {
                                 team.addEntry(player.getName());
                             } else {
-                                // Por si el equipo no está creado en el mundo aún
                                 Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "team join YMiembro " + player.getName());
                             }
                         }

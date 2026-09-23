@@ -38,12 +38,10 @@ public class Achievement1 implements Achievement, Listener {
 
     @Override
     public void initializePlayerData(String playerName) {
-        // No necesita inicialización especial
     }
 
     @Override
     public void checkCompletion(String playerName) {
-        // Se verifica durante los eventos
     }
 
     @EventHandler
@@ -52,7 +50,6 @@ public class Achievement1 implements Achievement, Listener {
 
         Player player = event.getPlayer();
 
-        // Verificar primero si ya completó el logro
         FileConfiguration data = YamlConfiguration.loadConfiguration(eventHandler.getAchievementsFile());
         if (data.getBoolean("players." + player.getName() + ".achievements.fly_with_trident.completed", false)) {
             return;
@@ -60,27 +57,22 @@ public class Achievement1 implements Achievement, Listener {
 
         int currentY = event.getTo().getBlockY();
 
-        // Verificar si el jugador está subiendo
         if (currentY > event.getFrom().getBlockY()) {
-            // Si no hay registro previo, iniciar el seguimiento
             if (!ascentStartTimes.containsKey(player.getName())) {
                 ascentStartTimes.put(player.getName(), System.currentTimeMillis());
                 ascentStartHeights.put(player.getName(), currentY);
             }
 
-            // Obtener datos del ascenso
             long startTime = ascentStartTimes.get(player.getName());
             int startHeight = ascentStartHeights.get(player.getName());
             int heightGained = currentY - startHeight;
 
-            // Verificar si alcanzó los 400 bloques en menos de 10 segundos
             if (heightGained >= 300 && (System.currentTimeMillis() - startTime) <= 7000) {
                 eventHandler.completeAchievement(player.getName(), "fly_with_trident");
                 successNotification.showSuccess(player);
                 ascentStartTimes.remove(player.getName());
                 ascentStartHeights.remove(player.getName());
             }
-            // Si pasaron más de 7 segundos, reiniciar el contador
             else if (System.currentTimeMillis() - startTime > 7000) {
                 ascentStartTimes.remove(player.getName());
                 ascentStartHeights.remove(player.getName());

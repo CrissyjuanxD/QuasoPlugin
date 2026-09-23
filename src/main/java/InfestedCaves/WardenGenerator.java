@@ -35,7 +35,6 @@ public class WardenGenerator extends ChunkGenerator {
         int realX = chunkX * 16;
         int realZ = chunkZ * 16;
 
-        // Detectar Ancient City cercana (puro cálculo por seed, sin cargar chunks)
         AncientCityLocator.CityInfo cityInfo =
                 AncientCityLocator.findCityNear(world.getSeed(), realX + 8, realZ + 8);
 
@@ -48,13 +47,11 @@ public class WardenGenerator extends ChunkGenerator {
                 int distZ = Math.abs(cz);
                 double distToSpawn = Math.sqrt((double) cx * cx + (double) cz * cz);
 
-                // ── Pared de bedrock (límite del mundo) ──────────────────────────
                 if (distX >= WORLD_RADIUS || distZ >= WORLD_RADIUS) {
                     for (int y = -60; y <= 120; y++) chunk.setBlock(x, y, z, Material.BEDROCK);
                     continue;
                 }
 
-                // ── Influencias ──────────────────────────────────────────────────
                 double spawnInfluence = 0;
                 if (distToSpawn < SPAWN_RADIUS + SPAWN_TRANSITION) {
                     spawnInfluence = (distToSpawn <= SPAWN_RADIUS) ? 1.0
@@ -64,41 +61,29 @@ public class WardenGenerator extends ChunkGenerator {
                 double cityInfluence = (cityInfo != null)
                         ? AncientCityLocator.computeInfluence(cityInfo, cx, cz) : 0.0;
 
-                // ── Precalcular densidades ───────────────────────────────────────
-                double[] densities = new double[183]; // índice 0 = y -61
+                double[] densities = new double[183];
                 for (int y = -61; y <= 121; y++) {
                     double v = noise.noise(cx, y, cz, 0.5, 0.5);
 
-                    // Limpieza spawn (solo hacia arriba desde -58)
                     if (spawnInfluence > 0 && y >= -58)
                         v += spawnInfluence * 1.2;
 
-                    // Limpieza Ancient City: SOLO el volumen real del schem (minY..maxY).
-                    // La capa -59 no se toca (y > minY): el suelo base permanece sculk.
-                    // Por encima de maxY el noise corre totalmente libre → techo natural.
                     if (cityInfluence > 0 && cityInfo != null
-                            && y > cityInfo.minY()    // > -59: no tocar suelo base
-                            && y <= cityInfo.maxY())  // hasta el techo real del schem
+                            && y > cityInfo.minY()
+                            && y <= cityInfo.maxY())
                         v += cityInfluence * 1.2;
 
-                    // ANTI-TECHO-PLANO: en la franja justo por encima del schem
-                    // (maxY < y <= maxY+15) inyectamos ruido extra de alta frecuencia
-                    // para que la transición suelo→techo sea orgánica, no una capa plana.
-                    // Esto solo afecta a la zona de ciudad y solo en esa franja de 15 bloques.
                     if (cityInfluence > 0 && cityInfo != null
                             && y > cityInfo.maxY()
                             && y <= cityInfo.maxY() + 15) {
-                        double transition = (double)(y - cityInfo.maxY()) / 15.0; // 0→1
-                        // Ruido extra de alta frecuencia (4x más denso) que rompe la planitud
+                        double transition = (double)(y - cityInfo.maxY()) / 15.0;
                         double extraNoise = noise.noise(cx * 3.7, y * 2.1, cz * 3.7, 0.5, 0.5);
-                        // Se mezcla: fuerte cerca del techo del schem, cero 15 bloques arriba
                         v += cityInfluence * (1.0 - transition) * extraNoise * 0.6;
                     }
 
                     densities[y + 61] = v;
                 }
 
-                // ── Colocar bloques ──────────────────────────────────────────────
                 for (int y = -60; y <= 120; y++) {
                     int idx = y + 61;
 
@@ -111,13 +96,8 @@ public class WardenGenerator extends ChunkGenerator {
                     biomes.setBiome(x, y, z, Biome.DEEP_DARK);
 
                     if (density > 0.2) {
-                        // ── AIRE ────────────────────────────────────────────────
                         chunk.setBlock(x, y, z, Material.AIR);
 
-                        // Decoración: permitida en TODA la dimensión salvo spawn.
-                        // La ciudad NO bloquea decoración: el schem sobreescribe lo
-                        // que necesite, y los huecos naturales quedan decorados.
-                        // Nunca decoramos en Y=119 desde aquí (bedrock en 120 encima).
                         if (spawnInfluence < 0.5) {
                             if (y > -60 && y < 119 && densities[idx - 1] <= 0.2)
                                 decorateFloor(chunk, x, y - 1, z, random);
@@ -126,11 +106,9 @@ public class WardenGenerator extends ChunkGenerator {
                         }
 
                     } else {
-                        // ── SÓLIDO ───────────────────────────────────────────────
                         if (chunk.getType(x, y, z) == Material.AIR) {
                             chunk.setBlock(x, y, z, Material.SCULK);
 
-                            // Venas de mineral (no en spawn ni en interior de la ciudad)
                             if (spawnInfluence < 0.1 && cityInfluence < 0.1
                                     && random.nextInt(500) == 0) {
                                 double c = random.nextDouble();
@@ -141,27 +119,14 @@ public class WardenGenerator extends ChunkGenerator {
                     }
                 }
 
-                // ── Capa -59: suelo sculk base ───────────────────────────────────
-                // SIEMPRE se fuerza a SCULK (evita parches de bedrock).
-                // FIX ERROR CONSOLA: SCULK_CATALYST tiene block-entity y NO puede
-                // colocarse via ChunkData.setBlock() — solo colocamos SCULK aquí.
-                // La decoración encima solo si hay ≥2 bloques de aire (no bajo montañas)
-                // y estamos fuera del interior puro de la ciudad.
                 chunk.setBlock(x, -59, z, Material.SCULK);
 
-                // Decoración sobre la capa -59: siempre que haya ≥2 bloques de aire
-                // (no bajo montañas). Ciudad no bloquea: el schem sobreescribe igual.
                 boolean twoAirAbove = chunk.getType(x, -58, z) == Material.AIR
                         && chunk.getType(x, -57, z) == Material.AIR;
                 if (twoAirAbove && spawnInfluence < 0.5) {
                     decorateFloorCapeTop(chunk, x, -59, z, random);
                 }
 
-                // ── Techo superior: sculk en Y=119 cubre la bedrock de Y=120 ─────
-                // Sin condición de ciudad: siempre se decora el techo natural.
-                // decorateCeiling coloca SCULK en y y amethyst en y-1 (Y=118).
-                // Solo se salta si la posición Y=119 ya tiene algo (amethyst puesto
-                // por el bucle de densidades desde abajo).
                 if (chunk.getType(x, 119, z) == Material.AIR)
                     decorateCeiling(chunk, x, 119, z, random);
 
@@ -172,8 +137,6 @@ public class WardenGenerator extends ChunkGenerator {
         }
         return chunk;
     }
-
-    // ── Helpers ──────────────────────────────────────────────────────────────────
 
     private void generateVein(ChunkData chunk, int sx, int sy, int sz, int size, Random r) {
         int x = sx, y = sy, z = sz;
@@ -203,7 +166,6 @@ public class WardenGenerator extends ChunkGenerator {
 
     private void decorateFloor(ChunkData chunk, int x, int y, int z, Random r) {
         if (r.nextInt(1000) < 10) {
-            // Shrieker/sensor encima del bloque sólido
             if (r.nextBoolean()) {
                 org.bukkit.block.data.type.SculkShrieker sh =
                         (org.bukkit.block.data.type.SculkShrieker)
@@ -215,17 +177,10 @@ public class WardenGenerator extends ChunkGenerator {
             }
             chunk.setBlock(x, y, z, Material.SCULK);
         } else {
-            // FIX ERROR CONSOLA: SCULK_CATALYST tiene block-entity; NO se puede
-            // colocar con ChunkData.setBlock() → siempre ponemos SCULK puro.
             chunk.setBlock(x, y, z, Material.SCULK);
         }
     }
 
-    /**
-     * Decoración encima de la capa -59 (sensores/shriekers sobre el suelo base).
-     * Solo se llama cuando hay ≥2 bloques de aire arriba.
-     * FIX ERROR CONSOLA: SCULK_CATALYST eliminado de aquí — no es seguro via ChunkData.
-     */
     private void decorateFloorCapeTop(ChunkData chunk, int x, int y, int z, Random r) {
         if (r.nextInt(1000) < 8) {
             if (r.nextBoolean()) {

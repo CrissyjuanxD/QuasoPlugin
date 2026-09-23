@@ -10,7 +10,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public class ItemsPartyRecolect {
 
-    // TAG para reconocer que es ítem de fiesta y su subtipo (1..4)
     public static final String KEY_PARTY = "itemparty_kind";
 
     private final NamespacedKey KEY;
@@ -28,7 +27,6 @@ public class ItemsPartyRecolect {
         ItemStack is = new ItemStack(mat, 1);
         ItemMeta meta = is.getItemMeta();
         meta.setDisplayName(name);
-        // MARCA para stackeo: SOLO este byte + mismo material/nombre ⇒ stackean.
         meta.getPersistentDataContainer().set(KEY, PersistentDataType.BYTE, (byte) kind);
         is.setItemMeta(meta);
         return is;

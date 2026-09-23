@@ -26,7 +26,6 @@ public class SetTiendasCommand implements CommandExecutor {
 
         Player player = (Player) sender;
 
-        // Verificar permisos (Mismos que tu setspawn)
         if (!player.isOp() && !player.hasPermission("viciont.admin")) {
             player.sendMessage(ChatColor.RED + "No tienes permiso para usar este comando.");
             return true;
@@ -37,7 +36,6 @@ public class SetTiendasCommand implements CommandExecutor {
 
         if (world == null) return true;
 
-        // Guardar en la config bajo la sección "tiendas_loc"
         plugin.getConfig().set("tiendas_loc.world", world.getName());
         plugin.getConfig().set("tiendas_loc.x", loc.getX());
         plugin.getConfig().set("tiendas_loc.y", loc.getY());

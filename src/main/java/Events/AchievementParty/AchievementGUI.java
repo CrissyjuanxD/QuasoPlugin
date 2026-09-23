@@ -25,7 +25,6 @@ public class AchievementGUI implements Listener {
     private final AchievementPartyHandler achievementHandler;
     private final File achievementsFile;
 
-    // Slots donde se colocarán los logros
     private final int[] achievementSlots = {18, 19, 20, 21, 22, 23, 24, 25, 26,
             29, 30, 31, 32, 33, 40};
 
@@ -37,29 +36,22 @@ public class AchievementGUI implements Listener {
     }
 
     public void openAchievementGUI(Player player) {
-        // Crear inventario de doble cofre (54 slots)
         Inventory gui = Bukkit.createInventory(null, 54, ChatColor.of("#FF1493") + "" + ChatColor.BOLD + "Fiesta de Logros");
 
-        // Rellenar los slots vacíos con paneles de vidrio gris
         ItemStack border = createBorderItem();
         for (int i = 0; i < 54; i++) {
-            // Poner en todos los slots que no son para logros
             if (!isAchievementSlot(i)) {
                 gui.setItem(i, border);
             }
         }
 
-        // Obtener datos del jugador
         FileConfiguration data = YamlConfiguration.loadConfiguration(achievementsFile);
         String playerName = player.getName();
 
-        // Obtener todos los logros registrados
         List<Achievement> allAchievements = new ArrayList<>(achievementHandler.getAchievements().values());
 
-        // Ordenar los logros por orden de registro (logro1, logro2, etc.)
         allAchievements.sort(Comparator.comparingInt(a -> achievementHandler.getAchievementIndex(a)));
 
-        // Colocar los logros en los slots designados
         for (int i = 0; i < Math.min(allAchievements.size(), achievementSlots.length); i++) {
             Achievement achievement = allAchievements.get(i);
             String achievementId = achievementHandler.getAchievementKey(achievement);
@@ -69,7 +61,6 @@ public class AchievementGUI implements Listener {
             gui.setItem(achievementSlots[i], createAchievementItem(achievement, isCompleted, playerName));
         }
 
-        // Abrir la GUI al jugador
         player.openInventory(gui);
     }
 
@@ -77,11 +68,9 @@ public class AchievementGUI implements Listener {
         ItemStack item = new ItemStack(Material.PAPER);
         ItemMeta meta = item.getItemMeta();
 
-        // Colores festivos para Achievement Party
-        ChatColor completedColor = ChatColor.of("#FF6B35"); // Naranja festivo para completados
-        ChatColor pendingColor = ChatColor.of("#A8A8A8"); // Gris para pendientes
+        ChatColor completedColor = ChatColor.of("#FF6B35");
+        ChatColor pendingColor = ChatColor.of("#A8A8A8");
 
-        // Asignar nombre con colores pasteles festivos
         if (isCompleted) {
             meta.setDisplayName(completedColor + achievement.getName());
         } else {
@@ -93,7 +82,6 @@ public class AchievementGUI implements Listener {
         lore.add("");
         lore.add(isCompleted ? ChatColor.of("#32CD32") + "✔ Completado" : ChatColor.of("#FFD700") + "✖ Pendiente");
 
-        // Manejar logros con listas (como el de las flores)
         if (achievement instanceof Achievement2) {
             lore.add("");
             lore.add(ChatColor.of("#FF1493") + "" + ChatColor.BOLD + "Progreso de flores:");
@@ -109,7 +97,6 @@ public class AchievementGUI implements Listener {
             }
         }
 
-        // Manejar logros con listas (achievement5)
         if (achievement instanceof Achievement5) {
             lore.add("");
             lore.add(ChatColor.of("#FF8C00") + "" + ChatColor.BOLD + "Progreso de bloques:");
@@ -125,7 +112,6 @@ public class AchievementGUI implements Listener {
             }
         }
 
-        // En el método createAchievementItem, añadir este caso:
         if (achievement instanceof Achievement8) {
             lore.add("");
             lore.add(ChatColor.of("#DC143C") + "" + ChatColor.BOLD + "Progreso de chilladores:");
@@ -139,7 +125,6 @@ public class AchievementGUI implements Listener {
 
         meta.setLore(lore);
 
-        // Asignar CustomModelData según estado
         meta.setCustomModelData(isCompleted ? 3000 : 3001);
 
         item.setItemMeta(meta);
@@ -172,12 +157,11 @@ public class AchievementGUI implements Listener {
     @EventHandler
     public void onInventoryClick(InventoryClickEvent event) {
         if (event.getView().getTitle().equals(ChatColor.of("#FF1493") + "" + ChatColor.BOLD + "Fiesta de Logros")) {
-            event.setCancelled(true); // Cancelar cualquier interacción
+            event.setCancelled(true);
         }
     }
 
     @EventHandler
     public void onInventoryClose(InventoryCloseEvent event) {
-        // Puedes agregar lógica adicional si es necesario
     }
 }

@@ -36,10 +36,6 @@ public class ItemsEventos implements Listener {
         this.plumaKey = new NamespacedKey(plugin, "pluma_levitacion");
     }
 
-    // --------------------------------------------------------
-    // CREACIÓN DE ITEMS
-    // --------------------------------------------------------
-
     public ItemStack createManzanaVida() {
         ItemStack item = new ItemStack(Material.APPLE);
         ItemMeta meta = item.getItemMeta();
@@ -104,16 +100,13 @@ public class ItemsEventos implements Listener {
 
         ItemMeta meta = item.getItemMeta();
 
-        // Verificación Principal (PDC)
         if (meta.getPersistentDataContainer().has(manzanaKey, PersistentDataType.BYTE)) {
             return true;
         }
 
-        // Plan B: Si el schematic borró el PDC, verificamos por CustomModelData y Nombre
         if (meta.hasCustomModelData() && meta.getCustomModelData() == 100) {
             if (meta.hasDisplayName() && meta.getDisplayName().contains("Manzana de la Vida")) {
 
-                // Opcional: "Auto-reparar" el ítem inyectándole el PDC nuevamente
                 meta.getPersistentDataContainer().set(manzanaKey, PersistentDataType.BYTE, (byte) 1);
                 item.setItemMeta(meta);
 
@@ -129,16 +122,13 @@ public class ItemsEventos implements Listener {
 
         ItemMeta meta = item.getItemMeta();
 
-        // Verificación Principal (PDC)
         if (meta.getPersistentDataContainer().has(plumaKey, PersistentDataType.BYTE)) {
             return true;
         }
 
-        // Plan B: Fallback
         if (meta.hasCustomModelData() && meta.getCustomModelData() == 100) {
             if (meta.hasDisplayName() && meta.getDisplayName().contains("Pluma de Levitación")) {
 
-                // Auto-reparar
                 meta.getPersistentDataContainer().set(plumaKey, PersistentDataType.BYTE, (byte) 1);
                 item.setItemMeta(meta);
 

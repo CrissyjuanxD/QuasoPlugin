@@ -70,7 +70,6 @@ public class Mission9 implements Mission, Listener {
     @Override
     public void checkCompletion(String playerName) {}
 
-    // Evento cuando usa el catalejo
     @EventHandler
     public void onSpyglassUse(PlayerInteractEvent event) {
         if (event.getAction() != Action.RIGHT_CLICK_AIR && event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
@@ -91,7 +90,6 @@ public class Mission9 implements Mission, Listener {
                 return;
             }
 
-            // Inyectamos la marca en el Iceologer
             hitEntity.getPersistentDataContainer().set(spyglassMarkerKey, PersistentDataType.STRING, player.getUniqueId().toString());
 
             String msg = ChatColor.GOLD + "۞ " + ChatColor.AQUA + "¡Iceologer avistado y marcado! Ahora elimínalo.";
@@ -100,7 +98,6 @@ public class Mission9 implements Mission, Listener {
         }
     }
 
-    // Evento cuando el Iceologer muere
     @EventHandler
     public void onIceologerDeath(EntityDeathEvent event) {
         Entity entity = event.getEntity();
@@ -112,7 +109,6 @@ public class Mission9 implements Mission, Listener {
         if (!missionHandler.isMissionActive(killer, 9)) return;
         if (missionHandler.isMissionCompleted(killer, 9)) return;
 
-        // Comprobamos si el que lo mató es el mismo que lo marcó
         String markedPlayerUUID = entity.getPersistentDataContainer().get(spyglassMarkerKey, PersistentDataType.STRING);
 
         if (markedPlayerUUID != null && markedPlayerUUID.equals(killer.getUniqueId().toString())) {

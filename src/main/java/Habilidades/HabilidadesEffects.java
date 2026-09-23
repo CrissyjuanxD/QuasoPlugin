@@ -106,7 +106,6 @@ public class HabilidadesEffects {
                         @Override
                         public void run() {
                             player.removePotionEffect(PotionEffectType.SLOWNESS);
-                            // Llamamos a la recarga global de todas las habilidades
                             HabilidadesManager manager = new HabilidadesManager(plugin);
                             reapplyAllEffects(player, manager);
                         }
@@ -403,14 +402,13 @@ public class HabilidadesEffects {
         }
     }
 
-    // Calcula cuánta vida máxima en total dan las habilidades
     private double calculateExtraHealth(int level) {
         double extra = 0;
         for (int i = 1; i <= level; i++) {
             if (i <= 4) {
-                extra += 5.0; // 2.5 Corazones por nivel (1 al 4)
+                extra += 5.0;
             } else {
-                extra += 8.0; // 4 Corazones por nivel (5 al 8)
+                extra += 8.0;
             }
         }
         return extra;
@@ -429,7 +427,6 @@ public class HabilidadesEffects {
     }
 
     private void applyAllInternal(Player player, HabilidadesManager manager) {
-        // --- VITALIDAD ---
         int vitLevel = manager.getHighestLevel(player.getUniqueId(), HabilidadesType.VITALIDAD);
         AttributeInstance healthAttr = player.getAttribute(Attribute.MAX_HEALTH);
 
@@ -452,7 +449,6 @@ public class HabilidadesEffects {
             }
         }
 
-        // --- AGILIDAD ---
         int agiLevel = manager.getHighestLevel(player.getUniqueId(), HabilidadesType.AGILIDAD);
 
         if (agiLevel >= 1) addInfiniteEffect(player, PotionEffectType.HASTE, 0);
@@ -461,23 +457,18 @@ public class HabilidadesEffects {
         if (agiLevel >= 2) addInfiniteEffect(player, PotionEffectType.DOLPHINS_GRACE, 1);
         else player.removePotionEffect(PotionEffectType.DOLPHINS_GRACE);
 
-        // Velocidad II en el Nivel 7, Velocidad I en el Nivel 3
         if (agiLevel >= 7) addInfiniteEffect(player, PotionEffectType.SPEED, 1);
         else if (agiLevel >= 3) addInfiniteEffect(player, PotionEffectType.SPEED, 0);
         else player.removePotionEffect(PotionEffectType.SPEED);
 
-        // Fuerza I en el Nivel 5
         if (agiLevel >= 5) addInfiniteEffect(player, PotionEffectType.STRENGTH, 0);
         else player.removePotionEffect(PotionEffectType.STRENGTH);
 
-        // Salto Alto I en el Nivel 6
         if (agiLevel >= 6) addInfiniteEffect(player, PotionEffectType.JUMP_BOOST, 0);
         else player.removePotionEffect(PotionEffectType.JUMP_BOOST);
 
-        // --- RESISTENCIA ---
         int resLevel = manager.getHighestLevel(player.getUniqueId(), HabilidadesType.RESISTENCIA);
 
-        // Resistencia II en el Nivel 8, Resistencia I en el Nivel 4
         if (resLevel >= 8) addInfiniteEffect(player, PotionEffectType.RESISTANCE, 1);
         else if (resLevel >= 4) addInfiniteEffect(player, PotionEffectType.RESISTANCE, 0);
         else player.removePotionEffect(PotionEffectType.RESISTANCE);

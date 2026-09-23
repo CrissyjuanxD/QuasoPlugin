@@ -84,14 +84,13 @@ public class AreaZone {
             double maxZ = loc.getZ() + r;
             double y = loc.getY();
 
-            drawLine(w, new Location(w, minX, y, minZ), new Location(w, maxX, y, minZ), dust); // Norte
-            drawLine(w, new Location(w, maxX, y, minZ), new Location(w, maxX, y, maxZ), dust); // Este
-            drawLine(w, new Location(w, maxX, y, maxZ), new Location(w, minX, y, maxZ), dust); // Sur
-            drawLine(w, new Location(w, minX, y, maxZ), new Location(w, minX, y, minZ), dust); // Oeste
+            drawLine(w, new Location(w, minX, y, minZ), new Location(w, maxX, y, minZ), dust);
+            drawLine(w, new Location(w, maxX, y, minZ), new Location(w, maxX, y, maxZ), dust);
+            drawLine(w, new Location(w, maxX, y, maxZ), new Location(w, minX, y, maxZ), dust);
+            drawLine(w, new Location(w, minX, y, maxZ), new Location(w, minX, y, minZ), dust);
         }
     }
 
-    // Dibuja la tapa (relleno o rejilla) en una altura Y específica
     private void drawCap(World w, double y, Color color) {
         Particle.DustOptions dust = new Particle.DustOptions(color, 1.0f);
         Location loc = center.clone();

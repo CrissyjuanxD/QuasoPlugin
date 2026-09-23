@@ -84,13 +84,11 @@ public class InfestedSkeleton extends InfestedMob implements Listener {
         skeleton.getPersistentDataContainer().set(mobKey, PersistentDataType.BYTE, (byte) 1);
     }
 
-    // Al disparar al jugador: 40% chance de sonic boom adicional
     @EventHandler
     public void onSkeletonShoot(EntityShootBowEvent event) {
         if (!isCustomMob(event.getEntity())) return;
         if (!(event.getProjectile() instanceof Arrow arrow)) return;
 
-        // Trail sonic boom en la flecha
         new BukkitRunnable() {
             @Override
             public void run() {
@@ -103,7 +101,6 @@ public class InfestedSkeleton extends InfestedMob implements Listener {
             }
         }.runTaskTimer(plugin, 0L, 1L);
 
-        // 40% de lanzar sonic boom al objetivo
         if (Math.random() < 0.3) {
             LivingEntity shooter = (LivingEntity) event.getEntity();
             Player nearest = findNearestPlayer(shooter.getLocation(), 35);
@@ -113,7 +110,6 @@ public class InfestedSkeleton extends InfestedMob implements Listener {
         }
     }
 
-    // Las flechas aplican Instant Damage II al impactar
     @EventHandler
     public void onArrowHit(EntityDamageByEntityEvent event) {
         if (!(event.getDamager() instanceof Arrow arrow)) return;

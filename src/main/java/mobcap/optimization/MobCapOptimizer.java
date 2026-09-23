@@ -28,11 +28,9 @@ public class MobCapOptimizer {
             return originalMobCap;
         }
 
-        // Calcular factor de optimización basado en número de jugadores
         double optimizationFactor = calculateOptimizationFactor(playerCount);
         int optimizedCap = (int) (originalMobCap * optimizationFactor);
 
-        // Asegurar un mínimo razonable
         int minimumCap = Math.max(70, (int) (originalMobCap * config.getOptimizationMinimumPercentage()));
         optimizedCap = Math.max(optimizedCap, minimumCap);
 
@@ -50,13 +48,11 @@ public class MobCapOptimizer {
             return 1.0;
         }
 
-        // Reducción gradual basada en configuración
         double reductionFactor = config.getOptimizationReductionFactor();
         double minimumPercentage = config.getOptimizationMinimumPercentage();
 
-        // Calcular reducción progresiva
         int excessPlayers = playerCount - threshold;
-        double reductionPerPlayer = (1.0 - minimumPercentage) / 40.0; // Reducción gradual hasta 40 jugadores extra
+        double reductionPerPlayer = (1.0 - minimumPercentage) / 40.0;
         double reduction = Math.min(1.0 - minimumPercentage, excessPlayers * reductionPerPlayer);
 
         return Math.max(minimumPercentage, 1.0 - reduction);
@@ -68,7 +64,6 @@ public class MobCapOptimizer {
                 int totalMobs = getTotalMobCount();
                 int playerCount = Bukkit.getOnlinePlayers().size();
 
-                // Si hay demasiados mobs por jugador, aplicar limpieza
                 double mobsPerPlayer = playerCount > 0 ? (double) totalMobs / playerCount : totalMobs;
 
                 if (mobsPerPlayer > 15) {
@@ -105,7 +100,6 @@ public class MobCapOptimizer {
                 if (entity instanceof Monster &&
                         !(entity instanceof LivingEntity && ((LivingEntity) entity).getCustomName() != null)) {
 
-                    // Solo remover mobs que estén lejos de jugadores
                     boolean farFromPlayers = true;
                     for (Player player : world.getPlayers()) {
                         if (entity.getLocation().distance(player.getLocation()) < cleanupDistance) {

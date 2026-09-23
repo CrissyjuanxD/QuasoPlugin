@@ -76,7 +76,6 @@ public class InfestedCreeper extends InfestedMob implements Listener {
         creeper.getPersistentDataContainer().set(mobKey, PersistentDataType.BYTE, (byte) 1);
     }
 
-    // Sin daño a bloques + Darkness II + Poison II en el área
     @EventHandler
     public void onExplode(EntityExplodeEvent event) {
         if (!isCustomMob(event.getEntity())) return;
@@ -102,18 +101,16 @@ public class InfestedCreeper extends InfestedMob implements Listener {
         }
     }
 
-    // La explosión solo daña jugadores, no otros mobs
     @EventHandler
     public void onExplosionDamage(EntityDamageByEntityEvent event) {
         if (event.getCause() != EntityDamageEvent.DamageCause.ENTITY_EXPLOSION) return;
         if (!(event.getDamager() instanceof Creeper creeper)) return;
         if (!isCustomMob(creeper)) return;
-        if (event.getEntity() instanceof Player) return; // jugadores sí reciben daño
+        if (event.getEntity() instanceof Player) return;
 
-        event.setCancelled(true); // mobs, animales, etc. no reciben daño
+        event.setCancelled(true);
     }
 
-    // Mecánica: Proyectiles no hacen daño si tiene 18 o menos de vida
     @EventHandler
     public void onProjectileHit(EntityDamageByEntityEvent event) {
         if (!isCustomMob(event.getEntity())) return;
@@ -121,12 +118,10 @@ public class InfestedCreeper extends InfestedMob implements Listener {
         if (event.getDamager() instanceof Projectile) {
             Creeper creeper = (Creeper) event.getEntity();
 
-            // Si ya tiene 18 o menos de vida, bloquea el daño
             if (creeper.getHealth() <= 18.0) {
                 event.setCancelled(true);
                 creeper.getWorld().playSound(creeper.getLocation(), Sound.ITEM_SHIELD_BLOCK, 1.0f, 1.0f);
             }
-            // Si el flechazo lo va a dejar con menos de 18 o matarlo, topamos su vida a 18
             else if (creeper.getHealth() - event.getFinalDamage() <= 18.0) {
                 event.setCancelled(true);
                 creeper.setHealth(18.0);

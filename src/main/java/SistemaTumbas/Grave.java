@@ -26,7 +26,6 @@ public class Grave {
         this.creationTime = creationTime;
         this.expiryTime = expiryTime;
 
-        // Crear inventario de cofre doble
         this.inventory = Bukkit.createInventory(null, 54, "Tumba de " + ownerName);
         if (items != null) {
             for (int i = 0; i < Math.min(items.size(), 54); i++) {

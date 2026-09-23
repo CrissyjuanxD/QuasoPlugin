@@ -36,7 +36,6 @@ public class LifeCampfire implements Listener {
     private final NamespacedKey campfireKey;
     private final NamespacedKey fuelKey;
 
-    // Registro de todas las fogatas activas en el mundo
     private final Map<Location, ActiveCampfire> activeCampfires = new HashMap<>();
 
     public LifeCampfire(JavaPlugin plugin) {
@@ -44,10 +43,6 @@ public class LifeCampfire implements Listener {
         this.campfireKey = new NamespacedKey(plugin, "life_campfire");
         this.fuelKey = new NamespacedKey(plugin, "life_fuel");
     }
-
-    // ========================================================================================
-    // CREACIÓN DE LOS ÍTEMS
-    // ========================================================================================
 
     public ItemStack createCampfire() {
         ItemStack item = new ItemStack(Material.CAMPFIRE);
@@ -125,10 +120,6 @@ public class LifeCampfire implements Listener {
         return item.getItemMeta().getPersistentDataContainer().has(fuelKey, PersistentDataType.BYTE);
     }
 
-    // ========================================================================================
-    // EVENTOS DE COLOCACIÓN E INTERACCIÓN
-    // ========================================================================================
-
     @EventHandler
     public void onBlockPlace(BlockPlaceEvent event) {
         if (isCampfire(event.getItemInHand())) {
@@ -176,10 +167,6 @@ public class LifeCampfire implements Listener {
             event.setDropItems(false);
         }
     }
-
-    // ========================================================================================
-    // LÓGICA INTERNA DE LA FOGATA
-    // ========================================================================================
 
     private class ActiveCampfire {
         private final Location loc;
@@ -237,11 +224,11 @@ public class LifeCampfire implements Listener {
             int amplifier;
 
             if (radius <= 6) {
-                amplifier = 0; // Nivel I
+                amplifier = 0;
             } else if (radius <= 12) {
-                amplifier = 1; // Nivel II
+                amplifier = 1;
             } else {
-                amplifier = 2; // Nivel III
+                amplifier = 2;
             }
 
             PotionEffect regen = new PotionEffect(PotionEffectType.REGENERATION, 60, amplifier, true, true);

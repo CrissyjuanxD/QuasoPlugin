@@ -32,7 +32,6 @@ public class AchievementPartyHandler implements Listener {
         this.achievementsFile = new File(plugin.getDataFolder(), "achievements_data.yml");
         this.configFile = new File(plugin.getDataFolder(), "config.yml");
 
-        // Registrar logros iniciales
         registerAchievements();
         ensureFilesExist();
 
@@ -55,7 +54,6 @@ public class AchievementPartyHandler implements Listener {
     }
 
     private void registerAchievements() {
-        // Registrar los logros iniciales
         achievements.put("nether_fall", new Achievement9(plugin, this));
         achievements.put("sculk_shrieker", new Achievement8(plugin, this));
         achievements.put("alma_piedra", new Achievement7(plugin, this));
@@ -72,7 +70,6 @@ public class AchievementPartyHandler implements Listener {
         return achievements;
     }
 
-    // Método para obtener el índice numérico del logro (para CustomModelData)
     public int getAchievementIndex(Achievement achievement) {
         int index = 0;
         for (Map.Entry<String, Achievement> entry : achievements.entrySet()) {
@@ -84,7 +81,6 @@ public class AchievementPartyHandler implements Listener {
         return -1;
     }
 
-    // Método para obtener el ID de cadena del logro (la clave en el Map)
     public String getAchievementKey(Achievement achievement) {
         for (Map.Entry<String, Achievement> entry : achievements.entrySet()) {
             if (entry.getValue().equals(achievement)) {
@@ -104,7 +100,6 @@ public class AchievementPartyHandler implements Listener {
         eventActive = true;
         loadPlayerData();
 
-        // Inicializar tracking para todos los jugadores registrados
         FileConfiguration config = YamlConfiguration.loadConfiguration(configFile);
         Set<String> allPlayers = config.getConfigurationSection("HasJoinedBefore") != null ?
                 config.getConfigurationSection("HasJoinedBefore").getKeys(false) : new HashSet<>();
@@ -146,14 +141,11 @@ public class AchievementPartyHandler implements Listener {
                 penalizedPlayers.add(playerName);
                 data.set("players." + playerName + ".penalized", true);
 
-                // CAMBIO IMPORTANTE: Solo marcar apply_penalized como false si el jugador NO está en línea
                 Player onlinePlayer = Bukkit.getPlayer(UUID.fromString(uuid));
                 if (onlinePlayer != null) {
-                    // Si está en línea, aplicar penalización inmediatamente y marcar como aplicada
                     applyPenalty(onlinePlayer);
                     data.set("players." + playerName + ".apply_penalized", true);
                 } else {
-                    // Si NO está en línea, marcar para aplicar cuando se conecte
                     data.set("players." + playerName + ".apply_penalized", false);
                 }
             } else {
@@ -185,22 +177,17 @@ public class AchievementPartyHandler implements Listener {
 
         double currentMaxHealth = player.getAttribute(Attribute.MAX_HEALTH).getBaseValue();
 
-        // Si el jugador tiene 4 corazones o menos (8 de vida o menos)
         if (currentMaxHealth <= 8) {
-            // En lugar de penalizar, matar al jugador
             player.setHealth(0);
             player.sendMessage("§c¡No completaste todos los logros! Has sido ejecutado por no cumplir con el Evento de Logros.");
             Bukkit.broadcastMessage("§c" + player.getName() + " ha sido ejecutado por no completar el Evento de Logros.");
 
-            // Marcar como penalizado y que ya se aplicó
             data.set(penalizedPath, true);
             data.set(appliedPath, true);
         } else {
-            // Aplicar penalización normal (quitar 4 corazones)
             player.getAttribute(Attribute.MAX_HEALTH).setBaseValue(Math.max(2, currentMaxHealth - 8));
             player.sendMessage("§c¡No completaste todos los logros! Has perdido 4 corazones permanentes.");
 
-            // Marcar como penalizado y que ya se aplicó
             data.set(penalizedPath, true);
             data.set(appliedPath, true);
         }
@@ -287,7 +274,6 @@ public class AchievementPartyHandler implements Listener {
         if (!data.contains("players." + playerName)) {
             data.set("players." + playerName + ".completed", 0);
 
-            // Inicializar el progreso para cada logro
             for (String achievementId : achievements.keySet()) {
                 data.set("players." + playerName + ".achievements." + achievementId + ".completed", false);
                 achievements.get(achievementId).initializePlayerData(playerName);
@@ -362,7 +348,7 @@ public class AchievementPartyHandler implements Listener {
                             "{\"text\":\"]\\n\",\"color\":\"white\"}]",
                     player.getName(),
                     achievementName,
-                    achievementDesc.replace("\"", "\\\"") // Escapar comillas
+                    achievementDesc.replace("\"", "\\\"")
             );
 
             for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
@@ -392,12 +378,6 @@ public class AchievementPartyHandler implements Listener {
         return true;
     }
 
-    /**
-     * Remueve un logro completado de un jugador
-     * @param playerName Nombre del jugador
-     * @param achievementId ID del logro
-     * @return true si se removió correctamente, false si el logro no existe o no estaba completado
-     */
     public boolean removeAchievement(String playerName, String achievementId) {
         if (!achievements.containsKey(achievementId)) {
             return false;
@@ -423,10 +403,6 @@ public class AchievementPartyHandler implements Listener {
         }
     }
 
-    /**
-     * Obtiene la lista de IDs de logros disponibles
-     * @return Lista de IDs de logros
-     */
     public List<String> getAchievementIds() {
         return new ArrayList<>(achievements.keySet());
     }

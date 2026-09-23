@@ -26,10 +26,8 @@ public class WardenUpgrades {
         ItemMeta meta = essence.getItemMeta();
 
         if (meta != null) {
-            // Set display name
             meta.setDisplayName(ChatColor.of("#00b3b3") + "" + ChatColor.BOLD + "Mejora de Casco Warden");
 
-            // Set lore
             List<String> lore = new ArrayList<>();
             lore.add("");
             lore.add(ChatColor.of("#006666") + "Plantilla de herrería necesaria");
@@ -39,7 +37,6 @@ public class WardenUpgrades {
             lore.add("");
             meta.setLore(lore);
 
-            // Set custom model data
             meta.setCustomModelData(400);
             meta.setRarity(ItemRarity.EPIC);
 
@@ -55,10 +52,8 @@ public class WardenUpgrades {
         ItemMeta meta = essence.getItemMeta();
 
         if (meta != null) {
-            // Set display name
             meta.setDisplayName(ChatColor.of("#00b3b3") + "" + ChatColor.BOLD + "Mejora de Peto Warden");
 
-            // Set lore
             List<String> lore = new ArrayList<>();
             lore.add("");
             lore.add(ChatColor.of("#006666") + "Plantilla de herrería necesaria");
@@ -68,7 +63,6 @@ public class WardenUpgrades {
             lore.add("");
             meta.setLore(lore);
 
-            // Set custom model data
             meta.setCustomModelData(405);
             meta.setRarity(ItemRarity.EPIC);
 
@@ -84,10 +78,8 @@ public class WardenUpgrades {
         ItemMeta meta = essence.getItemMeta();
 
         if (meta != null) {
-            // Set display name
             meta.setDisplayName(ChatColor.of("#00b3b3") + "" + ChatColor.BOLD + "Mejora de Pantalón Warden");
 
-            // Set lore
             List<String> lore = new ArrayList<>();
             lore.add("");
             lore.add(ChatColor.of("#006666") + "Plantilla de herrería necesaria");
@@ -97,7 +89,6 @@ public class WardenUpgrades {
             lore.add("");
             meta.setLore(lore);
 
-            // Set custom model data
             meta.setCustomModelData(410);
             meta.setRarity(ItemRarity.EPIC);
 
@@ -113,10 +104,8 @@ public class WardenUpgrades {
         ItemMeta meta = essence.getItemMeta();
 
         if (meta != null) {
-            // Set display name
             meta.setDisplayName(ChatColor.of("#00b3b3") + "" + ChatColor.BOLD + "Mejora de Botas Warden");
 
-            // Set lore
             List<String> lore = new ArrayList<>();
             lore.add("");
             lore.add(ChatColor.of("#006666") + "Plantilla de herrería necesaria");
@@ -126,7 +115,6 @@ public class WardenUpgrades {
             lore.add("");
             meta.setLore(lore);
 
-            // Set custom model data
             meta.setCustomModelData(415);
             meta.setRarity(ItemRarity.EPIC);
 

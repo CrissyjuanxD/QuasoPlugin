@@ -39,10 +39,8 @@ public class DayOneChanges implements Listener {
     private final CorruptedSpider corruptedSpider;
     private final Map<UUID, Long> cooldownPlayers = new HashMap<>();
 
-    // FEATURES DEL DÍA 2
     private final Map<LivingEntity, Long> trackedMobs = new HashMap<>();
     private BukkitTask targetTask;
-    // FEATURES DEL DÍA 4
     private final Map<Location, Long> altarCooldowns = new HashMap<>();
     private final GuardianBlaze blazespawmer;
     private final GuardianCorruptedSkeleton guardianCorruptedSkeleton;
@@ -67,7 +65,6 @@ public class DayOneChanges implements Listener {
         this.corruptedZombies = new CorruptedZombies(plugin);
         this.corruptedSpider = new CorruptedSpider(plugin, handler);
 
-        //INICIALIZACIÓN DE LOS FEATURES DEL DÍA 4
         this.blazespawmer = new GuardianBlaze(plugin);
         this.guardianCorruptedSkeleton = new GuardianCorruptedSkeleton(plugin);
         this.corruptedInfernalSpider = new CorruptedInfernalSpider(plugin);
@@ -95,11 +92,9 @@ public class DayOneChanges implements Listener {
             corruptedZombies.apply();
             corruptedSpider.apply();
             registerCustomRecipe();
-            //APPLYS DEL DIA 2
             bombitaSpawner.apply();
             iceologerSpawner.apply();
             startTargetTask();
-            //APPLYS DEL DIA 4
             blazespawmer.apply();
             guardianCorruptedSkeleton.apply();
             corruptedInfernalSpider.apply();
@@ -122,7 +117,6 @@ public class DayOneChanges implements Listener {
             corruptedSpider.revert();
             NamespacedKey key = new NamespacedKey(plugin, "corrupted_steak");
             Bukkit.removeRecipe(key);
-            //REVERTS DEL DIA 2
             bombitaSpawner.revert();
             iceologerSpawner.revert();
             if (targetTask != null && !targetTask.isCancelled()) {
@@ -130,7 +124,6 @@ public class DayOneChanges implements Listener {
                 targetTask = null;
             }
             trackedMobs.clear();
-            //rEVERTS DEL DIA 4
             blazespawmer.revert();
             guardianCorruptedSkeleton.revert();
             corruptedInfernalSpider.revert();
@@ -144,7 +137,6 @@ public class DayOneChanges implements Listener {
             enderBlaze.revert();
             enderCreeper.revert();
             enderSpider.revert();
-            // Desregistrar eventos
             HandlerList.unregisterAll(this);
 
             isApplied = false;
@@ -239,15 +231,12 @@ public class DayOneChanges implements Listener {
         if (item.getType() != Material.PUMPKIN_PIE) return;
 
         ItemMeta meta = item.getItemMeta();
-        // Verificamos que sea nuestra tarta (CustomModelData 3)
         if (meta == null || !meta.hasCustomModelData() || meta.getCustomModelData() != 3) return;
 
         Player player = event.getPlayer();
 
-        // Lentitud 1 por 10 segundos (200 ticks)
         player.addPotionEffect(new PotionEffect(PotionEffectType.SLOWNESS, 200, 0, false, false, true));
 
-        // Saturación 1 por 2.5 segundos (50 ticks)
         player.addPotionEffect(new PotionEffect(PotionEffectType.SATURATION, 50, 0, false, false, true));
     }
 
@@ -339,10 +328,6 @@ public class DayOneChanges implements Listener {
         }
     }
 
-    //----------------------
-    //SISTEMA DE ALTARES
-    //----------------------
-
     @EventHandler
     public void onAltarActivate(AltarActivateEvent event) {
         if (!isApplied) return;
@@ -432,10 +417,6 @@ public class DayOneChanges implements Listener {
         }.runTaskTimer(plugin, 0L, 1L);
     }
 
-    //----------------------
-    // SISTEMA DE RAIDS
-    //----------------------
-
     private void startTargetTask() {
         targetTask = new BukkitRunnable() {
             @Override
@@ -462,13 +443,10 @@ public class DayOneChanges implements Listener {
             }, 40L);
         }
 
-        // 2. Reemplazo seguro de mobs por Bombitas
-        // Esperamos 1 tick para que la Raid se genere completamente antes de tocarla
         Bukkit.getScheduler().runTaskLater(plugin, () -> {
             if (!isApplied) return;
 
             int replacedCount = 0;
-            // Evitamos reemplazar a los bosses de la raid (Evokers/Ravagers) si no es necesario, preferimos a los Vindicators/Pillagers
             for (Entity entity : event.getRaiders()) {
                 if (entity instanceof Raider && entity.isValid() && !entity.isDead()) {
                     if (replacedCount < currentWave) {
@@ -484,7 +462,6 @@ public class DayOneChanges implements Listener {
             }
         }, 1L);
 
-        // 3. Iceologers a partir de la oleada 2
         if (currentWave >= 2) {
             int iceologerCount = random.nextInt(2) + 1;
 
@@ -508,20 +485,17 @@ public class DayOneChanges implements Listener {
         }
     }
 
-    // Actualiza los objetivos dinámicamente
     private void updateTargets() {
         Iterator<Map.Entry<LivingEntity, Long>> iterator = trackedMobs.entrySet().iterator();
         while (iterator.hasNext()) {
             Map.Entry<LivingEntity, Long> entry = iterator.next();
             LivingEntity mob = entry.getKey();
 
-            // Limpieza automática si el mob murió
             if (mob == null || !mob.isValid() || mob.isDead()) {
                 iterator.remove();
                 continue;
             }
 
-            // Solo forzamos target si es un Mob con IA
             if (mob instanceof Mob activeMob) {
                 LivingEntity currentTarget = activeMob.getTarget();
 
@@ -541,7 +515,6 @@ public class DayOneChanges implements Listener {
     private LivingEntity findTarget(Entity mob) {
         World world = mob.getWorld();
 
-        // 1. Prioridad: Jugadores (Búsqueda rápida)
         Player closestPlayer = null;
         double minDistanceSq = Double.MAX_VALUE;
 
@@ -559,7 +532,6 @@ public class DayOneChanges implements Listener {
             return closestPlayer;
         }
 
-        // 2. Secundaria: Aldeanos (Búsqueda lenta - solo si no hay jugadores)
         return world.getNearbyEntities(mob.getLocation(), 50, 50, 50).stream()
                 .filter(e -> e instanceof Villager && !e.isDead())
                 .map(e -> (LivingEntity) e)
@@ -585,7 +557,6 @@ public class DayOneChanges implements Listener {
         }
     }
 
-    // Obtener ubicaciones de spawn cerca de los Raiders
     private List<Location> getSpawnLocations(RaidSpawnWaveEvent event, int count) {
         List<Location> locations = new ArrayList<>();
         List<Entity> raiders = new ArrayList<>(event.getRaiders());
@@ -596,10 +567,8 @@ public class DayOneChanges implements Listener {
             Entity raider = raiders.get(random.nextInt(raiders.size()));
             Location spawnLocation = raider.getLocation().clone();
 
-            // Añade un pequeño desplazamiento aleatorio para dispersar los mobs
             spawnLocation.add(random.nextInt(6) - 3, 0, random.nextInt(6) - 3);
 
-            // Validar que no spawnee en bloque solido
             int y = spawnLocation.getWorld().getHighestBlockYAt(spawnLocation);
             spawnLocation.setY(y + 1);
 

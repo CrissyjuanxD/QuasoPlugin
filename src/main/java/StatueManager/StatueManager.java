@@ -75,7 +75,6 @@ public class StatueManager implements Listener {
 
                     StatueData data = new StatueData(stand);
 
-                    // Si es Anti-Grief, no da efectos de poción
                     if (data.isAntiGrief()) continue;
 
                     double radiusX = data.getRadiusX();
@@ -108,7 +107,7 @@ public class StatueManager implements Listener {
 
     private void removeEffectFromPlayers(ArmorStand stand) {
         StatueData data = new StatueData(stand);
-        if (data.isAntiGrief()) return; // No hay efecto que quitar
+        if (data.isAntiGrief()) return;
 
         PotionEffectType type = data.getEffectType();
         if (type == null) return;
@@ -152,10 +151,6 @@ public class StatueManager implements Listener {
         stand.setGlowing(true);
     }
 
-    // ==========================================
-    //          SISTEMA ANTI-GRIEF
-    // ==========================================
-
     private boolean isLocationProtected(Location loc) {
         for (ArmorStand stand : activeStatues.values()) {
             if (!stand.isValid() || !stand.getChunk().isLoaded()) continue;
@@ -165,14 +160,12 @@ public class StatueManager implements Listener {
 
             Location sLoc = stand.getLocation();
 
-            // Verificamos si el mundo es el mismo
             if (!sLoc.getWorld().equals(loc.getWorld())) continue;
 
             double dx = Math.abs(loc.getX() - sLoc.getX());
             double dy = Math.abs(loc.getY() - sLoc.getY());
             double dz = Math.abs(loc.getZ() - sLoc.getZ());
 
-            // Verificación Cilíndrica/Cúbica básica
             if (dx <= data.getRadiusX() && dz <= data.getRadiusX() && dy <= data.getRadiusY()) {
                 return true;
             }
@@ -182,7 +175,6 @@ public class StatueManager implements Listener {
 
     @EventHandler
     public void onEntityExplode(EntityExplodeEvent event) {
-        // Copiamos la lista para iterar y borrar sin problemas
         List<Block> blocks = new ArrayList<>(event.blockList());
 
         for (Block block : blocks) {
@@ -205,8 +197,7 @@ public class StatueManager implements Listener {
 
     @EventHandler
     public void onEntityChangeBlock(EntityChangeBlockEvent event) {
-        // Evita que los Endermans roben bloques, Withers rompan al pasar, etc.
-        if (event.getEntity() instanceof Player) return; // Permitimos a los jugadores construir
+        if (event.getEntity() instanceof Player) return;
 
         if (isLocationProtected(event.getBlock().getLocation())) {
             event.setCancelled(true);

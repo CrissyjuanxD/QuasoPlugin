@@ -27,14 +27,10 @@ public class ConfusionEffect implements CustomEffect {
 
         removeEffect(player);
 
-        // Guardamos la rotación original (opcional, aunque con movimiento constante es difícil de mantener)
         originalYaw.put(player.getUniqueId(), player.getLocation().getYaw());
         originalPitch.put(player.getUniqueId(), player.getLocation().getPitch());
         shakePatterns.put(player.getUniqueId(), random.nextInt(4));
 
-        // Calculamos intensidad basada en el nivel (amplifier)
-        // Nivel 1 (Amp 0) = 1.0 (Normal)
-        // Nivel 2 (Amp 1) = 1.5 (Más fuerte)
         final float intensityMultiplier = 1.0f + (amplifier * 0.5f);
 
         BukkitRunnable task = new BukkitRunnable() {
@@ -42,9 +38,6 @@ public class ConfusionEffect implements CustomEffect {
             final int maxTicks = durationSeconds * 20;
             int pattern = shakePatterns.get(player.getUniqueId());
 
-            // Nota: Usar yaw/pitch fijo base puede ser molesto si el jugador intenta moverse.
-            // Para un efecto de "borrachera/mareo", a veces es mejor sumar al yaw actual,
-            // pero mantendremos tu lógica original aquí.
             float baseYaw = originalYaw.get(player.getUniqueId());
             float basePitch = originalPitch.get(player.getUniqueId());
 
@@ -54,9 +47,6 @@ public class ConfusionEffect implements CustomEffect {
                     removeEffect(player);
                     return;
                 }
-
-                // Actualizamos la base si el jugador se mueve mucho (opcional para hacerlo jugable)
-                // baseYaw = player.getLocation().getYaw();
 
                 applySmoothCameraShake(player, ticks, pattern, baseYaw, basePitch, intensityMultiplier);
                 ticks++;
@@ -75,8 +65,6 @@ public class ConfusionEffect implements CustomEffect {
         if (task != null) {
             task.cancel();
             activeEffects.remove(playerId);
-            // Restaurar rotación puede ser brusco si el jugador se movió, a veces es mejor no hacerlo.
-            // restoreOriginalRotation(player);
             originalYaw.remove(playerId);
             originalPitch.remove(playerId);
             shakePatterns.remove(playerId);
@@ -85,7 +73,7 @@ public class ConfusionEffect implements CustomEffect {
 
     @Override
     public PotionEffectType getTriggerEffectType() {
-        return PotionEffectType.UNLUCK; // Mala suerte activa Confusión
+        return PotionEffectType.UNLUCK;
     }
 
     @Override
@@ -108,19 +96,14 @@ public class ConfusionEffect implements CustomEffect {
         if (!player.isOnline()) return;
 
         float frequency = 0.3f;
-        // Aplicamos el multiplicador de intensidad (Nivel de la poción)
         float amplitudeYaw = 8.0f * intensity;
         float amplitudePitch = 5.0f * intensity;
 
         float yawVariation = calculateShake(tick, pattern, frequency, amplitudeYaw, 0);
         float pitchVariation = calculateShake(tick, pattern, frequency, amplitudePitch, 1);
 
-        // Opción A: Forzar la cámara a un punto fijo + vibración (Tu lógica original)
         float newYaw = baseYaw + yawVariation;
         float newPitch = Math.max(-90, Math.min(90, basePitch + pitchVariation));
-
-        // Opción B (Alternativa más jugable): Sumar vibración a la vista actual del jugador
-        // float newYaw = player.getLocation().getYaw() + (yawVariation * 0.1f); // Más sutil
 
         setPlayerRotation(player, newYaw, newPitch);
     }
@@ -144,20 +127,15 @@ public class ConfusionEffect implements CustomEffect {
 
     private void setPlayerRotation(Player player, float yaw, float pitch) {
         try {
-            // Ubicación actual con nueva rotación
             org.bukkit.Location loc = player.getLocation();
             loc.setYaw(yaw);
             loc.setPitch(pitch);
             player.teleport(loc);
-            // Nota: player.setRotation() existe en versiones muy recientes de Paper/Spigot,
-            // si usas una versión antigua, teleport es la forma estándar.
         } catch (Exception e) {
-            // Ignorar errores de teletransporte
         }
     }
 
     private void restoreOriginalRotation(Player player) {
-        // Método mantenido pero cuidado al usarlo
         UUID playerId = player.getUniqueId();
         Float originalY = originalYaw.get(playerId);
         Float originalP = originalPitch.get(playerId);

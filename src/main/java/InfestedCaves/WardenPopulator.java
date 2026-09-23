@@ -81,22 +81,10 @@ public class WardenPopulator extends BlockPopulator {
                 mat == Material.COARSE_DIRT;
     }
 
-    /**
-     * FIX #6: El bug del "árbol de una sola valla" ocurría porque BlockChangeDelegate.isEmpty()
-     * consultaba world.getBlockAt(), que devuelve el estado REAL del mundo antes de que el
-     * generador de chorus_plant hubiera colocado los bloques del árbol. Así, el generador
-     * pensaba que su propio tronco era aire y no podía expandirse.
-     *
-     * Solución: mantener un mapa interno (placedBlocks) donde registramos cada bloque que
-     * el delegate coloca. isEmpty() consulta primero ese mapa, y solo si no está ahí mira
-     * el mundo real. Esto le da al generador de Chorus visibilidad de su propio trabajo
-     * en curso, igual que lo haría en un mundo real donde los bloques ya existen.
-     */
     private void generateCustomTree(World world, Location location, Random random) {
         Material originalSoil = location.clone().subtract(0, 1, 0).getBlock().getType();
         location.clone().subtract(0, 1, 0).getBlock().setType(Material.END_STONE);
 
-        // Mapa temporal: clave = "x,y,z" → material colocado por este delegate
         Map<String, Material> placedBlocks = new HashMap<>();
 
         world.generateTree(location, TreeType.CHORUS_PLANT, new BlockChangeDelegate() {
@@ -111,10 +99,8 @@ public class WardenPopulator extends BlockPopulator {
                     world.getBlockAt(x, y, z).setType(Material.VERDANT_FROGLIGHT);
                     placedBlocks.put(x + "," + y + "," + z, Material.VERDANT_FROGLIGHT);
                 } else if (mat == Material.END_STONE) {
-                    // El generador de chorus a veces coloca END_STONE como base: lo ignoramos
                     placedBlocks.put(x + "," + y + "," + z, mat);
                 } else {
-                    // Aire u otros: registrar igualmente para que isEmpty() sea correcto
                     placedBlocks.put(x + "," + y + "," + z, Material.AIR);
                 }
                 return true;
@@ -134,7 +120,6 @@ public class WardenPopulator extends BlockPopulator {
 
             @Override
             public boolean isEmpty(int x, int y, int z) {
-                // FIX: comprobamos primero el mapa interno del árbol en construcción
                 Material placed = placedBlocks.get(x + "," + y + "," + z);
                 if (placed != null) {
                     return placed == Material.AIR;

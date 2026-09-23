@@ -41,10 +41,8 @@ public class AmuletInvisibility implements Listener {
         ItemMeta meta = item.getItemMeta();
 
         if (meta != null) {
-            // Nombre del ítem
             meta.setDisplayName(ChatColor.of("#00ffff") + "" + ChatColor.BOLD + "Amuleto de Invisibilidad");
 
-            // Lore descriptivo
             List<String> lore = new ArrayList<>();
             lore.add("");
             lore.add(ChatColor.of("#66ffff") + "Al consumirse, este amuleto");
@@ -91,35 +89,28 @@ public class AmuletInvisibility implements Listener {
         event.setCancelled(true);
         Player player = event.getPlayer();
 
-        // Verificar cooldown global del ítem
         if (player.hasCooldown(Material.GLOW_SQUID_SPAWN_EGG)) {
             player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_NO, 1.0f, 1.0f);
             return;
         }
 
-        // Consumir 1 amuleto
         item.setAmount(item.getAmount() - 1);
 
-        // 3 minutos = 180 segundos = 3600 ticks
         int duration = 3600;
 
-        // Otorgar efectos
         player.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, duration, 0));
         player.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, duration, 1));
         player.addPotionEffect(new PotionEffect(PotionEffectType.ABSORPTION, duration, 2));
 
         player.setCooldown(Material.GLOW_SQUID_SPAWN_EGG, 2400);
 
-        // Registrar al jugador como "Oculto"
         UUID uuid = player.getUniqueId();
         hiddenPlayers.add(uuid);
 
-        // Remover al jugador de la lista después de los 3 minutos
         Bukkit.getScheduler().runTaskLater(plugin, () -> {
             hiddenPlayers.remove(uuid);
         }, duration);
 
-        // Sonidos y Partículas
         player.playSound(player.getLocation(), Sound.ENTITY_WANDERING_TRADER_DISAPPEARED, 1.0f, 1.0f);
         player.playSound(player.getLocation(), Sound.ENTITY_GLOW_SQUID_SQUIRT, 1.0f, 0.8f);
 

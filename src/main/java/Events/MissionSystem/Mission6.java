@@ -55,7 +55,6 @@ public class Mission6 implements Mission, Listener {
         ItemStack xpFill = new ItemStack(Material.EXPERIENCE_BOTTLE, 1);
 
         for (int i = 0; i < 27; i++) {
-            // Ponemos las 3 pociones en los slots 10, 11 y 12
             if (i == 10 || i == 11 || i == 12) rewards.add(potion.clone());
             else if (i == 14) rewards.add(coins);
             else if (i == 16) rewards.add(goldenApples);

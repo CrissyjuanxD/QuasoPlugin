@@ -486,12 +486,10 @@ public class MissionGUI implements Listener {
             int currentPage = playerPages.getOrDefault(player.getUniqueId(), 1);
 
             if (slot == 36) {
-                // Rotación hacia atrás
                 player.playSound(player.getLocation(), org.bukkit.Sound.ITEM_BOOK_PAGE_TURN, 1f, 1f);
                 int newPage = (currentPage == 1) ? MAX_PAGES : currentPage - 1;
                 openMissionGUI(player, newPage);
             } else if (slot == 44) {
-                // Rotación hacia adelante
                 player.playSound(player.getLocation(), org.bukkit.Sound.ITEM_BOOK_PAGE_TURN, 1f, 1f);
                 int newPage = (currentPage == MAX_PAGES) ? 1 : currentPage + 1;
                 openMissionGUI(player, newPage);

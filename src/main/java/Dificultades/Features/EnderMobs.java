@@ -26,7 +26,6 @@ public abstract class EnderMobs {
 
     public void apply() {
         if (!eventsRegistered) {
-            // Listener: 25% de teleport al recibir daño
             Bukkit.getPluginManager().registerEvents(new Listener() {
                 @EventHandler
                 public void onMobHurt(EntityDamageEvent event) {
@@ -36,7 +35,6 @@ public abstract class EnderMobs {
                 }
             }, plugin);
 
-            // Tarea periódica: 5% de teleport cada minuto (1200 ticks)
             new BukkitRunnable() {
                 @Override
                 public void run() {
@@ -47,7 +45,7 @@ public abstract class EnderMobs {
                             if (mob.isDead() || !mob.isValid()) continue;
 
                             if (Math.random() < 0.05) {
-                                teleportRandomly(mob, 15); // Radio reducido a 15
+                                teleportRandomly(mob, 15);
                             }
                         }
                     }
@@ -59,8 +57,8 @@ public abstract class EnderMobs {
     }
 
     protected void handleTeleportOnDamage(LivingEntity mob) {
-        if (Math.random() < 0.25) { // Reducido al 25%
-            teleportRandomly(mob, 15); // Radio reducido a 15
+        if (Math.random() < 0.25) {
+            teleportRandomly(mob, 15);
         }
     }
 
@@ -80,7 +78,6 @@ public abstract class EnderMobs {
         }
     }
 
-    // Busca un lugar seguro cercano sin ahogar al mob ni enviarlo encima de la bedrock
     private Location findSafeLocation(Location currentLoc, int radius) {
         World world = currentLoc.getWorld();
 
@@ -91,7 +88,6 @@ public abstract class EnderMobs {
 
             Location target = currentLoc.clone().add(offsetX, offsetY, offsetZ);
 
-            // Previene que se salga de los límites del mundo
             if (target.getY() < world.getMinHeight() || target.getY() >= world.getMaxHeight()) {
                 continue;
             }
@@ -100,16 +96,14 @@ public abstract class EnderMobs {
             Block feet = target.getBlock();
             Block head = target.clone().add(0, 1, 0).getBlock();
 
-            // Verifica que el suelo sea sólido y que el cuerpo/cabeza estén en bloques libres (sin lava/agua)
             if (ground.getType().isSolid() &&
                     feet.isPassable() && feet.getType() != Material.WATER && feet.getType() != Material.LAVA &&
                     head.isPassable() && head.getType() != Material.WATER && head.getType() != Material.LAVA) {
 
-                // Centramos al mob en el bloque respetando su rotación
                 return new Location(world, target.getBlockX() + 0.5, target.getBlockY(), target.getBlockZ() + 0.5, currentLoc.getYaw(), currentLoc.getPitch());
             }
         }
-        return null; // Si no encuentra un lugar seguro después de 15 intentos, se cancela el TP
+        return null;
     }
 
     public abstract boolean isCustomMob(Entity entity);

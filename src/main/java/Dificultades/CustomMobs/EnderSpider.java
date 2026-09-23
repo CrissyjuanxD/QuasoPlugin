@@ -25,7 +25,6 @@ public class EnderSpider extends EnderMobs implements Listener {
     private static BukkitTask particleTask;
     private static boolean eventsRegistered = false;
 
-    // Proyectiles de teletransporte
     private static final List<TeleportProjectileData> activeProjectiles = new ArrayList<>();
     private static BukkitTask projectileTask;
     private final Random random = new Random();
@@ -49,7 +48,7 @@ public class EnderSpider extends EnderMobs implements Listener {
 
     @Override
     public void apply() {
-        super.apply(); // Teleport al recibir daño (hereda lógica segura de EnderMobs)
+        super.apply();
         if (!eventsRegistered) {
             Bukkit.getPluginManager().registerEvents(this, plugin);
             eventsRegistered = true;
@@ -94,7 +93,6 @@ public class EnderSpider extends EnderMobs implements Listener {
         spider.setCustomName(ChatColor.LIGHT_PURPLE + "" + ChatColor.BOLD + "Ender Spider");
         spider.setCustomNameVisible(false);
 
-        // Araña normal tiene 8 salud y 2 de ataque; triplicamos el daño
         spider.getAttribute(Attribute.MAX_HEALTH).setBaseValue(50);
         spider.setHealth(50);
         spider.getAttribute(Attribute.ATTACK_DAMAGE).setBaseValue(6.0);
@@ -106,7 +104,6 @@ public class EnderSpider extends EnderMobs implements Listener {
         spider.getPersistentDataContainer().set(mobKey, PersistentDataType.BYTE, (byte) 1);
     }
 
-    // Al apuntar a un jugador: 25% chance de lanzar proyectil de teletransporte
     @EventHandler
     public void onTarget(EntityTargetLivingEntityEvent event) {
         if (!(event.getEntity() instanceof Spider spider)) return;
@@ -163,11 +160,9 @@ public class EnderSpider extends EnderMobs implements Listener {
                     pd.display.teleport(pd.display.getLocation().add(pd.direction));
                     pd.ticksAlive++;
 
-                    // Trail portal
                     pd.display.getWorld().spawnParticle(Particle.PORTAL,
                             pd.display.getLocation(), 3, 0.1, 0.1, 0.1, 0.05);
 
-                    // Colisión con jugadores
                     for (Entity nearby : pd.display.getNearbyEntities(1.0, 1.0, 1.0)) {
                         if (!(nearby instanceof Player hitPlayer)) continue;
                         if (hitPlayer.getGameMode() == GameMode.CREATIVE) continue;
@@ -175,56 +170,45 @@ public class EnderSpider extends EnderMobs implements Listener {
                         handleTeleportHit(hitPlayer, pd.shooter);
                         pd.display.remove();
                         it.remove();
-                        break; // Solo afecta a 1 jugador
+                        break;
                     }
                 }
             }
         }.runTaskTimer(plugin, 0L, 1L);
     }
 
-    /**
-     * Al impactar: teletransporta al jugador a una posición segura
-     * en un radio de 15 bloques alrededor de su ubicación actual.
-     */
     private void handleTeleportHit(Player player, Spider spider) {
         if (!spider.isValid() || spider.isDead()) return;
 
         Location originalLoc = player.getLocation();
         World world = player.getWorld();
 
-        // Buscar un sitio seguro para el jugador en un radio de 15
         Location targetLoc = findSafePlayerLocation(originalLoc, 15);
 
-        // Si se encuentra un lugar seguro, teletransportarlo
         if (targetLoc != null) {
-            // Efectos en posición original
             world.playSound(originalLoc, Sound.ENTITY_ENDERMAN_TELEPORT, 2.0f, 1.0f);
             world.spawnParticle(Particle.PORTAL, originalLoc, 40, 0.5, 1, 0.5, 0.3);
 
             player.teleport(targetLoc);
 
-            // Efectos en posición nueva
             world.playSound(targetLoc, Sound.ENTITY_ENDERMAN_TELEPORT, 2.0f, 1.0f);
             world.spawnParticle(Particle.PORTAL, targetLoc, 40, 0.5, 1, 0.5, 0.3);
         }
 
-        // Desorientación (aplica incluso si falló el TP)
         player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 20, 0, false, true));
         player.addPotionEffect(new PotionEffect(PotionEffectType.SLOWNESS, 60, 1, false, true));
     }
 
-    // Busca un lugar seguro cercano para no ahogar al jugador ni enviarlo encima de la bedrock
     private Location findSafePlayerLocation(Location currentLoc, int radius) {
         World world = currentLoc.getWorld();
 
-        for (int i = 0; i < 15; i++) { // Intenta encontrar un spot válido 15 veces
+        for (int i = 0; i < 15; i++) {
             int offsetX = random.nextInt(radius * 2) - radius;
-            int offsetY = random.nextInt(radius) - (radius / 2); // Busca un poco arriba y abajo
+            int offsetY = random.nextInt(radius) - (radius / 2);
             int offsetZ = random.nextInt(radius * 2) - radius;
 
             Location target = currentLoc.clone().add(offsetX, offsetY, offsetZ);
 
-            // Previene que se salga de los límites del mundo
             if (target.getY() < world.getMinHeight() || target.getY() >= world.getMaxHeight()) {
                 continue;
             }
@@ -233,16 +217,14 @@ public class EnderSpider extends EnderMobs implements Listener {
             Block feet = target.getBlock();
             Block head = target.clone().add(0, 1, 0).getBlock();
 
-            // Verifica que el suelo sea sólido, QUE NO SEA BEDROCK, y que el cuerpo/cabeza estén libres (sin lava/agua)
             if (ground.getType().isSolid() && ground.getType() != Material.BEDROCK &&
                     feet.isPassable() && feet.getType() != Material.WATER && feet.getType() != Material.LAVA &&
                     head.isPassable() && head.getType() != Material.WATER && head.getType() != Material.LAVA) {
 
-                // Centramos al jugador en el bloque respetando su cámara
                 return new Location(world, target.getBlockX() + 0.5, target.getBlockY(), target.getBlockZ() + 0.5, currentLoc.getYaw(), currentLoc.getPitch());
             }
         }
-        return null; // Si no encuentra un lugar seguro después de 15 intentos, devuelve null
+        return null;
     }
 
     @EventHandler

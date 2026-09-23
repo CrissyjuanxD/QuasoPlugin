@@ -32,7 +32,6 @@ public class GravesPublicCommand implements CommandExecutor, TabCompleter {
             return true;
         }
 
-        // Si mandaron el comando vacío -> Mostrar Lista
         if (args.length == 0) {
             player.sendMessage("§aTus tumbas activas (" + myGraves.size() + "):");
             for (Grave g : myGraves) {
@@ -47,7 +46,6 @@ public class GravesPublicCommand implements CommandExecutor, TabCompleter {
             return true;
         }
 
-        // Si mandaron un argumento autocompletado (Teletransporte)
         String input = args[0];
         if (input.startsWith("#")) {
             String shortId = input.split(",")[0].replace("#", "");

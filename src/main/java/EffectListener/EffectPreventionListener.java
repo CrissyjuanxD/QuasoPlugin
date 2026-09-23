@@ -23,7 +23,6 @@ import java.util.Set;
 
 public class EffectPreventionListener implements Listener {
 
-    // === Efectos de poción prohibidos ===
     private static final Set<PotionEffectType> BLOCKED_EFFECTS = new HashSet<>();
 
     static {

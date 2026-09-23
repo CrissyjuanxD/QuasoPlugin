@@ -33,7 +33,6 @@ public class AnvilOverEnchantHandler implements Listener {
             if (bookMeta == null || !bookMeta.hasStoredEnchants()) return;
 
             ItemStack resultItem = event.getResult();
-            // Si el yunque por defecto no da resultado (por ej. coste alto o enchants incompatibles en vanilla), clonamos el primero
             if (resultItem == null || resultItem.getType() == Material.AIR) {
                 resultItem = firstItem.clone();
             }
@@ -48,7 +47,6 @@ public class AnvilOverEnchantHandler implements Listener {
                 Enchantment enchant = entry.getKey();
                 int bookLevel = entry.getValue();
 
-                // Lógica separada para evitar el bug visual de enchants duplicados
                 if (isResultBook) {
                     EnchantmentStorageMeta resultStorageMeta = (EnchantmentStorageMeta) resultMeta;
                     int currentLevel = resultStorageMeta.getStoredEnchantLevel(enchant);
@@ -71,7 +69,6 @@ public class AnvilOverEnchantHandler implements Listener {
                 resultItem.setItemMeta(resultMeta);
                 event.setResult(resultItem);
 
-                // Forzar el costo de reparación
                 Bukkit.getScheduler().runTask(
                         plugin,
                         () -> event.getView().setRepairCost(12)

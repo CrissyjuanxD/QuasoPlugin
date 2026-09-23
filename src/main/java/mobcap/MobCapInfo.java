@@ -29,7 +29,6 @@ public class MobCapInfo {
         this.performanceData = performanceData;
     }
 
-    // Getters
     public int getBaseMobCap() { return baseMobCap; }
     public MobCapMultiplier getMultiplier() { return multiplier; }
     public int getEffectiveMobCap() { return effectiveMobCap; }

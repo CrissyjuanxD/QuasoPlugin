@@ -121,7 +121,6 @@ public class Mission24 implements Mission, Listener {
 
                 player.playSound(player.getLocation(), org.bukkit.Sound.BLOCK_NOTE_BLOCK_HAT, 0.3f, 2f);
 
-                // Condición de victoria
                 if (secondsElapsed >= targetSeconds) {
                     successNotification.showSuccess(player);
                     missionHandler.completeMission(player, 24);

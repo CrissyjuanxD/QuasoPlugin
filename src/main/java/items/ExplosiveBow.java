@@ -30,10 +30,6 @@ public class ExplosiveBow implements Listener {
         this.arrowLevelKey = new NamespacedKey(plugin, "explosive_arrow_level");
     }
 
-    // ==========================================
-    // CREACIÓN DE ITEMS
-    // ==========================================
-
     public ItemStack createExplosiveBowLevel1() {
         ItemStack bow = new ItemStack(Material.BOW);
         ItemMeta meta = bow.getItemMeta();
@@ -112,10 +108,6 @@ public class ExplosiveBow implements Listener {
         return bow;
     }
 
-    // ==========================================
-    // LÓGICA DE DISPARO
-    // ==========================================
-
     @EventHandler
     public void onShoot(EntityShootBowEvent event) {
         if (!(event.getEntity() instanceof Player player)) return;
@@ -127,7 +119,6 @@ public class ExplosiveBow implements Listener {
         int level = meta.getPersistentDataContainer().get(explosiveBowLevelKey, PersistentDataType.INTEGER);
 
         if (player.getGameMode() != GameMode.CREATIVE) {
-            // Determinar consumo base
             int requiredArrows = switch (level) {
                 case 1 -> 3;
                 case 2 -> 6;
@@ -150,32 +141,25 @@ public class ExplosiveBow implements Listener {
             }
         }
 
-        // Reemplazar la flecha normal por una espectral
         if (event.getProjectile() instanceof Arrow) {
-            event.getProjectile().remove(); // Borra la flecha original
+            event.getProjectile().remove();
 
             SpectralArrow spectral = player.launchProjectile(SpectralArrow.class);
-            spectral.setVelocity(event.getProjectile().getVelocity()); // Copia la fuerza del disparo
+            spectral.setVelocity(event.getProjectile().getVelocity());
             spectral.setShooter(player);
             spectral.getPersistentDataContainer().set(arrowLevelKey, PersistentDataType.INTEGER, level);
 
-            // Sonido de amatista al disparar
             player.getWorld().playSound(player.getLocation(), Sound.BLOCK_AMETHYST_CLUSTER_BREAK, 1.5f, 1.0f);
         }
     }
-
-    // ==========================================
-    // LÓGICA DE IMPACTO / EXPLOSIÓN
-    // ==========================================
 
     @EventHandler
     public void onHit(ProjectileHitEvent event) {
         if (!(event.getEntity() instanceof SpectralArrow arrow)) return;
         if (!arrow.getPersistentDataContainer().has(arrowLevelKey, PersistentDataType.INTEGER)) return;
 
-        // CONDICIÓN: Solo explota si le da a una entidad, pero que NO sea jugador
-        if (event.getHitEntity() == null) return; // Le dio a un bloque, no hace nada
-        if (event.getHitEntity() instanceof Player) return; // Le dio a un jugador, no hace nada
+        if (event.getHitEntity() == null) return;
+        if (event.getHitEntity() instanceof Player) return;
 
         int level = arrow.getPersistentDataContainer().get(arrowLevelKey, PersistentDataType.INTEGER);
         Location hitLoc = arrow.getLocation();
@@ -188,23 +172,13 @@ public class ExplosiveBow implements Listener {
             default -> 2.0f;
         };
 
-        // Generar la explosión (false = NO rompe bloques, solo hace daño)
         world.createExplosion(hitLoc, explosionPower, false, false, arrow.getShooter() instanceof Player ? (Player) arrow.getShooter() : null);
 
-        arrow.remove(); // Borrar la flecha tras detonar
+        arrow.remove();
     }
 
-    // ==========================================
-    // UTILIDADES
-    // ==========================================
-
-    /**
-     * Consume una cantidad específica de flechas del inventario del jugador.
-     * @return true si se consumieron, false si no tiene suficientes.
-     */
     private boolean consumeArrows(Player player, int amountToConsume) {
         int totalArrows = 0;
-        // Contar flechas en el inventario
         for (ItemStack item : player.getInventory().getContents()) {
             if (item != null && item.getType() == Material.ARROW) {
                 totalArrows += item.getAmount();
@@ -212,16 +186,15 @@ public class ExplosiveBow implements Listener {
         }
 
         if (totalArrows < amountToConsume) {
-            return false; // No hay suficientes
+            return false;
         }
 
-        // Restar flechas
         int remainingToConsume = amountToConsume;
         for (ItemStack item : player.getInventory().getContents()) {
             if (item != null && item.getType() == Material.ARROW) {
                 if (item.getAmount() <= remainingToConsume) {
                     remainingToConsume -= item.getAmount();
-                    item.setAmount(0); // Vacía este stack
+                    item.setAmount(0);
                 } else {
                     item.setAmount(item.getAmount() - remainingToConsume);
                     remainingToConsume = 0;

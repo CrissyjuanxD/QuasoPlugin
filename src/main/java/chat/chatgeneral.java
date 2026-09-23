@@ -96,28 +96,6 @@ public class chatgeneral implements Listener {
         }
     }
 
-    // Mensajes de Moderacion
-/*    @EventHandler
-    public void onPlayerInteract(PlayerInteractEvent event) {
-        Player player = event.getPlayer();
-        Block block = event.getClickedBlock();
-        if (block != null && block.getType() == Material.CHEST && event.getAction() == Action.RIGHT_CLICK_BLOCK && !player.isSneaking()) {
-            SimpleDateFormat formatter = new SimpleDateFormat("dd/MM, HH:mm:ss");
-            Date date = new Date();
-            Bukkit.getConsoleSender().sendMessage(ChatColor.DARK_PURPLE + (player.getName() + " HA ABIERTO UN COFRE, COORDENADAS " + block.getLocation() + ", FECHA: ").toUpperCase() + ChatColor.GOLD + formatter.format(date).toUpperCase());
-        }
-    }
-
-    @EventHandler
-    public void onBlockBreak(BlockBreakEvent event) {
-        Player player = event.getPlayer();
-        Block block = event.getBlock();
-        if (block.getType() == Material.CHEST) {
-            SimpleDateFormat formatter = new SimpleDateFormat("dd/MM, HH:mm:ss");
-            Date date = new Date();
-            Bukkit.getConsoleSender().sendMessage(ChatColor.DARK_PURPLE + (player.getName() + " HA ROTO UN COFRE, COORDENADAS " + block.getLocation() + ", FECHA: ").toUpperCase() + ChatColor.GOLD + formatter.format(date).toUpperCase());
-        }
-    }*/
     @EventHandler
     public void onInventoryCreative(InventoryCreativeEvent event) {
         Player player = (Player) event.getWhoClicked();

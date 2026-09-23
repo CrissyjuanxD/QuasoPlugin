@@ -35,7 +35,6 @@ public class FishingCommand implements CommandExecutor, TabCompleter {
 
         switch (args[0].toLowerCase()) {
 
-            // ── /pesca give ──────────────────────────────────────────────────
             case "give" -> {
                 if (!(sender instanceof Player player)) {
                     sender.sendMessage("Solo jugadores pueden usar este comando.");
@@ -50,7 +49,6 @@ public class FishingCommand implements CommandExecutor, TabCompleter {
                 player.sendMessage(ChatColor.GRAY + "Click Izquierdo → POS1 | Click Derecho → POS2");
             }
 
-            // ── /pesca set <nombre> ──────────────────────────────────────────
             case "set" -> {
                 if (!(sender instanceof Player player)) {
                     sender.sendMessage("Solo jugadores pueden usar este comando.");
@@ -86,7 +84,6 @@ public class FishingCommand implements CommandExecutor, TabCompleter {
                 }
             }
 
-            // ── /pesca removezone <nombre> ───────────────────────────────────
             case "removezone" -> {
                 if (!sender.hasPermission("pesca.admin")) {
                     sender.sendMessage(PREFIX + ChatColor.RED + "No tienes permiso.");
@@ -104,7 +101,6 @@ public class FishingCommand implements CommandExecutor, TabCompleter {
                 }
             }
 
-            // ── /pesca reload ────────────────────────────────────────────────
             case "reload" -> {
                 if (!sender.hasPermission("pesca.admin")) {
                     sender.sendMessage(PREFIX + ChatColor.RED + "No tienes permiso.");
@@ -115,7 +111,6 @@ public class FishingCommand implements CommandExecutor, TabCompleter {
                         + ChatColor.WHITE + zoneManager.getZones().size());
             }
 
-            // ── /pesca list ──────────────────────────────────────────────────
             case "list" -> {
                 if (!sender.hasPermission("pesca.admin")) {
                     sender.sendMessage(PREFIX + ChatColor.RED + "No tienes permiso.");

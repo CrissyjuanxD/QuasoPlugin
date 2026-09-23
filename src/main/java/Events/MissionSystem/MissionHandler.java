@@ -93,14 +93,11 @@ public class MissionHandler implements Listener {
         plugin.getLogger().info("Sistema de misiones: Listeners registrados correctamente.");
     }
 
-    // --- GESTIÓN DE CACHÉ ---
-
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {
         UUID uuid = event.getPlayer().getUniqueId();
 
         Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
-            // Cargar datos previos del jugador
             Map<Integer, MissionData> data = dbManager.loadPlayerMissions(uuid);
 
             for (int missionId : globalActiveMissions) {
@@ -161,7 +158,6 @@ public class MissionHandler implements Listener {
     }
 
     public MissionData getData(Player player, int missionId) {
-        // Evitar crear un perfil falso si la caché aún no carga o el jugador está saliendo
         if (!playerCache.containsKey(player.getUniqueId())) {
             MissionData dummy = new MissionData();
             dummy.setActive(false);
@@ -176,7 +172,6 @@ public class MissionHandler implements Listener {
     }
 
     public void saveData(Player player, int missionId, MissionData data) {
-        // Evitar guardar si el jugador no tiene caché (evita corrupciones al reiniciar)
         if (!playerCache.containsKey(player.getUniqueId())) {
             return;
         }
@@ -198,7 +193,7 @@ public class MissionHandler implements Listener {
             for (Map.Entry<Integer, MissionData> missionEntry : entry.getValue().entrySet()) {
                 if (missionEntry.getValue().isDirty()) {
                     dirtyMissions.put(missionEntry.getKey(), missionEntry.getValue());
-                    missionEntry.getValue().setDirty(false); // Reseteamos la marca de sucio
+                    missionEntry.getValue().setDirty(false);
 
                     String name = missions.containsKey(missionEntry.getKey()) ? ChatColor.stripColor(missions.get(missionEntry.getKey()).getName()) : "Unknown";
                     missionNames.put(missionEntry.getKey(), name);
@@ -227,14 +222,12 @@ public class MissionHandler implements Listener {
             return;
         }
 
-        // Activación Global
         globalActiveMissions.add(missionNumber);
 
         Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
             dbManager.setMissionGlobalState(missionNumber, true);
         });
 
-        // Actualizar en vivo a los jugadores online
         for (Player online : Bukkit.getOnlinePlayers()) {
             MissionData data = getData(online, missionNumber);
             saveData(online, missionNumber, data);
@@ -355,7 +348,6 @@ public class MissionHandler implements Listener {
         return true;
     }
 
-    // Métodos de utilidad
     public void giveMissionToken(Player player, int missionNumber) {
         ItemStack token = createMissionToken(missionNumber);
         HashMap<Integer, ItemStack> leftover = player.getInventory().addItem(token);
@@ -396,9 +388,6 @@ public class MissionHandler implements Listener {
         return token;
     }
 
-
-    // Métodos addMissionToPlayer y removeMissionFromPlayer se mantienen igual que tu versión original
-    // ya que son administrativos.
     public void addMissionToPlayer(CommandSender sender, String playerName, int missionNumber) {
         Player target = Bukkit.getPlayer(playerName);
         if (target == null) {
@@ -412,7 +401,6 @@ public class MissionHandler implements Listener {
             return;
         }
 
-        // Forzamos que esté activa y la completamos
         data.setActive(true);
         saveData(target, missionNumber, data);
 
@@ -439,8 +427,6 @@ public class MissionHandler implements Listener {
 
         sender.sendMessage(ChatColor.GREEN + "Misión " + missionNumber + " reiniciada para " + playerName);
     }
-
-    // --- GETTERS ---
 
     public Map<Integer, Mission> getMissions() { return missions; }
 

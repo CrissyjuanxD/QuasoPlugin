@@ -48,7 +48,6 @@ public class Mission1 implements Mission, Listener {
         return 1;
     }
 
-    // Lista de los 19 minerales del juego
     public List<Material> getRequiredOres() {
         return Arrays.asList(
                 Material.COAL_ORE, Material.DEEPSLATE_COAL_ORE,

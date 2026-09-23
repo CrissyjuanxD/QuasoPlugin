@@ -23,21 +23,16 @@ public abstract class BaseBoss {
     protected final LivingEntity entity;
     protected final Location spawnLocation;
 
-    // ---- Sistema de Jugadores ----
     protected final Set<UUID> currentPlayers = new HashSet<>();
     protected final Set<UUID> attackers = new HashSet<>();
 
-    // ---- Sistema de Arena ----
     protected AreaZone areaZone;
 
-    // ---- Estado ----
-    private boolean hibernating = false; // Nuevo estado
+    private boolean hibernating = false;
 
-    // ---- Debug ----
     private final Set<UUID> debugPlayers = new HashSet<>();
     private int debugTick = 0;
 
-    // ---- BossBars ----
     protected BossBar mainBar;
     protected BossBar staticBar;
 
@@ -50,9 +45,6 @@ public abstract class BaseBoss {
         this.spawnLocation = entity.getLocation().clone();
     }
 
-    // ===========================
-    //          INIT
-    // ===========================
     public final void start() {
         if (initialized) return;
         initialized = true;
@@ -66,7 +58,6 @@ public abstract class BaseBoss {
         tickTask = new BukkitRunnable() {
             @Override
             public void run() {
-                // 1. VALIDACIÓN DE ESTADO (CORREGIDO)
                 if (!entity.isValid() || entity.isDead()) {
                     cancel();
                     cleanupBars();
@@ -81,11 +72,9 @@ public abstract class BaseBoss {
                     return;
                 }
 
-                // 2. Actualizar jugadores
                 updatePlayers();
                 updateBars();
 
-                // 3. Hibernación
                 if (currentPlayers.isEmpty()) {
                     if (!hibernating) {
                         enterHibernation();
@@ -100,13 +89,11 @@ public abstract class BaseBoss {
                     }
                 }
 
-                // 4. Anti-Escape
                 if (!areaZone.isInside(entity.getLocation())) {
                     entity.teleport(spawnLocation);
                     entity.getWorld().playSound(entity.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 3f, 0.8f);
                 }
 
-                // 5. Tick
                 debugArenaTick();
                 onTick();
             }
@@ -114,9 +101,6 @@ public abstract class BaseBoss {
         tickTask.runTaskTimer(plugin, 1L, 1L);
     }
 
-    // ===========================
-    //      HIBERNACIÓN
-    // ===========================
     private void enterHibernation() {
         hibernating = true;
         entity.setAI(false);
@@ -146,9 +130,6 @@ public abstract class BaseBoss {
         return hibernating;
     }
 
-    // ===========================
-    //         BOSSBARS
-    // ===========================
     private void setupBars() {
         mainBar = Bukkit.createBossBar(getBossTitle(), BarColor.PINK, BarStyle.SOLID);
         staticBar = Bukkit.createBossBar(" ", BarColor.WHITE, BarStyle.SOLID);
@@ -168,9 +149,6 @@ public abstract class BaseBoss {
         staticBar.removeAll();
     }
 
-    // ===========================
-    //          ARENA
-    // ===========================
     private void setupArena() {
         this.areaZone = new AreaZone(
                 spawnLocation,
@@ -262,10 +240,6 @@ public abstract class BaseBoss {
         }
     }
 
-
-    // ===========================
-    //      MENSAJES GLOBALES
-    // ===========================
     private void sendSummonMessage() {
         if (currentPlayers.isEmpty()) return;
 
@@ -295,9 +269,6 @@ public abstract class BaseBoss {
         Bukkit.broadcastMessage(msg);
     }
 
-    // ===========================
-    //      MENSAJES GLOBALES
-    // ===========================
     private void sendDeathMessage() {
         Set<UUID> involvedUUIDs = new HashSet<>(currentPlayers);
         involvedUUIDs.addAll(attackers);
@@ -328,9 +299,6 @@ public abstract class BaseBoss {
         Bukkit.broadcastMessage(msg);
     }
 
-    // ===========================
-    //         ABSTRACTOS
-    // ===========================
     protected abstract String getBossTitle();
     protected abstract int getArenaRadius();
     protected abstract int getArenaHeightUp();

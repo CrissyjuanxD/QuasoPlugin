@@ -93,7 +93,6 @@ public class Mission7 implements Mission, Listener {
         Material locMat = player.getLocation().getBlock().getType();
         Material belowMat = player.getLocation().subtract(0, 0.1, 0).getBlock().getType();
 
-        // Bloques que anulan el daño y en los que el jugador podría aterrizar para salvarse (MLG)
         boolean isSafeBlock = locMat == Material.WATER || locMat == Material.LAVA || locMat == Material.COBWEB ||
                 locMat == Material.VINE || locMat == Material.TWISTING_VINES || locMat == Material.WEEPING_VINES ||
                 locMat == Material.LADDER || locMat == Material.SCAFFOLDING || locMat == Material.POWDER_SNOW ||
@@ -101,18 +100,15 @@ public class Mission7 implements Mission, Listener {
                 belowMat == Material.WATER || belowMat == Material.LAVA || locMat == Material.SWEET_BERRY_BUSH || belowMat == Material.SWEET_BERRY_BUSH;
 
         if (!onGround && !isSafeBlock && currentY < prevY) {
-            // El jugador está cayendo al vacío
             startYMap.putIfAbsent(id, prevY);
 
             double dist = startYMap.get(id) - currentY;
-            if (dist > 25) { // Empezar a mostrar a partir de 3 bloques para no llenar la pantalla por saltitos
+            if (dist > 25) {
                 String color = dist >= 200 ? ChatColor.GREEN.toString() : ChatColor.of("#FFA07A").toString();
                 String msg = ChatColor.GOLD + "۞ " + ChatColor.of("#FFCC99") + "Caída: " + color + (int)dist + ChatColor.of("#FFE4B5") + "/200m";
                 actionBarHandler.sendActionBar(player, msg);
             }
         } else {
-            // El jugador tocó el suelo, tocó un bloque seguro (MLG nieve/lava/telaraña),
-            // o rebotó hacia arriba (Usó su habilidad de Doble Salto a último momento o rebotó en Slime).
             if (startYMap.containsKey(id)) {
 
                 double lowestPoint = Math.min(currentY, prevY);
@@ -125,13 +121,11 @@ public class Mission7 implements Mission, Listener {
                     Bukkit.getScheduler().runTaskLater(plugin, () -> {
 
                         if (!failedAttempt.contains(id) && player.isOnline() && !player.isDead()) {
-                            // ¡Misión Cumplida! Sobrevivió sin daño.
                             successNotification.showSuccess(player);
                             String msg = ChatColor.GOLD + "۞ " + ChatColor.GREEN + "¡Salto de " + (int)totalDist + "m completado sin rasguños!";
                             actionBarHandler.sendActionBar(player, msg);
                             missionHandler.completeMission(player, 7);
                         } else {
-                            // Falló por recibir daño al estamparse contra el suelo
                             String msg = ChatColor.GOLD + "۞ " + ChatColor.RED + "¡Fallaste! Recibiste daño al aterrizar.";
                             actionBarHandler.sendActionBar(player, msg);
                         }
@@ -146,7 +140,6 @@ public class Mission7 implements Mission, Listener {
     @EventHandler
     public void onDamage(EntityDamageEvent event) {
         if (event.getEntity() instanceof Player player) {
-            // Si el daño fue específicamente por caída, lo anotamos como intento fallido
             if (event.getCause() == EntityDamageEvent.DamageCause.FALL) {
                 failedAttempt.add(player.getUniqueId());
             }

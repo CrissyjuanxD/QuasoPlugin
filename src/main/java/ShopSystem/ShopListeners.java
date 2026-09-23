@@ -128,7 +128,6 @@ public class ShopListeners implements Listener {
         List<MerchantRecipe> recipes = villager.getRecipes();
         if (tradeIndex >= recipes.size()) return;
 
-        // 2. Obtener el tradeo
         MerchantRecipe recipe = recipes.get(tradeIndex);
         ItemStack result = recipe.getResult();
         if (shopManager.isEmpty(result)) return;
@@ -136,13 +135,10 @@ public class ShopListeners implements Listener {
         ItemStack ing1 = recipe.getIngredients().size() > 0 ? recipe.getIngredients().get(0) : null;
         ItemStack ing2 = recipe.getIngredients().size() > 1 ? recipe.getIngredients().get(1) : null;
 
-        // 3. Procesar la compra
         if (hasRequiredItems(player, ing1, ing2)) {
             executeTransaction(player, ing1, ing2);
 
-            // ---> AQUI ESTA LA MAGIA PARA LAS MOCHILAS <---
             if (items.EconomyItems.isMaterialMochila(result.getType())) {
-                // Generamos una mochila TOTALMENTE NUEVA basada en el modelo
                 int amountToGive = result.getAmount();
                 int customModelData = result.getItemMeta().getCustomModelData();
 
@@ -152,7 +148,6 @@ public class ShopListeners implements Listener {
                             player.getWorld().dropItem(player.getLocation(), item));
                 }
             } else {
-                // Comportamiento normal para ítems normales (comida, pociones, etc)
                 player.getInventory().addItem(result.clone()).values().forEach(item ->
                         player.getWorld().dropItem(player.getLocation(), item));
             }

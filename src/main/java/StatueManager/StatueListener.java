@@ -55,7 +55,6 @@ public class StatueListener implements Listener {
         stand.setCustomName(ChatColor.translateAlternateColorCodes('&', "&6&lStatue Effect"));
         stand.setCustomNameVisible(false);
 
-        // Configurar Datos
         StatueData standData = new StatueData(stand);
         standData.setRadiusX(itemData.getRadiusX());
         standData.setRadiusY(itemData.getRadiusY());
@@ -65,17 +64,14 @@ public class StatueListener implements Listener {
         standData.setVisible(itemData.isVisible());
         standData.setInvulnerable(itemData.isInvulnerable());
 
-        // Conservamos el modo AntiGrief o Efecto
         if (itemData.isAntiGrief()) {
             standData.setAntiGrief(true);
         } else {
             standData.setEffect(itemData.getEffectType(), itemData.getEffectAmplifier());
         }
 
-        // Aplicar propiedades visuales inmediatas
         stand.setVisible(itemData.isVisible());
 
-        // Marca obligatoria para identificarla
         stand.getPersistentDataContainer().set(org.bukkit.NamespacedKey.fromString("viciont:statue_id"), org.bukkit.persistence.PersistentDataType.STRING, "true");
 
         manager.registerStatue(stand);
@@ -92,7 +88,6 @@ public class StatueListener implements Listener {
         ArmorStand stand = (ArmorStand) e.getEntity();
         if (!StatueData.isStatue(stand)) return;
 
-        // Cancelamos daño vanilla siempre
         e.setCancelled(true);
 
         if (!(e.getDamager() instanceof Player)) return;
@@ -100,7 +95,6 @@ public class StatueListener implements Listener {
 
         StatueData data = new StatueData(stand);
 
-        // LÓGICA DE INVULNERABILIDAD
         if (data.isInvulnerable()) {
             if (p.getGameMode() == GameMode.CREATIVE && p.isSneaking() && p.hasPermission("viciont.admin")) {
                 p.sendMessage(ChatColor.RED + "Estatua indestructible eliminada por Admin.");
@@ -111,7 +105,6 @@ public class StatueListener implements Listener {
             return;
         }
 
-        // Lógica normal de daño
         ItemStack hand = p.getInventory().getItemInMainHand();
         if (!hand.getType().name().contains("PICKAXE") && p.getGameMode() != GameMode.CREATIVE) {
             return;

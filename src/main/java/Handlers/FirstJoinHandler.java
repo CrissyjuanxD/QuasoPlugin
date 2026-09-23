@@ -33,6 +33,5 @@ public class FirstJoinHandler implements Listener {
     }
 
     private void handleWelcomeLogistics(Player player) {
-        // Tu lógica de bienvenida (kits, msgs) va aquí
     }
 }

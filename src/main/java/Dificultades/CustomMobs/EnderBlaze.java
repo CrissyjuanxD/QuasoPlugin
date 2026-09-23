@@ -29,7 +29,7 @@ public class EnderBlaze extends EnderMobs implements Listener {
 
     @Override
     public void apply() {
-        super.apply(); // Teleport al recibir daño
+        super.apply();
         if (!eventsRegistered) {
             Bukkit.getPluginManager().registerEvents(this, plugin);
             eventsRegistered = true;
@@ -75,7 +75,6 @@ public class EnderBlaze extends EnderMobs implements Listener {
         blaze.getPersistentDataContainer().set(mobKey, PersistentDataType.BYTE, (byte) 1);
     }
 
-    // Interceptar fireballs: marcarlas para que exploten al impactar
     @EventHandler
     public void onFireballLaunch(ProjectileLaunchEvent event) {
         if (!(event.getEntity() instanceof Fireball fireball)) return;
@@ -86,7 +85,6 @@ public class EnderBlaze extends EnderMobs implements Listener {
         trackedFireballs.add(fireball.getUniqueId());
         fireball.setYield(3.0f);
 
-        // Trail de partículas portal en la fireball
         new BukkitRunnable() {
             @Override
             public void run() {
@@ -101,7 +99,6 @@ public class EnderBlaze extends EnderMobs implements Listener {
         }.runTaskTimer(plugin, 0L, 1L);
     }
 
-    // Al explotar la fireball
     @EventHandler
     public void onFireballExplode(EntityExplodeEvent event) {
         if (!(event.getEntity() instanceof Fireball fireball)) return;

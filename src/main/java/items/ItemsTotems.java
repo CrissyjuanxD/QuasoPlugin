@@ -25,10 +25,8 @@ public class ItemsTotems {
         ItemMeta meta = totem.getItemMeta();
 
         if (meta != null) {
-            // Nombre
             meta.setDisplayName(ChatColor.of("#749cec") + "" + ChatColor.BOLD + "Totem Especial");
 
-            // Lore
             List<String> lore = new ArrayList<>();
             lore.add("");
             lore.add(ChatColor.of("#9172da") + "Este " + ChatColor.BOLD + "tótem" + ChatColor.of("#9172da") + " permite");
@@ -36,7 +34,6 @@ public class ItemsTotems {
             lore.add(ChatColor.of("#9172da") + "a uno con un " + ChatColor.BOLD + "poder oculto" + ChatColor.of("#9172da") + ".");
             meta.setLore(lore);
 
-            // Propiedades base conservadas
             meta.setRarity(ItemRarity.RARE);
             meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
             meta.addEnchant(Enchantment.KNOCKBACK, 2, true);
@@ -52,10 +49,8 @@ public class ItemsTotems {
         ItemMeta meta = item.getItemMeta();
 
         if (meta != null) {
-            // Nombre
             meta.setDisplayName(ChatColor.of("#66ffff") + "" + ChatColor.BOLD + "Cristal de Hielo");
 
-            // Lore
             List<String> lore = new ArrayList<>();
             lore.add("");
             lore.add(ChatColor.of("#4b95c3") + "Este cristal lo dropean");
@@ -65,7 +60,6 @@ public class ItemsTotems {
             lore.add(ChatColor.of("#4b95c3") + "durante las Raids.");
             meta.setLore(lore);
 
-            // Propiedades base conservadas
             meta.setCustomModelData(100);
             meta.setRarity(ItemRarity.EPIC);
 

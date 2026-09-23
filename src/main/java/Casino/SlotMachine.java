@@ -39,10 +39,8 @@ public class SlotMachine implements Listener {
     private final ItemManager itemManager;
     private final CasinoManager manager;
 
-    // Título con colores del código antiguo
     private final String title = ChatColor.of("#FF6B35") + "" + ChatColor.BOLD + "Máquina Tragamonedas";
 
-    // Slots GUI
     private final int[] reel1Slots = {12, 21, 30};
     private final int[] reel2Slots = {13, 22, 31};
     private final int[] reel3Slots = {14, 23, 32};
@@ -53,7 +51,6 @@ public class SlotMachine implements Listener {
 
     private final Material[] symbols = {Material.COAL, Material.IRON_INGOT, Material.GOLD_INGOT, Material.DIAMOND, Material.EMERALD};
 
-    // Estados
     private final Map<UUID, Boolean> isSpinning = new ConcurrentHashMap<>();
     private final Map<Location, UUID> machineUsers = new ConcurrentHashMap<>();
     private final Map<Location, List<ItemDisplay>> activeDisplays = new ConcurrentHashMap<>();
@@ -64,7 +61,6 @@ public class SlotMachine implements Listener {
     private final File configFile;
     private FileConfiguration config;
 
-    // Clase interna para el estado de animación
     private static class AnimationState {
         Material[] finalResults = new Material[3];
         Material[][] currentSymbols = new Material[3][3];
@@ -109,7 +105,6 @@ public class SlotMachine implements Listener {
             configFile.createNewFile();
             FileConfiguration def = YamlConfiguration.loadConfiguration(configFile);
 
-            // Probabilidad de ganar (Porcentaje 0 - 100)
             def.set("SlotMachine.win_chance", 15.0);
 
             def.set("SlotMachine.minerales.three_out_of_three", Arrays.asList("diamond 5", "gold_ingot 10"));
@@ -366,7 +361,6 @@ public class SlotMachine implements Listener {
         }
 
         if (machineLoc != null) {
-            // Asegurarnos de borrar CUALQUIER display viejo antes de empezar uno nuevo
             cleanupDisplays(machineLoc);
 
             animationStates.put(machineLoc, state);
@@ -451,17 +445,17 @@ public class SlotMachine implements Listener {
             new BukkitRunnable() {
                 @Override
                 public void run() {
-                    cleanupDisplays(loc); // Limpiar al instante
+                    cleanupDisplays(loc);
                     animationStates.remove(loc);
                     activeAnimations.remove(loc);
                     animationStartTimes.remove(loc);
-                    isSpinning.put(p.getUniqueId(), false); // Liberar giro AL FINAL
+                    isSpinning.put(p.getUniqueId(), false);
 
                     if (!p.hasMetadata("slot_machine_location")) {
                         forceCleanup(p, loc);
                     }
                 }
-            }.runTaskLater(plugin, 40L); // Reducido a 2 segundos exactos para que la transición sea fluida
+            }.runTaskLater(plugin, 40L);
         } else {
             isSpinning.put(p.getUniqueId(), false);
         }
@@ -578,35 +572,29 @@ public class SlotMachine implements Listener {
 
         List<ItemDisplay> displays = new ArrayList<>();
 
-        // Normalizamos el Yaw del jugador (0 a 360)
         double yaw = player.getLocation().getYaw();
         yaw = (yaw % 360 + 360) % 360;
 
-        // "Redondear" a la dirección cardinal más cercana (Norte, Sur, Este, Oeste)
         double cardinalYaw;
         if (yaw >= 45 && yaw < 135) {
-            cardinalYaw = 90.0;  // Oeste
+            cardinalYaw = 90.0;
         } else if (yaw >= 135 && yaw < 225) {
-            cardinalYaw = 180.0; // Norte
+            cardinalYaw = 180.0;
         } else if (yaw >= 225 && yaw < 315) {
-            cardinalYaw = 270.0; // Este
+            cardinalYaw = 270.0;
         } else {
-            cardinalYaw = 0.0;   // Sur
+            cardinalYaw = 0.0;
         }
 
-        // Usamos el Yaw redondeado para los cálculos
         double radYaw = Math.toRadians(cardinalYaw);
 
-        // Vector horizontal (derecha/izquierda relativos a la cara del bloque)
         double dx = Math.cos(radYaw);
         double dz = Math.sin(radYaw);
 
-        // Vector de profundidad (empujar "adentro" del bloque)
         double pushBack = 0.2;
         double px = -Math.sin(radYaw) * pushBack;
         double pz = Math.cos(radYaw) * pushBack;
 
-        // Rotación exacta fijada a los ejes
         float displayYaw = (float) (Math.toRadians(-cardinalYaw + 180));
         Quaternionf rotation = new Quaternionf().rotateY(displayYaw);
 
@@ -625,7 +613,7 @@ public class SlotMachine implements Listener {
 
             ItemDisplay d = machineLoc.getWorld().spawn(dLoc, ItemDisplay.class, display -> {
                 display.setItemStack(new ItemStack(symbols[0]));
-                display.setBillboard(Display.Billboard.FIXED); // Debe mantenerse en FIXED para respetar nuestra rotación manual
+                display.setBillboard(Display.Billboard.FIXED);
 
                 Transformation t = display.getTransformation();
                 t.getScale().set(scaleSize);
@@ -663,7 +651,6 @@ public class SlotMachine implements Listener {
             activeDisplays.remove(loc);
         }
 
-        // LIMPIEZA ABSOLUTA MEDIANTE TAGS
         if (loc.getWorld() != null && loc.getChunk().isLoaded()) {
             Location searchLoc = loc.clone().add(0.5, 2.0, 0.5);
             for (Entity e : loc.getChunk().getEntities()) {

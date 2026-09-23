@@ -250,14 +250,14 @@ public class ShopCommands implements CommandExecutor, TabCompleter {
             }
 
             if (remaining != null && remaining.length > 0) {
-                int currentArgIndex = remaining.length - 1; // 0=coordX, 1=coordY, 2=coordZ, 3=Type, 4=Profession
+                int currentArgIndex = remaining.length - 1;
                 String lastArg = remaining[currentArgIndex].toUpperCase();
 
                 if (currentArgIndex == 3 || currentArgIndex == 0) {
                     List<String> suggestions = new ArrayList<>();
                     for (Villager.Type t : Registry.VILLAGER_TYPE) suggestions.add(nombreClave(t));
                     return suggestions.stream().filter(s -> s.startsWith(lastArg)).collect(Collectors.toList());
-                } else if (currentArgIndex == 4 || currentArgIndex == 1) { // Profesión
+                } else if (currentArgIndex == 4 || currentArgIndex == 1) {
                     List<String> suggestions = new ArrayList<>();
                     for (Villager.Profession p : Registry.VILLAGER_PROFESSION) suggestions.add(nombreClave(p));
                     return suggestions.stream().filter(s -> s.startsWith(lastArg)).collect(Collectors.toList());

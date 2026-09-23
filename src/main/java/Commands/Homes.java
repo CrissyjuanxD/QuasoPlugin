@@ -37,7 +37,6 @@ public class Homes implements CommandExecutor, TabCompleter, Listener {
     public Homes(QuasoPlugin plugin) {
         this.plugin = plugin;
         createHomesConfig();
-        // Registramos el listener para cancelar el tp al recibir daño
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
 
@@ -51,7 +50,6 @@ public class Homes implements CommandExecutor, TabCompleter, Listener {
         Player player = (Player) sender;
         String homeName = (args.length > 0) ? args[0].toLowerCase() : "base";
 
-        // --- COMANDO: /SETHOME ---
         if (command.getName().equalsIgnoreCase("sethome")) {
             Set<String> playerHomes = getPlayerHomes(player);
 
@@ -60,20 +58,17 @@ public class Homes implements CommandExecutor, TabCompleter, Listener {
                 return true;
             }
 
-            // Guardar ubicación
             Location loc = player.getLocation();
             String worldName = loc.getWorld().getName();
             int x = loc.getBlockX();
             int y = loc.getBlockY();
             int z = loc.getBlockZ();
 
-            // Formato de guardado: "Mundo, x, y, z"
             String saveFormat = worldName + ", " + x + ", " + y + ", " + z;
 
             homesConfig.set("Homes." + player.getName() + "." + homeName, saveFormat);
             saveHomesConfig();
 
-            // Mensajes con colores HEX
             String simbolo = ChatColor.of("#E28B20") + "" + ChatColor.BOLD + "\u06de";
             String texto1 = ChatColor.of("#F4D990") + " Has establecido el home " + ChatColor.of("#C9DC8A") + homeName + ChatColor.of("#F4D990") + " en";
             String coords = ChatColor.of("#DD6110") + "" + ChatColor.BOLD + " " + x + " " + y + " " + z;
@@ -87,7 +82,6 @@ public class Homes implements CommandExecutor, TabCompleter, Listener {
             return true;
         }
 
-        // --- COMANDO: /DELHOME ---
         if (command.getName().equalsIgnoreCase("delhome")) {
             Set<String> playerHomes = getPlayerHomes(player);
 
@@ -104,7 +98,6 @@ public class Homes implements CommandExecutor, TabCompleter, Listener {
             return true;
         }
 
-        // --- COMANDO: /HOME ---
         if (command.getName().equalsIgnoreCase("home")) {
             Set<String> playerHomes = getPlayerHomes(player);
 
@@ -118,7 +111,6 @@ public class Homes implements CommandExecutor, TabCompleter, Listener {
                 return true;
             }
 
-            // Leer datos del YML
             String data = homesConfig.getString("Homes." + player.getName() + "." + homeName);
             if (data == null) return true;
 
@@ -128,7 +120,6 @@ public class Homes implements CommandExecutor, TabCompleter, Listener {
                 return true;
             }
 
-            // Parsear coordenadas y mundo
             String worldName = parts[0];
             double x = Double.parseDouble(parts[1]) + 0.5;
             double y = Double.parseDouble(parts[2]);
@@ -142,9 +133,6 @@ public class Homes implements CommandExecutor, TabCompleter, Listener {
 
             Location homeLoc = new Location(world, x, y, z, player.getLocation().getYaw(), player.getLocation().getPitch());
 
-            // --- LÓGICA DE TELETRANSPORTE CON COUNTDOWN ---
-
-            // Si ya se estaba tepeando a otro lugar, cancelamos el anterior
             if (teleportingPlayers.containsKey(player.getUniqueId())) {
                 teleportingPlayers.get(player.getUniqueId()).cancel();
             }
@@ -169,7 +157,6 @@ public class Homes implements CommandExecutor, TabCompleter, Listener {
                         player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 0.5f, 1f);
                         count--;
                     } else {
-                        // TP Final
                         player.teleport(homeLoc);
                         player.playSound(player.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 1.0f, 1.0f);
                         player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent("§a§l¡Teletransportado a " + homeName + "!"));
@@ -178,7 +165,7 @@ public class Homes implements CommandExecutor, TabCompleter, Listener {
                         this.cancel();
                     }
                 }
-            }.runTaskTimer(plugin, 0L, 20L); // Ejecuta cada segundo (20 ticks)
+            }.runTaskTimer(plugin, 0L, 20L);
 
             teleportingPlayers.put(player.getUniqueId(), tpTask);
             return true;
@@ -187,7 +174,6 @@ public class Homes implements CommandExecutor, TabCompleter, Listener {
         return false;
     }
 
-    // --- AUTOCOMPLETADO (Tab Completer) ---
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
         if (args.length == 1 && sender instanceof Player) {
@@ -202,7 +188,6 @@ public class Homes implements CommandExecutor, TabCompleter, Listener {
         return Collections.emptyList();
     }
 
-    // --- CANCELAR TP AL RECIBIR DAÑO ---
     @EventHandler
     public void onPlayerDamage(EntityDamageEvent event) {
         if (event.getEntity() instanceof Player) {
@@ -219,20 +204,16 @@ public class Homes implements CommandExecutor, TabCompleter, Listener {
         }
     }
 
-    // --- MÉTODOS PARA GESTIONAR EL ARCHIVO HOMES.YML ---
-
     private Set<String> getPlayerHomes(Player player) {
         String path = "Homes." + player.getName();
 
-        // MIGRACIÓN: Si el path es un String significa que tiene el formato antiguo de 1 solo home. Lo pasamos a "base"
         if (homesConfig.isString(path)) {
             String oldData = homesConfig.getString(path);
-            homesConfig.set(path, null); // Borrar viejo
-            homesConfig.set(path + ".base", oldData); // Migrar a base
+            homesConfig.set(path, null);
+            homesConfig.set(path + ".base", oldData);
             saveHomesConfig();
         }
 
-        // Devolver la lista de nombres de homes
         if (homesConfig.isConfigurationSection(path)) {
             return homesConfig.getConfigurationSection(path).getKeys(false);
         }

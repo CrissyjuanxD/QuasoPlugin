@@ -65,7 +65,7 @@ public class CorruptureEffect implements CustomEffect, Listener {
 
     @Override
     public PotionEffectType getTriggerEffectType() {
-        return PotionEffectType.LUCK; // ¡Efecto base cambiado a LUCK!
+        return PotionEffectType.LUCK;
     }
 
     @Override
@@ -78,14 +78,13 @@ public class CorruptureEffect implements CustomEffect, Listener {
         Player player = event.getPlayer();
         if (playersWithEffect.contains(player.getUniqueId())) {
 
-            // Permitir en creativo
             if (player.getGameMode() == GameMode.CREATIVE) {
                 return;
             }
 
             Material blockType = event.getBlock().getType();
             if (blockType == Material.SPAWNER || blockType == Material.TRIAL_SPAWNER) {
-                return; // Permitir romper si es un spawner
+                return;
             }
 
             event.setCancelled(true);
@@ -98,7 +97,6 @@ public class CorruptureEffect implements CustomEffect, Listener {
         Player player = event.getPlayer();
         if (playersWithEffect.contains(player.getUniqueId())) {
 
-            // Permitir en creativo
             if (player.getGameMode() == GameMode.CREATIVE) {
                 return;
             }

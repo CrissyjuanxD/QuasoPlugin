@@ -38,12 +38,10 @@ public class Achievement6 implements Achievement, Listener {
 
     @Override
     public void initializePlayerData(String playerName) {
-        // No necesita inicialización especial
     }
 
     @Override
     public void checkCompletion(String playerName) {
-        // Se verifica durante los eventos
     }
 
     @EventHandler
@@ -53,18 +51,14 @@ public class Achievement6 implements Achievement, Listener {
         LivingEntity entity = event.getEntity();
         Player killer = entity.getKiller();
 
-        // Verificar que sea un Piglin Brute muerto por un jugador
         if (entity.getType() == EntityType.PIGLIN_BRUTE && killer != null) {
-            // Verificar primero si ya completó el logro
             FileConfiguration data = YamlConfiguration.loadConfiguration(eventHandler.getAchievementsFile());
             if (data.getBoolean("players." + killer.getName() + ".achievements.payback.completed", false)) {
                 return;
             }
 
-            // Verificar el arma (hacha de oro en mano principal)
             ItemStack weapon = killer.getInventory().getItemInMainHand();
             if (weapon.getType() == Material.GOLDEN_AXE) {
-                // Verificar al menos una pieza de armadura de oro
                 if (hasGoldenArmor(killer)) {
                     if (eventHandler.completeAchievement(killer.getName(), "payback")) {
                         successNotification.showSuccess(killer);

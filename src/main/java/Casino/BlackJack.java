@@ -31,7 +31,6 @@ public class BlackJack implements Listener {
     private final CasinoManager manager;
     private final String title = ChatColor.of("#228B22") + "" + ChatColor.BOLD + "BlackJack";
 
-    // Slots GUI
     private final List<Integer> dealerCardSlots = Arrays.asList(11, 12, 13, 14, 15);
     private final List<Integer> playerCardSlots = Arrays.asList(29, 30, 31, 32, 33);
     private final int dealerHeadSlot = 10;
@@ -42,7 +41,6 @@ public class BlackJack implements Listener {
     private final int hitButton = 48;
     private final int standButton = 50;
 
-    // Estado del Juego
     private final Map<UUID, Boolean> isPlaying = new ConcurrentHashMap<>();
     private final Map<UUID, List<Card>> playerHands = new ConcurrentHashMap<>();
     private final Map<UUID, List<Card>> dealerHands = new ConcurrentHashMap<>();
@@ -97,13 +95,10 @@ public class BlackJack implements Listener {
         } catch (IOException e) { e.printStackTrace(); }
     }
 
-    // Obtenedor de materiales a prueba de errores de versión
     private Material getSafeMaterial(String name, Material fallback) {
         Material mat = Material.matchMaterial(name);
         return mat != null ? mat : fallback;
     }
-
-    // --- INTERACCIÓN Y RECONEXIÓN ---
 
     @EventHandler
     public void onPlayerInteract(PlayerInteractEvent event) {
@@ -423,9 +418,9 @@ public class BlackJack implements Listener {
 
         meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
         try {
-            meta.addItemFlags(ItemFlag.valueOf("HIDE_ADDITIONAL_TOOLTIP")); // 1.20.5+
+            meta.addItemFlags(ItemFlag.valueOf("HIDE_ADDITIONAL_TOOLTIP"));
         } catch (IllegalArgumentException ignored) {
-            meta.addItemFlags(ItemFlag.valueOf("HIDE_ITEM_SPECIFICS")); // Versiones antiguas
+            meta.addItemFlags(ItemFlag.valueOf("HIDE_ITEM_SPECIFICS"));
         }
 
         item.setItemMeta(meta);
@@ -454,14 +449,10 @@ public class BlackJack implements Listener {
         return new Card(ranks[r.nextInt(ranks.length)], suits[r.nextInt(suits.length)]);
     }
 
-    // --- EVENTOS DE CLICK Y CIERRE CON FIX PARA BEDROCK ---
-
     @EventHandler
     public void onClick(InventoryClickEvent e) {
         Player p = (Player) e.getWhoClicked();
 
-        // FIX BEDROCK: En lugar de comprobar el título de la ventana,
-        // comprobamos si el jugador tiene la sesión abierta en metadata.
         if (!p.hasMetadata("blackjack_loc")) return;
 
         if (e.getView().getTopInventory().getSize() != 54) return;
@@ -507,8 +498,6 @@ public class BlackJack implements Listener {
     public void onClose(InventoryCloseEvent e) {
         Player p = (Player) e.getPlayer();
 
-        // FIX BEDROCK: Geyser a veces distorsiona el título del inventario
-        // Solo revisamos si el jugador está vinculado a una mesa de BlackJack
         if (!p.hasMetadata("blackjack_loc")) return;
 
         if (isPlaying.getOrDefault(p.getUniqueId(), false)) {
@@ -535,8 +524,6 @@ public class BlackJack implements Listener {
             cleanupTable(p);
         }
     }
-
-    // --- FUNCIONES DE LIMPIEZA Y TIMER ---
 
     private void cleanUpGame(UUID id) {
         isPlaying.remove(id);

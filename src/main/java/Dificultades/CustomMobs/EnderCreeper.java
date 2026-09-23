@@ -28,7 +28,7 @@ public class EnderCreeper extends EnderMobs implements Listener {
 
     @Override
     public void apply() {
-        super.apply(); // Teleport al recibir daño
+        super.apply();
         if (!eventsRegistered) {
             Bukkit.getPluginManager().registerEvents(this, plugin);
             eventsRegistered = true;
@@ -75,7 +75,6 @@ public class EnderCreeper extends EnderMobs implements Listener {
         creeper.getPersistentDataContainer().set(mobKey, PersistentDataType.BYTE, (byte) 1);
     }
 
-    // Prevenir que pierda el powered por rayo
     @EventHandler
     public void onTransform(EntityTransformEvent event) {
         if (event.getTransformReason() == EntityTransformEvent.TransformReason.LIGHTNING &&
@@ -106,7 +105,6 @@ public class EnderCreeper extends EnderMobs implements Listener {
         creeper.getWorld().playSound(creeper.getLocation(), Sound.ENTITY_CREEPER_HURT, 2.0f, 0.7f);
         creeper.getWorld().spawnParticle(Particle.PORTAL, creeper.getLocation(), 30, 0.5, 0.5, 0.5, 0.1);
 
-        // Brillo breve para que el jugador pueda verlo pese a la invisibilidad
         creeper.addPotionEffect(new PotionEffect(PotionEffectType.GLOWING, 20, 0, false, false));
     }
 

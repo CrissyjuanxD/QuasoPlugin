@@ -38,7 +38,6 @@ public class MobCapTabCompleter implements TabCompleter {
             if (args[0].equalsIgnoreCase("setbase") && sender.hasPermission("mobcap.admin")) {
                 completions.addAll(Arrays.asList("70", "140", "200", "280", "350"));
             } else if (args[0].equalsIgnoreCase("mob") && sender.hasPermission("mobcap.admin")) {
-                // Agregar tipos de mobs hostiles
                 completions.addAll(getHostileMobTypes());
             }
         } else if (args.length == 3) {

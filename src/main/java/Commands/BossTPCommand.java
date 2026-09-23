@@ -2,7 +2,7 @@ package Commands;
 
 import Events.MissionSystem.MissionHandler;
 import imp.crissyjuanxd.QuasoPlugin;
-import net.md_5.bungee.api.ChatColor; // Importante para colores HEX
+import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Sound;
@@ -43,7 +43,6 @@ public class BossTPCommand implements CommandExecutor {
             player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 1.0f, 0.5f);
             return true;
         }
-        // -----------------------------------
 
         FileConfiguration config = plugin.getConfig();
 

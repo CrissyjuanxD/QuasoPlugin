@@ -16,7 +16,7 @@ public class Achievement4 implements Achievement, Listener {
     private final JavaPlugin plugin;
     private final AchievementPartyHandler eventHandler;
     private final SuccessNotification successNotification;
-    private static final int DETECTION_RANGE = 20; // Radio de 20 bloques
+    private static final int DETECTION_RANGE = 20;
 
     public Achievement4(JavaPlugin plugin, AchievementPartyHandler eventHandler) {
         this.plugin = plugin;
@@ -37,19 +37,16 @@ public class Achievement4 implements Achievement, Listener {
 
     @Override
     public void initializePlayerData(String playerName) {
-        // No necesita inicialización especial
     }
 
     @Override
     public void checkCompletion(String playerName) {
-        // Se verifica durante los eventos
     }
 
     @EventHandler
     public void onPiglinTransform(EntityTransformEvent event) {
         if (!eventHandler.isEventActive()) return;
 
-        // Verificar que la transformación sea de Piglin a Zombified Piglin
         if (event.getEntityType() == EntityType.PIGLIN &&
                 event.getTransformReason() == EntityTransformEvent.TransformReason.PIGLIN_ZOMBIFIED) {
 
@@ -73,7 +70,6 @@ public class Achievement4 implements Achievement, Listener {
                 Player player = (Player) nearby;
                 String playerName = player.getName();
 
-                // Verificar si el jugador no ha completado el logro
                 if (!data.getBoolean("players." + playerName + ".achievements.piglin_transformation.completed", false)) {
                     double distance = nearby.getLocation().distanceSquared(piglin.getLocation());
                     if (distance < closestDistance) {

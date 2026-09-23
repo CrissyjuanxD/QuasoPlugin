@@ -81,7 +81,6 @@ public class InfestedCaveSpider extends InfestedMob implements Listener {
         spider.getAttribute(Attribute.ATTACK_DAMAGE).setBaseValue(8.0);
         spider.getAttribute(Attribute.FOLLOW_RANGE).setBaseValue(32.0);
 
-        // 3-5 efectos aleatorios
         List<SpiderEffect> shuffled = new ArrayList<>(POSSIBLE_EFFECTS);
         Collections.shuffle(shuffled, random);
         int numEffects = 3 + random.nextInt(3);
@@ -97,7 +96,6 @@ public class InfestedCaveSpider extends InfestedMob implements Listener {
         spider.getPersistentDataContainer().set(mobKey, PersistentDataType.BYTE, (byte) 1);
     }
 
-    // Al atacar a un jugador: 50% chance de lanzar sonic boom
     @EventHandler
     public void onAttack(EntityDamageByEntityEvent event) {
         if (!isCustomMob(event.getDamager())) return;
@@ -108,7 +106,6 @@ public class InfestedCaveSpider extends InfestedMob implements Listener {
         }
     }
 
-    // Mecánica: Inmune a proyectiles + Sonido de escudo
     @EventHandler
     public void onProjectileHit(EntityDamageByEntityEvent event) {
         if (!isCustomMob(event.getEntity())) return;

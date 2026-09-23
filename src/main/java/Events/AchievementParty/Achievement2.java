@@ -65,7 +65,6 @@ public class Achievement2 implements Achievement, Listener {
     public void initializePlayerData(String playerName) {
         FileConfiguration data = YamlConfiguration.loadConfiguration(eventHandler.getAchievementsFile());
 
-        // Inicializar el progreso de flores recolectadas
         for (Material flower : requiredFlowers) {
             data.set("players." + playerName + ".achievements.collect_all_flowers.collected." + flower.name(), false);
         }
@@ -79,7 +78,6 @@ public class Achievement2 implements Achievement, Listener {
 
     @Override
     public void checkCompletion(String playerName) {
-        // Se verifica durante el evento de recoger items
     }
 
     public Set<Material> getRequiredFlowers() {
@@ -95,7 +93,6 @@ public class Achievement2 implements Achievement, Listener {
         ItemStack item = event.getItem().getItemStack();
         Material itemType = item.getType();
 
-        // Verificar primero si ya completó el logro principal
         FileConfiguration data = YamlConfiguration.loadConfiguration(eventHandler.getAchievementsFile());
         if (data.getBoolean("players." + player.getName() + ".achievements.collect_all_flowers.completed", false)) {
             return;
@@ -104,7 +101,6 @@ public class Achievement2 implements Achievement, Listener {
         if (requiredFlowers.contains(itemType)) {
             String path = "players." + player.getName() + ".achievements.collect_all_flowers.collected." + itemType.name();
 
-            // Marcar la flor como recolectada si no lo estaba
             if (!data.getBoolean(path, false)) {
                 data.set(path, true);
 
@@ -117,7 +113,6 @@ public class Achievement2 implements Achievement, Listener {
                     return;
                 }
 
-                // Verificar progreso
                 checkFlowerCompletion(player, data);
             }
         }
@@ -138,7 +133,6 @@ public class Achievement2 implements Achievement, Listener {
         player.sendMessage("§eFlores recolectadas: §a" + collectedCount + "§e/§a" + requiredFlowers.size());
 
         if (allCollected) {
-            // Usamos el nuevo método que verifica internamente si ya estaba completado
             if (eventHandler.completeAchievement(player.getName(), "collect_all_flowers")) {
             }
         }

@@ -25,10 +25,8 @@ public class GuardianBlaze implements Listener {
     private final Random random = new Random();
     private static boolean eventsRegistered = false;
 
-    // --- OPTIMIZACIÓN: Manager Interno Estático ---
     private static final Set<UUID> activeBlazes = new HashSet<>();
     private static BukkitTask mainTask;
-    // ---------------------------------------------
 
     public GuardianBlaze(JavaPlugin plugin) {
         this.plugin = plugin;
@@ -40,7 +38,6 @@ public class GuardianBlaze implements Listener {
         if (!eventsRegistered) {
             Bukkit.getPluginManager().registerEvents(this, plugin);
             eventsRegistered = true;
-            // Escanear por si hubo un reload
             scanExistingBlazes();
             startGlobalTask();
         }
@@ -48,7 +45,6 @@ public class GuardianBlaze implements Listener {
 
     public void revert() {
         if (eventsRegistered) {
-            // Limpiar tarea global
             if (mainTask != null && !mainTask.isCancelled()) {
                 mainTask.cancel();
                 mainTask = null;
@@ -94,16 +90,13 @@ public class GuardianBlaze implements Listener {
         blaze.getPersistentDataContainer().set(guardianblazeKey, PersistentDataType.BYTE, (byte) 1);
         blaze.getPersistentDataContainer().set(lastAttackKey, PersistentDataType.LONG, 0L);
 
-        // Registrar en el sistema optimizado
         activeBlazes.add(blaze.getUniqueId());
         startGlobalTask();
     }
 
-    // --- TAREA GLOBAL ÚNICA (Reemplaza startBehavior) ---
     private void startGlobalTask() {
         if (mainTask != null && !mainTask.isCancelled()) return;
 
-        // Ejecutamos cada 10 ticks (0.5s) que es suficiente para IA de movimiento
         mainTask = new BukkitRunnable() {
             @Override
             public void run() {
@@ -114,7 +107,6 @@ public class GuardianBlaze implements Listener {
                     UUID uuid = it.next();
                     Entity entity = Bukkit.getEntity(uuid);
 
-                    // Limpieza automática
                     if (entity == null || !entity.isValid() || entity.isDead()) {
                         if (entity != null && !entity.isValid()) it.remove();
                         continue;
@@ -129,7 +121,6 @@ public class GuardianBlaze implements Listener {
     }
 
     private void processBlazeAI(Blaze blaze) {
-        // 1. Lógica de Movimiento y Melee
         Player target = getClosestPlayer(blaze, 20);
         if (target != null) {
             Vector direction = target.getLocation().toVector().subtract(blaze.getLocation().toVector()).normalize();
@@ -137,7 +128,6 @@ public class GuardianBlaze implements Listener {
 
             if (blaze.getLocation().distance(target.getLocation()) <= 2) {
                 long currentTime = System.currentTimeMillis();
-                // Usamos getOrDefault para evitar nulos
                 Long lastAttackObj = blaze.getPersistentDataContainer().get(lastAttackKey, PersistentDataType.LONG);
                 long lastAttack = (lastAttackObj != null) ? lastAttackObj : 0L;
 
@@ -148,8 +138,6 @@ public class GuardianBlaze implements Listener {
             }
         }
 
-        // 2. Lógica de Ataque Especial (Cada 8 segundos aprox = 160 ticks)
-        // Usamos ticksLived para sincronizar sin variables extra
         if (blaze.getTicksLived() % 160 == 0) {
             if (random.nextBoolean()) {
                 launchHorizontalFireballAttack(blaze);
@@ -159,7 +147,6 @@ public class GuardianBlaze implements Listener {
         }
     }
 
-    // Las tareas de ataques especiales son temporales (duran poco), así que está bien dejarlas como Runnables individuales
     private void launchHorizontalFireballAttack(Blaze blaze) {
         List<Player> targets = getPlayersInLineOfSight(blaze, 20);
         if (targets.isEmpty()) return;
@@ -251,8 +238,6 @@ public class GuardianBlaze implements Listener {
         }.runTaskTimer(plugin, 0L, 1L);
     }
 
-    // Optimización leve: streams pueden ser costosos si hay muchos jugadores,
-    // pero getPlayers() suele ser una lista pequeña. Está aceptable.
     private Player getClosestPlayer(Blaze blaze, double radius) {
         return blaze.getWorld().getPlayers().stream()
                 .filter(p -> p.getLocation().distance(blaze.getLocation()) <= radius)
@@ -332,7 +317,6 @@ public class GuardianBlaze implements Listener {
             event.getDrops().clear();
             blaze.getWorld().playSound(blaze.getLocation(), Sound.ENTITY_BLAZE_DEATH, SoundCategory.HOSTILE, 2.0f, 0.6f);
 
-            // IMPORTANTE: Limpiar de la lista activa al morir
             activeBlazes.remove(blaze.getUniqueId());
 
             if (random.nextInt(100) < 90) {

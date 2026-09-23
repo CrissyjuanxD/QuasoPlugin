@@ -47,30 +47,29 @@ public class AltarFunctions implements Listener, CommandExecutor, TabCompleter {
         }, 40L);
     }
 
-    // --- ESTRUCTURA QUEEN BEE ---
     private final Material[][][] queenBeeAltarLayers = {
-            { // Layer 1
+            {
                     {Material.HONEY_BLOCK, Material.HONEYCOMB_BLOCK, Material.HONEYCOMB_BLOCK, Material.HONEYCOMB_BLOCK, Material.HONEY_BLOCK},
                     {Material.HONEYCOMB_BLOCK, Material.HONEY_BLOCK, Material.HONEYCOMB_BLOCK, Material.HONEY_BLOCK, Material.HONEYCOMB_BLOCK},
                     {Material.HONEYCOMB_BLOCK, Material.HONEYCOMB_BLOCK, Material.BEDROCK, Material.HONEYCOMB_BLOCK, Material.HONEYCOMB_BLOCK},
                     {Material.HONEYCOMB_BLOCK, Material.HONEY_BLOCK, Material.HONEYCOMB_BLOCK, Material.HONEY_BLOCK, Material.HONEYCOMB_BLOCK},
                     {Material.HONEY_BLOCK, Material.HONEYCOMB_BLOCK, Material.HONEYCOMB_BLOCK, Material.HONEYCOMB_BLOCK, Material.HONEY_BLOCK}
             },
-            { // Layer 2
+            {
                     {Material.HONEY_BLOCK, Material.AIR, Material.AIR, Material.AIR, Material.HONEY_BLOCK},
                     {Material.AIR, Material.AIR, Material.TORCH, Material.AIR, Material.AIR},
                     {Material.AIR, Material.TORCH, Material.HONEYCOMB_BLOCK, Material.TORCH, Material.AIR},
                     {Material.AIR, Material.AIR, Material.TORCH, Material.AIR, Material.AIR},
                     {Material.HONEY_BLOCK, Material.AIR, Material.AIR, Material.AIR, Material.HONEY_BLOCK}
             },
-            { // Layer 3
+            {
                     {Material.AIR, Material.AIR, Material.AIR, Material.AIR, Material.AIR},
                     {Material.AIR, Material.AIR, Material.AIR, Material.AIR, Material.AIR},
                     {Material.AIR, Material.AIR, Material.BEE_NEST, Material.AIR, Material.AIR},
                     {Material.AIR, Material.AIR, Material.AIR, Material.AIR, Material.AIR},
                     {Material.AIR, Material.AIR, Material.AIR, Material.AIR, Material.AIR}
             },
-            { // Layer 4
+            {
                     {Material.AIR, Material.AIR, Material.AIR, Material.AIR, Material.AIR},
                     {Material.AIR, Material.AIR, Material.AIR, Material.AIR, Material.AIR},
                     {Material.AIR, Material.AIR, Material.HONEY_BLOCK, Material.AIR, Material.AIR},
@@ -108,8 +107,6 @@ public class AltarFunctions implements Listener, CommandExecutor, TabCompleter {
         }
     }
 
-    // --- GESTIÓN DE COOLDOWNS ---
-
     private void createCooldownHologram(Location loc, int seconds) {
         long endTime = System.currentTimeMillis() + (seconds * 1000L);
         Location hologramLoc = loc.clone().add(0.5, 2.5, 0.5);
@@ -134,7 +131,6 @@ public class AltarFunctions implements Listener, CommandExecutor, TabCompleter {
         return false;
     }
 
-    // --- MOTOR GLOBAL DE ACTUALIZACIÓN ---
     private void startGlobalTicker() {
         new BukkitRunnable() {
             @Override
@@ -183,7 +179,6 @@ public class AltarFunctions implements Listener, CommandExecutor, TabCompleter {
         }.runTaskTimer(plugin, 0L, 20L);
     }
 
-    // --- RESTAURACIÓN ---
     private void restoreAllLoadedCooldowns() {
         activeAltars.clear();
         for (World world : Bukkit.getWorlds()) {
@@ -207,8 +202,6 @@ public class AltarFunctions implements Listener, CommandExecutor, TabCompleter {
             }
         }
     }
-
-    // --- COMANDOS ---
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
@@ -278,7 +271,6 @@ public class AltarFunctions implements Listener, CommandExecutor, TabCompleter {
 
                     long newEnd = action.equals("addcooldown") ? currentEnd + millis : currentEnd - millis;
 
-                    // Si restamos tanto que ya terminó
                     if (newEnd <= System.currentTimeMillis()) {
                         display.remove();
                         activeAltars.remove(index);
@@ -358,7 +350,6 @@ public class AltarFunctions implements Listener, CommandExecutor, TabCompleter {
         }
     }
 
-    // --- ESTRUCTURA ---
     private boolean isValidAltar(Location center, Material[][][] structure) {
         int baseY = center.getBlockY();
         int startY = baseY - 2;

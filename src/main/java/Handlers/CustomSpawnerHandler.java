@@ -47,7 +47,6 @@ public class CustomSpawnerHandler implements Listener {
     private long lastCleanupTime = 0;
     private static final long CLEANUP_INTERVAL = 60000;
 
-    // Instancias de los mobs
     private final Bombita bombitaSpawner;
     private final Iceologer iceologerSpawner;
     private final CorruptedZombies corruptedZombieSpawner;

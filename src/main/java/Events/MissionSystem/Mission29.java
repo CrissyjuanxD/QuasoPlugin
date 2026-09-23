@@ -47,7 +47,6 @@ public class Mission29 implements Mission, Listener {
                         long currentTicks = player.getStatistic(Statistic.PLAY_ONE_MINUTE);
                         long currentHours = currentTicks / 72000L;
 
-                        // Notificación de horas subidas
                         UUID id = player.getUniqueId();
                         if (lastNotifiedHour.containsKey(id)) {
                             long lastHour = lastNotifiedHour.get(id);

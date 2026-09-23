@@ -23,12 +23,10 @@ public class RuletaAnimation {
         }
         ongoingAnimations++;
 
-        // Efectos iniciales
         player.addPotionEffect(new PotionEffect(PotionEffectType.DARKNESS, 80, 1, true, false, false));
         player.addPotionEffect(new PotionEffect(PotionEffectType.RESISTANCE, 80, 0, true, false, false));
         player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_BELL, 3.0f, 1.0f);
 
-        // Etapas de la animación
         String[] stages = {
                 ChatColor.GRAY + "C_",
                 ChatColor.WHITE + "Ca",
@@ -61,7 +59,7 @@ public class RuletaAnimation {
             public void run() {
                 if (showingFinalMessage) {
                     finalMessageTicks++;
-                    if (finalMessageTicks >= 60) { // 3 segundos (60 ticks)
+                    if (finalMessageTicks >= 60) {
                         showJsonMessageAndFinish();
                     }
                     return;
@@ -123,7 +121,6 @@ public class RuletaAnimation {
 
             private void showJsonMessageAndFinish() {
                 if (jsonMessage != null && !jsonMessage.isEmpty()) {
-                    // ENVIAR EL JSON EXACTAMENTE COMO EN EL CÓDIGO ORIGINAL
                     Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "tellraw " + player.getName() + " " + jsonMessage);
                     player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 1.0f, 1.3f);
                 }

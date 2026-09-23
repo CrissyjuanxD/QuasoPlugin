@@ -46,7 +46,7 @@ public class AmuletBloodM implements Listener {
     private final JavaPlugin plugin;
     private final NamespacedKey amuletIdKey;
     private final NamespacedKey diamondTicksKey;
-    private final NamespacedKey usosKey; // Nueva llave para usos virtuales
+    private final NamespacedKey usosKey;
 
     private final Map<UUID, AmuletSession> activeSessions = new HashMap<>();
     private final Map<UUID, Long> hordeMessageCooldown = new HashMap<>();
@@ -136,10 +136,6 @@ public class AmuletBloodM implements Listener {
                 return false;
         }
     }
-
-    // ========================================================================================
-    // INTERACCIÓN Y LÓGICA DE ACTIVACIÓN
-    // ========================================================================================
 
     @EventHandler
     public void onInteract(PlayerInteractEvent event) {
@@ -290,10 +286,6 @@ public class AmuletBloodM implements Listener {
         }.runTaskTimer(plugin, 0L, 1L);
     }
 
-    // ========================================================================================
-    // MANEJADOR DE TIEMPO DEL AMULETO
-    // ========================================================================================
-
     private class AmuletSession {
         private final Player player;
         private int diamondTicks;
@@ -362,7 +354,6 @@ public class AmuletBloodM implements Listener {
                         sendActionBar(player, false);
                     }
 
-                    // Desgaste virtual (Cada 7.2s = 144 ticks)
                     if (durabilityTicks >= 144) {
                         durabilityTicks = 0;
                         if (!consumeVirtualDurability(player, amulet)) {
@@ -393,7 +384,6 @@ public class AmuletBloodM implements Listener {
             return diamondTicks;
         }
 
-        // LÓGICA VIRTUAL DE USOS
         private boolean consumeVirtualDurability(Player player, ItemStack amulet) {
             ItemMeta meta = amulet.getItemMeta();
             if (meta == null) return false;
@@ -402,7 +392,7 @@ public class AmuletBloodM implements Listener {
             usos -= 1;
 
             if (usos <= 0) {
-                amulet.setAmount(0); // Se rompe el ítem
+                amulet.setAmount(0);
                 player.playSound(player.getLocation(), Sound.ENTITY_ITEM_BREAK, 1f, 1f);
                 return false;
             }
@@ -428,10 +418,6 @@ public class AmuletBloodM implements Listener {
 
         return null;
     }
-
-    // ========================================================================================
-    // BLOQUEO DE MOBS Y HORDAS (SINERGIA CON BLOODMOON)
-    // ========================================================================================
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onCreatureSpawn(CreatureSpawnEvent event) {
@@ -461,10 +447,6 @@ public class AmuletBloodM implements Listener {
             }
         }
     }
-
-    // ========================================================================================
-    // ANTI-EXPLOITS Y EVENTOS EXTERNOS
-    // ========================================================================================
 
     @EventHandler
     public void onInventoryClick(InventoryClickEvent event) {

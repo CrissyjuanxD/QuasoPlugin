@@ -70,7 +70,6 @@ public class TiempoCommand implements CommandExecutor, TabCompleter {
         sender.sendMessage(ChatColor.YELLOW + "/timers lista " + ChatColor.WHITE + "<jugador/all>");
     }
 
-    // --- SUBCOMANDO: CREAR ---
     private boolean handleAddTiempo(CommandSender sender, String[] args) {
         if (args.length < 2) {
             sender.sendMessage(ChatColor.RED + "Uso: /timers crear <jugador/@a> [tiempo=hh:mm:ss] [nombre=\"...\"] [sonido=on/off] [comando=\"...\"]");
@@ -85,7 +84,6 @@ public class TiempoCommand implements CommandExecutor, TabCompleter {
         String soundOption = "on";
         String actionCommand = null;
 
-        // Extraer Nombre
         if (fullArgs.contains("nombre=\"")) {
             int start = fullArgs.indexOf("nombre=\"") + 8;
             int end = fullArgs.indexOf("\"", start);
@@ -94,7 +92,6 @@ public class TiempoCommand implements CommandExecutor, TabCompleter {
             }
         }
 
-        // Extraer Tiempo
         if (fullArgs.contains("tiempo=")) {
             int start = fullArgs.indexOf("tiempo=") + 7;
             int end = fullArgs.indexOf(" ", start);
@@ -102,7 +99,6 @@ public class TiempoCommand implements CommandExecutor, TabCompleter {
             timeString = fullArgs.substring(start, end);
         }
 
-        // Extraer Sonido
         if (fullArgs.contains("sonido=")) {
             int start = fullArgs.indexOf("sonido=") + 7;
             int end = fullArgs.indexOf(" ", start);
@@ -110,7 +106,6 @@ public class TiempoCommand implements CommandExecutor, TabCompleter {
             soundOption = fullArgs.substring(start, end).toLowerCase();
         }
 
-        // Extraer Comando
         if (fullArgs.contains("comando=\"")) {
             int start = fullArgs.indexOf("comando=\"") + 9;
             int end = fullArgs.indexOf("\"", start);
@@ -149,7 +144,6 @@ public class TiempoCommand implements CommandExecutor, TabCompleter {
         return true;
     }
 
-    // --- SUBCOMANDO: EDITAR ---
     private boolean handleEditTiempo(CommandSender sender, String[] args) {
         if (args.length < 2) {
             sender.sendMessage(ChatColor.RED + "Uso: /timers editar <\"Nombre Actual\"> [nombre=\"Nuevo\"] [tiempo=hh:mm:ss] [sonido=on/off] [comando=\"nuevo comando\"]");
@@ -241,7 +235,6 @@ public class TiempoCommand implements CommandExecutor, TabCompleter {
         return true;
     }
 
-    // --- SUBCOMANDO: REMOVER ---
     private boolean handleRemoveTiempo(CommandSender sender, String[] args) {
         if (args.length == 0) {
             boolean removed = removeFirstUnnamedBossBar();
@@ -267,7 +260,6 @@ public class TiempoCommand implements CommandExecutor, TabCompleter {
         return true;
     }
 
-    // --- SUBCOMANDO: LISTA ---
     private boolean handleTiempoView(CommandSender sender, String[] args) {
         if (args.length == 0) {
             sender.sendMessage(ChatColor.RED + "Uso: /timers lista <jugador/all>");
@@ -329,10 +321,6 @@ public class TiempoCommand implements CommandExecutor, TabCompleter {
         sender.sendMessage(ChatColor.GREEN + "Acción: " + ChatColor.WHITE + action);
         sender.sendMessage("");
     }
-
-    // ========================================================================
-    // --- LÓGICA INTERNA DE TIMERS Y MÉTODOS DE COMPATIBILIDAD EXTERNA ---
-    // ========================================================================
 
     public void createBossBar(String name, int totalSeconds, String timeString, String soundOption) {
         createBossBar(name, totalSeconds, timeString, soundOption, null);
@@ -414,7 +402,6 @@ public class TiempoCommand implements CommandExecutor, TabCompleter {
                     }
                 }
 
-                // Restamos para que en el próximo tick caiga en -1 y -2
                 timers.put(barId, timeLeft - 1);
                 return;
             }
@@ -546,7 +533,6 @@ public class TiempoCommand implements CommandExecutor, TabCompleter {
         return String.format("%02d:%02d:%02d", h, m, s);
     }
 
-    // --- TAB COMPLETER INTELIGENTE ---
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
         List<String> completions = new ArrayList<>();
@@ -565,11 +551,10 @@ public class TiempoCommand implements CommandExecutor, TabCompleter {
                 for (Player p : Bukkit.getOnlinePlayers()) completions.add(p.getName());
             } else if (args.length > 2) {
                 String lastArg = args[args.length - 1];
-                if (!lastArg.contains("=")) { // Sólo sugiere si no está escribiendo el valor actualmente
+                if (!lastArg.contains("=")) {
                     String fullStr = String.join(" ", args).toLowerCase();
                     List<String> options = new ArrayList<>(Arrays.asList("nombre=\"\"", "tiempo=00:00:00", "sonido=on/off", "comando=\"\""));
 
-                    // Filtrar opciones que ya fueron usadas
                     if (fullStr.contains("nombre=")) options.remove("nombre=\"\"");
                     if (fullStr.contains("tiempo=")) options.remove("tiempo=00:00:00");
                     if (fullStr.contains("sonido=")) options.remove("sonido=on/off");
@@ -591,7 +576,6 @@ public class TiempoCommand implements CommandExecutor, TabCompleter {
                     String fullStr = String.join(" ", args).toLowerCase();
                     List<String> options = new ArrayList<>(Arrays.asList("nombre=\"\"", "tiempo=00:00:00", "sonido=on/off", "comando=\"\""));
 
-                    // Filtrar opciones usadas en editar
                     if (fullStr.contains("nombre=")) options.remove("nombre=\"\"");
                     if (fullStr.contains("tiempo=")) options.remove("tiempo=00:00:00");
                     if (fullStr.contains("sonido=")) options.remove("sonido=on/off");

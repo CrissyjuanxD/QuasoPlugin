@@ -8,7 +8,7 @@ import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerItemDamageEvent;
-import org.bukkit.inventory.EquipmentSlotGroup; // Nuevo estándar en 1.21+
+import org.bukkit.inventory.EquipmentSlotGroup;
 import org.bukkit.inventory.ItemRarity;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -44,7 +44,6 @@ public class WardenArmor implements Listener {
                 ""
         ));
 
-        // Atributos actualizados a 1.21+ (Usando NamespacedKey y sin el prefijo GENERIC_)
         meta.addAttributeModifier(Attribute.ARMOR, new AttributeModifier(
                 new NamespacedKey(plugin, "warden_helmet_armor"), 4, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlotGroup.HEAD
         ));
@@ -188,7 +187,6 @@ public class WardenArmor implements Listener {
     @EventHandler
     public void onItemDamage(PlayerItemDamageEvent event) {
         if (isWardenArmor(event.getItem())) {
-            // 30% de probabilidad de ignorar el daño que iba a recibir el ítem
             if (Math.random() < 0.30) {
                 event.setCancelled(true);
             }

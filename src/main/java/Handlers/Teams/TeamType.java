@@ -4,8 +4,6 @@ import net.md_5.bungee.api.ChatColor;
 
 
 public enum TeamType {
-    // Orden: ID_INTERNO, HEX, PREFIJO_CHAT/CABEZA, PREFIJO_TAB, COLOR_BUKKIT, PRIORIDAD_TAB
-
     ADMIN("Admin", "#F89130",
             ChatColor.GRAY + "" + ChatColor.BOLD + "[" + ChatColor.DARK_GRAY + ChatColor.BOLD + "PRIETO" + ChatColor.GRAY + ChatColor.BOLD + "] ",
             ChatColor.GRAY + "" + ChatColor.BOLD + "[" + ChatColor.DARK_GRAY + ChatColor.BOLD + "PRT" + ChatColor.GRAY + ChatColor.BOLD + "] ",

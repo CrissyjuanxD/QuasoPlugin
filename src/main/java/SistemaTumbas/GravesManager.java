@@ -82,7 +82,7 @@ public class GravesManager {
                 Grave grave = new Grave(id, owner, ownerName, loc, creation, expiry, items);
                 activeGraves.put(id, grave);
 
-                cleanupVisuals(id, loc); // Limpiar fantasmas
+                cleanupVisuals(id, loc);
                 spawnGraveVisuals(id, ownerName, loc, creation);
             }
         }
@@ -105,7 +105,6 @@ public class GravesManager {
     public void createGrave(Player player, List<ItemStack> items) {
         UUID id = UUID.randomUUID();
 
-        // Posición: Se eleva a bloque Y + 1 (Bloque de aire por encima de donde murió)
         Location loc = player.getLocation();
         Location blockLoc = new Location(loc.getWorld(), loc.getBlockX() + 0.5, loc.getBlockY() + 1.0, loc.getBlockZ() + 0.5);
 
@@ -144,12 +143,10 @@ public class GravesManager {
         String tag = "grave_" + graveId.toString();
         String timerTag = "timer_" + graveId.toString();
 
-        // 1. Spawnea la entidad de interacción (Hitbox perfecta)
         String interactionCmd = String.format("execute in %s positioned %f %f %f run summon interaction ~ ~0.5 ~ {width:1f,height:1.2f,Tags:[\"%s\"]}",
                 loc.getWorld().getKey().toString(), loc.getX(), loc.getY(), loc.getZ(), tag);
         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), interactionCmd);
 
-        // 2. Modelo visual exacto. Escapamos las comillas y pasamos los tags individualmente.
         String rawNbt = "{Tags:[\"" + tag + "\"],Passengers:[" +
                 "{id:\"minecraft:item_display\",Tags:[\"" + tag + "\"],item:{id:\"minecraft:player_head\",Count:1,components:{\"minecraft:profile\":{id:[I;-706285507,552059348,1919193404,638722781],properties:[{name:\"textures\",value:\"ewogICJ0aW1lc3RhbXAiIDogMTc1NDA3MTcxOTI2OCwKICAicHJvZmlsZUlkIiA6ICJjM2ZmNTY5OWZlNWI0OTY2YTYzYzdhMTEzNTBjZGIyNSIsCiAgInByb2ZpbGVOYW1lIiA6ICJUZWNobzkwMDAiLAogICJzaWduYXR1cmVSZXF1aXJlZCIgOiB0cnVlLAogICJ0ZXh0dXJlcyIgOiB7CiAgICAiU0tJTiIgOiB7CiAgICAgICJ1cmwiIDogImh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMWRkNTZkYjVhYWE3MDM3MDA1MzI2OTgzZjMzZGY3OTRlYzJkMzEzZGE1ZGNmNjQ3ZWRkNWVhYWRiMzI0NWZiOCIsCiAgICAgICJtZXRhZGF0YSIgOiB7CiAgICAgICAgIm1vZGVsIiA6ICJzbGltIgogICAgICB9CiAgICB9CiAgfQp9\"}]}}},item_display:\"none\",transformation:[-1f,0f,0f,0.3671875f,0f,1f,0f,0.703125f,0f,0f,-0.5f,0.8046875f,0f,0f,0f,1f]}," +
                 "{id:\"minecraft:item_display\",Tags:[\"" + tag + "\"],item:{id:\"minecraft:player_head\",Count:1,components:{\"minecraft:profile\":{id:[I;-44807437,1502350709,-1118570811,-56742203],properties:[{name:\"textures\",value:\"ewogICJ0aW1lc3RhbXAiIDogMTc1NDA3MTcyNTU4NCwKICAicHJvZmlsZUlkIiA6ICJhYzY1NDYwOWVkZjM0ODhmOTM0ZWNhMDRmNjlkNGIwMCIsCiAgInByb2ZpbGVOYW1lIiA6ICJzcGFjZUd1cmxTa3kiLAogICJzaWduYXR1cmVSZXF1aXJlZCIgOiB0cnVlLAogICJ0ZXh0dXJlcyIgOiB7CiAgICAiU0tJTiIgOiB7CiAgICAgICJ1cmwiIDogImh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNmVjN2FkZmNkZDkzMTEzMjk3ZGViZjE3YjVlNGYxMzZiYWE5MTU2MzQxNjcxODU2ODEwMDExYzllYmZlMjBmYSIsCiAgICAgICJtZXRhZGF0YSIgOiB7CiAgICAgICAgIm1vZGVsIiA6ICJzbGltIgogICAgICB9CiAgICB9CiAgfQp9\"}]}}},item_display:\"none\",transformation:[-0.5f,0f,0f,0.7421875f,0f,1f,0f,0.703125f,0f,0f,-0.5f,0.8046875f,0f,0f,0f,1f]}," +
@@ -181,7 +178,6 @@ public class GravesManager {
 
     private void cleanupVisuals(UUID id, Location loc) {
         String tag = "grave_" + id.toString();
-        // Borrar el block display, text displays y el interaction entity
         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "execute in " + loc.getWorld().getKey().toString() + " run kill @e[tag=" + tag + "]");
     }
 
@@ -204,7 +200,6 @@ public class GravesManager {
                         }
                         toRemove.add(grave.getId());
                     } else {
-                        // Actualizar cronómetro visual (TextDisplay) conservando formato
                         if (grave.getLocation().getWorld() != null && grave.getLocation().getWorld().isChunkLoaded(grave.getLocation().getBlockX() >> 4, grave.getLocation().getBlockZ() >> 4)) {
                             long totalSecs = remaining / 1000;
                             long mins = totalSecs / 60;
@@ -214,7 +209,6 @@ public class GravesManager {
 
                             for (Entity entity : grave.getLocation().getWorld().getNearbyEntities(grave.getLocation(), 2, 2, 2)) {
                                 if (entity instanceof TextDisplay textDisplay && entity.getScoreboardTags().contains(timerTag)) {
-                                    // Usamos el API de Bukkit para setear el texto conservando colores
                                     textDisplay.setText(ChatColor.of("#858585") + "" + ChatColor.BOLD + timeStr);
                                 }
                             }

@@ -32,14 +32,10 @@ public class FishingListener implements Listener {
     private final FishingZoneManager zoneManager;
     private final ItemManager itemManager;
 
-    /** UUID de jugadores con minijuego activo */
     private final Map<UUID, FishingMiniGame> activeGames = new HashMap<>();
-    /** Set de UUIDs de jugadores que están actualmente FÍSICAMENTE dentro de una zona */
     private final Set<UUID> playersInZone = new HashSet<>();
-    /** Cooldown de 20 segundos para el mensaje del tutorial */
     private final Map<UUID, Long> tutorialCooldowns = new HashMap<>();
 
-    // Loot custom (intercambiable por DinoCoins)
     private static final String[] CUSTOM_LOOT = {
             "zanahoria_encantada", "pepitas_hierro_oxidadas", "pepitas_diamante",
             "fragmentos_ambar", "fosiles_pequenos", "lingote_platino"
@@ -53,15 +49,12 @@ public class FishingListener implements Listener {
         this.itemManager = itemManager;
     }
 
-    // ─── Evento: Entrar a la zona (Tutorial) ─────────────────────────────────
-
     @EventHandler
     public void onMove(PlayerMoveEvent event) {
         Location from = event.getFrom();
         Location to = event.getTo();
         if (to == null) return;
 
-        // Optimización: Solo verificamos si cambió de bloque entero
         if (from.getBlockX() == to.getBlockX() && from.getBlockY() == to.getBlockY() && from.getBlockZ() == to.getBlockZ()) return;
 
         Player player = event.getPlayer();
@@ -74,7 +67,6 @@ public class FishingListener implements Listener {
             long currentTime = System.currentTimeMillis();
             long lastMessageTime = tutorialCooldowns.getOrDefault(player.getUniqueId(), 0L);
 
-            // Verificamos si pasaron 20 segundos (20,000 ms) desde el último mensaje
             if (currentTime - lastMessageTime >= 20000) {
                 sendTutorialMessage(player);
                 player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1f, 1f);
@@ -86,8 +78,6 @@ public class FishingListener implements Listener {
         }
     }
 
-    // ─── Evento: pez atrapado ────────────────────────────────────────────────
-
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onFish(PlayerFishEvent event) {
         if (event.getState() != PlayerFishEvent.State.CAUGHT_FISH) return;
@@ -95,30 +85,25 @@ public class FishingListener implements Listener {
         Player player = event.getPlayer();
         Location hookLoc = event.getHook().getLocation();
 
-        // ¿Está la caña en una zona de pesca?
         FishingZone zone = zoneManager.getZoneAt(hookLoc);
         if (zone == null) return;
 
         if (activeGames.containsKey(player.getUniqueId())) return;
 
-        // Capturamos el botín Vanilla original antes de cancelar el evento
-        ItemStack vanillaLoot = new ItemStack(Material.COD); // Fallback por defecto
+        ItemStack vanillaLoot = new ItemStack(Material.COD);
         if (event.getCaught() instanceof org.bukkit.entity.Item droppedItem) {
             vanillaLoot = droppedItem.getItemStack().clone();
-            droppedItem.remove(); // Eliminamos la entidad nativa para que no se suelte sola
+            droppedItem.remove();
         }
 
-        // Cancelamos el evento nativo para retener la física y ejecutar el minijuego
         event.setCancelled(true);
 
-        // Inicia el minijuego, pasando el loot vanilla y la ubicación del anzuelo
         FishingMiniGame game = new FishingMiniGame(plugin, player, vanillaLoot, () -> {
             handleGameResult(player, hookLoc);
         });
         activeGames.put(player.getUniqueId(), game);
         game.start();
 
-        // Títulos
         player.sendTitle(
                 ChatColor.of("#61B1F2") + "" + ChatColor.BOLD + "¡Algo ha picado!",
                 ChatColor.GRAY + "Usa el botón " + ChatColor.YELLOW + ChatColor.BOLD + "saltar" + ChatColor.GRAY + " o " + ChatColor.YELLOW + ChatColor.BOLD + "agacharse",
@@ -128,42 +113,32 @@ public class FishingListener implements Listener {
         player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 0.5f, 2f);
     }
 
-    // ─── Eventos de Acción del Minijuego (Compatibilidad Total) ──────────────
-
-    // 1. Saltar (Estando de pie)
     @EventHandler
     public void onJump(PlayerJumpEvent event) {
         Player player = event.getPlayer();
         if (tryProcessMinigameClick(player)) {
-            event.setCancelled(true); // Cancela el salto físico
+            event.setCancelled(true);
         }
     }
 
-    // 2. Agacharse (Estando de pie)
     @EventHandler
     public void onSneak(PlayerToggleSneakEvent event) {
-        if (event.isSneaking()) { // Solo cuenta cuando presiona la tecla hacia abajo
+        if (event.isSneaking()) {
             tryProcessMinigameClick(event.getPlayer());
         }
     }
 
-    // 3. Agacharse estando sentado (Intentar bajarse de monturas/sillas)
     @EventHandler
     public void onDismount(EntityDismountEvent event) {
         if (event.getEntity() instanceof Player player) {
             if (tryProcessMinigameClick(player)) {
-                event.setCancelled(true); // Evitamos que se baje de la vagoneta/silla
+                event.setCancelled(true);
             }
         }
     }
 
-    /**
-     * Método centralizado para procesar la acción del jugador.
-     * Retorna 'true' si el jugador tenía un minijuego activo.
-     */
     private boolean tryProcessMinigameClick(Player player) {
         FishingMiniGame game = activeGames.get(player.getUniqueId());
-        // Gracias a game.isFinished() evitamos que se ejecute dos veces si ocurren dos eventos simultáneos
         if (game != null && !game.isFinished()) {
             game.playerClick();
             return true;
@@ -171,13 +146,10 @@ public class FishingListener implements Listener {
         return false;
     }
 
-    // ─── Lógica de resultado y físicas Vanilla ───────────────────────────────
-
     private void handleGameResult(Player player, Location hookLoc) {
         FishingMiniGame game = activeGames.remove(player.getUniqueId());
         if (game == null) return;
 
-        // Verificar si perdió por tiempo
         if (game.isFailedByTime()) {
             player.sendTitle(ChatColor.RED + "¡Tiempo agotado!", ChatColor.GRAY + "El anzuelo se ha roto...", 10, 40, 10);
             player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_NO, 1f, 0.6f);
@@ -195,28 +167,22 @@ public class FishingListener implements Listener {
         if (reward == null) return;
 
         Bukkit.getScheduler().runTask(plugin, () -> {
-            // FÍSICA VANILLA: Hacemos spawn del ítem en el anzuelo y lo lanzamos al jugador
             Item dropped = player.getWorld().dropItem(hookLoc, reward);
-            dropped.setPickupDelay(0); // Para que se pueda recoger al instante al chocar con el jugador
+            dropped.setPickupDelay(0);
 
-            // Matemáticas para el arco de vuelo del ítem hacia el jugador
             Vector direction = player.getLocation().toVector().subtract(hookLoc.toVector());
             double distance = direction.length();
             direction.normalize();
-            // Multiplicamos según la distancia para que no vuele al infinito si está cerca
             direction.multiply(Math.min(distance * 0.12, 1.2));
-            direction.setY(direction.getY() + 0.4); // Arco curvo hacia arriba
+            direction.setY(direction.getY() + 0.4);
             dropped.setVelocity(direction);
 
-            // Desgaste natural de la caña de pescar
             applyFishingRodDamage(player);
 
-            // Enviar mensaje en el chat
             sendResultMessage(player, slotType, giveCustom, reward);
         });
     }
 
-    // Desgaste de la caña de pescar soportando Unbreaking
     private void applyFishingRodDamage(Player player) {
         ItemStack item = player.getInventory().getItemInMainHand();
         if (item.getType() != Material.FISHING_ROD) {
@@ -226,19 +192,16 @@ public class FishingListener implements Listener {
         if (item.getType() == Material.FISHING_ROD) {
             ItemMeta meta = item.getItemMeta();
             if (meta instanceof Damageable damageable) {
-                // Cálculo del encantamiento irrompibilidad
                 int unbreaking = item.getEnchantmentLevel(Enchantment.UNBREAKING);
                 if (unbreaking > 0) {
-                    // Probabilidad de desgaste = 100% / (Nivel + 1)
                     if (RANDOM.nextInt(unbreaking + 1) != 0) {
-                        return; // Evitó el desgaste
+                        return;
                     }
                 }
 
                 damageable.setDamage(damageable.getDamage() + 1);
                 item.setItemMeta(damageable);
 
-                // Si se rompe
                 if (damageable.getDamage() >= item.getType().getMaxDurability()) {
                     item.setAmount(0);
                     player.playSound(player.getLocation(), Sound.ENTITY_ITEM_BREAK, 1f, 1f);
@@ -247,15 +210,11 @@ public class FishingListener implements Listener {
         }
     }
 
-    // ─── Loot ────────────────────────────────────────────────────────────────
-
     private ItemStack getCustomLoot() {
         String key = CUSTOM_LOOT[RANDOM.nextInt(CUSTOM_LOOT.length)];
-        // Intentamos primero el ItemManager
         ItemStack item = itemManager.getItem(key, 1, null);
         if (item != null) return item;
 
-        // Fallback: FishingItems
         return switch (key) {
             case "zanahoria_encantada"    -> FishingItems.createZanahoriaEncantada();
             case "pepitas_hierro_oxidadas"-> FishingItems.createPepitasHierroOxidadas();
@@ -266,8 +225,6 @@ public class FishingListener implements Listener {
             default                       -> null;
         };
     }
-
-    // ─── Mensajes y Formateo ─────────────────────────────────────────────────
 
     private void sendTutorialMessage(Player player) {
         player.sendMessage("");

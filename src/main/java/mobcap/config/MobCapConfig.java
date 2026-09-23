@@ -32,12 +32,10 @@ public class MobCapConfig {
     }
 
     private void setupDefaults() {
-        // Configuración general
         config.addDefault("enabled", true);
         config.addDefault("base-mobcap", 70);
         config.addDefault("multiplier", "NORMAL");
 
-        // Optimización
         config.addDefault("optimization.enabled", true);
         config.addDefault("optimization.player-threshold", 20);
         config.addDefault("optimization.mobcap-threshold", 140);
@@ -46,13 +44,11 @@ public class MobCapConfig {
         config.addDefault("optimization.cleanup-distance", 32);
         config.addDefault("optimization.max-cleanup-per-cycle", 50);
 
-        // Spawn personalizado
         config.addDefault("custom-spawn.enabled", false);
         config.addDefault("custom-spawn.oval-pattern", true);
         config.addDefault("custom-spawn.closer-to-player", true);
         config.addDefault("custom-spawn.radius-multiplier", 0.8);
 
-        // Configuración de mobs individuales
         setupMobDefaults();
 
         config.options().copyDefaults(true);
@@ -60,7 +56,6 @@ public class MobCapConfig {
     }
 
     private void setupMobDefaults() {
-        // Configurar todos los mobs hostiles con spawn vanilla por defecto
         String[] hostileMobs = {
                 "ZOMBIE", "SKELETON", "CREEPER", "SPIDER", "ENDERMAN", "WITCH",
                 "SLIME", "MAGMA_CUBE", "GHAST", "BLAZE", "WITHER_SKELETON",
@@ -87,7 +82,6 @@ public class MobCapConfig {
         }
     }
 
-    // Getters para configuración general
     public boolean isEnabled() {
         return config.getBoolean("enabled", true);
     }
@@ -101,7 +95,6 @@ public class MobCapConfig {
         return MobCapMultiplier.fromString(multiplierStr);
     }
 
-    // Getters para optimización
     public boolean isOptimizationEnabled() {
         return config.getBoolean("optimization.enabled", true);
     }
@@ -130,7 +123,6 @@ public class MobCapConfig {
         return config.getInt("optimization.max-cleanup-per-cycle", 50);
     }
 
-    // Getters para spawn personalizado
     public boolean isCustomSpawnEnabled() {
         return config.getBoolean("custom-spawn.enabled", false);
     }
@@ -147,7 +139,6 @@ public class MobCapConfig {
         return config.getDouble("custom-spawn.radius-multiplier", 0.8);
     }
 
-    // Getters para configuración de mobs
     public SpawnMode getMobSpawnMode(EntityType entityType) {
         String mode = config.getString("mob-spawn-settings." + entityType.name().toLowerCase(), "vanilla");
         return SpawnMode.fromString(mode);
@@ -171,7 +162,6 @@ public class MobCapConfig {
         return modes;
     }
 
-    // Setters
     public void setEnabled(boolean enabled) {
         config.set("enabled", enabled);
         saveConfig();

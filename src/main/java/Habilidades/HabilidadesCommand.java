@@ -31,7 +31,6 @@ public class HabilidadesCommand implements CommandExecutor, TabCompleter {
             return true;
         }
 
-        // Subcomando: /habilidades list <jugador>
         if (args[0].equalsIgnoreCase("list")) {
             if (args.length != 2) {
                 sender.sendMessage(ChatColor.RED + "Uso: /habilidades list <jugador>");
@@ -46,7 +45,6 @@ public class HabilidadesCommand implements CommandExecutor, TabCompleter {
             return true;
         }
 
-        // Subcomandos admin: on / off
         if (args[0].equalsIgnoreCase("on") || args[0].equalsIgnoreCase("off")) {
             if (!sender.hasPermission("viciont.admin")) {
                 sender.sendMessage(ChatColor.RED + "No tienes permiso.");
@@ -59,7 +57,6 @@ public class HabilidadesCommand implements CommandExecutor, TabCompleter {
 
             String targetName = args[1];
 
-            // Lógica GLOBAL
             if (targetName.equalsIgnoreCase("global")) {
                 if (args[0].equalsIgnoreCase("off")) {
                     manager.setGlobalDisabled(true);
@@ -93,7 +90,6 @@ public class HabilidadesCommand implements CommandExecutor, TabCompleter {
             return true;
         }
 
-        // Comandos admin: add/remove <jugador> <tipo> <nivel>
         if (args[0].equalsIgnoreCase("add") || args[0].equalsIgnoreCase("remove")) {
             if (!sender.hasPermission("viciont.admin")) {
                 sender.sendMessage(ChatColor.RED + "No tienes permiso.");

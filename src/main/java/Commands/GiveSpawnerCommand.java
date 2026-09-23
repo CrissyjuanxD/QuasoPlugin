@@ -124,7 +124,6 @@ public class GiveSpawnerCommand implements CommandExecutor, TabCompleter {
                 return null;
             }
         } else {
-            // Inicializar con valores por defecto
             displayName = ChatColor.GRAY + "" + ChatColor.BOLD + "Spawner Custom";
             description = "Genera un mob personalizado";
             customModelData = 1000;

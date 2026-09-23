@@ -37,10 +37,6 @@ public class Estatua_Reward {
             golem.getAttribute(Attribute.SCALE).setBaseValue(2.0);
         }
 
-/*        if (golem.getEquipment() != null) {
-            golem.getEquipment().setItem(EquipmentSlot.SADDLE, new ItemStack(Material.TORCHFLOWER));
-        }*/
-
         golem.addPotionEffect(new PotionEffect(PotionEffectType.RESISTANCE, PotionEffect.INFINITE_DURATION, 200, false, false, false));
 
         golem.addScoreboardTag("reward_statue");

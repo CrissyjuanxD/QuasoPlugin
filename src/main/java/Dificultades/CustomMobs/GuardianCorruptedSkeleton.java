@@ -35,7 +35,6 @@ public class GuardianCorruptedSkeleton implements Listener {
     private final Random random = new Random();
     private static boolean eventsRegistered = false;
 
-    // --- OPTIMIZACIÓN ---
     private static final Set<UUID> activeSkeletons = new HashSet<>();
     private static BukkitTask aiTask;
 
@@ -99,11 +98,9 @@ public class GuardianCorruptedSkeleton implements Listener {
         return skeleton.getPersistentDataContainer().has(gcorruptedskelKey, PersistentDataType.BYTE);
     }
 
-    // --- TAREA CENTRALIZADA DE IA (Disparo de Cráneos) ---
     private void startAITask() {
         if (aiTask != null && !aiTask.isCancelled()) return;
 
-        // Ejecutar cada 60 ticks (3 segundos)
         aiTask = new BukkitRunnable() {
             @Override
             public void run() {
@@ -146,7 +143,6 @@ public class GuardianCorruptedSkeleton implements Listener {
         data.set(guardianProjectileKey, PersistentDataType.BYTE, (byte) 1);
         skull.setCustomName("Corrupted Skeleton Skull");
 
-        // Partículas del proyectil (tarea corta y temporal, aceptable)
         new BukkitRunnable() {
             @Override
             public void run() {

@@ -26,7 +26,6 @@ public class PortalManager implements Listener {
     private final JavaPlugin plugin;
     private final NamespacedKey PORTAL_KEY;
 
-    // Coordenadas fijas de entrada a la dimensión
     private static final int ENTRY_X = 1000;
     private static final int ENTRY_Z = 1500;
 
@@ -42,7 +41,6 @@ public class PortalManager implements Listener {
             @Override
             public void run() {
                 for (World world : Bukkit.getWorlds()) {
-                    // Escaneamos solo BlockDisplays para ahorrar recursos
                     for (Entity entity : world.getEntitiesByClass(BlockDisplay.class)) {
                         if (entity.getPersistentDataContainer().has(PORTAL_KEY, PersistentDataType.BYTE)) {
                             world.spawnParticle(Particle.DRAGON_BREATH, entity.getLocation().add(0, 0.2, 0), 3, 1.5, 0, 1.5, 0.02);
@@ -93,7 +91,6 @@ public class PortalManager implements Listener {
 
     @EventHandler
     public void onPlayerMove(PlayerMoveEvent e) {
-        // Optimización básica
         if (e.getFrom().getBlockX() == e.getTo().getBlockX() &&
                 e.getFrom().getBlockY() == e.getTo().getBlockY() &&
                 e.getFrom().getBlockZ() == e.getTo().getBlockZ()) return;
@@ -101,7 +98,6 @@ public class PortalManager implements Listener {
         Player p = e.getPlayer();
         if (p.hasMetadata("Teleporting")) return;
 
-        // En modo espectador no se puede usar el portal
         if (p.getGameMode() == GameMode.SPECTATOR) return;
 
         for (Entity ent : p.getNearbyEntities(2.5, 2.0, 2.5)) {
@@ -182,15 +178,10 @@ public class PortalManager implements Listener {
         p.playSound(p.getLocation(), Sound.BLOCK_PORTAL_TRAVEL, 0.5f, 1f);
     }
 
-    /**
-     * Punto de entrada fijo a la dimensión: siempre en X=1000, Z=1500,
-     * buscando la primera posición segura en vertical.
-     */
     public Location findSafeSpawn(World world) {
         int x = ENTRY_X;
         int z = ENTRY_Z;
 
-        // Escaneo vertical
         for (int y = 50; y < 110; y++) {
             if (world.getBlockAt(x, y, z).getType().isSolid() &&
                     !world.getBlockAt(x, y+1, z).getType().isSolid() &&
@@ -199,7 +190,7 @@ public class PortalManager implements Listener {
                 return new Location(world, x + 0.5, y + 1.0, z + 0.5);
             }
         }
-        // Fallback: si no se encontró hueco natural, se entrega la posición fija en altura segura
+
         return new Location(world, x + 0.5, 100, z + 0.5);
     }
 }

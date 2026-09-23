@@ -61,19 +61,11 @@ import java.util.Objects;
 
 public class QuasoPlugin extends JavaPlugin implements Listener {
 
-    // ------------------------------------------------------------------------
-    //  Constantes y estado básico
-    // ------------------------------------------------------------------------
-
     public String Prefix = "§9§lQua§c§lso§7§lPlugin &7➤ &f";
     public String Version;
     public static boolean shuttingDown = false;
 
     private static QuasoPlugin instance;
-
-    // ------------------------------------------------------------------------
-    //  Core / Dificultades principales / Juagdores
-    // ------------------------------------------------------------------------
 
     private DayHandler dayHandler;
     private NightmareMechanic nightmareMechanic;
@@ -100,23 +92,13 @@ public class QuasoPlugin extends JavaPlugin implements Listener {
 
     private GravesManager gravesManager;
 
-    // ------------------------------------------------------------------------
-    //  Sistemas de Misiones / Tiendas / Linterna
-    // ------------------------------------------------------------------------
-
     private MissionHandler missionHandler;
     private MissionRewardHandler missionRewardHandler;
-
-/*    private ShopHandler shopHandler;
-    private ShopCommand shopCommand;*/
 
     private AltarFunctions altarFunctions;
 
     private CasinoManager casinoManager;
 
-    // ------------------------------------------------------------------------
-    //  Corrupción Ansiosa / Tótems / Items
-    // ------------------------------------------------------------------------
     private DoubleLifeTotem doubleLifeTotemHandler;
     private NormalTotemHandler normalTotemHandler;
     private EconomyItemsFunctions economyItemsFunctions;
@@ -132,34 +114,18 @@ public class QuasoPlugin extends JavaPlugin implements Listener {
     private AmuletInvisibility amuletInvisibility;
     private ExplosiveBow explosiveBow;
 
-    // ------------------------------------------------------------------------
-    //  Ping / Sonidos / Spawners
-    // ------------------------------------------------------------------------
-
     private MobSoundManager mobSoundManager;
     private CustomSpawnerHandler customSpawnerHandler;
-
-    // ------------------------------------------------------------------------
-    //  Mobcap
-    // ------------------------------------------------------------------------
 
     private MobCapManager mobCapManager;
     private MobCapConfig config;
     private CustomSpawnManager spawnManager;
-
-    // ------------------------------------------------------------------------
-    //  Habilidades
-    // ------------------------------------------------------------------------
 
     private HabilidadesManager habilidadesManager;
     private HabilidadesGUI habilidadesGUI;
     private HabilidadesListener habilidadesListener;
     private HabilidadesEffects habilidadesEffects;
     private CustomItemRegistry customItemRegistry;
-
-    // ------------------------------------------------------------------------
-    //  Eventos
-    // ------------------------------------------------------------------------
 
     private EventoHandler eventoHandler;
     private AchievementPartyHandler achievementPartyHandler;
@@ -169,24 +135,15 @@ public class QuasoPlugin extends JavaPlugin implements Listener {
     private HotPotatoHandler hotPotatoHandler;
     private BuildBattleHandler buildBattleHandler;
 
-    // ------------------------------------------------------------------------
-    //  Mobs / Bosses / Entidades
-    // ------------------------------------------------------------------------
     private RemoveParticlesCreeper removeParticlesCreeper;
     private CorruptedZombies corruptedZombies;
     private CorruptedInfernalSpider corruptedinfernalSpider;
     private CustomBoat customBoat;
 
-    /*private HellishBeeHandler hellishBeeHandler;*/
     private InfestedBeeHandler infestedBeeHandler;
-    /*private QueenBeeHandler queenBeeHandler;*/
 
     private StatueManager statueManager;
     private StatueGUI statueGUI;
-
-    // ------------------------------------------------------------------------
-    //  Dimensiones
-    // ------------------------------------------------------------------------
 
     public static final String WORLD_NAME = "wardencave";
     private WardenGenerator generator;
@@ -194,10 +151,6 @@ public class QuasoPlugin extends JavaPlugin implements Listener {
     private WardenCaveListeners listeners;
     private WardenCaveAmbient wardenAmbient;
     private StructureManager structureManager;
-
-    // ------------------------------------------------------------------------
-    //  Inicipialización y apagado
-    // ------------------------------------------------------------------------
 
     @Override
     public void onEnable() {
@@ -245,19 +198,16 @@ public class QuasoPlugin extends JavaPlugin implements Listener {
                 ChatColor.translateAlternateColorCodes('&',
                         Prefix + "&aha sido deshabilitado!, &eVersion: " + Version));
 
-        // Apagar Nightmare
         if (nightmareMechanic != null) {
             nightmareMechanic.onDisableNightmare();
         } else {
             Bukkit.getLogger().severe("nightmareMechanic is null, cannot disable nightmare.");
         }
 
-        // MobCap
         if (config != null) {
             MobCapManager.getInstance(this, config).shutdown();
         }
 
-        // Sonidos
         if (mobSoundManager != null) {
             mobSoundManager.shutdown();
         }
@@ -274,19 +224,12 @@ public class QuasoPlugin extends JavaPlugin implements Listener {
             gravesManager.saveData();
         }
 
-        // Limpieza de bosses/abejas
         cleanupBossHandlers();
 
         Handlers.ToastHandler.cleanupToasts();
 
-        // if (corruptedEnd != null) corruptedEnd.shutdown();
-
         shuttingDown = true;
     }
-
-    // ------------------------------------------------------------------------
-    //  Inicialización por sistemas (onEnable)
-    // ------------------------------------------------------------------------
 
     private void logStartup() {
         Bukkit.getConsoleSender().sendMessage(
@@ -299,10 +242,8 @@ public class QuasoPlugin extends JavaPlugin implements Listener {
     }
 
     private void initCoreDayAndDeathStormSystem() {
-        // DayHandler
         dayHandler = new DayHandler(this);
 
-        // Comando cambio de día
         PluginCommand changeDayCommand = getCommand("cambiardia");
         if (changeDayCommand != null) {
             changeDayCommand.setExecutor(new DayCommandHandler(dayHandler));
@@ -314,7 +255,6 @@ public class QuasoPlugin extends JavaPlugin implements Listener {
     }
 
     private void initTiempoSystem() {
-        // Registrar el comando para el temporizador
         tiempoCommand = new TiempoCommand(this);
 
         Objects.requireNonNull(getCommand("timers")).setExecutor(tiempoCommand);
@@ -328,7 +268,6 @@ public class QuasoPlugin extends JavaPlugin implements Listener {
     }
 
     private void initItemsSystem() {
-        // Tótems protección de ítems Armor y Herramientas
         invulnerableItemProtection = new InvulnerableItemProtection(this);
         normalTotemHandler = new NormalTotemHandler(this);
         doubleLifeTotemHandler = new DoubleLifeTotem(this);
@@ -366,7 +305,6 @@ public class QuasoPlugin extends JavaPlugin implements Listener {
     }
 
     private void initMissionSystem() {
-        // Este maneja la lógica y los datos.
         this.missionHandler = new MissionHandler(this, databaseManager, dayHandler);
 
         MissionGUI missionGUI = new MissionGUI(this, missionHandler);
@@ -378,10 +316,8 @@ public class QuasoPlugin extends JavaPlugin implements Listener {
 
         Objects.requireNonNull(getCommand("missions")).setTabCompleter(missionCommands);
 
-        // 4. Registrar la recompensa (usando el MISMO handler)
         this.missionRewardHandler = new MissionRewardHandler(this, missionHandler);
 
-        // 5. Registrar los eventos (Listeners) DEL HANDLER ORIGINAL
         this.missionHandler.registerAllMissionListeners();
 
     }
@@ -396,11 +332,9 @@ public class QuasoPlugin extends JavaPlugin implements Listener {
     }
 
     private void initGeneralCommandsAndCustomSpawners() {
-        // spawnvct
         Objects.requireNonNull(this.getCommand("spawnqp"))
                 .setExecutor(new SpawnMobs(this, mobManager));
 
-        // Items generales
         ItemsCommands itemsCommands = new ItemsCommands(this, itemManager);
 
         Objects.requireNonNull(this.getCommand("giveqp")).setExecutor(itemsCommands);
@@ -412,7 +346,6 @@ public class QuasoPlugin extends JavaPlugin implements Listener {
         getCommand("setspawn").setExecutor(new SetSpawnCommand(this));
         getCommand("anuncio").setExecutor(new AnuncioCommand());
 
-        // Spawners custom
         customSpawnerHandler = new CustomSpawnerHandler(this, dayHandler);
         new GiveSpawnerCommand(this);
 
@@ -448,25 +381,20 @@ public class QuasoPlugin extends JavaPlugin implements Listener {
     }
 
     private void initAnimationAndTitleSystem() {
-        // Animaciones
         ruletaAnimation = new RuletaAnimation(this);
         misionAnimation = new MisionAnimation(this);
         eventoAnimation = new EventoAnimation(this);
         successNotif = new SuccessNotification(this);
 
-        // MuerteHandler
         MuerteHandler muertehandler = new MuerteHandler(this);
 
-        // Comandos de teleport / disco
         Objects.requireNonNull(this.getCommand("magictp")).setExecutor(new MagicTP(this));
 
         Bukkit.getPluginManager().registerEvents(muertehandler, this);
 
-        // Comandos de ruleta / muerte / bonus
         Objects.requireNonNull(this.getCommand("ruletaqp"))
                 .setExecutor(new RuletaCommand(ruletaAnimation));
 
-        // Listeners adicionales
         SnowballDamage snowballDamage1 = new SnowballDamage(this);
         Bukkit.getPluginManager().registerEvents(snowballDamage1, this);
 
@@ -474,10 +402,8 @@ public class QuasoPlugin extends JavaPlugin implements Listener {
     }
 
     private void initGameplaySystem() {
-        //Nightmare
         this.nightmareMechanic = new NightmareMechanic(this, tiempoCommand, successNotif);
 
-        //Efectos Custom
         this.effectManager = new CustomEffectManager();
 
         ConfusionEffect confusionEffect = new ConfusionEffect(this);
@@ -492,14 +418,12 @@ public class QuasoPlugin extends JavaPlugin implements Listener {
         this.effectPreventionListener = new EffectPreventionListener();
         getServer().getPluginManager().registerEvents(effectPreventionListener, this);
 
-        // Comandos
         NightmareCommand nightmareCommand = new NightmareCommand(this, nightmareMechanic);
         Objects.requireNonNull(this.getCommand("addnightmare")).setExecutor(nightmareCommand);
         Objects.requireNonNull(this.getCommand("removenightmare")).setExecutor(nightmareCommand);
         Objects.requireNonNull(this.getCommand("resetnightmarecooldown")).setExecutor(nightmareCommand);
         Objects.requireNonNull(this.getCommand("levelnightmare")).setExecutor(nightmareCommand);
 
-        //BubbleChat
         chatBubbleManager = new ChatBubbleManager(this);
 
         getServer().getPluginManager().registerEvents(chatBubbleManager, this);
@@ -578,7 +502,6 @@ public class QuasoPlugin extends JavaPlugin implements Listener {
         Bukkit.getPluginManager().registerEvents(hotPotatoHandler, this);
         Bukkit.getPluginManager().registerEvents(buildBattleHandler, this);
 
-        // Comandos de logros
         Objects.requireNonNull(this.getCommand("addlogro")).setExecutor(achievementCommands);
         Objects.requireNonNull(this.getCommand("addlogro")).setTabCompleter(achievementCommands);
         Objects.requireNonNull(this.getCommand("removelogro")).setExecutor(achievementCommands);
@@ -590,7 +513,6 @@ public class QuasoPlugin extends JavaPlugin implements Listener {
         getCommand("lavaclash").setExecutor(lavaCmd);
         getCommand("lavaclash").setTabCompleter(lavaCmd);
 
-        // ItemParty
         ItemPartyCommand itemPartyCmd = new ItemPartyCommand(itemPartyHandler);
         getCommand("itemparty").setExecutor(itemPartyCmd);
         getCommand("itemparty").setTabCompleter(itemPartyCmd);
@@ -608,13 +530,11 @@ public class QuasoPlugin extends JavaPlugin implements Listener {
 
         CustomItemRegistry.init(this, itemManager);
 
-        //Inicializar Shop System
         ShopManager shopManager = new ShopManager(this);
         ShopGUI shopGUI = new ShopGUI(shopManager);
         ShopCommands shopCommands = new ShopCommands(shopManager, shopGUI);
         ShopListeners shopListeners = new ShopListeners(shopManager, shopGUI);
 
-        //Registrar Eventos y Comandos
         getServer().getPluginManager().registerEvents(shopListeners, this);
         getCommand("spawnshop").setExecutor(shopCommands);
         getCommand("removeshop").setExecutor(shopCommands);
@@ -631,10 +551,7 @@ public class QuasoPlugin extends JavaPlugin implements Listener {
 
         removeParticlesCreeper = new RemoveParticlesCreeper(this);
         Bukkit.getPluginManager().registerEvents(removeParticlesCreeper, this);
-        //Booses
         infestedBeeHandler = new InfestedBeeHandler(this);
-        /*hellishBeeHandler = new HellishBeeHandler(this);*/
-        /*queenBeeHandler = new QueenBeeHandler(this);*/
 
         getServer().getPluginManager().registerEvents(new BossChunkListener(this), this);
         Objects.requireNonNull(getCommand("debugarena")).setExecutor(new DebugArenaCommand());
@@ -681,26 +598,19 @@ public class QuasoPlugin extends JavaPlugin implements Listener {
         getServer().getPluginManager().registerEvents(listeners, this);
         getServer().getPluginManager().registerEvents(portalManager, this);
 
-        // --- Comando único /wardencave <subcomandos> ---
         WardenCaveCommand wardenCommand = new WardenCaveCommand(this, portalManager);
         getCommand("wardencave").setExecutor(wardenCommand);
         getCommand("wardencave").setTabCompleter(wardenCommand);
 
-        // --- Ambiente simplificado (sonidos de cueva/warden + darkness aleatorio) ---
         this.wardenAmbient = new WardenCaveAmbient(this);
         getServer().getPluginManager().registerEvents(this.wardenAmbient, this);
 
-        // 5. Crear la dimensión
         createInfestedWorld();
         Bukkit.getScheduler().runTaskLater(this, () -> {
             structureManager.loadSchematics();
         }, 20L);
         getLogger().info("WardenCave ha sido habilitado correctamente.");
     }
-
-    // ------------------------------------------------------------------------
-    //  Metodos
-    // ------------------------------------------------------------------------
 
     private void cleanupBossHandlers() {
         if (infestedBeeHandler != null) {
@@ -712,30 +622,7 @@ public class QuasoPlugin extends JavaPlugin implements Listener {
             }
             infestedBeeHandler = null;
         }
-
-/*        if (hellishBeeHandler != null) {
-            try {
-                hellishBeeHandler.shutdown();
-                getLogger().info("HellishBeeHandler limpiado correctamente");
-            } catch (Exception e) {
-                getLogger().warning("Error al limpiar HellishBeeHandler: " + e.getMessage());
-            }
-            hellishBeeHandler = null;
-        }*/
-
-/*        if (queenBeeHandler != null) {
-            try {
-                queenBeeHandler.shutdown();
-                getLogger().info("QueenBeeHandler limpiado correctamente");
-            } catch (Exception e) {
-                getLogger().warning("Error al limpiar QueenBeeHandler: " + e.getMessage());
-            }
-            queenBeeHandler = null;
-        }*/
     }
-    // ------------------------------------------------------------------------
-    //  Eventos básicos (join / quit / world load)
-    // ------------------------------------------------------------------------
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
@@ -763,17 +650,12 @@ public class QuasoPlugin extends JavaPlugin implements Listener {
             creator.generator(generator);
             World world = creator.createWorld();
             if (world != null) {
-                // Evitar ciclo día/noche si quieres que sea oscuro siempre
                 world.setGameRule(org.bukkit.GameRules.ADVANCE_TIME, false);
-                world.setTime(18000); // Medianoche
+                world.setTime(18000);
                 getLogger().info("Dimensión " + WORLD_NAME + " cargada/creada.");
             }
         }
     }
-
-    // ------------------------------------------------------------------------
-    //  Getters útiles
-    // ------------------------------------------------------------------------
 
     public static QuasoPlugin getInstance() {
         return instance;

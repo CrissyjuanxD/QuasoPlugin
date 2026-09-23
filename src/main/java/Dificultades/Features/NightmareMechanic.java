@@ -33,7 +33,6 @@ public class NightmareMechanic implements Listener {
     private final TiempoCommand tiempoCommand;
     private final SuccessNotification successNotification;
 
-    // Pesadilla
     private final Map<UUID, Integer> levelUpAttempts = new HashMap<>();
     private final Map<UUID, Integer> nightmareLevel = new HashMap<>();
     private final Map<UUID, Long> lastNightmareTime = new HashMap<>();
@@ -43,17 +42,15 @@ public class NightmareMechanic implements Listener {
     private final Map<UUID, BukkitTask> soundTasksng = new HashMap<>();
     private final Map<UUID, BukkitTask> spawnTasks = new HashMap<>();
 
-    private static final int ATTEMPTS_NEEDED = 5;          // 4 intentos → 100%
+    private static final int ATTEMPTS_NEEDED = 5;
     private static final int MAX_LEVEL = 3;
 
-    // Duración aleatoria por pesadilla
-    private static final int MIN_DURATION_SECONDS = 3 * 60; // 3 minutos
-    private static final int MAX_DURATION_SECONDS = 5 * 60; // 5 minutos
+    private static final int MIN_DURATION_SECONDS = 3 * 60;
+    private static final int MAX_DURATION_SECONDS = 5 * 60;
 
-    // Cooldown para volver a tener pesadilla (p.ej. si se activa por cama)
-    private static final int COOLDOWN_SECONDS = 15 * 60;    // 15 minutos
+    private static final int COOLDOWN_SECONDS = 15 * 60;
 
-    private static final int SPAWN_INTERVAL = 15 * 20;      // ticks
+    private static final int SPAWN_INTERVAL = 15 * 20;
     private static final String NIGHTMARE_BOSSBAR_ID = "NightmareMode";
 
     private final Random random = new Random();
@@ -64,10 +61,6 @@ public class NightmareMechanic implements Listener {
         this.successNotification = successNotification;
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
-
-    // ===========================
-    //         GETTERS
-    // ===========================
 
     public boolean isInNightmare(UUID playerId) {
         return nightmareLevel.containsKey(playerId);
@@ -83,10 +76,6 @@ public class NightmareMechanic implements Listener {
         return elapsed >= COOLDOWN_SECONDS;
     }
 
-    // ===========================
-    //       EVENTOS
-    // ===========================
-
     @EventHandler
     public void onTotemUse(EntityResurrectEvent event) {
         if (!(event.getEntity() instanceof Player)) return;
@@ -94,15 +83,10 @@ public class NightmareMechanic implements Listener {
         Player player = (Player) event.getEntity();
         UUID playerId = player.getUniqueId();
 
-        // 👉 Ahora SOLO importa el tótem si el jugador YA está en Nightmare
         if (!isInNightmare(playerId)) return;
 
         increaseNightmareLevel(playerId);
     }
-
-    // ===========================
-    //    INICIAR / TERMINAR
-    // ===========================
 
     public void forceStartNightmare(UUID playerId, int level) {
         startNightmare(playerId, Math.max(1, Math.min(level, MAX_LEVEL)));
@@ -121,10 +105,6 @@ public class NightmareMechanic implements Listener {
         return MIN_DURATION_SECONDS + random.nextInt((MAX_DURATION_SECONDS - MIN_DURATION_SECONDS) + 1);
     }
 
-    /**
-     * Inicia la pesadilla para un jugador a un nivel concreto.
-     * Se llama tanto desde comandos como desde BedEvents.
-     */
     private void startNightmare(UUID playerId, int level) {
         Player player = Bukkit.getPlayer(playerId);
         if (player == null) return;
@@ -144,7 +124,6 @@ public class NightmareMechanic implements Listener {
 
         createBossBars(player, levelClamped, durationSeconds);
 
-        // Programar fin de la pesadilla
         BukkitTask endTask = new BukkitRunnable() {
             @Override
             public void run() {
@@ -153,7 +132,6 @@ public class NightmareMechanic implements Listener {
         }.runTaskLater(plugin, durationSeconds * 20L);
         nightmareTasks.put(playerId, endTask);
 
-        // Sonidos ambiente
         soundTasksng.put(playerId, new BukkitRunnable() {
             @Override
             public void run() {
@@ -163,7 +141,6 @@ public class NightmareMechanic implements Listener {
             }
         }.runTaskTimer(plugin, 0L, 20L));
 
-        // Spawneo de mobs
         spawnTasks.put(playerId, new BukkitRunnable() {
             @Override
             public void run() {
@@ -185,7 +162,6 @@ public class NightmareMechanic implements Listener {
         nightmareLevel.remove(playerId);
 
         if (player != null) {
-            // Quitar todos los efectos de la pesadilla
             player.removePotionEffect(PotionEffectType.DARKNESS);
             player.removePotionEffect(PotionEffectType.WEAVING);
             player.removePotionEffect(PotionEffectType.UNLUCK);
@@ -206,10 +182,6 @@ public class NightmareMechanic implements Listener {
         BukkitTask sp = spawnTasks.remove(playerId);
         if (sp != null) sp.cancel();
     }
-
-    // ===========================
-    //   EFECTOS Y NIVELES
-    // ===========================
 
     private double calculateLevelUpProbability(int attempts) {
         double perAttempt = 100.0 / ATTEMPTS_NEEDED;
@@ -257,22 +229,15 @@ public class NightmareMechanic implements Listener {
         }
     }
 
-    /**
-     * Aplica los efectos correspondientes al nivel actual de Nightmare.
-     * Todos con partículas visibles. No importa la duración real porque
-     * al finalizar Nightmare se eliminan manualmente.
-     */
     private void applyNightmareEffects(Player player, int level) {
-        int amplifierWind = 1; // Wind Charged II -> amplifier 1
+        int amplifierWind = 1;
         int durationTicks = MAX_DURATION_SECONDS * 20;
 
-        // Limpiar antes de aplicar
         player.removePotionEffect(PotionEffectType.DARKNESS);
         player.removePotionEffect(PotionEffectType.WEAVING);
         player.removePotionEffect(PotionEffectType.UNLUCK);
         player.removePotionEffect(PotionEffectType.WIND_CHARGED);
 
-        // Nivel 1: Darkness + Weaving
         player.addPotionEffect(new PotionEffect(
                 PotionEffectType.DARKNESS,
                 durationTicks,
@@ -292,7 +257,6 @@ public class NightmareMechanic implements Listener {
         ));
 
         if (level >= 2) {
-            // Unluck I
             player.addPotionEffect(new PotionEffect(
                     PotionEffectType.UNLUCK,
                     durationTicks,
@@ -304,7 +268,6 @@ public class NightmareMechanic implements Listener {
         }
 
         if (level >= 3) {
-            // Wind Charged II
             player.addPotionEffect(new PotionEffect(
                     PotionEffectType.WIND_CHARGED,
                     durationTicks,
@@ -316,18 +279,12 @@ public class NightmareMechanic implements Listener {
         }
     }
 
-    /**
-     * Permite cambiar el nivel manualmente (comando /levelnightmare).
-     * Si el jugador no está en pesadilla, la inicia en ese nivel.
-     * Si ya está, NO reinicia el tiempo, solo cambia el nivel y efectos.
-     */
     public void setNightmareLevel(UUID playerId, int newLevel) {
         int levelClamped = Math.max(1, Math.min(newLevel, MAX_LEVEL));
         Player player = Bukkit.getPlayer(playerId);
         if (player == null) return;
 
         if (!isInNightmare(playerId)) {
-            // Si no tiene Nightmare, la iniciamos directamente en ese nivel
             startNightmare(playerId, levelClamped);
             return;
         }
@@ -339,10 +296,6 @@ public class NightmareMechanic implements Listener {
         player.sendMessage(ChatColor.RED + "۞ El nivel de tu pesadilla ha sido ajustado a " +
                 ChatColor.DARK_RED + ChatColor.BOLD + "Nivel " + levelClamped);
     }
-
-    // ===========================
-    //       BOSSBARS
-    // ===========================
 
     private void createBossBars(Player player, int level, int durationSeconds) {
         endBossBars(player.getUniqueId());
@@ -391,10 +344,6 @@ public class NightmareMechanic implements Listener {
         int seconds = totalSeconds % 60;
         return String.format("00:%02d:%02d", minutes, seconds);
     }
-
-    // ===========================
-    //       MOBS PESADILLA
-    // ===========================
 
     private void spawnMonstersGradually(Player player, int level) {
         List<LivingEntity> monsters = spawnedMonsters.getOrDefault(player.getUniqueId(), new ArrayList<>());
@@ -532,10 +481,6 @@ public class NightmareMechanic implements Listener {
             }
         }
     }
-
-    // ===========================
-    //   MENSAJES GENERALES
-    // ===========================
 
     private void broadcastNightmareMessage(Player player) {
         String message = ChatColor.translateAlternateColorCodes('&',

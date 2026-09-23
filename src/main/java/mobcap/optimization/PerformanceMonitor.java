@@ -14,28 +14,23 @@ public class PerformanceMonitor {
     }
 
     private void updatePerformanceMetrics() {
-        // Calcular TPS aproximado
         long currentTime = System.currentTimeMillis();
         long timeDiff = currentTime - lastCheck;
-        if (timeDiff > 1000) { // Actualizar cada segundo
+        if (timeDiff > 1000) {
             try {
-                // Intentar obtener TPS del servidor (Paper/Spigot)
                 Object server = Bukkit.getServer();
                 if (server.getClass().getName().contains("CraftServer")) {
-                    // Aproximación básica del TPS
                     averageTPS = Math.min(20.0, 20.0 * (1000.0 / Math.max(timeDiff, 50)));
                 }
             } catch (Exception e) {
-                averageTPS = 20.0; // Valor por defecto si no se puede obtener
+                averageTPS = 20.0;
             }
             lastCheck = currentTime;
         }
 
-        // Memoria utilizada
         Runtime runtime = Runtime.getRuntime();
-        usedMemory = (runtime.totalMemory() - runtime.freeMemory()) / (1024 * 1024); // MB
+        usedMemory = (runtime.totalMemory() - runtime.freeMemory()) / (1024 * 1024);
 
-        // CPU usage aproximado (simplificado)
         cpuUsage = Math.min(100.0, (usedMemory / (double) (runtime.maxMemory() / (1024 * 1024))) * 100);
     }
 }

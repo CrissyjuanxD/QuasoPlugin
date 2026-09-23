@@ -1,165 +1,41 @@
 package Events.MissionSystem;
 
-import Handlers.ActionBarHandler;
-import TitleListener.SuccessNotification;
-import com.magmaguy.elitemobs.entitytracker.EntityTracker;
-import items.EconomyItems;
-import net.md_5.bungee.api.ChatColor;
-import org.bukkit.Material;
-import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Spider;
+import org.bukkit.entity.Zombie;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
-import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.EnchantmentStorageMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.util.ArrayList;
 import java.util.List;
 
-public class Mission17 implements Mission, Listener {
-    private final JavaPlugin plugin;
-    private final MissionHandler missionHandler;
-    private final SuccessNotification successNotification;
-    private final ActionBarHandler actionBarHandler;
+import static Events.MissionSystem.MissionRewards.*;
 
-    public Mission17(JavaPlugin plugin, MissionHandler missionHandler) {
-        this.plugin = plugin;
-        this.missionHandler = missionHandler;
-        this.successNotification = new SuccessNotification(plugin);
-        this.actionBarHandler = new ActionBarHandler(plugin);
+public class Mission17 extends BaseMission {
+
+    public Mission17(JavaPlugin plugin, MissionHandler handler) {
+        super(plugin, handler, 17, "Cazador de Corruptos", MissionDifficulty.DIFICIL, 18,
+                "Mata 25 Corrupted Zombies y 25 Corrupted Spiders. Salen en oleadas en las raids.");
+        counter("zombies", "Corrupted Zombies", 25);
+        counter("aranas", "Corrupted Spiders", 25);
     }
 
     @Override
-    public String getName() {
-        return "Elite Profesional";
+    protected List<List<ItemStack>> rewardItems() {
+        return of(custom("corrupted_steak", 32), custom("potion_haste_2", 3));
     }
 
-    @Override
-    public String getDescription() {
-        return "Mata a 40 Elite Endermans y\n40 Elite Creepers.";
-    }
+    @EventHandler
+    public void onKill(EntityDeathEvent event) {
+        LivingEntity entity = event.getEntity();
+        String key = null;
+        if (entity instanceof Zombie && MissionUtils.isMob(entity, MissionUtils.CORRUPTED_ZOMBIE)) key = "zombies";
+        else if (entity instanceof Spider && MissionUtils.isMob(entity, MissionUtils.CORRUPTED_SPIDER)) key = "aranas";
+        if (key == null) return;
 
-    @Override
-    public int getMissionNumber() {
-        return 17;
-    }
-
-    @Override
-    public List<ItemStack> getRewards() {
-        List<ItemStack> rewards = new ArrayList<>();
-
-        ItemStack coins = EconomyItems.createVithiumCoin();
-        coins.setAmount(20);
-
-        ItemStack sharpBook = new ItemStack(Material.ENCHANTED_BOOK);
-        EnchantmentStorageMeta meta = (EnchantmentStorageMeta) sharpBook.getItemMeta();
-        if (meta != null) {
-            meta.addStoredEnchant(Enchantment.SHARPNESS, 7, true);
-            sharpBook.setItemMeta(meta);
-        }
-
-        ItemStack goldenApples = new ItemStack(Material.GOLDEN_APPLE, 15);
-        ItemStack xpFill = new ItemStack(Material.EXPERIENCE_BOTTLE, 1);
-
-        for (int i = 0; i < 27; i++) {
-            if (i == 11) {
-                rewards.add(sharpBook);
-            } else if (i == 13) {
-                rewards.add(coins);
-            } else if (i == 15) {
-                rewards.add(goldenApples);
-            } else {
-                rewards.add(xpFill.clone());
-            }
-        }
-        return rewards;
-    }
-
-    @Override
-    public void initializePlayerData(String playerName) {}
-
-    @Override
-    public void checkCompletion(String playerName) {}
-
-    // Detecta endermans y creepers Elite (EliteMobs) y los cuenta por separado hasta 40
-    @EventHandler(priority = EventPriority.LOWEST)
-    public void onEliteDeath(EntityDeathEvent event) {
-        org.bukkit.entity.LivingEntity entity = event.getEntity();
-
-        boolean isEnderman = entity instanceof org.bukkit.entity.Enderman;
-        boolean isCreeper = entity instanceof org.bukkit.entity.Creeper;
-
-        if (!isEnderman && !isCreeper) return;
-
-        boolean isElite = false;
-
-        try {
-            if (EntityTracker.getEliteMobEntity(entity) != null) {
-                isElite = true;
-            }
-        } catch (Throwable ignored) {
-        }
-
-        if (!isElite && entity.getScoreboardTags().stream().anyMatch(tag -> tag.toLowerCase().contains("elitemob"))) {
-            isElite = true;
-        }
-
-        if (!isElite && entity.hasMetadata("EliteMob")) {
-            isElite = true;
-        }
-
-        if (!isElite) return;
-
-        Player killer = entity.getKiller();
-
-        if (killer == null && entity.getLastDamageCause() instanceof org.bukkit.event.entity.EntityDamageByEntityEvent damageEvent) {
-            if (damageEvent.getDamager() instanceof Player) {
-                killer = (Player) damageEvent.getDamager();
-            } else if (damageEvent.getDamager() instanceof org.bukkit.entity.Projectile proj) {
-                if (proj.getShooter() instanceof Player) {
-                    killer = (Player) proj.getShooter();
-                }
-            }
-        }
-
-        if (killer == null) return;
-
-        MissionData data = missionHandler.getData(killer, 17);
-        if (!data.isActive() || data.isCompleted()) return;
-
-        int endermen = data.getProgressInt("elite_endermen_killed");
-        int creepers = data.getProgressInt("elite_creepers_killed");
-        boolean updated = false;
-
-        if (isEnderman && endermen < 40) {
-            endermen++;
-            data.setProgressValue("elite_endermen_killed", endermen);
-            updated = true;
-        } else if (isCreeper && creepers < 40) {
-            creepers++;
-            data.setProgressValue("elite_creepers_killed", creepers);
-            updated = true;
-        }
-
-        if (updated) {
-            missionHandler.saveData(killer, 17, data);
-
-            if (endermen >= 40 && creepers >= 40) {
-                successNotification.showSuccess(killer);
-                missionHandler.completeMission(killer, 17);
-            } else {
-                String enderColor = endermen >= 40 ? ChatColor.GREEN.toString() : ChatColor.of("#FFA07A").toString();
-                String creeperColor = creepers >= 40 ? ChatColor.GREEN.toString() : ChatColor.of("#FFA07A").toString();
-
-                String msg = ChatColor.GOLD + "۞ " +
-                        ChatColor.of("#FFCC99") + "Elite Endermans: " + enderColor + endermen + ChatColor.of("#FFE4B5") + "/40" +
-                        ChatColor.GRAY + " | " +
-                        ChatColor.of("#FFCC99") + "Elite Creepers: " + creeperColor + creepers + ChatColor.of("#FFE4B5") + "/40";
-                actionBarHandler.sendActionBar(killer, msg);
-            }
-        }
+        Player killer = MissionUtils.killer(entity);
+        if (killer != null) add(killer, key, 1);
     }
 }

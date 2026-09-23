@@ -13,6 +13,9 @@ public abstract class InfestedMob {
     protected final JavaPlugin plugin;
     protected final NamespacedKey mobKey;
 
+    // Probabilidad de que cada mob infestado suelte su alma (la que va en la mejora de la armadura)
+    protected static final double SOUL_CHANCE = 0.07;
+
     public InfestedMob(JavaPlugin plugin, String keyName) {
         this.plugin = plugin;
         this.mobKey = new NamespacedKey(plugin, keyName);

@@ -1,6 +1,11 @@
 package Events.MissionSystem;
 
 import net.md_5.bungee.api.ChatColor;
+import net.md_5.bungee.api.chat.ClickEvent;
+import net.md_5.bungee.api.chat.ComponentBuilder;
+import net.md_5.bungee.api.chat.HoverEvent;
+import net.md_5.bungee.api.chat.TextComponent;
+import net.md_5.bungee.api.chat.hover.content.Text;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -11,18 +16,24 @@ import org.bukkit.util.StringUtil;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class MissionCommands implements CommandExecutor, TabCompleter {
+    private static final long RESET_WINDOW = 30_000;
+
     private final MissionHandler missionHandler;
     private final MissionGUI missionGUI;
+    // Quién pidió el reset y hasta cuándo puede confirmarlo
+    private final Map<String, Long> pendingReset = new HashMap<>();
 
     public MissionCommands(MissionHandler missionHandler, MissionGUI missionGUI) {
         this.missionHandler = missionHandler;
         this.missionGUI = missionGUI;
     }
 
-    // /misiones abre el menú; /missions es el de admin para activar, desactivar, dar y quitar misiones
+    // /misiones abre el menú; /missions es el de admin para activar, desactivar, dar, quitar y resetear misiones
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (label.equalsIgnoreCase("misiones")) {
@@ -45,72 +56,50 @@ public class MissionCommands implements CommandExecutor, TabCompleter {
                 return true;
             }
 
-            String subCommand = args[0].toLowerCase();
-
-            switch (subCommand) {
-                case "activar":
+            switch (args[0].toLowerCase()) {
+                case "activar" -> {
                     if (args.length != 2) {
-                        sender.sendMessage(ChatColor.RED + "Uso: /missions activar <número>");
-                        return true;
+                        sender.sendMessage(ChatColor.RED + "Uso: /missions activar <número|todas>");
+                    } else if (args[1].equalsIgnoreCase("todas")) {
+                        missionHandler.activateAll(sender);
+                    } else {
+                        Integer number = parseNumber(sender, args[1]);
+                        if (number != null) missionHandler.activateMission(sender, number);
                     }
-                    try {
-                        int missionNumber = Integer.parseInt(args[1]);
-                        missionHandler.activateMission(sender, missionNumber);
-                    } catch (NumberFormatException e) {
-                        sender.sendMessage(ChatColor.RED + "El número de misión debe ser válido.");
-                    }
-                    break;
-
-                case "desactivar":
+                }
+                case "desactivar" -> {
                     if (args.length != 2) {
-                        sender.sendMessage(ChatColor.RED + "Uso: /missions desactivar <número>");
-                        return true;
+                        sender.sendMessage(ChatColor.RED + "Uso: /missions desactivar <número|todas>");
+                    } else if (args[1].equalsIgnoreCase("todas")) {
+                        missionHandler.deactivateAll(sender);
+                    } else {
+                        Integer number = parseNumber(sender, args[1]);
+                        if (number != null) missionHandler.deactivateMission(sender, number);
                     }
-                    try {
-                        int missionNumber = Integer.parseInt(args[1]);
-                        missionHandler.deactivateMission(sender, missionNumber);
-                    } catch (NumberFormatException e) {
-                        sender.sendMessage(ChatColor.RED + "El número de misión debe ser válido.");
-                    }
-                    break;
-
-                case "complete":
+                }
+                case "complete" -> {
                     if (args.length != 3) {
                         sender.sendMessage(ChatColor.RED + "Uso: /missions complete <jugador> <número>");
-                        return true;
+                    } else {
+                        Integer number = parseNumber(sender, args[2]);
+                        if (number != null) missionHandler.addMissionToPlayer(sender, args[1], number);
                     }
-                    try {
-                        String playerName = args[1];
-                        int missionNumber = Integer.parseInt(args[2]);
-                        missionHandler.addMissionToPlayer(sender, playerName, missionNumber);
-                    } catch (NumberFormatException e) {
-                        sender.sendMessage(ChatColor.RED + "El número de misión debe ser válido.");
-                    }
-                    break;
-
-                case "remove":
+                }
+                case "remove" -> {
                     if (args.length != 3) {
                         sender.sendMessage(ChatColor.RED + "Uso: /missions remove <jugador> <número>");
-                        return true;
+                    } else {
+                        Integer number = parseNumber(sender, args[2]);
+                        if (number != null) missionHandler.removeMissionFromPlayer(sender, args[1], number);
                     }
-                    try {
-                        String playerName = args[1];
-                        int missionNumber = Integer.parseInt(args[2]);
-                        missionHandler.removeMissionFromPlayer(sender, playerName, missionNumber);
-                    } catch (NumberFormatException e) {
-                        sender.sendMessage(ChatColor.RED + "El número de misión debe ser válido.");
-                    }
-                    break;
-
-                case "savedata":
+                }
+                case "reset" -> handleReset(sender, args);
+                case "savedata" -> {
                     sender.sendMessage(ChatColor.YELLOW + "Forzando guardado de datos de misiones...");
                     missionHandler.autoSaveAll();
                     sender.sendMessage(ChatColor.GREEN + "Datos guardados exitosamente en la base de datos.");
-                    break;
-
-                default:
-                    sendHelpMenu(sender);
-                    break;
+                }
+                default -> sendHelpMenu(sender);
             }
             return true;
         }
@@ -118,12 +107,48 @@ public class MissionCommands implements CommandExecutor, TabCompleter {
         return false;
     }
 
+    private Integer parseNumber(CommandSender sender, String text) {
+        try {
+            return Integer.parseInt(text);
+        } catch (NumberFormatException e) {
+            sender.sendMessage(ChatColor.RED + "El número de misión debe ser válido.");
+            return null;
+        }
+    }
+
+    // Primero avisa lo que borra; recién con /missions reset confirmar (dentro de 30 segundos) lo hace
+    private void handleReset(CommandSender sender, String[] args) {
+        if (args.length >= 2 && args[1].equalsIgnoreCase("confirmar")) {
+            Long until = pendingReset.remove(sender.getName());
+            if (until == null || System.currentTimeMillis() > until) {
+                sender.sendMessage(ChatColor.RED + "No hay ningún reset pendiente o ya pasaron los 30 segundos. Usa /missions reset primero.");
+                return;
+            }
+            missionHandler.resetAll(sender);
+            return;
+        }
+
+        pendingReset.put(sender.getName(), System.currentTimeMillis() + RESET_WINDOW);
+        sender.sendMessage(ChatColor.RED + "⚠ " + ChatColor.of("#FFA07A") + "Esto desactiva todas las misiones y borra "
+                + ChatColor.RED + "todos" + ChatColor.of("#FFA07A") + " los datos de misiones de la base de datos (progreso, completadas y recompensas).");
+
+        if (sender instanceof Player player) {
+            TextComponent confirm = new TextComponent(ChatColor.RED + "" + ChatColor.BOLD + "[CONFIRMAR RESET]");
+            confirm.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/missions reset confirmar"));
+            confirm.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("Borra todo, no tiene vuelta atrás")));
+            player.spigot().sendMessage(new ComponentBuilder(ChatColor.GRAY + "Tienes 30 segundos: ").append(confirm).create());
+        } else {
+            sender.sendMessage(ChatColor.GRAY + "Escribe /missions reset confirmar en los próximos 30 segundos para continuar.");
+        }
+    }
+
     private void sendHelpMenu(CommandSender sender) {
         sender.sendMessage(ChatColor.GOLD + "=== Menú de Administración de Misiones ===");
-        sender.sendMessage(ChatColor.YELLOW + "/missions activar <número> " + ChatColor.GRAY + "- Activa una misión globalmente.");
-        sender.sendMessage(ChatColor.YELLOW + "/missions desactivar <número> " + ChatColor.GRAY + "- Desactiva una misión globalmente.");
+        sender.sendMessage(ChatColor.YELLOW + "/missions activar <número|todas> " + ChatColor.GRAY + "- Activa una misión (con sus extras) o todas.");
+        sender.sendMessage(ChatColor.YELLOW + "/missions desactivar <número|todas> " + ChatColor.GRAY + "- Desactiva una misión (con sus extras) o todas.");
         sender.sendMessage(ChatColor.YELLOW + "/missions complete <jugador> <número> " + ChatColor.GRAY + "- Completa forzosamente una misión a un jugador.");
         sender.sendMessage(ChatColor.YELLOW + "/missions remove <jugador> <número> " + ChatColor.GRAY + "- Reinicia la misión a un jugador.");
+        sender.sendMessage(ChatColor.YELLOW + "/missions reset " + ChatColor.GRAY + "- Desactiva todo y borra los datos de misiones (pide confirmación).");
         sender.sendMessage(ChatColor.YELLOW + "/missions savedata " + ChatColor.GRAY + "- Guarda los datos de todos a la Base de Datos.");
     }
 
@@ -133,22 +158,23 @@ public class MissionCommands implements CommandExecutor, TabCompleter {
 
         if (command.getName().equalsIgnoreCase("missions") || command.getName().equalsIgnoreCase("mission")) {
             if (args.length == 1) {
-                completions.addAll(Arrays.asList("activar", "desactivar", "complete", "remove", "savedata"));
-            }
-            else if (args.length == 2) {
+                completions.addAll(Arrays.asList("activar", "desactivar", "complete", "remove", "reset", "savedata"));
+            } else if (args.length == 2) {
                 String sub = args[0].toLowerCase();
                 if (sub.equals("activar") || sub.equals("desactivar")) {
-                    for (int i = 1; i <= 36; i++) completions.add(String.valueOf(i));
+                    completions.add("todas");
+                    for (int number : missionHandler.getMissions().keySet()) completions.add(String.valueOf(number));
                 } else if (sub.equals("complete") || sub.equals("remove")) {
                     for (Player player : org.bukkit.Bukkit.getOnlinePlayers()) {
                         completions.add(player.getName());
                     }
+                } else if (sub.equals("reset")) {
+                    completions.add("confirmar");
                 }
-            }
-            else if (args.length == 3) {
+            } else if (args.length == 3) {
                 String sub = args[0].toLowerCase();
                 if (sub.equals("complete") || sub.equals("remove")) {
-                    for (int i = 1; i <= 36; i++) completions.add(String.valueOf(i));
+                    for (int number : missionHandler.getMissions().keySet()) completions.add(String.valueOf(number));
                 }
             }
         }

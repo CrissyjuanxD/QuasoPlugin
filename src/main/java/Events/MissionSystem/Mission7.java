@@ -1,149 +1,40 @@
 package Events.MissionSystem;
 
-import Handlers.ActionBarHandler;
-import TitleListener.SuccessNotification;
-import items.CustomPotions;
-import items.EconomyItems;
-import net.md_5.bungee.api.ChatColor;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.World;
+import org.bukkit.entity.AbstractSkeleton;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Spider;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.util.*;
+import java.util.List;
 
-public class Mission7 implements Mission, Listener {
-    private final JavaPlugin plugin;
-    private final MissionHandler missionHandler;
-    private final SuccessNotification successNotification;
-    private final ActionBarHandler actionBarHandler;
+import static Events.MissionSystem.MissionRewards.*;
 
-    private final Map<UUID, Double> startYMap = new HashMap<>();
-    private final Set<UUID> failedAttempt = new HashSet<>();
+public class Mission7 extends BaseMission {
 
-    public Mission7(JavaPlugin plugin, MissionHandler missionHandler) {
-        this.plugin = plugin;
-        this.missionHandler = missionHandler;
-        this.successNotification = new SuccessNotification(plugin);
-        this.actionBarHandler = new ActionBarHandler(plugin);
+    public Mission7(JavaPlugin plugin, MissionHandler handler) {
+        super(plugin, handler, 7, "Elite Superior", MissionDifficulty.MEDIA, 15,
+                "Mata 25 Elite Spiders y 25 Elite Skeletons.");
+        counter("spiders", "Elite Spiders", 25);
+        counter("skeletons", "Elite Skeletons", 25);
     }
 
     @Override
-    public String getName() { return "Salto de fe ardiente"; }
-
-    @Override
-    public String getDescription() { return "Cae 200 bloques de altura en el Nether y sobrevive el impacto."; }
-
-    @Override
-    public int getMissionNumber() { return 7; }
-
-    @Override
-    public List<ItemStack> getRewards() {
-        List<ItemStack> rewards = new ArrayList<>();
-
-        ItemStack coins = EconomyItems.createVithiumCoin();
-        coins.setAmount(14);
-
-        ItemStack potion = CustomPotions.getSlowFallingPotion();
-        potion.setAmount(1);
-
-        ItemStack xpFill = new ItemStack(Material.EXPERIENCE_BOTTLE, 1);
-
-        for (int i = 0; i < 27; i++) {
-            if (i == 10 || i == 12 || i == 14) rewards.add(potion.clone());
-            else if (i == 16) rewards.add(coins);
-            else rewards.add(xpFill.clone());
-        }
-        return rewards;
+    protected List<List<ItemStack>> rewardItems() {
+        return of(custom("splash_regeneration_3", 3), item(Material.DIAMOND_BLOCK, 8));
     }
 
-    @Override
-    public void initializePlayerData(String playerName) {}
-
-    @Override
-    public void checkCompletion(String playerName) {}
-
-    // Guarda la altura desde donde empieza a caer; al aterrizar revisa si fueron 200 bloques y si no recibió daño de caída
-    @EventHandler
-    public void onMove(PlayerMoveEvent event) {
-        if (event.getFrom().getY() == event.getTo().getY()) return;
-
-        Player player = event.getPlayer();
-        if (player.getWorld().getEnvironment() != World.Environment.NETHER) return;
-
-        if (!missionHandler.isMissionActive(player, 7)) return;
-        if (missionHandler.isMissionCompleted(player, 7)) return;
-
-        UUID id = player.getUniqueId();
-
-        if (player.isGliding() || player.isFlying()) {
-            startYMap.remove(id);
-            return;
-        }
-
-        double currentY = event.getTo().getY();
-        double prevY = event.getFrom().getY();
-
-        boolean onGround = player.isOnGround();
-        Material locMat = player.getLocation().getBlock().getType();
-        Material belowMat = player.getLocation().subtract(0, 0.1, 0).getBlock().getType();
-
-        boolean isSafeBlock = locMat == Material.WATER || locMat == Material.LAVA || locMat == Material.COBWEB ||
-                locMat == Material.VINE || locMat == Material.TWISTING_VINES || locMat == Material.WEEPING_VINES ||
-                locMat == Material.LADDER || locMat == Material.SCAFFOLDING || locMat == Material.POWDER_SNOW ||
-                belowMat == Material.SLIME_BLOCK || belowMat == Material.HONEY_BLOCK ||
-                belowMat == Material.WATER || belowMat == Material.LAVA || locMat == Material.SWEET_BERRY_BUSH || belowMat == Material.SWEET_BERRY_BUSH;
-
-        if (!onGround && !isSafeBlock && currentY < prevY) {
-            startYMap.putIfAbsent(id, prevY);
-
-            double dist = startYMap.get(id) - currentY;
-            if (dist > 25) {
-                String color = dist >= 200 ? ChatColor.GREEN.toString() : ChatColor.of("#FFA07A").toString();
-                String msg = ChatColor.GOLD + "۞ " + ChatColor.of("#FFCC99") + "Caída: " + color + (int)dist + ChatColor.of("#FFE4B5") + "/200m";
-                actionBarHandler.sendActionBar(player, msg);
-            }
-        } else {
-            if (startYMap.containsKey(id)) {
-
-                double lowestPoint = Math.min(currentY, prevY);
-                double totalDist = startYMap.get(id) - lowestPoint;
-                startYMap.remove(id);
-
-                if (totalDist >= 200) {
-                    failedAttempt.remove(id);
-
-                    Bukkit.getScheduler().runTaskLater(plugin, () -> {
-
-                        if (!failedAttempt.contains(id) && player.isOnline() && !player.isDead()) {
-                            successNotification.showSuccess(player);
-                            String msg = ChatColor.GOLD + "۞ " + ChatColor.GREEN + "¡Salto de " + (int)totalDist + "m completado sin rasguños!";
-                            actionBarHandler.sendActionBar(player, msg);
-                            missionHandler.completeMission(player, 7);
-                        } else {
-                            String msg = ChatColor.GOLD + "۞ " + ChatColor.RED + "¡Fallaste! Recibiste daño al aterrizar.";
-                            actionBarHandler.sendActionBar(player, msg);
-                        }
-
-                        failedAttempt.remove(id);
-                    }, 2L);
-                }
-            }
-        }
-    }
-
-    @EventHandler
-    public void onDamage(EntityDamageEvent event) {
-        if (event.getEntity() instanceof Player player) {
-            if (event.getCause() == EntityDamageEvent.DamageCause.FALL) {
-                failedAttempt.add(player.getUniqueId());
-            }
-        }
+    @EventHandler(priority = EventPriority.LOWEST)
+    public void onKill(EntityDeathEvent event) {
+        LivingEntity entity = event.getEntity();
+        String key = entity instanceof Spider ? "spiders" : entity instanceof AbstractSkeleton ? "skeletons" : null;
+        if (key == null || !MissionUtils.isElite(entity)) return;
+        Player killer = MissionUtils.killer(entity);
+        if (killer != null) add(killer, key, 1);
     }
 }

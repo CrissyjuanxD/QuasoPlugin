@@ -1,109 +1,55 @@
 package Events.MissionSystem;
 
-import Handlers.ActionBarHandler;
-import TitleListener.SuccessNotification;
-import items.CustomPotions;
-import items.EconomyItems;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.block.Biome;
+import org.bukkit.NamespacedKey;
+import org.bukkit.Sound;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.entity.EntityDeathEvent;
+import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.util.ArrayList;
 import java.util.List;
 
-public class Mission19 implements Mission, Listener {
-    private final JavaPlugin plugin;
-    private final MissionHandler missionHandler;
-    private final SuccessNotification successNotification;
-    private final ActionBarHandler actionBarHandler;
+import static Events.MissionSystem.MissionRewards.*;
 
-    public Mission19(JavaPlugin plugin, MissionHandler missionHandler) {
-        this.plugin = plugin;
-        this.missionHandler = missionHandler;
-        this.successNotification = new SuccessNotification(plugin);
-        this.actionBarHandler = new ActionBarHandler(plugin);
+public class Mission19 extends BaseMission {
+    private final NamespacedKey markKey;
+
+    public Mission19(JavaPlugin plugin, MissionHandler handler) {
+        super(plugin, handler, 19, "Nervios de Acero", MissionDifficulty.DIFICIL, 19,
+                "Pégale con un proyectil a 4 Wardens y mátalos.");
+        counter("wardens", "Wardens", 4);
+        this.markKey = new NamespacedKey(plugin, "mission8_snowball_marker");
     }
 
     @Override
-    public String getName() { return "Vida Opaca"; }
-
-    @Override
-    public String getDescription() { return "Rompe 35 Creaking Hearts en un Pale Garden."; }
-
-    @Override
-    public int getMissionNumber() { return 19; }
-
-    @Override
-    public List<ItemStack> getRewards() {
-        List<ItemStack> rewards = new ArrayList<>();
-
-        ItemStack coins = EconomyItems.createVithiumCoin();
-        coins.setAmount(14);
-        ItemStack potion = CustomPotions.getSplashAbsorptionXPotion();
-        potion.setAmount(1);
-        ItemStack gapple = new ItemStack(Material.GOLDEN_APPLE, 20);
-        ItemStack xpFill = new ItemStack(Material.EXPERIENCE_BOTTLE, 1);
-
-        for (int i = 0; i < 27; i++) {
-            if (i == 10 || i == 11 || i == 12) {
-                rewards.add(potion.clone());
-            }
-            else if (i == 14) {
-                rewards.add(coins);
-            }
-            else if (i == 16) {
-                rewards.add(gapple);
-            }
-            else {
-                rewards.add(xpFill.clone());
-            }
-        }
-        return rewards;
+    protected List<List<ItemStack>> rewardItems() {
+        return of(item(Material.ENCHANTED_GOLDEN_APPLE, 5), item(Material.EMERALD_BLOCK, 20));
     }
 
-    @Override
-    public void initializePlayerData(String playerName) {}
-
-    @Override
-    public void checkCompletion(String playerName) {}
-
-    // Solo cuentan los corazones de creaking rotos dentro de un Pale Garden, y no sueltan nada
+    // Marca al Warden con el jugador que le pegó con el proyectil
     @EventHandler
-    public void onBlockBreak(BlockBreakEvent event) {
-        if (event.getBlock().getType() != Material.CREAKING_HEART) return;
-        if (event.getBlock().getBiome() != Biome.PALE_GARDEN) return;
+    public void onHit(ProjectileHitEvent event) {
+        if (event.getHitEntity() == null || event.getHitEntity().getType() != EntityType.WARDEN) return;
+        if (!(event.getEntity().getShooter() instanceof Player player) || !tracking(player)) return;
 
-        Player player = event.getPlayer();
-        if (!missionHandler.isMissionActive(player, 19)) return;
+        event.getHitEntity().getPersistentDataContainer().set(markKey, PersistentDataType.STRING, player.getUniqueId().toString());
+        sendBar(player, ChatColor.AQUA + "¡Warden marcado! Ahora elimínalo.");
+        player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1f, 2f);
+    }
 
-        MissionData data = missionHandler.getData(player, 19);
-        if (data.isCompleted()) return;
-
-        int broken = data.getProgressInt("hearts_broken");
-
-        if (broken < 35) {
-            broken++;
-            data.setProgressValue("hearts_broken", broken);
-            event.setDropItems(false);
-            missionHandler.saveData(player, 19, data);
-
-            if (broken >= 35) {
-                successNotification.showSuccess(player);
-                missionHandler.completeMission(player, 19);
-            } else {
-                String msg = ChatColor.GOLD + "۞ " +
-                        ChatColor.of("#FFCC99") + "Creaking Hearts: " +
-                        ChatColor.of("#FFA07A") + broken +
-                        ChatColor.of("#FFE4B5") + "/" +
-                        ChatColor.of("#FFA07A") + "35";
-                actionBarHandler.sendActionBar(player, msg);
-            }
-        }
+    // Solo cuenta si lo mata el mismo jugador que lo marcó
+    @EventHandler
+    public void onKill(EntityDeathEvent event) {
+        if (event.getEntityType() != EntityType.WARDEN) return;
+        Player killer = event.getEntity().getKiller();
+        if (killer == null) return;
+        String marked = event.getEntity().getPersistentDataContainer().get(markKey, PersistentDataType.STRING);
+        if (killer.getUniqueId().toString().equals(marked)) add(killer, "wardens", 1);
     }
 }

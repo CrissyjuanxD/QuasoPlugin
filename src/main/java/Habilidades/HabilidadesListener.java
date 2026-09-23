@@ -44,7 +44,7 @@ public class HabilidadesListener implements Listener {
             if (item != null && item.getType() == Material.KNOWLEDGE_BOOK && item.hasItemMeta()) {
                 if (item.getItemMeta().hasCustomModelData() && item.getItemMeta().getCustomModelData() == 9999) {
                     event.setCancelled(true);
-                    HabilidadesGUI gui = new HabilidadesGUI(plugin, manager, null);
+                    HabilidadesGUI gui = new HabilidadesGUI(plugin, manager);
                     gui.openHabilidadesGUI(event.getPlayer());
                 }
             }

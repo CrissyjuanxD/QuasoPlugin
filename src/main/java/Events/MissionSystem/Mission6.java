@@ -1,116 +1,117 @@
 package Events.MissionSystem;
 
-import Handlers.ActionBarHandler;
-import TitleListener.SuccessNotification;
-import items.CustomPotions;
-import items.EconomyItems;
 import net.md_5.bungee.api.ChatColor;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
-import org.bukkit.entity.*;
+import org.bukkit.block.Biome;
+import org.bukkit.entity.Enderman;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Mob;
+import org.bukkit.entity.PiglinAbstract;
+import org.bukkit.entity.Player;
+import org.bukkit.entity.Snowman;
+import org.bukkit.entity.Zoglin;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageByBlockEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
+import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitRunnable;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
-public class Mission6 implements Mission, Listener {
-    private final JavaPlugin plugin;
-    private final MissionHandler missionHandler;
-    private final SuccessNotification successNotification;
-    private final ActionBarHandler actionBarHandler;
+import static Events.MissionSystem.MissionRewards.*;
 
-    public Mission6(JavaPlugin plugin, MissionHandler missionHandler) {
-        this.plugin = plugin;
-        this.missionHandler = missionHandler;
-        this.successNotification = new SuccessNotification(plugin);
-        this.actionBarHandler = new ActionBarHandler(plugin);
+public class Mission6 extends BaseMission {
+    private final NamespacedKey friendKey;
+
+    public Mission6(JavaPlugin plugin, MissionHandler handler) {
+        super(plugin, handler, 6, "Los mejores amigos", MissionDifficulty.MEDIA, 13,
+                "Defiende 10 Snow Golems sin calabaza en un Warped Forest hasta que se derritan solos.");
+        counter("golems", "Golems derretidos", 10);
+        this.friendKey = new NamespacedKey(plugin, "mission_friend_snowman");
     }
 
     @Override
-    public String getName() { return "Cazador de Corruptos"; }
-
-    @Override
-    public String getDescription() { return "Mata a 30 Corrupted Zombies\ny 30 Corrupted Spiders.\nAparecen en oleadas en las raids con prob. muy baja."; }
-
-    @Override
-    public int getMissionNumber() { return 6; }
-
-    @Override
-    public List<ItemStack> getRewards() {
-        List<ItemStack> rewards = new ArrayList<>();
-
-        ItemStack coins = EconomyItems.createVithiumCoin();
-        coins.setAmount(18);
-
-        ItemStack potion = CustomPotions.getHasteIIPotion();
-        potion.setAmount(1);
-
-        ItemStack goldenApples = new ItemStack(Material.ENCHANTED_GOLDEN_APPLE, 4);
-
-        ItemStack xpFill = new ItemStack(Material.EXPERIENCE_BOTTLE, 1);
-
-        for (int i = 0; i < 27; i++) {
-            if (i == 10 || i == 11 || i == 12) rewards.add(potion.clone());
-            else if (i == 14) rewards.add(coins);
-            else if (i == 16) rewards.add(goldenApples);
-            else rewards.add(xpFill.clone());
-        }
-        return rewards;
+    protected List<List<ItemStack>> rewardItems() {
+        return of(custom("tarta_calabaza_mejorada", 8), item(Material.GOLDEN_APPLE, 5));
     }
 
-    @Override
-    public void initializePlayerData(String playerName) {}
-
-    @Override
-    public void checkCompletion(String playerName) {}
-
-    // Cuenta zombies y arañas corruptas por separado hasta 30 de cada uno
+    // En Warped Forest los golems no reciben daño de fuego ni calor, así solo se derriten con el daño de la misión
     @EventHandler
-    public void onEntityDeath(EntityDeathEvent event) {
-        Entity entity = event.getEntity();
-        Player killer = ((LivingEntity) entity).getKiller();
-        if (killer == null) return;
+    public void onEnvironmentDamage(EntityDamageEvent event) {
+        if (!(event.getEntity() instanceof Snowman snowman)) return;
+        if (!snowman.getLocation().getBlock().getBiome().equals(Biome.WARPED_FOREST)) return;
 
-        MissionData data = missionHandler.getData(killer, 6);
-        if (!data.isActive() || data.isCompleted()) return;
-
-        boolean isZ = entity instanceof Zombie && entity.getPersistentDataContainer().has(new NamespacedKey(plugin, "corrupted_zombie"), PersistentDataType.BYTE);
-        boolean isS = entity instanceof Spider && entity.getPersistentDataContainer().has(new NamespacedKey(plugin, "corruptedspider"), PersistentDataType.BYTE);
-
-        if (!isZ && !isS) return;
-
-        boolean updated = false;
-        int zKilled = data.getProgressInt("zombies_killed");
-        int sKilled = data.getProgressInt("spiders_killed");
-
-        if (isZ && zKilled < 30) {
-            zKilled++;
-            data.setProgressValue("zombies_killed", zKilled);
-            updated = true;
-        } else if (isS && sKilled < 30) {
-            sKilled++;
-            data.setProgressValue("spiders_killed", sKilled);
-            updated = true;
+        EntityDamageEvent.DamageCause cause = event.getCause();
+        if (cause == EntityDamageEvent.DamageCause.MELTING || cause == EntityDamageEvent.DamageCause.FIRE
+                || cause == EntityDamageEvent.DamageCause.FIRE_TICK || cause == EntityDamageEvent.DamageCause.LAVA
+                || isMagma(event)) {
+            event.setCancelled(true);
         }
+    }
 
-        if (updated) {
-            missionHandler.saveData(killer, 6, data);
+    // Desde la 26.2 la magma ya no da HOT_FLOOR, llega como CONTACT con el bloque
+    private boolean isMagma(EntityDamageEvent event) {
+        if (event.getCause() != EntityDamageEvent.DamageCause.CONTACT) return false;
+        if (!(event instanceof EntityDamageByBlockEvent byBlock) || byBlock.getDamager() == null) return false;
+        return byBlock.getDamager().getType() == Material.MAGMA_BLOCK;
+    }
 
-            if (zKilled >= 30 && sKilled >= 30) {
-                successNotification.showSuccess(killer);
-                missionHandler.completeMission(killer, 6);
-            } else {
-                String msg = ChatColor.GOLD + "۞ " +
-                        ChatColor.of("#FFCC99") + "Corr. Zombies: " + ChatColor.of("#FFA07A") + zKilled + ChatColor.of("#FFE4B5") + "/" + ChatColor.of("#FFA07A") + "30" +
-                        ChatColor.GRAY + " | " +
-                        ChatColor.of("#FFCC99") + "Corr. Arañas: " + ChatColor.of("#FFA07A") + sKilled + ChatColor.of("#FFE4B5") + "/" + ChatColor.of("#FFA07A") + "30";
-                actionBarHandler.sendActionBar(killer, msg);
+    // Al quitarle la calabaza el golem queda a cargo del jugador, atrae a los mobs del Nether y se va derritiendo
+    @EventHandler
+    public void onShearSnowman(PlayerInteractEntityEvent event) {
+        if (!(event.getRightClicked() instanceof Snowman snowman)) return;
+        Player player = event.getPlayer();
+        if (!tracking(player)) return;
+        if (player.getInventory().getItemInMainHand().getType() != Material.SHEARS) return;
+        if (!snowman.getLocation().getBlock().getBiome().equals(Biome.WARPED_FOREST)) return;
+        if (snowman.isDerp() || snowman.getPersistentDataContainer().has(friendKey, PersistentDataType.STRING)) return;
+
+        snowman.getPersistentDataContainer().set(friendKey, PersistentDataType.STRING, player.getUniqueId().toString());
+        sendBar(player, ChatColor.of("#FFCC99") + "¡Protege al Golem hasta que se derrita!");
+
+        new BukkitRunnable() {
+            int ticks = 0;
+
+            @Override
+            public void run() {
+                if (!snowman.isValid() || snowman.isDead()) {
+                    cancel();
+                    return;
+                }
+                for (Entity nearby : snowman.getNearbyEntities(15, 15, 15)) {
+                    if ((nearby instanceof Enderman || nearby instanceof PiglinAbstract || nearby instanceof Zoglin)
+                            && nearby instanceof Mob mob && !(mob.getTarget() instanceof Snowman)) {
+                        mob.setTarget(snowman);
+                    }
+                }
+                if (ticks % 6 == 0) {
+                    snowman.setMetadata("custom_melt", new FixedMetadataValue(plugin, true));
+                    snowman.damage(1.0);
+                }
+                ticks++;
             }
-        }
+        }.runTaskTimer(plugin, 10L, 10L);
+    }
+
+    // Solo cuenta si el golem murió derretido por la misión
+    @EventHandler
+    public void onSnowmanDeath(EntityDeathEvent event) {
+        if (!(event.getEntity() instanceof Snowman snowman)) return;
+        String owner = snowman.getPersistentDataContainer().get(friendKey, PersistentDataType.STRING);
+        if (owner == null) return;
+
+        EntityDamageEvent damage = snowman.getLastDamageCause();
+        if (damage == null || damage.getCause() != EntityDamageEvent.DamageCause.CUSTOM || !snowman.hasMetadata("custom_melt")) return;
+
+        Player player = Bukkit.getPlayer(UUID.fromString(owner));
+        if (player != null) add(player, "golems", 1);
     }
 }

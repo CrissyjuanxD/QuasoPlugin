@@ -1,7 +1,6 @@
 package Dificultades.CustomMobs;
 
 import Dificultades.Features.MobSoundManager;
-import Handlers.DayHandler;
 import items.CorruptedMobItems;
 import org.bukkit.*;
 import org.bukkit.attribute.Attribute;
@@ -21,13 +20,11 @@ import java.util.Objects;
 
 public class CorruptedSpider implements Listener {
     private final JavaPlugin plugin;
-    private final DayHandler dayHandler;
     private final NamespacedKey corrupedtedspiderKey;
     private static boolean eventsRegistered = false;
 
-    public CorruptedSpider(JavaPlugin plugin, DayHandler dayHandler) {
+    public CorruptedSpider(JavaPlugin plugin) {
         this.plugin = plugin;
-        this.dayHandler = dayHandler;
         this.corrupedtedspiderKey = new NamespacedKey(plugin, "corruptedspider");
         MobSoundManager.register(
                 corrupedtedspiderKey,

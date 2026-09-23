@@ -1,7 +1,7 @@
 package Managers;
 
 import Armors.WardenArmor;
-import Dificultades.DayOneChanges;
+import Dificultades.OneChanges;
 import Habilidades.HabilidadesBook;
 import imp.crissyjuanxd.QuasoPlugin;
 import items.*;
@@ -66,13 +66,15 @@ public class ItemManager {
                 "potion_slow_falling", "splash_regeneration_3", "potion_haste_3", "potion_haste_2",
                 "splash_absorption_10", "frasco_de_velocidad", "amulet_bloodmoon", "amuleto_inmortalidad",
                 "life_campfire", "fuel_campfire", "special_totem", "cristal_hielo", "arco_hielo",
-                "happy_ghast_enchant", "tarta_calabaza_mejorada", "bar_tequila", "bar_margarita",
+                "happy_ghast_enchant", "happy_ghast_enchant_2", "perla_infinita", "retorno_warden", "tarta_calabaza_mejorada", "bar_tequila", "bar_margarita",
                 "bar_mezcal", "bar_pulque", "bar_cerveza", "bar_ron", "bar_vodka", "bar_whisky",
                 "bar_sake", "bar_ginebra", "bar_azulito", "bar_michelada", "manzana_vida", "pluma_levitacion",
 
                 "amuleto_invisiblidad", "arco_nivel1", "arco_nivel2", "arco_nivel3", "alma_infested_skeleton",
                 "alma_infested_ghast", "alma_infested_creeper", "alma_infested_cave_spider", "energia_warden",
-                "fragmento_profundo", "mineral_crudo_profundo", "lingote_profundo", "corazon_warden_boss",
+                "mineral_crudo_cian", "mineral_crudo_verde", "mineral_crudo_morado", "mineral_crudo_gris",
+                "fragmento_profundo_cian", "fragmento_profundo_verde", "fragmento_profundo_morado",
+                "fragmento_profundo_gris", "lingote_profundo", "corazon_warden_boss",
                 "mejora_casco_warden", "mejora_peto_warden", "mejora_pantalon_warden", "mejora_bota_warden",
 
                 "casco_warden", "peto_warden", "pantalon_warden", "bota_warden",
@@ -96,7 +98,7 @@ public class ItemManager {
 
         switch (itemName.toLowerCase()) {
             case "doubletotem": item = doubleLifeTotem.createDoubleLifeTotem(); break;
-            case "corrupted_steak": item = DayOneChanges.corruptedSteak(); break;
+            case "corrupted_steak": item = OneChanges.corruptedSteak(); break;
             case "corrupted_golden_apple": item = CorruptedGoldenApple.createCorruptedGoldenApple(); break;
             case "libro_habilidades": item = HabilidadesBook.createHabilidadesBook(); break;
             case "dinocoins": item = EconomyItems.createVithiumCoin(); break;
@@ -132,7 +134,10 @@ public class ItemManager {
             case "cristal_hielo": item = ItemsTotems.createIceCrystal(); break;
             case "arco_hielo": item = iceBowItem.createIceBow(); break;
             case "happy_ghast_enchant": item = happyGhastEnchant.createFastFlightBook(1); break;
-            case "tarta_calabaza_mejorada": item = DayOneChanges.improvedPumpkinPie(); break;
+            case "happy_ghast_enchant_2": item = happyGhastEnchant.createFastFlightBook(2); break;
+            case "perla_infinita": item = InfinitePearl.createPearl(); break;
+            case "retorno_warden": item = WardenReturnItem.create(); break;
+            case "tarta_calabaza_mejorada": item = OneChanges.improvedPumpkinPie(); break;
             case "bar_tequila": item = CustomPotions.getTequila(); break;
             case "bar_margarita": item = CustomPotions.getMargarita(); break;
             case "bar_mezcal": item = CustomPotions.getMezcal(); break;
@@ -157,8 +162,14 @@ public class ItemManager {
             case "alma_infested_creeper": item = infestedSoulsItems.createInfestedCreeperSoul(); break;
             case "alma_infested_cave_spider": item = infestedSoulsItems.createInfestedCaveSpiderSoul(); break;
             case "energia_warden": item = WardenCaveItems.createWardenEnergy(); break;
-            case "fragmento_profundo": item = WardenCaveItems.createDeepFragment(); break;
-            case "mineral_crudo_profundo": item = WardenCaveItems.createDeepRawOre(); break;
+            case "mineral_crudo_cian": item = WardenCaveItems.createRawOre(WardenCaveItems.Variant.CIAN); break;
+            case "mineral_crudo_verde": item = WardenCaveItems.createRawOre(WardenCaveItems.Variant.VERDE); break;
+            case "mineral_crudo_morado": item = WardenCaveItems.createRawOre(WardenCaveItems.Variant.MORADO); break;
+            case "mineral_crudo_gris": item = WardenCaveItems.createRawOre(WardenCaveItems.Variant.GRIS); break;
+            case "fragmento_profundo_cian": item = WardenCaveItems.createFragment(WardenCaveItems.Variant.CIAN); break;
+            case "fragmento_profundo_verde": item = WardenCaveItems.createFragment(WardenCaveItems.Variant.VERDE); break;
+            case "fragmento_profundo_morado": item = WardenCaveItems.createFragment(WardenCaveItems.Variant.MORADO); break;
+            case "fragmento_profundo_gris": item = WardenCaveItems.createFragment(WardenCaveItems.Variant.GRIS); break;
             case "lingote_profundo": item = WardenCaveItems.createDeepIngot(); break;
             case "corazon_warden_boss": item = WardenCaveItems.createWardenBossHeart(); break;
             case "mejora_casco_warden": item = wardenUpgrades.createHelmetWardenUpgrade(); break;

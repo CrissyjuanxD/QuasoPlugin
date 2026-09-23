@@ -63,6 +63,7 @@ public final class AncientCityLocator {
 
         Random rng = new Random(worldSeed ^ (cellX * 341873128712L) ^ (cellZ * 132897987541L));
         if (rng.nextInt(CHANCE) != 0) return null;
+        if (touchesAbyss(worldSeed, cellCenterX, cellCenterZ)) return null;
 
         int originX = cellCenterX - SIZE_X / 2;
         int originZ = cellCenterZ - SIZE_Z / 2;
@@ -72,15 +73,32 @@ public final class AncientCityLocator {
                 cellCenterX, cellCenterZ);
     }
 
+    // Las ciudades no van en el Abismo Flotante: abajo no hay suelo
+    private static boolean touchesAbyss(long worldSeed, int centerX, int centerZ) {
+        WardenBiomeMap map = WardenBiomeMap.forSeed(worldSeed);
+        int r = CLEAR_RADIUS;
+        int[][] points = {{0, 0}, {r, 0}, {-r, 0}, {0, r}, {0, -r}};
+        for (int[] p : points) {
+            if (map.biomeAt(centerX + p[0], centerZ + p[1]) == WardenBiome.ABISMO_FLOTANTE) return true;
+        }
+        return false;
+    }
+
     public static long cellOf(int blockCoord) {
         return Math.floorDiv(blockCoord, CELL_SIZE);
     }
 
     // Revisa la celda actual y las 8 de alrededor por si hay una ciudad que afecte a ese bloque
     public static CityInfo findCityNear(long worldSeed, int blockX, int blockZ) {
+        return findCityNear(worldSeed, blockX, blockZ, 0);
+    }
+
+    // Con margen: el generador busca desde el centro del chunk y necesita encontrar la ciudad aunque solo
+    // le toque una esquina; si no, ese chunk no se vacía y queda una pared recta en el borde
+    public static CityInfo findCityNear(long worldSeed, int blockX, int blockZ, double margin) {
         long ccx = cellOf(blockX);
         long ccz = cellOf(blockZ);
-        double maxDist = CLEAR_RADIUS + CLEAR_TRANSITION;
+        double maxDist = CLEAR_RADIUS + CLEAR_TRANSITION + margin;
 
         for (long dx = -1; dx <= 1; dx++) {
             for (long dz = -1; dz <= 1; dz++) {

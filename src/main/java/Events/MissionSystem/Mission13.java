@@ -1,122 +1,69 @@
 package Events.MissionSystem;
 
-import Handlers.ActionBarHandler;
-import TitleListener.SuccessNotification;
-import items.EconomyItems;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
-import org.bukkit.enchantments.Enchantment;
-import org.bukkit.entity.Bee;
-import org.bukkit.entity.Creeper;
+import org.bukkit.Sound;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Evoker;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDeathEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.EnchantmentStorageMeta;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.util.RayTraceResult;
 
-import java.util.ArrayList;
 import java.util.List;
 
-public class Mission13 implements Mission, Listener {
-    private final JavaPlugin plugin;
-    private final MissionHandler missionHandler;
-    private final SuccessNotification successNotification;
-    private final ActionBarHandler actionBarHandler;
+import static Events.MissionSystem.MissionRewards.*;
 
-    public Mission13(JavaPlugin plugin, MissionHandler missionHandler) {
-        this.plugin = plugin;
-        this.missionHandler = missionHandler;
-        this.successNotification = new SuccessNotification(plugin);
-        this.actionBarHandler = new ActionBarHandler(plugin);
+public class Mission13 extends BaseMission {
+    private final NamespacedKey spottedKey;
+
+    public Mission13(JavaPlugin plugin, MissionHandler handler) {
+        super(plugin, handler, 13, "¡Qué frialdad!", MissionDifficulty.MEDIA, 15,
+                "Mira a 6 Iceologers con el catalejo y mátalos.");
+        counter("iceologers", "Iceologers avistados", 6);
+        this.spottedKey = new NamespacedKey(plugin, "mission9_spyglass_marker");
     }
 
     @Override
-    public String getName() { return "Veneno Explosivo"; }
-
-    @Override
-    public String getDescription() { return "Mata 30 Corrupted Bees y 30 Bombitas."; }
-
-    @Override
-    public int getMissionNumber() { return 13; }
-
-    @Override
-    public List<ItemStack> getRewards() {
-        List<ItemStack> rewards = new ArrayList<>();
-        ItemStack coins = EconomyItems.createVithiumCoin();
-        coins.setAmount(18);
-        ItemStack goldenApples = new ItemStack(Material.ENCHANTED_GOLDEN_APPLE, 5);
-        ItemStack unBook = new ItemStack(Material.ENCHANTED_BOOK);
-        EnchantmentStorageMeta meta = (EnchantmentStorageMeta) unBook.getItemMeta();
-        if (meta != null) {
-            meta.addStoredEnchant(Enchantment.PROTECTION, 5, true);
-            unBook.setItemMeta(meta);
-        }
-        ItemStack xpFill = new ItemStack(Material.EXPERIENCE_BOTTLE, 3);
-        for (int i = 0; i < 27; i++) {
-            if (i == 11) rewards.add(goldenApples);
-            else if (i == 13) rewards.add(coins);
-            else if (i == 15) rewards.add(unBook);
-            else rewards.add(xpFill.clone());
-        }
-        return rewards;
+    protected List<List<ItemStack>> rewardItems() {
+        return of(custom("icetotem", 1), item(Material.ANCIENT_DEBRIS, 8));
     }
 
-    @Override
-    public void initializePlayerData(String playerName) {}
-
-    @Override
-    public void checkCompletion(String playerName) {}
-
-    // Cuenta abejas corruptas y Bombitas por separado hasta 30 de cada una
+    // Al mirar un Iceologer con el catalejo queda marcado para ese jugador
     @EventHandler
-    public void onEntityDeath(EntityDeathEvent event) {
+    public void onSpyglass(PlayerInteractEvent event) {
+        if (event.getAction() != Action.RIGHT_CLICK_AIR && event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
+        if (event.getItem() == null || event.getItem().getType() != Material.SPYGLASS) return;
+        Player player = event.getPlayer();
+        if (!tracking(player)) return;
+
+        RayTraceResult result = player.getWorld().rayTraceEntities(player.getEyeLocation(), player.getEyeLocation().getDirection(), 50,
+                entity -> entity instanceof Evoker && MissionUtils.isMob(entity, MissionUtils.ICEOLOGER));
+        if (result == null || result.getHitEntity() == null) return;
+
+        Entity iceologer = result.getHitEntity();
+        String id = player.getUniqueId().toString();
+        if (id.equals(iceologer.getPersistentDataContainer().get(spottedKey, PersistentDataType.STRING))) return;
+
+        iceologer.getPersistentDataContainer().set(spottedKey, PersistentDataType.STRING, id);
+        sendBar(player, ChatColor.AQUA + "¡Iceologer avistado! Ahora elimínalo.");
+        player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1f, 2f);
+    }
+
+    @EventHandler
+    public void onKill(EntityDeathEvent event) {
         Entity entity = event.getEntity();
-        Player killer = ((LivingEntity) entity).getKiller();
+        if (!MissionUtils.isMob(entity, MissionUtils.ICEOLOGER)) return;
+        Player killer = event.getEntity().getKiller();
         if (killer == null) return;
 
-        if (!missionHandler.isMissionActive(killer, 13)) return;
-
-        boolean isBee = entity instanceof Bee && entity.getPersistentDataContainer().has(new NamespacedKey(plugin, "corrupted_bee"), PersistentDataType.BYTE);
-        boolean isBombita = entity instanceof Creeper && entity.getPersistentDataContainer().has(new NamespacedKey(plugin, "bombita"), PersistentDataType.BYTE);
-
-        if (!isBee && !isBombita) return;
-
-        MissionData data = missionHandler.getData(killer, 13);
-        if (data.isCompleted()) return;
-
-        boolean updated = false;
-        int bees = data.getProgressInt("bees_killed");
-        int bombs = data.getProgressInt("bombitas_killed");
-
-        if (isBee && bees < 30) {
-            bees++;
-            data.setProgressValue("bees_killed", bees);
-            updated = true;
-        } else if (isBombita && bombs < 30) {
-            bombs++;
-            data.setProgressValue("bombitas_killed", bombs);
-            updated = true;
-        }
-
-        if (updated) {
-            missionHandler.saveData(killer, 13, data);
-
-            if (bees >= 30 && bombs >= 30) {
-                successNotification.showSuccess(killer);
-                missionHandler.completeMission(killer, 13);
-            } else {
-                String msg = ChatColor.GOLD + "۞ " +
-                        ChatColor.of("#FFCC99") + "Bees: " + ChatColor.of("#FFA07A") + bees + ChatColor.of("#FFE4B5") + "/" + ChatColor.of("#FFA07A") + "30" +
-                        ChatColor.GRAY + " | " +
-                        ChatColor.of("#FFCC99") + "Bombitas: " + ChatColor.of("#FFA07A") + bombs + ChatColor.of("#FFE4B5") + "/" + ChatColor.of("#FFA07A") + "30";
-                actionBarHandler.sendActionBar(killer, msg);
-            }
-        }
+        String marked = entity.getPersistentDataContainer().get(spottedKey, PersistentDataType.STRING);
+        if (killer.getUniqueId().toString().equals(marked)) add(killer, "iceologers", 1);
     }
 }

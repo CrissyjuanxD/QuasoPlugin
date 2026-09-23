@@ -1,0 +1,64 @@
+{
+  "has_precipitation": false,
+  "temperature": 0.5,
+  "downfall": 0.0,
+  "effects": {
+    "water_color": "#3b7a4b"
+  },
+  "attributes": {
+    "minecraft:visual/sky_color": "#2f7a34",
+    "minecraft:visual/fog_color": "#173d1c",
+    "minecraft:visual/water_fog_color": "#12301a",
+    "minecraft:visual/fog_start_distance": 8.0,
+    "minecraft:visual/fog_end_distance": 96.0,
+    "minecraft:visual/ambient_particles": [
+      {
+        "particle": {
+          "type": "minecraft:spore_blossom_air"
+        },
+        "probability": 0.006
+      }
+    ],
+    "minecraft:audio/background_music": {
+      "default": {
+        "sound": "minecraft:music.overworld.lush_caves",
+        "min_delay": 12000,
+        "max_delay": 24000
+      }
+    },
+    "minecraft:audio/ambient_sounds": {
+      "mood": {
+        "sound": "minecraft:ambient.cave",
+        "tick_delay": 6000,
+        "block_search_extent": 8,
+        "offset": 2.0
+      }
+    }
+  },
+  "carvers": [],
+  "features": [[], [], [], [], [], [], [], [], [], [], []],
+  "spawn_costs": {},
+  "spawners": {
+    "ambient": [],
+    "axolotls": [],
+    "creature": [],
+    "misc": [],
+    "monster": [
+      {
+        "type": "minecraft:cave_spider",
+        "weight": 60,
+        "minCount": 1,
+        "maxCount": 3
+      },
+      {
+        "type": "minecraft:zombie",
+        "weight": 40,
+        "minCount": 1,
+        "maxCount": 2
+      }
+    ],
+    "underground_water_creature": [],
+    "water_ambient": [],
+    "water_creature": []
+  }
+}

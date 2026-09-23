@@ -15,6 +15,7 @@ public class TeamsHandler {
         this.scoreboard = Bukkit.getScoreboardManager().getMainScoreboard();
     }
 
+    // Crea o actualiza todos los teams del server con su prefijo y color
     public void loadTeams() {
         for (TeamType type : TeamType.values()) {
             Team team = scoreboard.getTeam(type.getId());

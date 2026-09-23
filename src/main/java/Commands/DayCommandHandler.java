@@ -13,6 +13,7 @@ public class DayCommandHandler implements CommandExecutor {
         this.dayHandler = dayHandler;
     }
 
+    // /cambiardia <día> para admins y /dia para ver el día actual
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (label.equalsIgnoreCase("cambiardia") && args.length == 1) {

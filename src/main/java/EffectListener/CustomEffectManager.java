@@ -22,6 +22,7 @@ public class CustomEffectManager implements Listener {
         registeredEffects.remove(effectType);
     }
 
+    // Activa o quita el efecto custom cuando al jugador le ponen o le quitan la poción que lo dispara
     @EventHandler
     public void onPlayerPotionEffect(org.bukkit.event.entity.EntityPotionEffectEvent event) {
         if (!(event.getEntity() instanceof Player)) return;
@@ -64,6 +65,7 @@ public class CustomEffectManager implements Listener {
         playersWithEffects.remove(player.getUniqueId());
     }
 
+    // Al entrar vuelve a activar los efectos custom si todavía tiene la poción
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();

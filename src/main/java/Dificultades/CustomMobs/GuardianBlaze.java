@@ -72,6 +72,7 @@ public class GuardianBlaze implements Listener {
         }
     }
 
+    // Blaze más grande y lento que pega fuerte cuerpo a cuerpo
     public void spawnGuardianBlaze(Location location) {
         World world = location.getWorld();
         if (world == null) return;
@@ -120,6 +121,7 @@ public class GuardianBlaze implements Listener {
         }.runTaskTimer(plugin, 0L, 10L);
     }
 
+    // Persigue al jugador más cercano y cada 8 segundos hace un ataque especial
     private void processBlazeAI(Blaze blaze) {
         Player target = getClosestPlayer(blaze, 20);
         if (target != null) {
@@ -147,6 +149,7 @@ public class GuardianBlaze implements Listener {
         }
     }
 
+    // 3 rondas de bolas de fuego en fila contra los que tenga a la vista
     private void launchHorizontalFireballAttack(Blaze blaze) {
         List<Player> targets = getPlayersInLineOfSight(blaze, 20);
         if (targets.isEmpty()) return;
@@ -194,6 +197,7 @@ public class GuardianBlaze implements Listener {
         }
     }
 
+    // Anillo de fuego que se expande y quema a los jugadores que toca
     private void spawnCircleParticles(Blaze blaze) {
         blaze.getWorld().playSound(blaze.getLocation(), Sound.ENTITY_BLAZE_AMBIENT, 1.5f, 0.7f);
         Set<Player> damagedPlayers = new HashSet<>();
@@ -311,6 +315,7 @@ public class GuardianBlaze implements Listener {
         }
     }
 
+    // 90% de soltar entre 1 y 3 netherite scrap
     @EventHandler
     public void onEntityDeath(EntityDeathEvent event) {
         if (event.getEntity() instanceof Blaze blaze && isGuardianBlaze(blaze)) {

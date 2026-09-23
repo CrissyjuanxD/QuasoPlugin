@@ -65,6 +65,7 @@ public class Mission20 implements Mission, Listener {
     @Override
     public void checkCompletion(String playerName) {}
 
+    // Solo cuentan los chilladores del Deep Dark, y no sueltan nada
     @EventHandler
     public void onBlockBreak(BlockBreakEvent event) {
         Block block = event.getBlock();

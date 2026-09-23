@@ -10,6 +10,7 @@ import org.bukkit.entity.Player;
 
 public class AnuncioCommand implements CommandExecutor {
 
+    // Manda el anuncio a todos con tellraw y un sonido
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!sender.hasPermission("ismanu.admin")) {

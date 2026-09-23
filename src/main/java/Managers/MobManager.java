@@ -96,6 +96,7 @@ public class MobManager {
         }
     }
 
+    // Spawnea cualquier mob custom por su nombre (lo usa /spawnqp)
     public boolean spawnMob(String mobType, Location location, Player targetPlayer, String variantArgs) {
         switch (mobType.toLowerCase()) {
             case "bombita": bombitaSpawner.spawnBombita(location); return true;
@@ -120,6 +121,7 @@ public class MobManager {
         }
     }
 
+    // Todavía no se usa: nadie llama a notifyEntitySpawned, así que siempre devuelve null
     public Entity spawnMobAndReturn(String mobType, Location location, Player targetPlayer, String variantArgs) {
         final Entity[] captured = {null};
 

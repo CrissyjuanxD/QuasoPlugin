@@ -26,6 +26,7 @@ public class FishingCommand implements CommandExecutor, TabCompleter {
         this.wandListener = wandListener;
     }
 
+    // give da la vara para marcar zonas, set la guarda, removezone la borra, reload recarga pesca.yml y list muestra las zonas
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (args.length == 0) {

@@ -24,6 +24,7 @@ public abstract class EnderMobs {
         this.mobKey = new NamespacedKey(plugin, keyName);
     }
 
+    // Registra el teleport al recibir daño y cada minuto hay 5% de que se tepeen solos
     public void apply() {
         if (!eventsRegistered) {
             Bukkit.getPluginManager().registerEvents(new Listener() {
@@ -78,6 +79,7 @@ public abstract class EnderMobs {
         }
     }
 
+    // Busca un lugar con suelo sólido y sin agua ni lava para el teleport
     private Location findSafeLocation(Location currentLoc, int radius) {
         World world = currentLoc.getWorld();
 

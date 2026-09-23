@@ -49,6 +49,7 @@ public class FishingListener implements Listener {
         this.itemManager = itemManager;
     }
 
+    // Al entrar a una zona de pesca manda el tutorial (máximo cada 20 segundos)
     @EventHandler
     public void onMove(PlayerMoveEvent event) {
         Location from = event.getFrom();
@@ -78,6 +79,7 @@ public class FishingListener implements Listener {
         }
     }
 
+    // En una zona de pesca, al picar algo se cancela la pesca normal y empieza el minijuego
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onFish(PlayerFishEvent event) {
         if (event.getState() != PlayerFishEvent.State.CAUGHT_FISH) return;
@@ -137,6 +139,7 @@ public class FishingListener implements Listener {
         }
     }
 
+    // Saltar o agacharse cuenta como el click del minijuego
     private boolean tryProcessMinigameClick(Player player) {
         FishingMiniGame game = activeGames.get(player.getUniqueId());
         if (game != null && !game.isFinished()) {
@@ -146,6 +149,7 @@ public class FishingListener implements Listener {
         return false;
     }
 
+    // Según el color donde paró: rojo da el loot normal, naranja 35% de loot especial y verde loot especial seguro
     private void handleGameResult(Player player, Location hookLoc) {
         FishingMiniGame game = activeGames.remove(player.getUniqueId());
         if (game == null) return;
@@ -183,6 +187,7 @@ public class FishingListener implements Listener {
         });
     }
 
+    // Como se cancela la pesca normal, el desgaste de la caña se hace a mano (respetando Irrompibilidad)
     private void applyFishingRodDamage(Player player) {
         ItemStack item = player.getInventory().getItemInMainHand();
         if (item.getType() != Material.FISHING_ROD) {

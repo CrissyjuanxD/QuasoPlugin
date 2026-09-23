@@ -69,6 +69,7 @@ public class Mission7 implements Mission, Listener {
     @Override
     public void checkCompletion(String playerName) {}
 
+    // Guarda la altura desde donde empieza a caer; al aterrizar revisa si fueron 200 bloques y si no recibió daño de caída
     @EventHandler
     public void onMove(PlayerMoveEvent event) {
         if (event.getFrom().getY() == event.getTo().getY()) return;

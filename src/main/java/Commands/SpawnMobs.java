@@ -27,6 +27,7 @@ public class SpawnMobs implements CommandExecutor, TabCompleter {
         plugin.getCommand("spawnqp").setTabCompleter(this);
     }
 
+    // El segundo argumento puede ser un jugador o la variante del mob; las coords siempre van al final
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (args.length < 1) {

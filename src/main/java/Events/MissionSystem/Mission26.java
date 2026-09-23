@@ -85,6 +85,7 @@ public class Mission26 implements Mission, Listener {
 
     public Set<Material> getRequiredBlocks() { return requiredBlocks; }
 
+    // Marca cada bloque de la lista roto con Fatiga Minera III o más
     @EventHandler
     public void onBlockBreak(BlockBreakEvent event) {
         Block block = event.getBlock();

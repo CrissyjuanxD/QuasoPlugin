@@ -84,6 +84,7 @@ public class Achievement2 implements Achievement, Listener {
         return requiredFlowers;
     }
 
+    // Va marcando en el archivo de logros cada flor que recoge el jugador
     @EventHandler
     public void onEntityPickupItem(EntityPickupItemEvent event) {
         if (!(event.getEntity() instanceof Player)) return;

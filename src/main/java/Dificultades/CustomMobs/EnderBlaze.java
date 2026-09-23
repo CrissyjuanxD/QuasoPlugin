@@ -75,6 +75,7 @@ public class EnderBlaze extends EnderMobs implements Listener {
         blaze.getPersistentDataContainer().set(mobKey, PersistentDataType.BYTE, (byte) 1);
     }
 
+    // Las bolas de fuego del Ender Blaze explotan más fuerte y dejan rastro de partículas
     @EventHandler
     public void onFireballLaunch(ProjectileLaunchEvent event) {
         if (!(event.getEntity() instanceof Fireball fireball)) return;
@@ -139,6 +140,7 @@ public class EnderBlaze extends EnderMobs implements Listener {
         activeMobs.remove(blaze.getUniqueId());
     }
 
+    // Partículas de portal y fuego para todos los Ender Blaze vivos
     private void startGlobalParticleTask() {
         if (particleTask != null && !particleTask.isCancelled()) return;
 

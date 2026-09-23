@@ -40,6 +40,7 @@ public class Homes implements CommandExecutor, TabCompleter, Listener {
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
 
+    // /sethome, /home y /delhome; máximo 10 homes por jugador y el tp tarda 5 segundos
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!(sender instanceof Player)) {
@@ -188,6 +189,7 @@ public class Homes implements CommandExecutor, TabCompleter, Listener {
         return Collections.emptyList();
     }
 
+    // Si le pegan mientras espera el tp se cancela
     @EventHandler
     public void onPlayerDamage(EntityDamageEvent event) {
         if (event.getEntity() instanceof Player) {
@@ -204,6 +206,7 @@ public class Homes implements CommandExecutor, TabCompleter, Listener {
         }
     }
 
+    // Si el jugador tenía el formato viejo (un solo home) lo pasa a 'base'
     private Set<String> getPlayerHomes(Player player) {
         String path = "Homes." + player.getName();
 

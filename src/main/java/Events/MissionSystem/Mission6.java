@@ -69,6 +69,7 @@ public class Mission6 implements Mission, Listener {
     @Override
     public void checkCompletion(String playerName) {}
 
+    // Cuenta zombies y arañas corruptas por separado hasta 30 de cada uno
     @EventHandler
     public void onEntityDeath(EntityDeathEvent event) {
         Entity entity = event.getEntity();

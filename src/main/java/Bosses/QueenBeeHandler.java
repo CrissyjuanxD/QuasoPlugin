@@ -76,6 +76,7 @@ public class QueenBeeHandler extends BaseBoss implements Listener {
 
     private final NamespacedKey musicKey;
 
+    // Si la abeja ya era boss (chunk recargado) recupera el centro de la arena guardado en su PDC
     public QueenBeeHandler(JavaPlugin plugin, Bee bee) {
         super(plugin, bee);
         this.bee = bee;
@@ -113,6 +114,7 @@ public class QueenBeeHandler extends BaseBoss implements Listener {
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
 
+    // Spawnea la Abeja Reina con sus stats y arranca la pelea
     public static QueenBeeHandler spawn(JavaPlugin plugin, Location center) {
         World world = center.getWorld();
         if (world == null) return null;
@@ -174,6 +176,7 @@ public class QueenBeeHandler extends BaseBoss implements Listener {
         iniciarFlujoMusica();
     }
 
+    // Elige el siguiente ataque; con menos de la mitad de vida ataca más rápido y puede regenerarse
     @Override
     protected void onTick() {
         if (isDying) return;
@@ -284,6 +287,7 @@ public class QueenBeeHandler extends BaseBoss implements Listener {
         return near;
     }
 
+    // Pone en bucle los discos de la pelea para los que estén cerca
     private void iniciarFlujoMusica() {
         PersistentDataContainer pdc = bee.getPersistentDataContainer();
 
@@ -361,6 +365,7 @@ public class QueenBeeHandler extends BaseBoss implements Listener {
         }
     }
 
+    // Hace de 1 a 3 ataques cuerpo a cuerpo y luego uno especial
     private void decideNextAttack() {
         if (getActivePlayers().isEmpty()) {
             bee.setTarget(null);
@@ -898,6 +903,7 @@ public class QueenBeeHandler extends BaseBoss implements Listener {
         }.runTaskTimer(plugin, 0L, 6L);
     }
 
+    // La reina se queda quieta y 4 tótems la curan hasta que los rompan
     private void startRegenerationPhase() {
         if (inRegenerationPhase) return;
         inRegenerationPhase = true;
@@ -1082,6 +1088,7 @@ public class QueenBeeHandler extends BaseBoss implements Listener {
         }
     }
 
+    // En vez de morir directo se queda con 1 de vida y arranca la animación de muerte
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onGenericDamage(EntityDamageEvent e) {
         if (!e.getEntity().equals(bee)) return;
@@ -1118,6 +1125,7 @@ public class QueenBeeHandler extends BaseBoss implements Listener {
         }
     }
 
+    // La maza no le hace daño, los proyectiles hacen la mitad y aquí se rompen los tótems
     @EventHandler
     public void onEntityDamage(EntityDamageByEntityEvent e) {
         Entity damaged = e.getEntity();
@@ -1256,6 +1264,7 @@ public class QueenBeeHandler extends BaseBoss implements Listener {
         }.runTaskTimer(plugin, 0L, 1L);
     }
 
+    // Da la recompensa según cuántas veces haya matado cada jugador a la reina
     private void finalizeDeath() {
         onDeath();
 

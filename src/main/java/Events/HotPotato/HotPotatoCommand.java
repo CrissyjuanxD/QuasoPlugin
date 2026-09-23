@@ -22,6 +22,7 @@ public class HotPotatoCommand implements CommandExecutor, TabCompleter {
         this.eventoHandler = eventoHandler;
     }
 
+    // Subcomandos de admin del HotPotato, todo lo hace el handler
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!sender.hasPermission("viciont_hardcore3.command.hotpotato")) {

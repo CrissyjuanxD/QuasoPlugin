@@ -78,6 +78,7 @@ public enum TeamType {
     public org.bukkit.ChatColor getBukkitColor() { return bukkitColor; }
     public String getPriority() { return priority; }
 
+    // Busca el tipo por el nombre del team (sin importar mayúsculas)
     public static TeamType getById(String id) {
         for (TeamType type : values()) {
             if (type.getId().equalsIgnoreCase(id)) return type;

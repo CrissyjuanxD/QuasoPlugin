@@ -17,6 +17,7 @@ public class SetSpawnCommand implements CommandExecutor {
         this.plugin = plugin;
     }
 
+    // Guarda el spawn en el config y también cambia el spawn vanilla del mundo
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!(sender instanceof Player)) {

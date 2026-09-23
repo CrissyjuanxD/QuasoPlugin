@@ -26,6 +26,7 @@ public class WardenPopulator extends BlockPopulator {
         this.plugin = plugin;
     }
 
+    // Espera a que los chunks vecinos estén generados antes de poner los árboles
     @Override
     public void populate(World world, Random random, Chunk chunk) {
         int chunkX = chunk.getX();
@@ -81,6 +82,7 @@ public class WardenPopulator extends BlockPopulator {
                 mat == Material.COARSE_DIRT;
     }
 
+    // Árbol de chorus convertido en vallas de warped y froglights; usa un mapa propio para que el generador vea los bloques que ya puso
     private void generateCustomTree(World world, Location location, Random random) {
         Material originalSoil = location.clone().subtract(0, 1, 0).getBlock().getType();
         location.clone().subtract(0, 1, 0).getBlock().setType(Material.END_STONE);

@@ -35,6 +35,7 @@ public class BossChunkListener implements Listener {
         }
     }
 
+    // Si se carga una Abeja Reina guardada en el mundo le vuelve a crear su handler
     private void checkAndRestoreBoss(Entity entity) {
         if (!(entity instanceof Bee bee)) return;
 

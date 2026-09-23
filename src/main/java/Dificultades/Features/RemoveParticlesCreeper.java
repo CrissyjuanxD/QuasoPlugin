@@ -14,6 +14,7 @@ public class RemoveParticlesCreeper implements Listener {
         this.plugin = plugin;
     }
 
+    // Le quita los efectos al creeper antes de explotar para que no deje la nube de partículas
     @EventHandler
     public void onCreeperExplode(EntityExplodeEvent event) {
         if (event.getEntity() instanceof Creeper creeper) {

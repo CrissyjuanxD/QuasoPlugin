@@ -21,6 +21,7 @@ public class FirstJoinHandler implements Listener {
         this.teamsHandler = teamsHandler;
     }
 
+    // La primera vez que entra lo registra en la base de datos y lo mete al team ZMiembro
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();

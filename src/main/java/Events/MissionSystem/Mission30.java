@@ -23,6 +23,7 @@ public class Mission30 implements Mission, Listener {
     private final SuccessNotification successNotification;
     private final ActionBarHandler actionBarHandler;
 
+    // Cada minuto cuenta las misiones completadas; al tener las 29 lo mete al team YMiembro
     public Mission30(JavaPlugin plugin, MissionHandler missionHandler) {
         this.plugin = plugin;
         this.missionHandler = missionHandler;

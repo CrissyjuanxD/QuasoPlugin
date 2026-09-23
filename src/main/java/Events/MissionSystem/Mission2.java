@@ -78,6 +78,7 @@ public class Mission2 implements Mission, Listener {
     @Override
     public void checkCompletion(String playerName) {}
 
+    // Solo cuentan los monstruos que mata mientras hay una Luna de Sangre
     @EventHandler
     public void onEntityDeath(EntityDeathEvent event) {
         if (!(event.getEntity() instanceof Monster)) return;

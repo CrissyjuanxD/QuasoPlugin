@@ -128,6 +128,7 @@ public class Iceologer implements Listener {
         }.runTaskTimer(plugin, 0L, 1L);
     }
 
+    // Según la distancia usa el arco de hielo, los colmillos, la esfera o la lluvia de bloques de hielo
     private void processIceologerAI(IceologerState state) {
         Evoker iceologer = state.entity;
 
@@ -161,6 +162,7 @@ public class Iceologer implements Listener {
         if (state.customFangsCooldown > 0) state.customFangsCooldown--;
     }
 
+    // Evoker con el arco de hielo, que no lo suelta al morir
     public Evoker spawnIceologer(Location location) {
         Evoker iceologer = (Evoker) location.getWorld().spawnEntity(location, EntityType.EVOKER);
         iceologer.setCustomName(ChatColor.AQUA + "" + ChatColor.BOLD + "Iceologer");
@@ -201,6 +203,7 @@ public class Iceologer implements Listener {
         iceAngel.getWorld().playSound(location, Sound.ENTITY_PLAYER_HURT_FREEZE, 1.0f, 0.8f);
     }
 
+    // Los vex que invoca un Iceologer se cambian por Ángeles de Hielo
     @EventHandler
     public void onVexSpawn(CreatureSpawnEvent event) {
         if (event.getEntityType() != EntityType.VEX) return;
@@ -236,6 +239,7 @@ public class Iceologer implements Listener {
         fangs.getWorld().playSound(fangs.getLocation(), Sound.ENTITY_PLAYER_HURT_FREEZE, 0.8f, 1.2f);
     }
 
+    // Línea de colmillos de hielo hasta el jugador
     private void performCustomFangsAttack(Evoker iceologer, LivingEntity target) {
         Location startLocation = iceologer.getLocation();
         Location targetLocation = target.getLocation();
@@ -334,6 +338,7 @@ public class Iceologer implements Listener {
         }
     }
 
+    // Esfera de hielo que persigue al jugador y lo congela al tocarlo
     private void performSpecialAttack(Evoker iceologer, Player player) {
         player.playSound(player.getLocation(), Sound.ENTITY_EVOKER_PREPARE_ATTACK, 10f, 2f);
         Location startLocation = player.getLocation().add(0, 10, 0);
@@ -418,6 +423,7 @@ public class Iceologer implements Listener {
         }
     }
 
+    // Hace caer 8 bloques de hielo alrededor de un jugador cercano
     private void performIceBlockAttack(Evoker iceologer) {
         if (random.nextInt(4) != 0) return;
         World world = iceologer.getWorld();
@@ -486,6 +492,7 @@ public class Iceologer implements Listener {
         }
     }
 
+    // No suelta tótem; siempre da un cristal de hielo y 10% de soltar el arco
     @EventHandler
     public void onIceologerDeath(EntityDeathEvent event) {
         if (event.getEntity() instanceof Evoker iceologer && iceologer.getPersistentDataContainer().has(iceologerKey, PersistentDataType.BYTE)) {

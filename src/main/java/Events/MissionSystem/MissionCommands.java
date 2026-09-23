@@ -22,6 +22,7 @@ public class MissionCommands implements CommandExecutor, TabCompleter {
         this.missionGUI = missionGUI;
     }
 
+    // /misiones abre el menú; /missions es el de admin para activar, desactivar, dar y quitar misiones
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (label.equalsIgnoreCase("misiones")) {

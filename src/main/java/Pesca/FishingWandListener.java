@@ -61,6 +61,7 @@ public class FishingWandListener implements Listener {
         return nombreLimpio.contains("Vara de Pesca");
     }
 
+    // Click izquierdo marca la POS1 y click derecho la POS2 de la zona
     @EventHandler
     public void onInteract(PlayerInteractEvent event) {
         if (event.getHand() == EquipmentSlot.OFF_HAND) return;

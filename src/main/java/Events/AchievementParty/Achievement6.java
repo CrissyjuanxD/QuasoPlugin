@@ -44,6 +44,7 @@ public class Achievement6 implements Achievement, Listener {
     public void checkCompletion(String playerName) {
     }
 
+    // Tiene que matar al Piglin Brute con hacha de oro y alguna pieza de armadura de oro
     @EventHandler
     public void onEntityDeath(EntityDeathEvent event) {
         if (!eventHandler.isEventActive()) return;

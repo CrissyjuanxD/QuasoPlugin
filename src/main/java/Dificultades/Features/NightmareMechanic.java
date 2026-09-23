@@ -76,6 +76,7 @@ public class NightmareMechanic implements Listener {
         return elapsed >= COOLDOWN_SECONDS;
     }
 
+    // Cada tótem usado durante la pesadilla sube la probabilidad de pasar al siguiente nivel
     @EventHandler
     public void onTotemUse(EntityResurrectEvent event) {
         if (!(event.getEntity() instanceof Player)) return;
@@ -105,6 +106,7 @@ public class NightmareMechanic implements Listener {
         return MIN_DURATION_SECONDS + random.nextInt((MAX_DURATION_SECONDS - MIN_DURATION_SECONDS) + 1);
     }
 
+    // Dura entre 3 y 5 minutos y cada 15 segundos spawnea monstruos cerca del jugador
     private void startNightmare(UUID playerId, int level) {
         Player player = Bukkit.getPlayer(playerId);
         if (player == null) return;
@@ -151,6 +153,7 @@ public class NightmareMechanic implements Listener {
         }.runTaskTimer(plugin, 0L, SPAWN_INTERVAL));
     }
 
+    // Quita los efectos, las barras y los monstruos que quedaron
     private void endNightmare(UUID playerId) {
         Player player = Bukkit.getPlayer(playerId);
 
@@ -188,6 +191,7 @@ public class NightmareMechanic implements Listener {
         return Math.min(100.0, perAttempt * attempts);
     }
 
+    // Cada intento suma 20% de probabilidad de subir de nivel
     private void increaseNightmareLevel(UUID playerId) {
         if (!isInNightmare(playerId)) return;
 
@@ -229,6 +233,7 @@ public class NightmareMechanic implements Listener {
         }
     }
 
+    // Oscuridad y weaving siempre, mala suerte desde el nivel 2 y wind charged en el nivel 3
     private void applyNightmareEffects(Player player, int level) {
         int amplifierWind = 1;
         int durationTicks = MAX_DURATION_SECONDS * 20;
@@ -345,6 +350,7 @@ public class NightmareMechanic implements Listener {
         return String.format("00:%02d:%02d", minutes, seconds);
     }
 
+    // Los monstruos salen más fuertes según el nivel de la pesadilla
     private void spawnMonstersGradually(Player player, int level) {
         List<LivingEntity> monsters = spawnedMonsters.getOrDefault(player.getUniqueId(), new ArrayList<>());
         World world = player.getWorld();
@@ -438,6 +444,7 @@ public class NightmareMechanic implements Listener {
         spawnedMonsters.put(player.getUniqueId(), monsters);
     }
 
+    // Busca un hueco de 2 bloques con suelo a 8-12 bloques del jugador
     private Location findSimpleSpawnLocation(Location playerLoc) {
         World world = playerLoc.getWorld();
         int radius = 8 + random.nextInt(5);

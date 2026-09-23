@@ -113,6 +113,7 @@ public class EventoHandler implements Listener {
         verificarEstadoEvento();
     }
 
+    // Crea lavaclashconfig.yml con los valores por defecto y lee el modo de ingreso, tiempos y la arena
     public void crearYcargarConfig() {
         configFile = new File(plugin.getDataFolder(), "lavaclashconfig.yml");
 
@@ -222,6 +223,7 @@ public class EventoHandler implements Listener {
         return participantes.contains(name);
     }
 
+    // Modo random: elige hasta 20 jugadores al azar. Modo block: los primeros 20 en romper el bloque elegido consiguen ticket
     public void iniciarEvento(boolean silencioso) {
         if (eventoActivo) return;
         eventoActivo = true;
@@ -354,6 +356,7 @@ public class EventoHandler implements Listener {
         }
     }
 
+    // Devuelve inventarios y teams, limpia la arena y restaura los cofres y los shroomlights
     public void terminarEvento() {
         guardarDatosFinales();
 
@@ -449,6 +452,7 @@ public class EventoHandler implements Listener {
         bordeReduciendose = false;
     }
 
+    // En modo block romper el bloque del evento da el Quaso Ticket y mete al jugador
     @EventHandler
     public void onBlockBreak(BlockBreakEvent event) {
         if (!eventoActivo || preparacion || participantes.size() >= MAX_PARTICIPANTES) return;
@@ -504,6 +508,7 @@ public class EventoHandler implements Listener {
         }
     }
 
+    // Después del timer guarda los cofres, desactiva habilidades, guarda inventarios y tepea a cada uno a un shroomlight
     private void teletransportarJugadores() {
         List<Location> shroomlightLocations = obtenerShroomlightLocations();
 
@@ -586,6 +591,7 @@ public class EventoHandler implements Listener {
         return offline;
     }
 
+    // Si falta alguien conectado el evento queda en pausa hasta que vuelvan todos
     private void iniciarMonitorPausa() {
         pauseMonitorTask = new BukkitRunnable() {
             @Override
@@ -637,6 +643,7 @@ public class EventoHandler implements Listener {
     }
 
 
+    // Cuenta regresiva, dificultad en hard al empezar y a los ~7 minutos la fase final con velocidad II
     private void ejecutarSecuenciaBatalla() {
         cancelarTareasActivas();
         getJugadoresEnZona().forEach(p -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "stopsound " + p.getName()));
@@ -715,6 +722,7 @@ public class EventoHandler implements Listener {
         }.runTaskTimer(plugin, 350, 20);
     }
 
+    // Da los kits, quita los shroomlights de spawn y arranca el borde y el daño fuera de él
     public void iniciarSkyBattle() {
         this.eventoEnCurso = true;
 
@@ -738,6 +746,7 @@ public class EventoHandler implements Listener {
         aplicarDanioFueraDelBorde();
     }
 
+    // Kit básico con armadura de cuero de un color distinto para cada jugador
     private void darKitBatalla(Player p, int colorIndex) {
         p.getInventory().clear();
         p.addPotionEffect(new PotionEffect(PotionEffectType.RESISTANCE, 200, 4));
@@ -789,6 +798,7 @@ public class EventoHandler implements Listener {
         }
         playNextSong();
     }
+    // La duración de cada canción se ajusta al pitch con el que suena
     private void playNextSong() {
         if (!eventoActivo) return;
 
@@ -970,6 +980,7 @@ public class EventoHandler implements Listener {
         taskBordeParticulas.runTaskTimer(plugin, 0L, 20L);
     }
 
+    // Cada cierto tiempo cierra el borde hacia el centro hasta dejarlo en 3x3
     private void iniciarReduccionBorde() {
         taskReduccionBorde = new BukkitRunnable() {
             @Override
@@ -1082,6 +1093,7 @@ public class EventoHandler implements Listener {
         taskReduccionBordeContinuo.runTaskTimer(plugin, 0L, 20L);
     }
 
+    // Tira sus items, le devuelve su inventario y le suma la kill al que lo mató
     private void procesarEliminacionJugador(Player jugador, Player atacante, String eliminado, String asesino) {
         jugador.setHealth(jugador.getAttribute(Attribute.MAX_HEALTH).getValue());
 
@@ -1157,6 +1169,7 @@ public class EventoHandler implements Listener {
         }
     }
 
+    // En la zona de espectadores no hay daño; en la partida la muerte se maneja a mano para no perder el inventario
     @EventHandler
     public void onEntityDamage(EntityDamageEvent event) {
         if (!eventoActivo || !(event.getEntity() instanceof Player)) return;
@@ -1202,6 +1215,7 @@ public class EventoHandler implements Listener {
         }
     }
 
+    // Saca el atacante del último daño (proyectiles, TNT y creepers incluidos)
     private Player getAtacante(Player jugador) {
         EntityDamageEvent lastDamage = jugador.getLastDamageCause();
         if (lastDamage instanceof EntityDamageByEntityEvent) {
@@ -1403,6 +1417,7 @@ public class EventoHandler implements Listener {
         }
     }
 
+    // Si el server se reinició con el evento activo lo termina para devolver todo
     private void verificarEstadoEvento() {
         if (!estadoArchivo.exists()) return;
 

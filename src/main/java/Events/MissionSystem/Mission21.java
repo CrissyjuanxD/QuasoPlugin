@@ -74,6 +74,7 @@ public class Mission21 implements Mission, Listener {
     @Override
     public void checkCompletion(String playerName) {}
 
+    // El tótem tiene que salvarlo del vacío (o de caer por debajo de Y -50 en el End)
     @EventHandler
     public void onResurrect(EntityResurrectEvent event) {
         if (event.isCancelled()) return;

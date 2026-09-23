@@ -93,6 +93,7 @@ public class MissionHandler implements Listener {
         plugin.getLogger().info("Sistema de misiones: Listeners registrados correctamente.");
     }
 
+    // Carga las misiones del jugador de la base de datos en async y las sincroniza con las activas globales
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {
         UUID uuid = event.getPlayer().getUniqueId();
@@ -132,6 +133,7 @@ public class MissionHandler implements Listener {
         });
     }
 
+    // Al salir guarda solo las misiones que cambiaron
     @EventHandler
     public void onQuit(PlayerQuitEvent event) {
         Player player = event.getPlayer();
@@ -157,6 +159,7 @@ public class MissionHandler implements Listener {
         playerCache.remove(uuid);
     }
 
+    // Si el jugador todavía no cargó devuelve una misión vacía e inactiva
     public MissionData getData(Player player, int missionId) {
         if (!playerCache.containsKey(player.getUniqueId())) {
             MissionData dummy = new MissionData();
@@ -181,6 +184,7 @@ public class MissionHandler implements Listener {
         data.setDirty(true);
     }
 
+    // Guarda en la base de datos todo lo que quedó pendiente en caché (cada 3 minutos y al apagar)
     public void autoSaveAll() {
         for (Map.Entry<UUID, Map<Integer, MissionData>> entry : playerCache.entrySet()) {
             UUID uuid = entry.getKey();
@@ -211,6 +215,7 @@ public class MissionHandler implements Listener {
         autoSaveAll();
     }
 
+    // Activa la misión para todos y lo anuncia con la animación
     public void activateMission(CommandSender sender, int missionNumber) {
         if (!missions.containsKey(missionNumber)) {
             sender.sendMessage(ChatColor.RED + "La misión " + missionNumber + " no existe.");
@@ -291,6 +296,7 @@ public class MissionHandler implements Listener {
         }
     }
 
+    // Marca la misión, le da la ficha para canjear la recompensa y lo anuncia a todos
     public boolean completeMission(String playerName, int missionNumber) {
         Player player = Bukkit.getPlayer(playerName);
         if (player == null) return false;
@@ -360,6 +366,7 @@ public class MissionHandler implements Listener {
         }
     }
 
+    // Ficha que se entrega en la Estatua de Recompensas para recibir el cofre
     public ItemStack createMissionToken(int missionNumber) {
         ItemStack token = new ItemStack(Material.POPPED_CHORUS_FRUIT);
         ItemMeta meta = token.getItemMeta();

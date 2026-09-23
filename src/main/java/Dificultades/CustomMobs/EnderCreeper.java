@@ -60,6 +60,7 @@ public class EnderCreeper extends EnderMobs implements Listener {
         return creeper;
     }
 
+    // Creeper cargado, invisible y rápido con explosión de radio 5
     private void applyAttributes(Creeper creeper) {
         creeper.setCustomName(ChatColor.LIGHT_PURPLE + "" + ChatColor.BOLD + "Ender Creeper");
         creeper.setCustomNameVisible(false);
@@ -75,6 +76,7 @@ public class EnderCreeper extends EnderMobs implements Listener {
         creeper.getPersistentDataContainer().set(mobKey, PersistentDataType.BYTE, (byte) 1);
     }
 
+    // Evita que un rayo lo transforme
     @EventHandler
     public void onTransform(EntityTransformEvent event) {
         if (event.getTransformReason() == EntityTransformEvent.TransformReason.LIGHTNING &&

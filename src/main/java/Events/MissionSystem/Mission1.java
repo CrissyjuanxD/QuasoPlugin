@@ -132,6 +132,7 @@ public class Mission1 implements Mission, Listener {
         }
     }
 
+    // Con toque de seda suelta el drop normal del mineral y cuenta hasta 10 de cada uno
     @EventHandler
     public void onBlockBreak(BlockBreakEvent event) {
         Player player = event.getPlayer();

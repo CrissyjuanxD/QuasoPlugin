@@ -29,6 +29,7 @@ public class EffectPreventionListener implements Listener {
         BLOCKED_EFFECTS.add(PotionEffectType.WEAVING);
     }
 
+    // Revisa los efectos custom y los del tipo base de la poción
     private boolean hasBlockedEffect(PotionMeta meta) {
         if (meta == null) return false;
 
@@ -73,6 +74,7 @@ public class EffectPreventionListener implements Listener {
         }
     }
 
+    // Borra del soporte las pociones con efectos bloqueados al terminar de destilar
     @EventHandler
     public void onBrew(BrewEvent event) {
         BrewerInventory inv = event.getContents();

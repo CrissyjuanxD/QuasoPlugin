@@ -81,6 +81,7 @@ public class MissionGUI implements Listener {
         return item;
     }
 
+    // El mapa con custom model data 9999 abre el menú de misiones
     @EventHandler
     public void onItemInteract(PlayerInteractEvent event) {
         if (event.getHand() != EquipmentSlot.HAND) return;
@@ -100,6 +101,7 @@ public class MissionGUI implements Listener {
         openMissionGUI(player, 1);
     }
 
+    // Menú paginado; cada item muestra si la misión está activa, completada y su progreso
     public void openMissionGUI(Player player, int page) {
         playerPages.put(player.getUniqueId(), page);
         Inventory gui = Bukkit.createInventory(null, 54, guiTitle + " - Pág " + page);
@@ -196,6 +198,7 @@ public class MissionGUI implements Listener {
         return item;
     }
 
+    // Agrega al lore el progreso detallado según qué misión es
     private void addMissionSpecificProgress(Mission mission, MissionData data, List<String> lore, Player player) {
         if (mission instanceof Mission1) {
             lore.add("");
@@ -475,6 +478,7 @@ public class MissionGUI implements Listener {
         }
     }
 
+    // Flechas para cambiar de página (dan la vuelta al llegar al final)
     @EventHandler
     public void onInventoryClick(InventoryClickEvent event) {
         if (event.getView().getTitle().startsWith(guiTitle)) {

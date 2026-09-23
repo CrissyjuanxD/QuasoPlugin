@@ -73,6 +73,7 @@ public class InfestedGhast extends InfestedMob implements Listener {
         ghast.getPersistentDataContainer().set(mobKey, PersistentDataType.BYTE, (byte) 1);
     }
 
+    // Bolas de fuego más fuertes con rastro de sonic boom
     @EventHandler
     public void onGhastFireball(ProjectileLaunchEvent event) {
         if (!(event.getEntity() instanceof Fireball fireball)) return;
@@ -97,6 +98,7 @@ public class InfestedGhast extends InfestedMob implements Listener {
         }.runTaskTimer(plugin, 0L, 1L);
     }
 
+    // Al explotar da oscuridad a los jugadores que estén a 25 bloques
     @EventHandler
     public void onFireballExplode(EntityExplodeEvent event) {
         if (!(event.getEntity() instanceof Fireball fireball)) return;

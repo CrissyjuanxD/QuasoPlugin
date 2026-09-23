@@ -70,6 +70,7 @@ public class CorruptedInfernalSpider implements Listener {
         applyCorruptedInfernalSpiderAttributes(spider);
     }
 
+    // Le da entre 3 y 5 efectos al azar de la lista
     private void applyCorruptedInfernalSpiderAttributes(Spider spider) {
         spider.setCustomName(ChatColor.RED + "" + ChatColor.BOLD + "Corrupted Infernal Spider");
         spider.setCustomNameVisible(true);
@@ -92,6 +93,7 @@ public class CorruptedInfernalSpider implements Listener {
         }
     }
 
+    // Si no te cubres te deja en una telaraña y prendido fuego
     @EventHandler
     public void onSpiderHit(EntityDamageByEntityEvent event) {
         if (event.getDamager() instanceof Spider spider && event.getEntity() instanceof Player player) {
@@ -105,6 +107,7 @@ public class CorruptedInfernalSpider implements Listener {
         }
     }
 
+    // Al fijar a un jugador tiene 20% de lanzarle una bola de fuego
     @EventHandler
     public void onSpiderTarget(EntityTargetEvent event) {
         if (event.getEntity() instanceof Spider spider && event.getTarget() instanceof Player) {

@@ -70,6 +70,7 @@ public class Mission9 implements Mission, Listener {
     @Override
     public void checkCompletion(String playerName) {}
 
+    // Al mirar un Iceologer con el catalejo queda marcado para ese jugador
     @EventHandler
     public void onSpyglassUse(PlayerInteractEvent event) {
         if (event.getAction() != Action.RIGHT_CLICK_AIR && event.getAction() != Action.RIGHT_CLICK_BLOCK) return;

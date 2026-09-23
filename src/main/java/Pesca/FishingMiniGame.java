@@ -38,6 +38,7 @@ public class FishingMiniGame {
 
     private static int globalOffset = 0;
 
+    // Cada partida arranca con el patrón de colores corrido para que no sea siempre igual
     public FishingMiniGame(QuasoPlugin plugin, Player player, ItemStack vanillaLoot, Runnable onComplete) {
         this.plugin = plugin;
         this.player = player;
@@ -68,6 +69,7 @@ public class FishingMiniGame {
         return failedByTime;
     }
 
+    // El cursor va y viene por la barra durante 5 segundos; si no hace click pierde
     public void start() {
         int tickSpeed = 1;
 
@@ -120,6 +122,7 @@ public class FishingMiniGame {
         return finished;
     }
 
+    // Dibuja la barra en la action bar: rojo falla, naranja normal y verde el mejor premio
     private void sendActionBar() {
         ComponentBuilder cb = new ComponentBuilder();
 

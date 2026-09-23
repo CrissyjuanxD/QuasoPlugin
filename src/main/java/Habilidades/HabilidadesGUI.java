@@ -44,6 +44,7 @@ public class HabilidadesGUI implements Listener {
         openHabilidadesGUI(player, 1);
     }
 
+    // Dos páginas: niveles 1-4 y 5-8 de cada habilidad
     public void openHabilidadesGUI(Player player, int page) {
         playerPages.put(player.getUniqueId(), page);
         Inventory gui = Bukkit.createInventory(null, 54, GUI_TITLE + " - Pág " + page);
@@ -317,6 +318,7 @@ public class HabilidadesGUI implements Listener {
         return 0;
     }
 
+    // Cobra XP, bloques y DinoCoins según el nivel y desbloquea la habilidad con la animación
     private void handleUnlock(Player player, HabilidadesType type, int level) {
         if (manager.hasHabilidadPurchased(player.getUniqueId(), type, level)) {
             player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_NO, 1f, 1f);
@@ -380,6 +382,7 @@ public class HabilidadesGUI implements Listener {
         return count >= amount;
     }
 
+    // Quita las DinoCoins de los stacks que haga falta hasta completar el monto
     private void removeDinoCoins(Player player, int amount) {
         int remaining = amount;
         ItemStack coinItem = EconomyItems.createVithiumCoin();

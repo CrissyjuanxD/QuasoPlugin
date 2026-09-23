@@ -63,6 +63,7 @@ public class AchievementCommands implements CommandExecutor, org.bukkit.command.
         return false;
     }
 
+    // En los logros de flores y bloques se puede marcar uno suelto o todos con 'all'
     private boolean handleAddAchievement(CommandSender sender, String achievementId, String playerName, String itemArg) {
         if (!achievementHandler.isEventActive()) {
             sender.sendMessage("§cNo hay ningún evento de logros activo!");
@@ -278,6 +279,7 @@ public class AchievementCommands implements CommandExecutor, org.bukkit.command.
         return true;
     }
 
+    // Igual que el add pero desmarcando; si deja de estar completo le resta el logro
     private boolean handleRemoveAchievement(CommandSender sender, String achievementId, String playerName, String itemArg) {
         if (!achievementHandler.isEventActive()) {
             sender.sendMessage("§cNo hay ningún evento de logros activo!");

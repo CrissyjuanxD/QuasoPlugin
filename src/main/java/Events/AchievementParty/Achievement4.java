@@ -43,6 +43,7 @@ public class Achievement4 implements Achievement, Listener {
     public void checkCompletion(String playerName) {
     }
 
+    // El logro se lo lleva el jugador más cercano que todavía no lo tenga
     @EventHandler
     public void onPiglinTransform(EntityTransformEvent event) {
         if (!eventHandler.isEventActive()) return;

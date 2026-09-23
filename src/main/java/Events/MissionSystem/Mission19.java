@@ -73,6 +73,7 @@ public class Mission19 implements Mission, Listener {
     @Override
     public void checkCompletion(String playerName) {}
 
+    // Solo cuentan los corazones de creaking rotos dentro de un Pale Garden, y no sueltan nada
     @EventHandler
     public void onBlockBreak(BlockBreakEvent event) {
         if (event.getBlock().getType() != Material.CREAKING_HEART) return;

@@ -30,6 +30,7 @@ public class EventInventoryManager implements Listener {
         this.isInEventCondition = condition;
     }
 
+    // Guarda el inventario en la base de datos antes de un evento y lo vacía
     public void saveAndClearInventory(Player player) {
         UUID uuid = player.getUniqueId();
         String name = player.getName();
@@ -48,6 +49,7 @@ public class EventInventoryManager implements Listener {
         });
     }
 
+    // Devuelve el inventario guardado y lo borra de la base de datos
     public void restoreInventory(Player player) {
         UUID uuid = player.getUniqueId();
 
@@ -71,6 +73,7 @@ public class EventInventoryManager implements Listener {
         });
     }
 
+    // Si se desconectó en un evento que ya terminó le devuelve el inventario al entrar
     @EventHandler(priority = EventPriority.LOW)
     public void onPlayerJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();

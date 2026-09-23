@@ -85,6 +85,7 @@ public class DayOneChanges implements Listener {
         this.upgradeKey = new NamespacedKey(plugin, "is_upgrade");
     }
 
+    // Activa todo lo del día 1: mobs corruptos, infestados y del End, la receta de la carne y la tarea de targets
     public void apply() {
         if (!isApplied) {
             Bukkit.getPluginManager().registerEvents(this, plugin);
@@ -111,6 +112,7 @@ public class DayOneChanges implements Listener {
         }
     }
 
+    // Deshace todo lo de apply(), se usa al bajar de día
     public void revert() {
         if (isApplied) {
             corruptedZombies.revert();
@@ -259,6 +261,7 @@ public class DayOneChanges implements Listener {
         }
     }
 
+    // Si cae al vacío del End con tótem en la mano lo mata para que salte el tótem y lo levita hacia arriba
     @EventHandler
     public void onPlayerVoidDamage(EntityDamageEvent event) {
         if (!isApplied) return;
@@ -295,6 +298,7 @@ public class DayOneChanges implements Listener {
         }
     }
 
+    // Durante la Luna de Sangre los monstruos pueden soltar fragmentos de sangre
     @EventHandler
     public void onBloodMoonMobKill(EntityDeathEvent event) {
         if (!isApplied) return;
@@ -328,6 +332,7 @@ public class DayOneChanges implements Listener {
         }
     }
 
+    // El altar de la Abeja Reina necesita Bad Omen y queda con 3 horas de cooldown
     @EventHandler
     public void onAltarActivate(AltarActivateEvent event) {
         if (!isApplied) return;
@@ -362,6 +367,7 @@ public class DayOneChanges implements Listener {
         return false;
     }
 
+    // Animación de partículas en el altar antes de que salga la reina
     private void spawnQueenBee(Location altarLocation) {
         World world = altarLocation.getWorld();
         if (world == null) return;
@@ -427,6 +433,7 @@ public class DayOneChanges implements Listener {
         }.runTaskTimer(plugin, 20L, 20L);
     }
 
+    // Cambia raiders por Bombitas, desde la 2da oleada mete Iceologers y a veces una horda de corruptos
     @EventHandler
     public void onRaidWaveSpawn(RaidSpawnWaveEvent event) {
         if (!isApplied) return;
@@ -485,6 +492,7 @@ public class DayOneChanges implements Listener {
         }
     }
 
+    // Los mobs que salen en la raid siempre van por el jugador más cercano o por un aldeano
     private void updateTargets() {
         Iterator<Map.Entry<LivingEntity, Long>> iterator = trackedMobs.entrySet().iterator();
         while (iterator.hasNext()) {

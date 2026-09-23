@@ -152,6 +152,7 @@ public class QuasoPlugin extends JavaPlugin implements Listener {
     private WardenCaveAmbient wardenAmbient;
     private StructureManager structureManager;
 
+    // Inicia todos los sistemas, el orden importa porque varios dependen de otros
     @Override
     public void onEnable() {
         instance = this;
@@ -192,6 +193,7 @@ public class QuasoPlugin extends JavaPlugin implements Listener {
         getLogger().info("DinoNuggetsSMP habilitado completamente.");
     }
 
+    // Guarda los datos y apaga los sistemas que tienen tareas o entidades activas
     @Override
     public void onDisable() {
         Bukkit.getConsoleSender().sendMessage(
@@ -477,6 +479,7 @@ public class QuasoPlugin extends JavaPlugin implements Listener {
         getLogger().info("Sistema de Habilidades habilitado correctamente!");
     }
 
+    // Eventos del server y el guardado de inventarios mientras alguien está en un evento
     private void initEventsSystem() {
         eventoHandler = new EventoHandler(this, habilidadesManager, habilidadesEffects);
         achievementPartyHandler = new AchievementPartyHandler(this);
@@ -644,6 +647,7 @@ public class QuasoPlugin extends JavaPlugin implements Listener {
         }
     }
 
+    // Crea o carga la dimensión WardenCave con su generador, siempre de noche
     public void createInfestedWorld() {
         if (Bukkit.getWorld(WORLD_NAME) == null) {
             WorldCreator creator = new WorldCreator(WORLD_NAME);

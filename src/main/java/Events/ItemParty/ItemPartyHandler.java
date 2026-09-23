@@ -102,6 +102,7 @@ public class ItemPartyHandler implements Listener {
 
     public void reloadConfig() { loadConfig(); }
 
+    // Copia los teams del scoreboard principal al del evento para no perder los prefijos
     private void syncTeamsToEventScoreboard() {
         if (eventScoreboard == null) return;
         Scoreboard mainBoard = Bukkit.getScoreboardManager().getMainScoreboard();
@@ -125,6 +126,7 @@ public class ItemPartyHandler implements Listener {
         }
     }
 
+    // Todos los conectados participan juntando el item configurado rompiendo bloques o matando mobs
     public void iniciarEvento() {
         if (eventoActivo) { Bukkit.broadcastMessage("§c¡El evento ya está activo!"); return; }
         if (Bukkit.getOnlinePlayers().size() < 2) {
@@ -143,7 +145,7 @@ public class ItemPartyHandler implements Listener {
         Objective oldObj = eventScoreboard.getObjective("itemparty");
         if (oldObj != null) oldObj.unregister();
 
-        Objective obj = eventScoreboard.registerNewObjective("itemparty", "dummy",
+        Objective obj = eventScoreboard.registerNewObjective("itemparty", Criteria.DUMMY,
                 Component.text("Fiesta de Items").color(TextColor.fromHexString("#ae52e3")).decorate(TextDecoration.BOLD));
         obj.setDisplaySlot(DisplaySlot.SIDEBAR);
 
@@ -199,6 +201,7 @@ public class ItemPartyHandler implements Listener {
         Bukkit.getScheduler().runTaskLater(plugin, this::terminarEvento, seconds * 20L);
     }
 
+    // Los últimos del ranking quedan chiquitos, lentos y débiles por 4 horas (safe_players decide cuántos se salvan)
     public void terminarEvento() {
         if (!eventoActivo) return;
         eventoActivo = false;
@@ -326,6 +329,7 @@ public class ItemPartyHandler implements Listener {
         savePlayersConfig();
     }
 
+    // Si el castigo sigue vigente se lo vuelve a poner con el tiempo que le queda
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {
         Player p = event.getPlayer();
@@ -502,6 +506,7 @@ public class ItemPartyHandler implements Listener {
         event.getEntity().getWorld().dropItemNaturally(event.getEntity().getLocation(), drop);
     }
 
+    // Solo cuentan los items del evento y cada uno cuenta una sola vez
     @EventHandler
     public void onPickup(EntityPickupItemEvent event) {
         if (!eventoActivo || !(event.getEntity() instanceof Player)) return;
@@ -530,6 +535,7 @@ public class ItemPartyHandler implements Listener {
         actualizarScoreboard();
     }
 
+    // Marca el item como del evento para que no se pueda contar dos veces
     private void tagAsEventItem(ItemStack is) {
         ItemMeta meta = is.getItemMeta();
         meta.getPersistentDataContainer().set(KEY_ORIGIN, PersistentDataType.BYTE, (byte)1);

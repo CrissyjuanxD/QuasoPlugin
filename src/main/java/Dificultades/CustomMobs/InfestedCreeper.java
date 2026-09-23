@@ -76,6 +76,7 @@ public class InfestedCreeper extends InfestedMob implements Listener {
         creeper.getPersistentDataContainer().set(mobKey, PersistentDataType.BYTE, (byte) 1);
     }
 
+    // La explosión no rompe bloques pero da oscuridad y veneno a los que estén a 15 bloques
     @EventHandler
     public void onExplode(EntityExplodeEvent event) {
         if (!isCustomMob(event.getEntity())) return;
@@ -111,6 +112,7 @@ public class InfestedCreeper extends InfestedMob implements Listener {
         event.setCancelled(true);
     }
 
+    // Con proyectiles no se le puede bajar de 18 de vida, hay que rematarlo cuerpo a cuerpo
     @EventHandler
     public void onProjectileHit(EntityDamageByEntityEvent event) {
         if (!isCustomMob(event.getEntity())) return;

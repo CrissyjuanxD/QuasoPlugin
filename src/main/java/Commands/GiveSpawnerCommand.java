@@ -103,6 +103,7 @@ public class GiveSpawnerCommand implements CommandExecutor, TabCompleter {
         return true;
     }
 
+    // Crea el item del spawner; el mob va guardado en el PDC y así lo lee CustomSpawnerHandler
     private ItemStack createCustomSpawner(String mobType) {
         ItemStack spawner = new ItemStack(Material.SPAWNER);
         ItemMeta meta = spawner.getItemMeta();

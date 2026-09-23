@@ -18,6 +18,7 @@ public class Grave {
     private final long expiryTime;
     private Inventory inventory;
 
+    // Los items van a un inventario de 54 slots, que es el que se abre al clickear la tumba
     public Grave(UUID id, UUID owner, String ownerName, Location location, long creationTime, long expiryTime, List<ItemStack> items) {
         this.id = id;
         this.owner = owner;

@@ -25,6 +25,7 @@ public class AltarActivateEvent extends Event implements Cancellable {
     public Location getLocation() { return location; }
     public String getAltarType() { return altarType; }
 
+    // El listener que maneja el altar decide cuánto cooldown le queda
     public void setCooldownSeconds(int seconds) {
         this.cooldownSeconds = seconds;
     }

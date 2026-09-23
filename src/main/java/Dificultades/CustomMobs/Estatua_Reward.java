@@ -16,8 +16,9 @@ public class Estatua_Reward {
 
     public static final String STATUE_NAME = ChatColor.of("#FFB347") + "" + ChatColor.BOLD + "Estatua de Recompensas";
 
+    // Golem de cobre gigante, quieto e invulnerable que hace de estatua de recompensas
     public static void spawn(Location loc) {
-        CopperGolem golem = (CopperGolem) loc.getWorld().spawnEntity(loc, EntityType.valueOf("COPPER_GOLEM"));
+        CopperGolem golem = (CopperGolem) loc.getWorld().spawnEntity(loc, EntityType.COPPER_GOLEM);
 
         golem.setAI(false);
         golem.setGravity(false);

@@ -35,6 +35,7 @@ public class ShopListeners implements Listener {
         this.shopGUI = shopGUI;
     }
 
+    // OP con shift abre la configuración (y si había una edición pendiente usa el item de la mano); si no, abre la tienda
     @EventHandler
     public void onInteract(PlayerInteractEntityEvent event) {
         if (!(event.getRightClicked() instanceof Villager)) return;
@@ -116,6 +117,7 @@ public class ShopListeners implements Listener {
         }
     }
 
+    // Cobra los ingredientes y da el producto; las mochilas se crean nuevas para que cada una tenga su propio id
     private void handleShopClick(Player player, int tradeIndex) {
         if (player.hasCooldown(Material.STRUCTURE_VOID)) return;
 
@@ -169,6 +171,7 @@ public class ShopListeners implements Listener {
         return EconomyItems.createNormalMochila();
     }
 
+    // Click derecho limpia el slot y click izquierdo lo deja en edición para /trade o el item de la mano
     private void handleConfigClick(Player player, InventoryClickEvent event, int tradeIndex, String typeStr) {
         String shopId = shopManager.activeShops.get(player.getUniqueId());
         if (shopId == null) {
@@ -255,6 +258,7 @@ public class ShopListeners implements Listener {
         }
     }
 
+    // Convierte el slot del menú en el número de tradeo y la columna (0 y 1 ingredientes, 2 flecha, 3 producto)
     private int[] getTradeSlotInfo(int slot) {
         if (slot < 9) return null;
         int col = slot % 9;
@@ -305,6 +309,7 @@ public class ShopListeners implements Listener {
         shopManager.editingSlotType.remove(event.getPlayer().getUniqueId());
     }
 
+    // Los aldeanos de tienda no reciben daño
     @EventHandler
     public void onDamage(EntityDamageEvent event) {
         if (event.getEntity() instanceof Villager) {
@@ -315,6 +320,7 @@ public class ShopListeners implements Listener {
         }
     }
 
+    // Si igual muere se borra del archivo
     @EventHandler
     public void onDeath(EntityDeathEvent event) {
         if (event.getEntity() instanceof Villager) {

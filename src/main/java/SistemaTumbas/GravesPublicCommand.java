@@ -16,6 +16,7 @@ public class GravesPublicCommand implements CommandExecutor, TabCompleter {
         this.manager = manager;
     }
 
+    // Sin argumentos lista tus tumbas y con el #id te tepea a esa tumba
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!(sender instanceof Player player)) return true;

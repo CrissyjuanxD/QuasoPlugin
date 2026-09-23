@@ -61,6 +61,7 @@ public class InfestedSkeleton extends InfestedMob implements Listener {
         return skeleton;
     }
 
+    // Arco con Power 7 que no se dropea, más resistencia y velocidad
     private void applyAttributes(Skeleton skeleton) {
         skeleton.setCustomName(ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "Infested Skeleton");
         skeleton.setCustomNameVisible(false);
@@ -84,6 +85,7 @@ public class InfestedSkeleton extends InfestedMob implements Listener {
         skeleton.getPersistentDataContainer().set(mobKey, PersistentDataType.BYTE, (byte) 1);
     }
 
+    // Las flechas dejan rastro y a veces también lanza un sonic boom al jugador más cercano
     @EventHandler
     public void onSkeletonShoot(EntityShootBowEvent event) {
         if (!isCustomMob(event.getEntity())) return;
@@ -110,6 +112,7 @@ public class InfestedSkeleton extends InfestedMob implements Listener {
         }
     }
 
+    // Las flechas además hacen daño instantáneo
     @EventHandler
     public void onArrowHit(EntityDamageByEntityEvent event) {
         if (!(event.getDamager() instanceof Arrow arrow)) return;

@@ -34,6 +34,7 @@ public class ComandoProteccion implements CommandExecutor {
         return true;
     }
 
+    // Libro con la guía de los comandos de protecciones
     private ItemStack crearLibroGuia() {
         ItemStack libro = new ItemStack(Material.WRITTEN_BOOK);
         BookMeta meta = (BookMeta) libro.getItemMeta();

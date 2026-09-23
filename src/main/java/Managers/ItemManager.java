@@ -90,6 +90,7 @@ public class ItemManager {
         return getItem(itemName, cantidad, target, -1);
     }
 
+    // Crea cualquier item custom del plugin por su nombre (lo usan /giveqp, el casino y las tiendas)
     public ItemStack getItem(String itemName, int cantidad, Player target, int usosEspeciales) {
         ItemStack item = null;
 

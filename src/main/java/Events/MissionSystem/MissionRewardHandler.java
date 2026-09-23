@@ -28,6 +28,7 @@ public class MissionRewardHandler implements Listener {
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
 
+    // Con una ficha de misión completada, la Estatua de Recompensas entrega el cofre con la animación
     @EventHandler
     public void onEntityInteract(PlayerInteractEntityEvent event) {
         if (event.getHand() != EquipmentSlot.HAND) return;
@@ -77,6 +78,7 @@ public class MissionRewardHandler implements Listener {
         missionHandler.saveData(player, missionNumber, data);
     }
 
+    // Las fichas usan custom model data 3000 + número de misión
     private boolean isMissionToken(ItemStack item) {
         if (item == null || item.getType() != Material.POPPED_CHORUS_FRUIT) return false;
         ItemMeta meta = item.getItemMeta();
@@ -256,6 +258,7 @@ public class MissionRewardHandler implements Listener {
         }
     }
 
+    // Cofre con las recompensas de la misión adentro
     private void giveRewardChest(Player player, int missionNumber) {
         Mission mission = missionHandler.getMissions().get(missionNumber);
         if (mission == null) return;

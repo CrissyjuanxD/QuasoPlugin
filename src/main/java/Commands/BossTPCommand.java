@@ -24,6 +24,7 @@ public class BossTPCommand implements CommandExecutor {
         this.missionHandler = missionHandler;
     }
 
+    // Solo funciona cuando la misión 10 está activa; tepea a la arena del boss después de 4 segundos
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!(sender instanceof Player)) {

@@ -36,6 +36,7 @@ public class PortalManager implements Listener {
         startParticleTask();
     }
 
+    // Partículas en todos los portales cada segundo
     private void startParticleTask() {
         new BukkitRunnable() {
             @Override
@@ -52,6 +53,7 @@ public class PortalManager implements Listener {
         }.runTaskTimer(plugin, 0L, 20L);
     }
 
+    // El portal es un BlockDisplay acostado de terracota morada marcado con el PDC
     public void spawnPortal(Location loc) {
         World world = loc.getWorld();
 
@@ -89,6 +91,7 @@ public class PortalManager implements Listener {
         }
     }
 
+    // Si el jugador pisa un portal empieza el teleport
     @EventHandler
     public void onPlayerMove(PlayerMoveEvent e) {
         if (e.getFrom().getBlockX() == e.getTo().getBlockX() &&
@@ -118,6 +121,7 @@ public class PortalManager implements Listener {
         }
     }
 
+    // Lo levita 4 segundos con efectos y después lo manda a la otra dimensión
     private void triggerTeleport(Player p) {
         p.setMetadata("Teleporting", new FixedMetadataValue(plugin, true));
 
@@ -178,6 +182,7 @@ public class PortalManager implements Listener {
         p.playSound(p.getLocation(), Sound.BLOCK_PORTAL_TRAVEL, 0.5f, 1f);
     }
 
+    // Busca un suelo seguro en la entrada fija de la dimensión (1000, 1500)
     public Location findSafeSpawn(World world) {
         int x = ENTRY_X;
         int z = ENTRY_Z;

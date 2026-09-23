@@ -86,6 +86,7 @@ public class Mission15 implements Mission, Listener {
         }
     }
 
+    // Si en 7 segundos sube 400 bloques sin elytras se completa; si pasa el tiempo empieza a contar de nuevo
     private void processFlight(Player player, double fromY, double toY) {
         UUID id = player.getUniqueId();
 

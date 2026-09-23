@@ -23,6 +23,7 @@ public class WardenCaveCommand implements CommandExecutor, TabCompleter {
         this.portalManager = portalManager;
     }
 
+    // portal crea o quita un portal donde estás; join y leave mandan jugadores a la dimensión o al spawn
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (args.length < 1) {

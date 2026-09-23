@@ -74,6 +74,7 @@ public class Mission12 implements Mission, Listener {
     @Override
     public void checkCompletion(String playerName) {}
 
+    // En Warped Forest los golems no reciben daño de fuego ni calor, así solo se derriten con el daño de la misión
     @EventHandler
     public void onEnvironmentDamage(EntityDamageEvent event) {
         if (!(event.getEntity() instanceof Snowman snowman)) return;
@@ -88,12 +89,14 @@ public class Mission12 implements Mission, Listener {
         }
     }
 
+    // Desde la 26.2 la magma ya no da HOT_FLOOR, llega como CONTACT con el bloque
     private boolean esDanoPorMagma(EntityDamageEvent event) {
         if (event.getCause() != EntityDamageEvent.DamageCause.CONTACT) return false;
         if (!(event instanceof EntityDamageByBlockEvent byBlock) || byBlock.getDamager() == null) return false;
         return byBlock.getDamager().getType() == Material.MAGMA_BLOCK;
     }
 
+    // Al quitarle la calabaza el golem queda a cargo del jugador, atrae a los mobs del Nether y se va derritiendo
     @EventHandler
     public void onShearSnowman(PlayerInteractEntityEvent event) {
         if (!(event.getRightClicked() instanceof Snowman snowman)) return;
@@ -144,6 +147,7 @@ public class Mission12 implements Mission, Listener {
         }.runTaskTimer(plugin, 10L, 10L);
     }
 
+    // Solo cuenta si el golem murió derretido por la misión
     @EventHandler
     public void onSnowmanDeath(EntityDeathEvent event) {
         if (!(event.getEntity() instanceof Snowman snowman)) return;

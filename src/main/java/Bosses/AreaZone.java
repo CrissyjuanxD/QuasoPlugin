@@ -25,6 +25,7 @@ public class AreaZone {
         this.shape = shape;
     }
 
+    // Comprueba si la ubicación está dentro del área (circular o cuadrada) y de su altura
     public boolean isInside(Location loc) {
         if (!loc.getWorld().equals(center.getWorld())) return false;
 
@@ -43,6 +44,7 @@ public class AreaZone {
                 Math.abs(loc.getZ() - center.getZ()) <= radius;
     }
 
+    // Dibuja los bordes del área con partículas para el /debugarena
     public void debug(Player p) {
         World w = center.getWorld();
         if (w == null) return;

@@ -19,6 +19,7 @@ public class GravesListener implements Listener {
         this.manager = manager;
     }
 
+    // Si no tiene keepInventory los drops van a una tumba en vez de caer al suelo
     @EventHandler
     public void onDeath(PlayerDeathEvent event) {
         Player player = event.getEntity();
@@ -33,6 +34,7 @@ public class GravesListener implements Listener {
         }
     }
 
+    // Click derecho a la tumba abre sus items; solo el dueño o un admin, salvo que anyone-can-open esté en true
     @EventHandler
     public void onInteractEntity(PlayerInteractEntityEvent event) {
         if (event.getRightClicked() instanceof org.bukkit.entity.Interaction interaction) {
@@ -62,6 +64,7 @@ public class GravesListener implements Listener {
         }
     }
 
+    // Si la tumba quedó vacía se borra, si no se guarda como quedó
     @EventHandler
     public void onInventoryClose(InventoryCloseEvent event) {
         String title = event.getView().getTitle();

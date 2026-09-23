@@ -23,6 +23,7 @@ public class NightmareCommand implements CommandExecutor, TabCompleter {
         this.nightmareMechanic = nightmareMechanic;
     }
 
+    // Comando compartido para add/remove/reset/level de la pesadilla, acepta un jugador o @a
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 
@@ -131,6 +132,7 @@ public class NightmareCommand implements CommandExecutor, TabCompleter {
         return true;
     }
 
+    // Acepta 1, Nvl1, Lvl1 o Nivel1
     private int parseLevel(String levelArg) {
         String s = levelArg.toLowerCase()
                 .replace("nvl", "")

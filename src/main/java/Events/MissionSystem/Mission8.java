@@ -68,6 +68,7 @@ public class Mission8 implements Mission, Listener {
     @Override
     public void checkCompletion(String playerName) {}
 
+    // Marca al Warden con el jugador que le tiró la bola de nieve
     @EventHandler
     public void onProjectileHit(ProjectileHitEvent event) {
         if (!(event.getEntity() instanceof Snowball snowball)) return;
@@ -84,6 +85,7 @@ public class Mission8 implements Mission, Listener {
         }
     }
 
+    // Solo cuenta si lo mata el mismo jugador que lo marcó
     @EventHandler
     public void onWardenDeath(EntityDeathEvent event) {
         if (event.getEntityType() != EntityType.WARDEN) return;

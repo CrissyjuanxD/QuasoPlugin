@@ -26,6 +26,7 @@ public class WardenGenerator extends ChunkGenerator {
         this.plugin = plugin;
     }
 
+    // Cueva de sculk hecha con noise entre bedrock en Y -60 y Y 120; vacía el spawn y los lugares donde van las Ancient City
     @Override
     public ChunkData generateChunkData(World world, Random random, int chunkX, int chunkZ, BiomeGrid biomes) {
         ChunkData chunk = createChunkData(world);
@@ -138,6 +139,7 @@ public class WardenGenerator extends ChunkGenerator {
         return chunk;
     }
 
+    // Vetas chicas de bloque de coral burbuja que hacen de mineral
     private void generateVein(ChunkData chunk, int sx, int sy, int sz, int size, Random r) {
         int x = sx, y = sy, z = sz;
         for (int i = 0; i < size; i++) {
@@ -154,6 +156,7 @@ public class WardenGenerator extends ChunkGenerator {
         }
     }
 
+    // Cerca del borde del mundo rellena los huecos para que no quede la pared de bedrock a la vista
     private void smoothBorder(ChunkData chunk, int x, int z, int distX, int distZ) {
         double px = (double)(distX - (WORLD_RADIUS - BORDER_SMOOTHING)) / BORDER_SMOOTHING;
         double pz = (double)(distZ - (WORLD_RADIUS - BORDER_SMOOTHING)) / BORDER_SMOOTHING;
@@ -164,6 +167,7 @@ public class WardenGenerator extends ChunkGenerator {
         }
     }
 
+    // En el suelo pone a veces shriekers o sensores
     private void decorateFloor(ChunkData chunk, int x, int y, int z, Random r) {
         if (r.nextInt(1000) < 10) {
             if (r.nextBoolean()) {
@@ -195,6 +199,7 @@ public class WardenGenerator extends ChunkGenerator {
         }
     }
 
+    // En el techo pone brotes de amatista y a veces obsidiana llorosa
     private void decorateCeiling(ChunkData chunk, int x, int y, int z, Random r) {
         if (r.nextInt(100) < 5) {
             chunk.setBlock(x, y, z, Material.SCULK);

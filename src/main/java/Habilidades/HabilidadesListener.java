@@ -36,6 +36,7 @@ public class HabilidadesListener implements Listener {
         this.actionBar = new ActionBarHandler(plugin);
     }
 
+    // El libro de habilidades (custom model data 9999) abre el menú
     @EventHandler
     public void onInteract(PlayerInteractEvent event) {
         if (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
@@ -81,6 +82,7 @@ public class HabilidadesListener implements Listener {
         protectNextLanding.remove(uuid);
     }
 
+    // Resistencia da probabilidad de bloquear el daño según el nivel y si viene de un proyectil, un monstruo u otra cosa
     @EventHandler(priority = EventPriority.LOWEST)
     public void onDamage(EntityDamageEvent event) {
         if (!(event.getEntity() instanceof Player player)) return;
@@ -130,6 +132,7 @@ public class HabilidadesListener implements Listener {
         }
     }
 
+    // Al tocar el suelo reinicia los saltos y con Agilidad 2 deja activado el vuelo para poder hacer el doble salto
     @EventHandler
     public void onMove(PlayerMoveEvent event) {
         Player player = event.getPlayer();
@@ -161,6 +164,7 @@ public class HabilidadesListener implements Listener {
         }
     }
 
+    // Doble salto: el vuelo se usa para detectar el salto en el aire (1, 2 o 3 saltos según el nivel)
     @EventHandler
     public void onToggleFlight(PlayerToggleFlightEvent event) {
         Player player = event.getPlayer();

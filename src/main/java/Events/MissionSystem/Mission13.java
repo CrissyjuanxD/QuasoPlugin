@@ -73,6 +73,7 @@ public class Mission13 implements Mission, Listener {
     @Override
     public void checkCompletion(String playerName) {}
 
+    // Cuenta abejas corruptas y Bombitas por separado hasta 30 de cada una
     @EventHandler
     public void onEntityDeath(EntityDeathEvent event) {
         Entity entity = event.getEntity();

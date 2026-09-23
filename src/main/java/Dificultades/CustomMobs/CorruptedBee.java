@@ -68,6 +68,7 @@ public class CorruptedBee implements Listener {
         }
     }
 
+    // Una sola tarea para todas las abejas corruptas en vez de una por abeja
     private void startCentralTask() {
         if (mainTask != null && !mainTask.isCancelled()) return;
 
@@ -94,6 +95,7 @@ public class CorruptedBee implements Listener {
         }.runTaskTimer(plugin, 0L, 20L);
     }
 
+    // Mantiene a la abeja enojada y la manda contra el jugador más cercano (20 bloques)
     private void manageBeeAI(Bee bee) {
         bee.setHasStung(false);
         bee.setAnger(999999);
@@ -159,6 +161,7 @@ public class CorruptedBee implements Listener {
     }
 
 
+    // La picadura da veneno III y la abeja no muere al picar
     @EventHandler
     public void onHit(EntityDamageByEntityEvent event) {
         if (!(event.getDamager() instanceof Bee bee)) return;

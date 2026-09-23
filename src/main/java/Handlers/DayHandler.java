@@ -33,6 +33,7 @@ import java.io.IOException;
             saveDayData();
         }
 
+        // Cambia el día a mano desde /cambiardia y aplica los cambios de dificultad de ese día
         public void changeDay(int day) {
             revertCurrentDayChanges();
             currentDay = day;
@@ -42,6 +43,7 @@ import java.io.IOException;
         }
 
 
+        // Desde el día 1 se activan los cambios del día 1 (mobs custom, recetas, etc.)
         private void applyCurrentDayChanges() {
             if (currentDay >= 1) {
                 dayOneChanges.apply();

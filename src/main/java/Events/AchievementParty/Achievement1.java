@@ -44,6 +44,7 @@ public class Achievement1 implements Achievement, Listener {
     public void checkCompletion(String playerName) {
     }
 
+    // Cuenta desde que empieza a subir; si sube 300 bloques en 7 segundos completa el logro
     @EventHandler
     public void onPlayerMove(PlayerMoveEvent event) {
         if (!eventHandler.isEventActive()) return;

@@ -75,6 +75,7 @@ public class Mission24 implements Mission, Listener {
     @Override
     public void checkCompletion(String playerName) {}
 
+    // Al quedar con medio corazón y la mano secundaria vacía empieza el contador
     @EventHandler
     public void onDamage(EntityDamageEvent event) {
         if (!(event.getEntity() instanceof Player player)) return;
@@ -90,6 +91,7 @@ public class Mission24 implements Mission, Listener {
         }
     }
 
+    // Si se cura, se muere o se pone algo en la mano secundaria antes de los 10 minutos se cancela
     private void startSurvivalTimer(Player player) {
         if (missionHandler.isMissionCompleted(player, 24)) return;
 

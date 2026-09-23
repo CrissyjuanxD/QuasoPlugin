@@ -27,6 +27,7 @@ public class StatueListener implements Listener {
         this.gui = gui;
     }
 
+    // Shift + click derecho abre la configuración y click derecho en un bloque pone la estatua
     @EventHandler
     public void onInteract(PlayerInteractEvent e) {
         if (e.getHand() != EquipmentSlot.HAND) return;
@@ -44,6 +45,7 @@ public class StatueListener implements Listener {
         }
     }
 
+    // Pasa la configuración del item al armor stand
     private void spawnStatue(Player p, ItemStack item, Location loc) {
         ItemMeta meta = item.getItemMeta();
         StatueData itemData = new StatueData(meta);
@@ -82,6 +84,7 @@ public class StatueListener implements Listener {
         p.playSound(loc, Sound.ENTITY_ARMOR_STAND_PLACE, 1f, 1f);
     }
 
+    // Cada golpe con pico le baja 1 de vida; las indestructibles solo las quita un admin en creativo con shift
     @EventHandler
     public void onDamage(EntityDamageByEntityEvent e) {
         if (!(e.getEntity() instanceof ArmorStand)) return;
@@ -129,6 +132,7 @@ public class StatueListener implements Listener {
         stand.remove();
     }
 
+    // Al cargar o descargar el chunk se registra o se saca la estatua del loop de efectos
     @EventHandler
     public void onChunkLoad(org.bukkit.event.world.ChunkLoadEvent e) {
         for (Entity ent : e.getChunk().getEntities()) {

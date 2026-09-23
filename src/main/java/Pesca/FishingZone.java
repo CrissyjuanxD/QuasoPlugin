@@ -23,6 +23,7 @@ public class FishingZone {
         maxZ = Math.max(pos1.getZ(), pos2.getZ());
     }
 
+    // Revisa si la ubicación está dentro del cubo de la zona
     public boolean contains(Location loc) {
         if (!loc.getWorld().equals(pos1.getWorld())) return false;
         double x = loc.getX(), y = loc.getY(), z = loc.getZ();

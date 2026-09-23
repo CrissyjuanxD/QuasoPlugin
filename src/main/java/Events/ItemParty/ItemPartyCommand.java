@@ -23,6 +23,7 @@ public class ItemPartyCommand implements CommandExecutor, TabCompleter {
         this.itemPartyHandler = itemPartyHandler;
     }
 
+    // Subcomandos de admin del ItemParty
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!sender.hasPermission("viciont_hardcore3.command.itemparty")) {

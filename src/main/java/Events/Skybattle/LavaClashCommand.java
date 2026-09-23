@@ -20,6 +20,7 @@ public class LavaClashCommand implements CommandExecutor, TabCompleter {
         this.eventoHandler = eventoHandler;
     }
 
+    // Subcomandos de admin del LavaClash
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!sender.hasPermission("viciont_hardcore3.command.lavaclash")) {

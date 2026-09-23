@@ -55,6 +55,7 @@ public class ChatBubbleManager implements Listener, CommandExecutor, TabComplete
         activeBubbles.clear();
     }
 
+    // Borra las burbujas que quedaron de antes de un reinicio
     private void cleanupOrphanedBubbles() {
         for (World world : Bukkit.getWorlds()) {
             for (Entity entity : world.getEntitiesByClass(TextDisplay.class)) {
@@ -78,6 +79,7 @@ public class ChatBubbleManager implements Listener, CommandExecutor, TabComplete
         return "§f";
     }
 
+    // Cada tick sube un poco la burbuja y al final la va desvaneciendo
     private void startTickTask() {
         new BukkitRunnable() {
             @Override
@@ -131,6 +133,7 @@ public class ChatBubbleManager implements Listener, CommandExecutor, TabComplete
         }.runTaskTimer(plugin, 0L, 1L);
     }
 
+    // Pone el mensaje en una burbuja encima del jugador; dura más cuanto más largo es (máximo 10 s)
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onPlayerChat(AsyncPlayerChatEvent e) {
         if (!enabled) return;

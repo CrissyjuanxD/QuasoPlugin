@@ -86,6 +86,7 @@ public class Mission25 implements Mission, Listener {
     @Override
     public void checkCompletion(String playerName) {}
 
+    // Detecta wither skeletons y piglins Elite (EliteMobs): 35 y 40
     @EventHandler(priority = EventPriority.LOWEST)
     public void onEliteDeath(EntityDeathEvent event) {
         org.bukkit.entity.LivingEntity entity = event.getEntity();

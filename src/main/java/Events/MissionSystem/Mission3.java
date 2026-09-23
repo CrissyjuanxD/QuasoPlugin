@@ -104,6 +104,7 @@ public class Mission3 implements Mission, Listener {
         }
     }
 
+    // Con shift-click calcula cuántas manzanas salen según el ingrediente que menos hay
     @EventHandler
     public void onCraftItem(CraftItemEvent event) {
         if (!(event.getWhoClicked() instanceof Player player)) return;
@@ -127,6 +128,7 @@ public class Mission3 implements Mission, Listener {
         }
     }
 
+    // Guarda el progreso de raids y manzanas; se completa cuando están las dos
     private void updateProgress(Player player, String type, int value) {
         MissionData data = missionHandler.getData(player, 3);
         if (data.isCompleted()) return;

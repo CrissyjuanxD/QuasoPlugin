@@ -17,6 +17,7 @@ public class QuasoReloadCommand implements CommandExecutor {
         this.databaseManager = databaseManager;
     }
 
+    // Recarga el config.yml y la conexión a la base de datos
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!sender.hasPermission("quaso.admin")) {

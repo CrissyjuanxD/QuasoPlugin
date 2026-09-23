@@ -78,6 +78,7 @@ public class AltarFunctions implements Listener, CommandExecutor, TabCompleter {
             }
     };
 
+    // Al hacer click al nido revisa que la estructura del altar esté bien y lanza el AltarActivateEvent
     @EventHandler
     public void onInteract(PlayerInteractEvent event) {
         if (event.getHand() != EquipmentSlot.HAND) return;
@@ -107,6 +108,7 @@ public class AltarFunctions implements Listener, CommandExecutor, TabCompleter {
         }
     }
 
+    // El cooldown se guarda en el PDC del holograma, así sobrevive a los reinicios
     private void createCooldownHologram(Location loc, int seconds) {
         long endTime = System.currentTimeMillis() + (seconds * 1000L);
         Location hologramLoc = loc.clone().add(0.5, 2.5, 0.5);
@@ -131,6 +133,7 @@ public class AltarFunctions implements Listener, CommandExecutor, TabCompleter {
         return false;
     }
 
+    // Actualiza el texto de todos los hologramas de cooldown cada segundo
     private void startGlobalTicker() {
         new BukkitRunnable() {
             @Override
@@ -330,6 +333,7 @@ public class AltarFunctions implements Listener, CommandExecutor, TabCompleter {
         sender.sendMessage("/altarvct delcooldown <#> <tiempo>");
     }
 
+    // Acepta segundos, 5m, 1h o hh:mm:ss
     private long parseTime(String input) {
         try {
             if (input.contains(":")) {
@@ -350,6 +354,7 @@ public class AltarFunctions implements Listener, CommandExecutor, TabCompleter {
         }
     }
 
+    // Compara el mundo con la estructura capa por capa (el aire no se revisa)
     private boolean isValidAltar(Location center, Material[][][] structure) {
         int baseY = center.getBlockY();
         int startY = baseY - 2;

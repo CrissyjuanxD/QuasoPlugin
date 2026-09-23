@@ -24,6 +24,7 @@ public class ToastHandler {
         createRootAdvancement();
     }
 
+    // Advancement raíz oculto que sirve de "carpeta" para los toasts
     private void createRootAdvancement() {
         if (Bukkit.getAdvancement(rootKey) != null) return;
 
@@ -53,6 +54,7 @@ public class ToastHandler {
         }
     }
 
+    // Muestra un toast usando un advancement temporal que se da y se quita al tick siguiente
     public void sendToast(Player player, String title, String description, String iconMaterial) {
         NamespacedKey key = new NamespacedKey(plugin, "toast_" + System.nanoTime());
 
@@ -102,6 +104,7 @@ public class ToastHandler {
         }
     }
 
+    // Al apagar borra los advancements temporales que se crearon
     public static void cleanupToasts() {
         if (activeToasts.isEmpty()) return;
 

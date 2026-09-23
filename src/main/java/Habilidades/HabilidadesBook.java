@@ -13,6 +13,7 @@ import java.util.List;
 
 public class HabilidadesBook {
 
+    // Libro que abre el menú de habilidades
     public static ItemStack createHabilidadesBook() {
         ItemStack book = new ItemStack(Material.KNOWLEDGE_BOOK);
         ItemMeta meta = book.getItemMeta();

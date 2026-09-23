@@ -39,6 +39,7 @@ public class GravesManager {
         startExpiryTask();
     }
 
+    // Crea tumbas_config.yml si no existe y lee quién puede abrirlas y cuántos minutos duran
     public void loadConfig() {
         if (!plugin.getDataFolder().exists()) plugin.getDataFolder().mkdirs();
 
@@ -61,6 +62,7 @@ public class GravesManager {
         expiryMinutes = config.getInt("expiry-minutes", 30);
     }
 
+    // Carga las tumbas de tumbas_data.yml y les vuelve a crear los displays por si quedaron mal después de un reinicio
     private void loadData() {
         dataFile = new File(plugin.getDataFolder(), "tumbas_data.yml");
         if (!dataFile.exists()) {
@@ -102,6 +104,7 @@ public class GravesManager {
         try { data.save(dataFile); } catch (IOException ignored) {}
     }
 
+    // La tumba va un bloque arriba de donde murió; si murió en el vacío queda 5 bloques arriba del fondo del mundo
     public void createGrave(Player player, List<ItemStack> items) {
         UUID id = UUID.randomUUID();
 
@@ -122,6 +125,7 @@ public class GravesManager {
         spawnGraveVisuals(id, player.getName(), blockLoc, creationTime);
     }
 
+    // Tumba vacía con cualquier nombre, solo de decoración
     public void createFakeGrave(String fakeName, Location loc) {
         UUID id = UUID.randomUUID();
         Location blockLoc = new Location(loc.getWorld(), loc.getBlockX() + 0.5, loc.getBlockY() + 1.0, loc.getBlockZ() + 0.5);
@@ -135,6 +139,7 @@ public class GravesManager {
         spawnGraveVisuals(id, fakeName, blockLoc, creationTime);
     }
 
+    // La tumba son displays (cabezas, textos y la losa) montados en un block_display, más un interaction para poder clickearla
     private void spawnGraveVisuals(UUID graveId, String playerName, Location loc, long creationTime) {
         Date date = new Date(creationTime);
         String dayMonthYear = new SimpleDateFormat("dd/MM/yyyy").format(date);
@@ -181,6 +186,7 @@ public class GravesManager {
         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "execute in " + loc.getWorld().getKey().toString() + " run kill @e[tag=" + tag + "]");
     }
 
+    // Cada segundo actualiza el contador; cuando se acaba el tiempo suelta los items y borra la tumba
     private void startExpiryTask() {
         new BukkitRunnable() {
             @Override

@@ -23,6 +23,7 @@ public class NormalTotemHandler implements Listener {
         this.plugin = plugin;
     }
 
+    // Anuncia a todos cuando alguien usa un tótem, con su nombre si es uno custom
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerTotemUse(EntityResurrectEvent event) {
         if (!(event.getEntity() instanceof Player player)) return;

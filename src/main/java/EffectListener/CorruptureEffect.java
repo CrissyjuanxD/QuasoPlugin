@@ -23,6 +23,7 @@ public class CorruptureEffect implements CustomEffect, Listener {
         this.plugin = plugin;
     }
 
+    // Solo se activa con Suerte nivel 100 (amplifier 99), que es la que da el plugin
     @Override
     public void applyEffect(Player player, int durationSeconds, int amplifier) {
         if (amplifier < 99) {
@@ -73,6 +74,7 @@ public class CorruptureEffect implements CustomEffect, Listener {
         return playersWithEffect.contains(player.getUniqueId());
     }
 
+    // Con la corrupción no se pueden romper ni poner bloques, salvo spawners
     @EventHandler
     public void onBlockBreak(BlockBreakEvent event) {
         Player player = event.getPlayer();

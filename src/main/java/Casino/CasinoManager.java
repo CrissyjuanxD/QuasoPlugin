@@ -41,6 +41,7 @@ public class CasinoManager {
         refreshHolograms();
     }
 
+    // Carga las mesas guardadas en CasinoTables.yml
     private void loadTables() {
         if (!tableFile.exists()) {
             try {
@@ -68,6 +69,7 @@ public class CasinoManager {
         }
     }
 
+    // Registra una mesa nueva y le pone su holograma
     public void saveTable(Location loc, String type) {
         String key = getLocationKey(loc);
         tableConfig.set("tables." + key + ".type", type);
@@ -122,6 +124,7 @@ public class CasinoManager {
         blackJack.reloadConfig();
     }
 
+    // Quita el holograma mientras alguien juega y lo vuelve a poner al terminar
     public void setGameActive(Location loc, boolean active) {
         Location blockLoc = new Location(loc.getWorld(), loc.getBlockX(), loc.getBlockY(), loc.getBlockZ());
 
@@ -209,6 +212,7 @@ public class CasinoManager {
         }
     }
 
+    // Partículas girando alrededor de cada mesa
     private void startParticleTask() {
         new BukkitRunnable() {
             double angle = 0;

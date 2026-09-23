@@ -18,6 +18,7 @@ public class SnowballDamage implements Listener {
         this.plugin = plugin;
     }
 
+    // Las bolas de nieve hacen 1 de daño por tick durante 5 ticks
     @EventHandler
     public void onSnowballHit(ProjectileHitEvent event) {
         if (!(event.getEntity() instanceof Snowball)) {

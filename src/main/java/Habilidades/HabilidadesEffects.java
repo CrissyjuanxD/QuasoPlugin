@@ -22,6 +22,7 @@ public class HabilidadesEffects {
         this.vitalidadKey = new NamespacedKey(plugin, "habilidad_vitalidad");
     }
 
+    // Animación al desbloquear: círculo mágico, esfera eléctrica y explosión de partículas
     public void playUnlockAnimation(Player player, HabilidadesType type, int level) {
         Location loc = player.getLocation();
 
@@ -402,6 +403,7 @@ public class HabilidadesEffects {
         }
     }
 
+    // +5 de vida por nivel hasta el 4 y +8 por cada nivel desde el 5
     private double calculateExtraHealth(int level) {
         double extra = 0;
         for (int i = 1; i <= level; i++) {
@@ -414,6 +416,7 @@ public class HabilidadesEffects {
         return extra;
     }
 
+    // Lo aplica dos veces (la segunda a los 3 segundos) por si otro sistema le quitó los efectos al entrar
     public void reapplyAllEffects(Player player, HabilidadesManager manager) {
         if (!player.isOnline()) return;
 
@@ -426,6 +429,7 @@ public class HabilidadesEffects {
         }, 60L);
     }
 
+    // Vida extra por Vitalidad y efectos infinitos por Agilidad y Resistencia; también limpia el modificador viejo que usaba UUID
     private void applyAllInternal(Player player, HabilidadesManager manager) {
         int vitLevel = manager.getHighestLevel(player.getUniqueId(), HabilidadesType.VITALIDAD);
         AttributeInstance healthAttr = player.getAttribute(Attribute.MAX_HEALTH);

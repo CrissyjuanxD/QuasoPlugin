@@ -56,6 +56,7 @@ public class InfestedBeeHandler implements Listener {
         startGlobalBossBarManager();
     }
 
+    // Cada medio segundo actualiza la bossbar de cada Infested Bee para los que estén a menos de 100 bloques
     private void startGlobalBossBarManager() {
         globalBossBarManager = new BukkitRunnable() {
             @Override
@@ -158,6 +159,7 @@ public class InfestedBeeHandler implements Listener {
         return true;
     }
 
+    // Prepara la abeja (stats y comportamiento) evitando que se inicialice dos veces
     private void initializeInfestedBee(Bee bee) {
         UUID beeId = bee.getUniqueId();
 
@@ -250,6 +252,7 @@ public class InfestedBeeHandler implements Listener {
         plugin.getLogger().info("Started behavior for Infested Bee: " + beeId);
     }
 
+    // Cada 3 segundos elige: moverse, regenerarse si tiene menos de la mitad de vida o atacar
     private void executeBehaviorTick(Bee bee) {
         UUID beeId = bee.getUniqueId();
 
@@ -331,6 +334,7 @@ public class InfestedBeeHandler implements Listener {
         }.runTaskLater(plugin, 100L);
     }
 
+    // Los jugadores elegidos tienen que quedarse agachados 20 segundos o reciben daño
     private void executeNoMove(Bee bee) {
         bee.getWorld().playSound(bee.getLocation(), Sound.ENTITY_WARDEN_SONIC_CHARGE, 5.0f, 0.5f);
 
@@ -373,6 +377,7 @@ public class InfestedBeeHandler implements Listener {
         }.runTaskLater(plugin, 400L);
     }
 
+    // Onda que se expande y da oscuridad y wither a los que toca
     private void executeDarkCircle(Bee bee) {
         Location center = bee.getLocation();
 
@@ -439,6 +444,7 @@ public class InfestedBeeHandler implements Listener {
         }
     }
 
+    // 8 sonic booms en todas direcciones que dejan una zona dañina donde terminan
     private void executeSonicBoom(Bee bee) {
         bee.getWorld().playSound(bee.getLocation(), Sound.ENTITY_WARDEN_SONIC_BOOM, 5.0f, 1.0f);
 
@@ -577,6 +583,7 @@ public class InfestedBeeHandler implements Listener {
         }.runTaskLater(plugin, 100L);
     }
 
+    // La muerte se maneja a mano para limpiar la bossbar y las tareas
     @EventHandler
     public void onEntityDamage(EntityDamageEvent event) {
         if (!(event.getEntity() instanceof Bee bee) || !isInfestedBee(bee)) return;
@@ -644,6 +651,7 @@ public class InfestedBeeHandler implements Listener {
         }
     }
 
+    // Mensaje de muerte propio si lo mató un ataque de la abeja
     @EventHandler
     public void onPlayerDeath(PlayerDeathEvent event) {
         Player player = event.getEntity();
@@ -654,6 +662,7 @@ public class InfestedBeeHandler implements Listener {
         }
     }
 
+    // Reactiva las abejas cercanas que se quedaron sin comportamiento (por ejemplo al recargar el chunk)
     @EventHandler
     public void onPlayerMove(PlayerMoveEvent event) {
         if (event.getFrom().getBlock().equals(event.getTo().getBlock())) return;
@@ -726,6 +735,7 @@ public class InfestedBeeHandler implements Listener {
         }
     }
 
+    // Efectos de muerte y limpieza (los drops todavía no están hechos)
     public void executeBeeDeath(Bee bee) {
         if (!bee.getPersistentDataContainer().has(infestedBeeKey, PersistentDataType.BYTE)) return;
 

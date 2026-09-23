@@ -43,6 +43,7 @@ public class StatueData {
 
     private PersistentDataContainer container;
 
+    // Todo se guarda en el PDC, así que sirve igual para el item y para la estatua ya puesta
     public StatueData(ArmorStand stand) {
         this.container = stand.getPersistentDataContainer();
     }
@@ -96,6 +97,7 @@ public class StatueData {
         catch (Exception e) { return ChatColor.WHITE; }
     }
 
+    // Poner un efecto saca el modo anti-grief (no pueden estar los dos)
     public void setEffect(PotionEffectType type, int amp) {
         if (type != null) {
             container.set(KEY_EFF_TYPE, PersistentDataType.STRING, type.getKey().toString());
@@ -113,6 +115,7 @@ public class StatueData {
         return buscarEfecto(name);
     }
 
+    // Busca el efecto por su key y traduce los nombres viejos que tenían las estatuas guardadas antes (INCREASE_DAMAGE, JUMP...)
     public static PotionEffectType buscarEfecto(String nombre) {
         String clave = nombre.toLowerCase(Locale.ROOT);
         clave = NOMBRES_VIEJOS.getOrDefault(clave, clave);
@@ -133,6 +136,7 @@ public class StatueData {
     public void setInvulnerable(boolean val) { container.set(KEY_INVULNERABLE, PersistentDataType.BYTE, val ? (byte)1 : (byte)0); }
     public boolean isInvulnerable() { return container.getOrDefault(KEY_INVULNERABLE, PersistentDataType.BYTE, (byte)0) == 1; }
 
+    // El anti-grief no da efectos, así que al activarlo se borra el efecto
     public void setAntiGrief(boolean val) {
         container.set(KEY_ANTI_GRIEF, PersistentDataType.BYTE, val ? (byte)1 : (byte)0);
         if (val) {

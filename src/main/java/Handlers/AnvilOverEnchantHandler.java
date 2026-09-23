@@ -21,6 +21,7 @@ public class AnvilOverEnchantHandler implements Listener {
         this.plugin = plugin;
     }
 
+    // Deja pasar encantamientos por encima del nivel máximo usando libros en el yunque, con coste fijo de 12
     @EventHandler
     public void onPrepareAnvil(PrepareAnvilEvent event) {
         ItemStack firstItem = event.getInventory().getItem(0);

@@ -34,6 +34,7 @@ public class ShopCommands implements CommandExecutor, TabCompleter {
         this.shopGUI = shopGUI;
     }
 
+    // /spawnshop crea la tienda, /removeshop borra la que estás mirando y /trade pone un item (custom o vanilla) en el tradeo que se está editando
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!(sender instanceof Player)) {

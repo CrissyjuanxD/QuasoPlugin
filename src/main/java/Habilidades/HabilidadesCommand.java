@@ -24,6 +24,7 @@ public class HabilidadesCommand implements CommandExecutor, TabCompleter {
         this.effects = effects;
     }
 
+    // list para ver las habilidades de alguien y on/off para activarlas o desactivarlas por jugador o global
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (args.length == 0) {

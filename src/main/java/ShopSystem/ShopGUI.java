@@ -51,6 +51,7 @@ public class ShopGUI {
         player.openInventory(gui);
     }
 
+    // Dos columnas de 5 tradeos cada una: precio 1, precio 2, flecha y producto
     private void populateBaseGUI(Inventory gui, Villager villager, boolean isConfig) {
         gui.setItem(0, createHeader(Material.ORANGE_DYE, ChatColor.GOLD + "Precio #1", false));
         gui.setItem(1, createHeader(Material.ORANGE_DYE, ChatColor.GOLD + "Precio #2", false));

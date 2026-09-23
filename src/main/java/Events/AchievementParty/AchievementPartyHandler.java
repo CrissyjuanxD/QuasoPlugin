@@ -90,6 +90,7 @@ public class AchievementPartyHandler implements Listener {
         return null;
     }
 
+    // Resetea los datos y registra a todos los jugadores que alguna vez entraron
     public void startEvent(CommandSender sender) {
         if (eventActive) {
             sender.sendMessage("§cEl evento de logros ya está activo!");
@@ -115,6 +116,7 @@ public class AchievementPartyHandler implements Listener {
         Bukkit.broadcastMessage("§7Completa los logros para evitar la penalización al final.");
     }
 
+    // Al terminar castiga a los que no completaron todos los logros y premia al resto
     public void endEvent(CommandSender sender) {
         if (!eventActive) {
             sender.sendMessage("§cNo hay ningún evento de logros activo!");
@@ -166,6 +168,7 @@ public class AchievementPartyHandler implements Listener {
         broadcastResults(penalizedPlayers, rewardedPlayers);
     }
 
+    // Quita 4 corazones permanentes, y si ya tenía 4 o menos lo mata
     public void applyPenalty(Player player) {
         FileConfiguration data = YamlConfiguration.loadConfiguration(achievementsFile);
         String penalizedPath = "players." + player.getName() + ".penalized";
@@ -199,6 +202,7 @@ public class AchievementPartyHandler implements Listener {
         }
     }
 
+    // Si lo penalizaron estando desconectado se le aplica al entrar
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
@@ -308,6 +312,7 @@ public class AchievementPartyHandler implements Listener {
         }
     }
 
+    // Marca el logro, suma al contador y lo anuncia a todos
     public boolean completeAchievement(String playerName, String achievementId) {
         if (!eventActive || !achievements.containsKey(achievementId)) return false;
 

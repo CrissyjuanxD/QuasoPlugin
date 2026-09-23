@@ -21,6 +21,7 @@ public abstract class InfestedMob {
     public void apply() {
     }
 
+    // Carga el sonic boom 15 ticks antes de dispararlo
     protected void launchSonicBoom(LivingEntity mob, Player target) {
         if (mob.isDead() || !mob.isValid() || target.isDead()) return;
 
@@ -56,6 +57,7 @@ public abstract class InfestedMob {
         }.runTaskTimer(plugin, 0L, 1L);
     }
 
+    // El rayo avanza hacia donde estaba el jugador y hace 25 de daño al primero que toque
     private void fireTravelingBeam(LivingEntity mob, Player target) {
         if (mob.isDead() || !mob.isValid() || target.isDead()) return;
 

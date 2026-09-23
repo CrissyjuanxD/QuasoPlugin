@@ -11,6 +11,7 @@ import org.bukkit.entity.Player;
 
 public class DebugArenaCommand implements CommandExecutor {
 
+    // Activa o desactiva el debug de la arena del boss que esté activo en el mundo
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 

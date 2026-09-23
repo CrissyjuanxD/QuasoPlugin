@@ -53,6 +53,7 @@ public class Achievement8 implements Achievement, Listener {
     public void checkCompletion(String playerName) {
     }
 
+    // Cuenta los chilladores rotos en Deep Dark hasta llegar a 15
     @EventHandler
     public void onBlockBreak(BlockBreakEvent event) {
         if (!eventHandler.isEventActive()) return;

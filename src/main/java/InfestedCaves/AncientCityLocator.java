@@ -52,6 +52,7 @@ public final class AncientCityLocator {
         public int maxY() { return originY + SIZE_Y - 1; }
     }
 
+    // El mundo se divide en celdas de 512x512 y cada una tiene 1 en 6 de tener una Ancient City (solo con la seed)
     public static CityInfo getCityForCell(long worldSeed, long cellX, long cellZ) {
         int cellCenterX = (int)(cellX * CELL_SIZE + CELL_SIZE / 2);
         int cellCenterZ = (int)(cellZ * CELL_SIZE + CELL_SIZE / 2);
@@ -75,6 +76,7 @@ public final class AncientCityLocator {
         return Math.floorDiv(blockCoord, CELL_SIZE);
     }
 
+    // Revisa la celda actual y las 8 de alrededor por si hay una ciudad que afecte a ese bloque
     public static CityInfo findCityNear(long worldSeed, int blockX, int blockZ) {
         long ccx = cellOf(blockX);
         long ccz = cellOf(blockZ);
@@ -91,6 +93,7 @@ public final class AncientCityLocator {
         return null;
     }
 
+    // 1 dentro del radio de la ciudad y baja hasta 0 en la transición; sirve para vaciar la cueva donde va la ciudad
     public static double computeInfluence(CityInfo info, int x, int z) {
         double d = distance(x, z, info.centerX, info.centerZ);
         if (d <= CLEAR_RADIUS)                      return 1.0;

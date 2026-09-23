@@ -98,6 +98,7 @@ public class GuardianCorruptedSkeleton implements Listener {
         return skeleton.getPersistentDataContainer().has(gcorruptedskelKey, PersistentDataType.BYTE);
     }
 
+    // Cada 3 segundos los que tengan a un jugador a menos de 20 bloques pueden lanzarle un cráneo
     private void startAITask() {
         if (aiTask != null && !aiTask.isCancelled()) return;
 
@@ -163,6 +164,7 @@ public class GuardianCorruptedSkeleton implements Listener {
         }, 5L);
     }
 
+    // El cráneo da wither III salvo que el jugador se cubra con el escudo
     @EventHandler
     public void onSkullHit(ProjectileHitEvent event) {
         if (!(event.getEntity() instanceof WitherSkull skull)) return;
@@ -231,6 +233,7 @@ public class GuardianCorruptedSkeleton implements Listener {
         }
     }
 
+    // Vuelve a registrar los esqueletos guardados cuando carga un mundo
     @EventHandler
     public void onWorldLoad(WorldLoadEvent event) {
         Bukkit.getScheduler().runTaskLater(plugin, () -> {

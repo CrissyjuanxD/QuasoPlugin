@@ -119,6 +119,7 @@ public class SlotMachine implements Listener {
         }
     }
 
+    // Abre la tragamonedas si no la está usando otro y limpia animaciones que se quedaron colgadas
     @EventHandler
     public void onPlayerInteract(PlayerInteractEvent event) {
         if (event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
@@ -316,6 +317,7 @@ public class SlotMachine implements Listener {
         }
     }
 
+    // Cobra una ficha y decide el resultado antes de la animación según el win_chance
     private void startSpin(Player p, Inventory inv) {
         if (isSpinning.getOrDefault(p.getUniqueId(), false)) return;
 
@@ -423,6 +425,7 @@ public class SlotMachine implements Listener {
         task.runTaskTimer(plugin, 0L, 2L);
     }
 
+    // Muestra el resultado final y da el premio si salieron 3 iguales
     private void finishSpin(Player p, Inventory inv, Location loc, AnimationState state) {
         Material[] results = state.finalResults;
 
@@ -461,6 +464,7 @@ public class SlotMachine implements Listener {
         }
     }
 
+    // Cada símbolo tiene su categoría de premios en el config y se elige uno al azar
     private void giveReward(Player p, Material symbol, Location loc) {
         String cat = getCategoryFromSymbol(symbol);
         List<String> rewards = config.getStringList("SlotMachine." + cat + ".three_out_of_three");
@@ -537,6 +541,7 @@ public class SlotMachine implements Listener {
         isSpinning.remove(p.getUniqueId());
     }
 
+    // Si se descarga el chunk de una máquina se cancela la animación y se limpian los displays
     @EventHandler
     public void onChunkUnload(ChunkUnloadEvent e) {
         List<Location> toRemove = new ArrayList<>();
@@ -567,6 +572,7 @@ public class SlotMachine implements Listener {
         manager.setGameActive(loc, false);
     }
 
+    // Crea los 3 ItemDisplay de los rodillos mirando hacia donde está el jugador
     private void createItemDisplays(Location machineLoc, Player player) {
         if (!machineLoc.getChunk().isLoaded()) machineLoc.getChunk().load();
 

@@ -17,6 +17,7 @@ public class SpawnCommand implements CommandExecutor {
         this.plugin = plugin;
     }
 
+    // Tepea al spawn guardado en el config después de 4 segundos
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!(sender instanceof Player)) {

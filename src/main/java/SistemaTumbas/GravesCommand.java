@@ -18,6 +18,7 @@ public class GravesCommand implements CommandExecutor, TabCompleter {
         this.manager = manager;
     }
 
+    // Admin: list, reload, remove (por id o mirando la tumba) y place para poner una tumba de prueba
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!sender.hasPermission("tumbas.admin")) {

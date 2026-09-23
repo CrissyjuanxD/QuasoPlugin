@@ -50,6 +50,7 @@ public class Achievement9 implements Achievement, Listener {
     public void checkCompletion(String playerName) {
     }
 
+    // Empieza a contar al pasar por Y=255 cayendo; si se detiene antes de Y=1 o pasan 10 segundos se reinicia
     @EventHandler
     public void onPlayerMove(PlayerMoveEvent event) {
         if (!eventHandler.isEventActive()) return;

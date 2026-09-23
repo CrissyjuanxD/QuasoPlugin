@@ -15,6 +15,7 @@ public class CustomItemRegistry {
         itemManager = manager;
     }
 
+    // Busca primero un item custom del plugin y si no existe lo trata como material vanilla
     public static ItemStack getCustomItem(String name, int amount) {
         ItemStack item = itemManager.getItem(name, amount, null);
         if (item != null) return item;

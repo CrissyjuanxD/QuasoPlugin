@@ -20,6 +20,7 @@ public class CasinoCommands implements CommandExecutor, TabCompleter {
         this.manager = manager;
     }
 
+    // /casino set, remove y reload
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!sender.hasPermission("ismanu.admin")) return true;

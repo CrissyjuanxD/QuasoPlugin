@@ -24,6 +24,7 @@ public class WardenCaveListeners implements Listener {
         this.structureManager = structureManager;
     }
 
+    // Al entrar a la dimensión da resistencia y caída lenta por 10 segundos
     @EventHandler
     public void onTeleport(PlayerTeleportEvent e) {
         if (e.getTo().getWorld().getName().equals(QuasoPlugin.WORLD_NAME)) {
@@ -32,6 +33,7 @@ public class WardenCaveListeners implements Listener {
         }
     }
 
+    // Pega el templo en el spawn la primera vez que carga el chunk 0,0 y genera las ciudades en los chunks nuevos
     @EventHandler
     public void onChunkLoad(ChunkLoadEvent e) {
         if (!e.getWorld().getName().equals(QuasoPlugin.WORLD_NAME)) return;
@@ -47,6 +49,7 @@ public class WardenCaveListeners implements Listener {
         }
     }
 
+    // En la dimensión solo spawnean zombies, creepers, arañas y esqueletos (más lo que spawnee el plugin)
     @EventHandler
     public void onMobSpawn(CreatureSpawnEvent e) {
         if (!e.getLocation().getWorld().getName().equals(QuasoPlugin.WORLD_NAME)) return;
@@ -62,6 +65,7 @@ public class WardenCaveListeners implements Listener {
         }
     }
 
+    // No se pueden usar camas en la dimensión
     @EventHandler
     public void onBedInteract(PlayerInteractEvent e) {
         if (!e.getPlayer().getWorld().getName().equals(QuasoPlugin.WORLD_NAME)) return;

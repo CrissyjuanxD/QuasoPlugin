@@ -106,6 +106,7 @@ public class Mission4 implements Mission, Listener {
         }
     }
 
+    // Marca cada pieza que se equipa hasta tener todas las de la lista
     private void checkArmor(Player player) {
         MissionData data = missionHandler.getData(player, 4);
 

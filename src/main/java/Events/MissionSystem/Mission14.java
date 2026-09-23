@@ -100,6 +100,7 @@ public class Mission14 implements Mission, Listener {
         }
     }
 
+    // Las flores ya contadas que se plantan y se vuelven a romper siguen marcadas para no contarlas dos veces
     @EventHandler
     public void onBlockDropItem(BlockDropItemEvent event) {
         if (event.getBlockState().hasMetadata("mission14_marked") || event.getBlock().hasMetadata("mission14_marked")) {
@@ -133,6 +134,7 @@ public class Mission14 implements Mission, Listener {
         }
     }
 
+    // Suma las flores recogidas (máximo 25 por tipo) y las marca como ya contadas
     private void checkFlower(Player player, ItemStack item) {
         if (item == null || item.getType() == Material.AIR) return;
         Material type = item.getType();

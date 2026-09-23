@@ -29,12 +29,14 @@ public class DatabaseManager {
         this.password = plugin.getConfig().getString("Database1.password");
     }
 
+    // Abre una conexión nueva cada vez (el driver de MySQL ya viene con Paper)
     private Connection getConnection() throws SQLException {
         String url = "jdbc:mysql://" + this.host + ":" + this.port + "/" + this.database +
                 "?useSSL=false&autoReconnect=true&allowPublicKeyRetrieval=true&serverTimezone=UTC&connectTimeout=5000";
         return DriverManager.getConnection(url, this.username, this.password);
     }
 
+    // Intenta conectar y crear las tablas hasta 3 veces antes de rendirse
     private void connectWithRetry(int maxRetries) {
         int attempt = 0;
         while (attempt < maxRetries) {
@@ -55,6 +57,7 @@ public class DatabaseManager {
         }
     }
 
+    // Crea las tablas de jugadores, misiones, mochilas e inventarios de eventos si no existen
     private void initializeDatabase() throws SQLException {
         try (Connection conn = getConnection();
              Statement stmt = conn.createStatement()) {
@@ -104,6 +107,7 @@ public class DatabaseManager {
     public void closeConnection() {
     }
 
+    // INSERT IGNORE: si ya tenía un inventario guardado no se pisa
     public boolean saveEventInventory(UUID uuid, String playerName, ItemStack[] contents) {
         String data = ItemSerializer.serialize(contents);
         if (data == null || data.isEmpty()) return false;
@@ -236,6 +240,7 @@ public class DatabaseManager {
         return missions;
     }
 
+    // Guarda en un solo batch todas las misiones que cambiaron
     public void savePlayerMissionsBatchSync(UUID uuid, String playerName, Map<Integer, MissionData> missionsToSave, Map<Integer, String> missionNames) {
         if (missionsToSave.isEmpty()) return;
 
@@ -292,6 +297,7 @@ public class DatabaseManager {
         return null;
     }
 
+    // Inserta la mochila o actualiza su contenido si ya existe
     public void saveBackpack(String backpackUuid, UUID ownerUuid, String ownerName, String itemName, int level, ItemStack[] items) throws SQLException {
         String contents = ItemSerializer.serialize(items);
         if (contents == null || contents.isEmpty()) return;

@@ -70,6 +70,7 @@ public class TiempoCommand implements CommandExecutor, TabCompleter {
         sender.sendMessage(ChatColor.YELLOW + "/timers lista " + ChatColor.WHITE + "<jugador/all>");
     }
 
+    // Lee las opciones nombre="", tiempo=, sonido= y comando="" del texto del comando
     private boolean handleAddTiempo(CommandSender sender, String[] args) {
         if (args.length < 2) {
             sender.sendMessage(ChatColor.RED + "Uso: /timers crear <jugador/@a> [tiempo=hh:mm:ss] [nombre=\"...\"] [sonido=on/off] [comando=\"...\"]");
@@ -326,6 +327,7 @@ public class TiempoCommand implements CommandExecutor, TabCompleter {
         createBossBar(name, totalSeconds, timeString, soundOption, null);
     }
 
+    // Timer global que ven todos los jugadores
     public void createBossBar(String name, int totalSeconds, String timeString, String soundOption, String action) {
         if (bossBars.containsKey(name)) removeBossBarInternal(name);
 
@@ -351,6 +353,7 @@ public class TiempoCommand implements CommandExecutor, TabCompleter {
         createPlayerBossBar(player, name, totalSeconds, timeString, soundOption, customId, null);
     }
 
+    // Timer de un solo jugador, el id es uuid_nombre salvo que se pase uno propio
     public void createPlayerBossBar(Player player, String name, int totalSeconds, String timeString, String soundOption, String customId, String action) {
         String barId = customId != null ? customId : player.getUniqueId() + "_" + name;
         if (bossBars.containsKey(barId)) removeBossBarInternal(barId);
@@ -370,6 +373,7 @@ public class TiempoCommand implements CommandExecutor, TabCompleter {
         startTimer(barId, bossBar);
     }
 
+    // Baja el timer cada segundo; al llegar a 0 ejecuta el comando guardado y quita la barra
     private void startTimer(String barId, BossBar bossBar) {
         int taskId = plugin.getServer().getScheduler().scheduleSyncRepeatingTask(plugin, () -> {
             if (!timers.containsKey(barId)) return;
@@ -442,6 +446,7 @@ public class TiempoCommand implements CommandExecutor, TabCompleter {
         taskIds.put(barId, taskId);
     }
 
+    // Busca primero por nombre exacto y si no, uno que lo contenga
     private String getBossBarIdByName(String searchName) {
         String cleanSearch = ChatColor.stripColor(searchName).toLowerCase();
 

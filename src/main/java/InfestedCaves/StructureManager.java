@@ -37,6 +37,7 @@ public class StructureManager {
         this.plugin = plugin;
     }
 
+    // Carga TemploRunico.schem y AncientCity.schem de la carpeta schematics del plugin
     public void loadSchematics() {
         File schemFolder = new File(plugin.getDataFolder(), "schematics");
         schemFolder.mkdirs();
@@ -63,6 +64,7 @@ public class StructureManager {
         pasteSchematicAsync(templeSchematic, new Location(world, 0, -56, 0), null);
     }
 
+    // Al generar un chunk nuevo revisa si le toca una ciudad y la pega una sola vez por celda
     public void tryGenerateAncientCity(Chunk chunk) {
         if (ancientCitySchematic == null) return;
 
@@ -87,6 +89,7 @@ public class StructureManager {
         preloadChunksThenPaste(world, info);
     }
 
+    // Carga todos los chunks que ocupa la ciudad antes de pegarla
     private void preloadChunksThenPaste(World world, AncientCityLocator.CityInfo info) {
         int radius = AncientCityLocator.CLEAR_RADIUS + AncientCityLocator.CLEAR_TRANSITION;
         int minCX = Math.floorDiv(info.centerX - radius, 16);
@@ -125,6 +128,7 @@ public class StructureManager {
         return false;
     }
 
+    // Pega el schematic con FAWE en async alineando la esquina del schem con la ubicación
     private void pasteSchematicAsync(Clipboard clipboard, Location loc, Runnable onComplete) {
         TaskManager.taskManager().async(() -> {
             try (EditSession editSession = WorldEdit.getInstance().newEditSessionBuilder()

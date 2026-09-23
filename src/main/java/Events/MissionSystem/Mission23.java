@@ -62,6 +62,7 @@ public class Mission23 implements Mission, Listener {
     @Override
     public void checkCompletion(String playerName) {}
 
+    // Tiene que matar al Piglin Brute con hacha de oro y alguna pieza de armadura de oro
     @EventHandler
     public void onDeath(EntityDeathEvent event) {
         if (event.getEntityType() != EntityType.PIGLIN_BRUTE) return;

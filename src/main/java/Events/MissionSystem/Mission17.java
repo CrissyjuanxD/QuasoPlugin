@@ -84,6 +84,7 @@ public class Mission17 implements Mission, Listener {
     @Override
     public void checkCompletion(String playerName) {}
 
+    // Detecta endermans y creepers Elite (EliteMobs) y los cuenta por separado hasta 40
     @EventHandler(priority = EventPriority.LOWEST)
     public void onEliteDeath(EntityDeathEvent event) {
         org.bukkit.entity.LivingEntity entity = event.getEntity();

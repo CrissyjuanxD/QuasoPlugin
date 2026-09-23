@@ -35,6 +35,7 @@ public class AchievementGUI implements Listener {
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
 
+    // Menú con todos los logros, marcando los que el jugador ya completó
     public void openAchievementGUI(Player player) {
         Inventory gui = Bukkit.createInventory(null, 54, ChatColor.of("#FF1493") + "" + ChatColor.BOLD + "Fiesta de Logros");
 

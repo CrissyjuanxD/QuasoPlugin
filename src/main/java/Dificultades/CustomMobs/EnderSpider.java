@@ -115,6 +115,7 @@ public class EnderSpider extends EnderMobs implements Listener {
         }
     }
 
+    // Dispara un bloque de cristal morado que si toca al jugador lo tepea cerca
     private void launchTeleportProjectile(Spider spider, Player target) {
         BlockDisplay projectile = (BlockDisplay) spider.getWorld().spawnEntity(
                 spider.getEyeLocation(), EntityType.BLOCK_DISPLAY
@@ -139,6 +140,7 @@ public class EnderSpider extends EnderMobs implements Listener {
         activeProjectiles.add(new TeleportProjectileData(projectile, direction, spider));
     }
 
+    // Mueve todos los proyectiles de teleport en una sola tarea
     private void startProjectileTask() {
         if (projectileTask != null && !projectileTask.isCancelled()) return;
 
@@ -199,6 +201,7 @@ public class EnderSpider extends EnderMobs implements Listener {
         player.addPotionEffect(new PotionEffect(PotionEffectType.SLOWNESS, 60, 1, false, true));
     }
 
+    // Busca un lugar seguro (suelo sólido y sin agua ni lava) dentro del radio
     private Location findSafePlayerLocation(Location currentLoc, int radius) {
         World world = currentLoc.getWorld();
 

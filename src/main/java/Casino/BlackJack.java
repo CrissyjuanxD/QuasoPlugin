@@ -100,6 +100,7 @@ public class BlackJack implements Listener {
         return mat != null ? mat : fallback;
     }
 
+    // Abre la mesa de blackjack; si el jugador tenía una partida pendiente la retoma
     @EventHandler
     public void onPlayerInteract(PlayerInteractEvent event) {
         if (event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
@@ -215,6 +216,7 @@ public class BlackJack implements Listener {
         inv.setItem(dealButton, usedDeal);
     }
 
+    // Toma la apuesta en fichas y reparte dos cartas al jugador y al crupier
     private void startGame(Player player, Inventory inv) {
         UUID id = player.getUniqueId();
         if (isPlaying.getOrDefault(id, false)) return;
@@ -280,6 +282,7 @@ public class BlackJack implements Listener {
         }
     }
 
+    // El crupier pide cartas hasta llegar a 17
     private void stand(Player player, Inventory inv) {
         playerStand.put(player.getUniqueId(), true);
         updateCards(inv, player.getUniqueId());
@@ -304,6 +307,7 @@ public class BlackJack implements Listener {
         }.runTaskTimer(plugin, 10L, 20L);
     }
 
+    // Mira quién ganó y paga la apuesta según los multiplicadores del config
     private void endRound(Player player, Inventory inv, boolean naturalBlackjack) {
         UUID id = player.getUniqueId();
         int playerVal = calculateValue(playerHands.get(id));
@@ -427,6 +431,7 @@ public class BlackJack implements Listener {
         return item;
     }
 
+    // Los ases valen 11 si no te pasas de 21, si no valen 1
     private int calculateValue(List<Card> hand) {
         int val = 0;
         int aces = 0;
@@ -548,6 +553,7 @@ public class BlackJack implements Listener {
         cleanUpGame(p.getUniqueId());
     }
 
+    // Si cierra el menú a mitad de partida tiene 60s para volver, si no se le devuelve la apuesta
     private void startReconnectTimer(Player player, Location loc) {
         UUID id = player.getUniqueId();
 

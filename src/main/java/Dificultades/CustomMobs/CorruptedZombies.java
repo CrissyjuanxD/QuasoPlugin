@@ -79,6 +79,7 @@ public class CorruptedZombies implements Listener {
         }
     }
 
+    // Una sola tarea para todos los zombies corruptos que revisa si pueden disparar
     private void startCentralTask() {
         if (mainTask != null && !mainTask.isCancelled()) return;
 
@@ -159,6 +160,7 @@ public class CorruptedZombies implements Listener {
         return distanceXZ <= 15 * 15 && distanceY <= 15;
     }
 
+    // Dispara una wind charge con partículas de portal hacia el jugador
     private void lanzarSnowball(Zombie zombie, Player player) {
         WindCharge snowball = zombie.launchProjectile(WindCharge.class);
 
@@ -214,6 +216,7 @@ public class CorruptedZombies implements Listener {
         }
     }
 
+    // 30% de soltar carne corrupta
     @EventHandler
     public void onZombieDeath(EntityDeathEvent event) {
         if (event.getEntity() instanceof Zombie zombie && isCorrupted(zombie)) {

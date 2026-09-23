@@ -134,6 +134,7 @@ public class CustomSpawnerHandler implements Listener {
         Bukkit.getScheduler().runTaskLater(plugin, this::loadAllCustomSpawners, 100L);
     }
 
+    // Al cargar un chunk registra los spawners custom que tenga
     @EventHandler
     public void onChunkLoad(ChunkLoadEvent event) {
         if (event.isNewChunk()) return;
@@ -182,6 +183,7 @@ public class CustomSpawnerHandler implements Listener {
         customSpawnTask.runTaskTimer(plugin, 20L, 20L);
     }
 
+    // Cada segundo revisa los spawners custom: modo, delay, jugadores en rango y máximo de mobs cerca
     private void processCustomSpawners() {
         long timelimp = System.currentTimeMillis();
 
@@ -332,6 +334,7 @@ public class CustomSpawnerHandler implements Listener {
         return count;
     }
 
+    // Spawnea los mobs del spawner con partículas según el modo
     private void performCustomSpawn(Location spawnerLoc, CustomSpawnerData data) {
         int spawnCount;
         if (data.spawnMode == SpawnMode.ONE_SPAWN) {
@@ -411,6 +414,7 @@ public class CustomSpawnerHandler implements Listener {
                 below.getType().isSolid();
     }
 
+    // Al poner el spawner custom pasa la configuración del item al bloque
     @EventHandler
     public void onBlockPlace(BlockPlaceEvent event) {
         ItemStack item = event.getItemInHand();
@@ -620,6 +624,7 @@ public class CustomSpawnerHandler implements Listener {
         spawner.setItemMeta(meta);
     }
 
+    // En modo vanilla cambia el mob que saca el spawner por el custom; en los otros modos spawnea la tarea propia
     @EventHandler
     public void onSpawnerSpawn(SpawnerSpawnEvent event) {
         CreatureSpawner spawner = (CreatureSpawner) event.getSpawner().getBlock().getState();
@@ -702,6 +707,7 @@ public class CustomSpawnerHandler implements Listener {
         }
     }
 
+    // Mob vanilla que se muestra dentro del spawner para cada mob custom
     private EntityType getBaseEntityType(String mobType) {
         switch (mobType.toLowerCase()) {
             case "bombita": case "corruptedcreeper": case "infernalcreeper": case "endercreeper": case "darkcreeper": return EntityType.CREEPER;
@@ -800,6 +806,7 @@ public class CustomSpawnerHandler implements Listener {
         openConfigGUI(event.getPlayer(), item);
     }
 
+    // Menú para editar los valores del spawner (shift + click derecho con el spawner en la mano)
     public void openConfigGUI(Player player, ItemStack spawnerItem) {
         Inventory gui = Bukkit.createInventory(player, 27, "Configuración del Spawner");
 
@@ -998,6 +1005,7 @@ public class CustomSpawnerHandler implements Listener {
         updateGUI(player, spawner);
     }
 
+    // Lee por chat el nuevo valor del spawner que se está editando
     @EventHandler
     public void onPlayerChat(AsyncPlayerChatEvent event) {
         Player player = event.getPlayer();

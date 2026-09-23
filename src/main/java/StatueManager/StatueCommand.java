@@ -14,6 +14,7 @@ import java.util.List;
 
 public class StatueCommand implements CommandExecutor {
 
+    // Da el item de la estatua con los valores por defecto
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!(sender instanceof Player)) return true;

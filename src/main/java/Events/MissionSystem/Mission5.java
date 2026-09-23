@@ -74,6 +74,7 @@ public class Mission5 implements Mission, Listener {
     @Override
     public void checkCompletion(String playerName) {}
 
+    // Detecta si es Elite (EliteMobs); si no hay killer directo lo saca del último daño, flechas incluidas
     @EventHandler(priority = EventPriority.LOWEST)
     public void onZombieDeath(EntityDeathEvent event) {
         org.bukkit.entity.LivingEntity entity = event.getEntity();

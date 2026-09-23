@@ -42,6 +42,7 @@ public class Achievement3 implements Achievement, Listener {
     public void checkCompletion(String playerName) {
     }
 
+    // Los tótems especiales son los que tienen custom model data 3, 4 o 5
     @EventHandler
     public void onTotemActivate(EntityResurrectEvent event) {
         if (!(event.getEntity() instanceof Player)) return;

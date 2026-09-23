@@ -45,6 +45,7 @@ public abstract class BaseBoss {
         this.spawnLocation = entity.getLocation().clone();
     }
 
+    // Arranca el boss: barras, arena y el tick que controla la hibernación, que no salga de la arena y su muerte
     public final void start() {
         if (initialized) return;
         initialized = true;
@@ -101,6 +102,7 @@ public abstract class BaseBoss {
         tickTask.runTaskTimer(plugin, 1L, 1L);
     }
 
+    // Si no queda nadie en la arena el boss se congela y se vuelve invulnerable
     private void enterHibernation() {
         hibernating = true;
         entity.setAI(false);
@@ -159,6 +161,7 @@ public abstract class BaseBoss {
         );
     }
 
+    // Mete o saca a los jugadores de las bossbars según entren o salgan de la arena
     private void updatePlayers() {
         for (Player player : Bukkit.getOnlinePlayers()) {
             boolean inside = areaZone.isInside(player.getLocation());

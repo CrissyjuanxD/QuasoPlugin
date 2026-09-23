@@ -24,6 +24,7 @@ public class BuildBattleCommand implements CommandExecutor, TabCompleter {
         this.handler = handler;
     }
 
+    // Comando de admin del evento, cada subcomando llama al handler
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!(sender instanceof Player p)) return true;

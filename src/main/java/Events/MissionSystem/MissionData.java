@@ -13,6 +13,7 @@ public class MissionData {
     private Map<String, Object> progress;
     private transient boolean dirty = false;
 
+    // El progreso se guarda en la base de datos como JSON
     public MissionData(boolean active, boolean completed, boolean rewardClaimed, String jsonProgress) {
         this.active = active;
         this.completed = completed;

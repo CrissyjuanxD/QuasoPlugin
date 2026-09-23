@@ -22,6 +22,7 @@ public class ConfusionEffect implements CustomEffect {
         this.plugin = plugin;
     }
 
+    // Mientras tenga mala suerte le mueve la cámara, más fuerte según el nivel del efecto
     @Override
     public void applyEffect(Player player, int durationSeconds, int amplifier) {
 
@@ -108,6 +109,7 @@ public class ConfusionEffect implements CustomEffect {
         setPlayerRotation(player, newYaw, newPitch);
     }
 
+    // Cada jugador tiene uno de 4 patrones de movimiento para que no sea siempre igual
     private float calculateShake(int tick, int pattern, float frequency, float amplitude, int offset) {
         float time = tick * frequency + offset * 2.0f;
 

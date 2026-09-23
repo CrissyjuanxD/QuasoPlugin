@@ -68,6 +68,7 @@ public class CorruptedSpider implements Listener {
         applyCorruptedSpiderAttributes(spider);
     }
 
+    // Araña con speed y fuerza permanentes
     private void applyCorruptedSpiderAttributes(Spider spider) {
         spider.setCustomName(ChatColor.DARK_PURPLE + "" + ChatColor.BOLD + "Corrupted Spider");
         spider.setCustomNameVisible(false);
@@ -78,6 +79,7 @@ public class CorruptedSpider implements Listener {
     }
 
 
+    // Si le pega a un jugador que no se cubre con el escudo le pone una telaraña en los pies
     @EventHandler
     public void onSpiderHit(EntityDamageByEntityEvent event) {
         if (event.getDamager() instanceof Spider && event.getEntity() instanceof Player) {

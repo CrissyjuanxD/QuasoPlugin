@@ -47,6 +47,7 @@ public class FishingZoneManager {
         }
     }
 
+    // Carga las zonas guardadas en pesca.yml
     private void loadZonesFromConfig() {
         if (!fishingConfig.contains("zonas")) return;
 
@@ -73,6 +74,7 @@ public class FishingZoneManager {
         plugin.getLogger().info("[Pesca] " + zones.size() + " zona(s) cargada(s).");
     }
 
+    // Guarda una zona nueva (las dos posiciones tienen que estar en el mismo mundo)
     public boolean registerZone(String name, Location pos1, Location pos2) {
         if (pos1 == null || pos2 == null) return false;
         if (!pos1.getWorld().equals(pos2.getWorld())) return false;

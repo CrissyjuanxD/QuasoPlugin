@@ -120,6 +120,7 @@ public class HotPotatoHandler implements Listener {
         ));
     }
 
+    // Crea hotpotatoconfig.yml con los valores por defecto y lee tiempos, poderes y modo de rondas
     public void crearYcargarConfig() {
         configFile = new File(plugin.getDataFolder(), "hotpotatoconfig.yml");
 
@@ -255,6 +256,7 @@ public class HotPotatoHandler implements Listener {
         }
     }
 
+    // Mete a todos los conectados al evento y los tepea cuando termina el timer de espera
     public void iniciarEvento() {
         if (eventoIniciado) return;
         eventoIniciado = true;
@@ -310,6 +312,7 @@ public class HotPotatoHandler implements Listener {
         teletransportarJugadores();
     }
 
+    // Les limpia el inventario, desactiva sus habilidades y los tepea de a uno con /magictp
     private void teletransportarJugadores() {
         tpRealizado = true;
         World world = Bukkit.getWorld("world");
@@ -358,6 +361,7 @@ public class HotPotatoHandler implements Listener {
         }
     }
 
+    // Cuenta regresiva de 10 segundos y arranca la primera ronda con todas las tareas del evento
     public void iniciarBatalla() {
         if (!tpRealizado) {
             Bukkit.broadcastMessage("§cPrimero deben ser teletransportados los jugadores.");
@@ -446,6 +450,7 @@ public class HotPotatoHandler implements Listener {
         }.runTaskTimer(plugin, 0L, 20L);
     }
 
+    // Cuántas bombas hay por ronda según el modo (rapida, lenta o max) hasta quedar 3, y la final con 2
     private void calcularRondas() {
         int total = vivos.size();
         secuenciaBombas.clear();
@@ -513,6 +518,7 @@ public class HotPotatoHandler implements Listener {
         }
     }
 
+    // Reparte las bombas de la ronda, spawnea poderes y si toca empieza a cerrar el borde
     private void siguienteRonda() {
         if (vivos.size() <= 1) {
             declararGanador();
@@ -587,6 +593,7 @@ public class HotPotatoHandler implements Listener {
         tareasActivas.add(timerRonda);
     }
 
+    // Al acabar el tiempo explotan uno por uno los que tienen la bomba
     private void finalizarRonda() {
         if (!enBatalla) return;
 
@@ -623,6 +630,7 @@ public class HotPotatoHandler implements Listener {
         }
     }
 
+    // Saca al jugador de la partida y lo manda a espectadores; si ya no quedan bombas adelanta la ronda
     private void procesarMuerte(Player jugador, Player atacante, String causa) {
         String eliminado = jugador.getName();
 
@@ -683,6 +691,7 @@ public class HotPotatoHandler implements Listener {
         tareasActivas.add(Bukkit.getScheduler().runTaskLater(plugin, this::siguienteRonda, 40L));
     }
 
+    // Cada segundo llena la comida y hace daño a los que estén fuera del borde o encima de un cactus
     private void iniciarSaturacionYDanioEntorno() {
         taskSaturacionDanio = new BukkitRunnable() {
             @Override
@@ -775,6 +784,7 @@ public class HotPotatoHandler implements Listener {
         actualizarScoreboard();
     }
 
+    // Al pegarle a alguien con la bomba se la pasa; la Protección la bloquea una vez
     @EventHandler
     public void onGolpe(EntityDamageByEntityEvent e) {
         if (!enBatalla || rondaEnPausa) return;
@@ -821,6 +831,7 @@ public class HotPotatoHandler implements Listener {
         }
     }
 
+    // Da el poder que recogió del suelo y lo anuncia en la zona
     private void darPoder(Player p, String poder) {
         poderActual.put(p.getName(), poder);
         p.getInventory().clear();
@@ -1165,6 +1176,7 @@ public class HotPotatoHandler implements Listener {
         }
     }
 
+    // Avisa 3 segundos antes y empieza a cerrar el borde hacia el centro hasta dejarlo en 25x25
     private void iniciarReduccionBorde() {
         if (vivos.size() <= 1 || !enBatalla) return;
 
@@ -1379,6 +1391,7 @@ public class HotPotatoHandler implements Listener {
         poderesEnSuelo.add(display);
     }
 
+    // Busca un bloque de arena con 2 de aire encima dentro del borde actual
     private Location getSafeLocation(World world) {
         for (int i = 0; i < 50; i++) {
             int x = minX + new Random().nextInt(maxX - minX + 1);

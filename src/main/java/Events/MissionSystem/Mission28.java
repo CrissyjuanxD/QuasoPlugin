@@ -108,6 +108,7 @@ public class Mission28 implements Mission, Listener {
         }
     }
 
+    // Marca cada pieza de netherita con Protección V que se equipe hasta tener las 4
     private void checkArmorEquipped(Player player) {
         MissionData data = missionHandler.getData(player, 28);
         if (!data.isActive() || data.isCompleted()) return;

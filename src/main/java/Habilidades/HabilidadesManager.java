@@ -25,6 +25,7 @@ public class HabilidadesManager {
         loadHabilidadesConfig();
     }
 
+    // Los eventos desactivan las habilidades mientras dura la partida; queda guardado por si se reinicia el server
     public void disableHabilidades(Player player) {
         disabledPlayers.add(player.getUniqueId());
         habilidadesConfig.set("disabled_players." + player.getUniqueId().toString(), true);
@@ -84,6 +85,7 @@ public class HabilidadesManager {
         }
     }
 
+    // Si las habilidades están desactivadas cuenta como que no la tiene aunque la haya comprado
     public boolean hasHabilidad(UUID playerUUID, HabilidadesType type, int level) {
         if (areHabilidadesDisabled(playerUUID)) {
             return false;
@@ -104,6 +106,7 @@ public class HabilidadesManager {
         saveConfig();
     }
 
+    // Nivel más alto activo de esa habilidad (máximo 8)
     public int getHighestLevel(UUID playerUUID, HabilidadesType type) {
         for (int level = 8; level >= 1; level--) {
             if (hasHabilidad(playerUUID, type, level)) {
@@ -137,6 +140,7 @@ public class HabilidadesManager {
         saveConfig();
     }
 
+    // Para comprar un nivel hay que tener el anterior
     public boolean canUnlock(UUID playerUUID, HabilidadesType type, int level) {
         if (level == 1) {
             return true;

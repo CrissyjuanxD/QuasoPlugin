@@ -70,6 +70,7 @@ public class Mission27 implements Mission, Listener {
     @Override
     public void checkCompletion(String playerName) {}
 
+    // Se completa al matar al jugador Crosszy
     @EventHandler
     public void onPlayerDeath(PlayerDeathEvent event) {
         Player victim = event.getEntity();

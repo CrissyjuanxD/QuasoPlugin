@@ -71,6 +71,7 @@ public class InfestedCaveSpider extends InfestedMob implements Listener {
         return spider;
     }
 
+    // Araña de cueva más grande con 100 de vida y entre 3 y 5 efectos al azar
     private void applyAttributes(CaveSpider spider) {
         spider.setCustomName(ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "Infested Cave Spider");
         spider.setCustomNameVisible(false);
@@ -96,6 +97,7 @@ public class InfestedCaveSpider extends InfestedMob implements Listener {
         spider.getPersistentDataContainer().set(mobKey, PersistentDataType.BYTE, (byte) 1);
     }
 
+    // 30% de lanzar un sonic boom al pegarle a un jugador
     @EventHandler
     public void onAttack(EntityDamageByEntityEvent event) {
         if (!isCustomMob(event.getDamager())) return;
@@ -106,6 +108,7 @@ public class InfestedCaveSpider extends InfestedMob implements Listener {
         }
     }
 
+    // Los proyectiles no le hacen daño
     @EventHandler
     public void onProjectileHit(EntityDamageByEntityEvent event) {
         if (!isCustomMob(event.getEntity())) return;

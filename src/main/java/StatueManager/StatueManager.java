@@ -36,6 +36,7 @@ public class StatueManager implements Listener {
         startEffectLoop();
     }
 
+    // Al iniciar busca en todos los mundos las estatuas que ya estaban puestas
     public void loadStatues() {
         Bukkit.getScheduler().runTask(plugin, () -> {
             for (org.bukkit.World world : Bukkit.getWorlds()) {
@@ -63,6 +64,7 @@ public class StatueManager implements Listener {
         removeEffectFromPlayers(stand);
     }
 
+    // Cada segundo da el efecto de cada estatua a los jugadores que estén dentro de su radio
     private void startEffectLoop() {
         new BukkitRunnable() {
             @Override
@@ -95,6 +97,7 @@ public class StatueManager implements Listener {
         }.runTaskTimer(plugin, 20L, 20L);
     }
 
+    // Solo lo renueva si le quedan 2 segundos o menos o si el que tiene es más débil, para no pisar pociones más fuertes
     private void applySmartEffect(Player p, PotionEffectType type, int amplifier) {
         PotionEffect current = p.getPotionEffect(type);
         if (current != null) {
@@ -105,6 +108,7 @@ public class StatueManager implements Listener {
         p.addPotionEffect(new PotionEffect(type, 200, amplifier, true, true));
     }
 
+    // Al quitar la estatua saca el efecto a los que estén cerca, solo si parece de la estatua (10 segundos o menos)
     private void removeEffectFromPlayers(ArmorStand stand) {
         StatueData data = new StatueData(stand);
         if (data.isAntiGrief()) return;
@@ -126,6 +130,7 @@ public class StatueManager implements Listener {
         }
     }
 
+    // El color del brillo sale de un team del scoreboard (SE_<COLOR>)
     public void updateGlowingColor(ArmorStand stand) {
         StatueData data = new StatueData(stand);
         ChatColor color = data.getGlowColor();
@@ -151,6 +156,7 @@ public class StatueManager implements Listener {
         stand.setGlowing(true);
     }
 
+    // Revisa si el bloque está dentro del radio de alguna estatua anti-grief
     private boolean isLocationProtected(Location loc) {
         for (ArmorStand stand : activeStatues.values()) {
             if (!stand.isValid() || !stand.getChunk().isLoaded()) continue;
@@ -173,6 +179,7 @@ public class StatueManager implements Listener {
         return false;
     }
 
+    // Las explosiones no rompen bloques protegidos por una estatua anti-grief
     @EventHandler
     public void onEntityExplode(EntityExplodeEvent event) {
         List<Block> blocks = new ArrayList<>(event.blockList());
@@ -195,6 +202,7 @@ public class StatueManager implements Listener {
         }
     }
 
+    // Los mobs tampoco pueden cambiar bloques en la zona protegida (endermans, withers, etc.)
     @EventHandler
     public void onEntityChangeBlock(EntityChangeBlockEvent event) {
         if (event.getEntity() instanceof Player) return;

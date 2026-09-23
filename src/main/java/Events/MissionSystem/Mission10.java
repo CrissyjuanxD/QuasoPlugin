@@ -69,6 +69,7 @@ public class Mission10 implements Mission, Listener {
     @Override
     public void checkCompletion(String playerName) {}
 
+    // Se completa al matar a la Abeja Reina
     @EventHandler
     public void onEntityDeath(EntityDeathEvent event) {
         Entity entity = event.getEntity();

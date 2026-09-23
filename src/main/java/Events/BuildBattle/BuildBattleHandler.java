@@ -125,6 +125,7 @@ public class BuildBattleHandler implements Listener {
         startLocationTracker();
     }
 
+    // Cada 5 ticks revisa quién está en la arena, saca a los que se meten en parcelas ajenas y muestra de quién es la parcela
     private void startLocationTracker() {
         locationTrackerTask = new BukkitRunnable() {
             @Override
@@ -218,6 +219,7 @@ public class BuildBattleHandler implements Listener {
     public boolean isAdmin(String name) { return admins.contains(name); }
     public boolean isParticipante(String name) { return participantes.contains(name); }
 
+    // Carga config, datos (parcelas y centro) y puntajes; si no existen los crea con valores por defecto
     public void loadFiles() {
         configFile = new File(plugin.getDataFolder() + "/buildbattle", "buildbattleconfig.yml");
         dataFile = new File(plugin.getDataFolder() + "/buildbattle", "buildbattledata.yml");
@@ -314,6 +316,7 @@ public class BuildBattleHandler implements Listener {
         return x >= arenaMinX && x <= arenaMaxX && y >= arenaMinY && y <= arenaMaxY && z >= arenaMinZ && z <= arenaMaxZ;
     }
 
+    // Busca la parcela usando el índice por chunk para no recorrerlas todas
     public BuildBattleParcel getParcelByLocationFast(Location loc) {
         int chunkX = loc.getBlockX() >> 4;
         int chunkZ = loc.getBlockZ() >> 4;
@@ -366,6 +369,7 @@ public class BuildBattleHandler implements Listener {
         try { data.save(dataFile); } catch (IOException ignored) {}
     }
 
+    // Arranca el evento: todos los que no son votadores ni admins pasan a ser participantes
     public void iniciarEvento() {
         if (eventoIniciado) return;
         eventoIniciado = true;
@@ -453,6 +457,7 @@ public class BuildBattleHandler implements Listener {
         broadcastEventZona("§aParticipantes forzados a sus parcelas.");
     }
 
+    // Tepea a los jugadores de a uno cada 7 ticks para no laggear y a los participantes les da parcela
     private void realizarTpProgresivo(Location center) {
         List<Player> aTeletransportar = new ArrayList<>();
         for (String name : votantes) { Player p = Bukkit.getPlayer(name); if (p != null) aTeletransportar.add(p); }
@@ -557,6 +562,7 @@ public class BuildBattleHandler implements Listener {
         }
     }
 
+    // Cuenta regresiva de 10 segundos antes de empezar a construir
     public void startBuildPhase() {
         if (categoria.equals("Ninguna")) {
             broadcastEventZona("§c§lERROR §8» §fFalta asignar una categoría.");
@@ -615,6 +621,7 @@ public class BuildBattleHandler implements Listener {
         }.runTaskTimer(plugin, 0L, 20L);
     }
 
+    // Pone el timer de construcción y la música; al acabar el tiempo pasa a votación
     private void iniciarTemporizadorYMusica() {
         fase = "Construccion";
         timeLeftBuild = config.getInt("tiempo_construccion", 25) * 60;
@@ -661,6 +668,7 @@ public class BuildBattleHandler implements Listener {
         }.runTaskTimer(plugin, 0L, 20L);
     }
 
+    // Va rotando los discos mientras dure la construcción
     private void playNextSong() {
         if (!eventoIniciado || !fase.equals("Construccion")) return;
 
@@ -688,6 +696,7 @@ public class BuildBattleHandler implements Listener {
         }
     }
 
+    // Congela a los constructores y les da a los votadores los items para puntuar
     private void startVotingPhase() {
         fase = "Votacion";
         tiempoCommand.removeBossBar("bb_timer");
@@ -832,6 +841,7 @@ public class BuildBattleHandler implements Listener {
         mostrarTopYTerminar(validParcels);
     }
 
+    // Solo si todas las parcelas tienen todos los votos. En torneo guarda la ronda y si hay empate en el top arma un desempate (una sola vez)
     public void declararGanadores() {
         if (!fase.equals("Votacion")) return;
 
@@ -1101,6 +1111,7 @@ public class BuildBattleHandler implements Listener {
         broadcastEventZona(cPrimary + "Todas las parcelas han sido reseteadas.");
     }
 
+    // Devuelve inventarios, teams y modo de juego a todos y resetea las parcelas
     public void endEvent() {
         eventoIniciado = false;
         tpRealizado = false;
@@ -1313,6 +1324,7 @@ public class BuildBattleHandler implements Listener {
         }
     }
 
+    // /floor cambia el suelo de la parcela por el bloque que tenga en la mano
     @EventHandler
     public void onCommandPreprocess(PlayerCommandPreprocessEvent e) {
         if (!eventoIniciado) return;
@@ -1590,6 +1602,7 @@ public class BuildBattleHandler implements Listener {
         p.setFlying(true);
     }
 
+    // Varita para marcar parcelas, bloqueo de interacción fuera de la parcela propia e items de votación
     @EventHandler
     public void onInteract(PlayerInteractEvent e) {
         if (e.getHand() != EquipmentSlot.HAND) return;
@@ -1719,6 +1732,7 @@ public class BuildBattleHandler implements Listener {
         p.openInventory(inv);
     }
 
+    // Abre un dialog de Paper para escribir el puntaje del 1 al 10
     private void abrirMenuPuntos(Player p, String tituloCategoria) {
         net.kyori.adventure.text.minimessage.MiniMessage mm = net.kyori.adventure.text.minimessage.MiniMessage.miniMessage();
 
@@ -1799,6 +1813,7 @@ public class BuildBattleHandler implements Listener {
         }
     }
 
+    // Recibe el puntaje del dialog y se lo pone a la parcela que está viendo el votador
     @EventHandler
     public void onCustomDialogClick(io.papermc.paper.event.player.PlayerCustomClickEvent e) {
         String keyStr = e.getIdentifier().asString();
@@ -1892,6 +1907,7 @@ public class BuildBattleHandler implements Listener {
         t.setOption(Team.Option.NAME_TAG_VISIBILITY, Team.OptionStatus.ALWAYS);
     }
 
+    // Guarda el team original del jugador para devolvérselo al terminar
     private void aplicarTeam(Player p) {
         Scoreboard mainBoard = Bukkit.getScoreboardManager().getMainScoreboard();
         Team oldTeam = mainBoard.getEntryTeam(p.getName());
@@ -1975,6 +1991,7 @@ public class BuildBattleHandler implements Listener {
         actualizarScoreboardIndividual(p, validParcelsPrecalc);
     }
 
+    // Scoreboard propio del jugador copiando los teams del principal; cambia según la fase
     private void actualizarScoreboardIndividual(Player p, List<BuildBattleParcel> validParcels) {
         Scoreboard board = p.getScoreboard();
 
@@ -2200,6 +2217,7 @@ public class BuildBattleHandler implements Listener {
         }
     }
 
+    // Mete a un jugador al evento ya empezado y le da parcela si ya se hizo el tp
     public void addPlayerEnMedio(String name) {
         if (!participantes.contains(name)) {
             participantes.add(name);
@@ -2285,6 +2303,7 @@ public class BuildBattleHandler implements Listener {
         p.sendMessage(net.kyori.adventure.text.serializer.gson.GsonComponentSerializer.gson().deserialize(json));
     }
 
+    // Usa /magictp para tepear con la animación
     private void teleportMagico(Player p, Location loc) {
         String comando = String.format(Locale.US, "magictp %s %.2f %.2f %.2f", p.getName(), loc.getX(), loc.getY(), loc.getZ());
         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), comando);

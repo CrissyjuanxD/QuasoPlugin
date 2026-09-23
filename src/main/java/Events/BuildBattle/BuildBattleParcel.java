@@ -40,6 +40,7 @@ public class BuildBattleParcel {
 
     private boolean eliminated = false;
 
+    // La parcela llega hasta 60 bloques por encima del suelo marcado
     public BuildBattleParcel(int id, Location p1, Location p2) {
         this.id = id;
         this.cachedWorld = p1.getWorld();
@@ -65,6 +66,7 @@ public class BuildBattleParcel {
         return x >= minX && x <= maxX && y >= minY && y <= maxY && z >= minZ && z <= maxZ;
     }
 
+    // Chunks que toca la parcela, sirve para el índice de búsqueda rápida del handler
     public Set<Long> getIntersectingChunks() {
         Set<Long> chunks = new HashSet<>();
         int minChunkX = minX >> 4;
@@ -92,6 +94,7 @@ public class BuildBattleParcel {
         return count;
     }
 
+    // Con FAWE deja la parcela vacía y el suelo de concreto gris
     public void clearParcel() {
         com.sk89q.worldedit.world.World weWorld = BukkitAdapter.adapt(cachedWorld);
 
@@ -142,6 +145,7 @@ public class BuildBattleParcel {
         removeTextDisplay();
     }
 
+    // En torneo pasa los votos de la ronda a los puntos acumulados
     public void saveRoundPoints() {
         baseOriginality += votesOriginality.values().stream().mapToInt(Integer::intValue).sum();
         baseComplexity += votesComplexity.values().stream().mapToInt(Integer::intValue).sum();
@@ -152,6 +156,7 @@ public class BuildBattleParcel {
         votesVisual.clear();
     }
 
+    // Guarda el puntaje global y deja los votos en cero para el desempate
     public void prepareForTieBreaker() {
         storedGlobalScore = getTotalPoints();
         votesOriginality.clear();
@@ -167,6 +172,7 @@ public class BuildBattleParcel {
         this.storedGlobalScore = score;
     }
 
+    // Holograma con el puntaje de la parcela, lo crea si todavía no existe
     public void updateTextDisplay() {
         if (textDisplayUUID != null) {
             org.bukkit.entity.Entity ent = Bukkit.getEntity(textDisplayUUID);
@@ -225,6 +231,7 @@ public class BuildBattleParcel {
     public int getPointsVisual() { return baseVisual + votesVisual.values().stream().mapToInt(Integer::intValue).sum(); }
     public int getTotalPoints() { return getPointsOriginality() + getPointsComplexity() + getPointsVisual(); }
 
+    // En desempate los puntos nuevos solo sirven para desempatar (0.001 por punto)
     public double getSortPoints() {
         if (storedGlobalScore != -1) {
             return storedGlobalScore + (getTotalPoints() * 0.001);

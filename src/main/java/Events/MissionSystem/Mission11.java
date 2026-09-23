@@ -80,6 +80,7 @@ public class Mission11 implements Mission, Listener {
     @Override
     public void checkCompletion(String playerName) {}
 
+    // Detecta arañas y esqueletos Elite (EliteMobs) y los cuenta por separado hasta 30
     @EventHandler(priority = EventPriority.LOWEST)
     public void onEliteDeath(EntityDeathEvent event) {
         org.bukkit.entity.LivingEntity entity = event.getEntity();

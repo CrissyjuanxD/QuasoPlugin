@@ -184,6 +184,7 @@ public class WardenArmor implements Listener {
         return item.getItemMeta().getPersistentDataContainer().has(wardenArmorKey, PersistentDataType.BYTE);
     }
 
+    // La armadura del Warden tiene 30% de probabilidad de no gastarse
     @EventHandler
     public void onItemDamage(PlayerItemDamageEvent event) {
         if (isWardenArmor(event.getItem())) {

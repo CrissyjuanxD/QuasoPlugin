@@ -38,12 +38,14 @@ public class MobSoundManager {
         startCleanupTask();
     }
 
+    // Cada mob custom registra sus sonidos con la key de su PDC
     public static void register(NamespacedKey key, Sound ambient, Sound step, float pitch, float volume) {
         if (instance != null) {
             instance.soundRegistry.put(key, new SoundData(ambient, step, pitch, volume));
         }
     }
 
+    // Revisa los mobs cerca de cada jugador y les pone sus sonidos custom (máximo 300 por tick)
     private void startSoundTask() {
         new BukkitRunnable() {
             @Override
@@ -138,6 +140,7 @@ public class MobSoundManager {
         }
     }
 
+    // Borra de los caches los mobs que no se ven hace más de 10 segundos
     private void startCleanupTask() {
         new BukkitRunnable() {
             @Override

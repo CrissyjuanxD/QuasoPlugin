@@ -53,6 +53,7 @@ public class Bombita implements Listener {
         applyBombitaAttributes(creeper);
     }
 
+    // Creeper chiquito y rápido que explota casi al instante con radio 2
     private void applyBombitaAttributes(Creeper creeper) {
         creeper.setCustomName(ChatColor.RED + "" + ChatColor.BOLD + "Bombita");
         creeper.setCustomNameVisible(false);
@@ -64,6 +65,7 @@ public class Bombita implements Listener {
         creeper.getPersistentDataContainer().set(bombitaKey, PersistentDataType.BYTE, (byte) 1);
     }
 
+    // Las Bombitas no se dañan entre ellas
     @EventHandler
     public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
         if (event.getDamager() instanceof Creeper creeper && event.getEntity() instanceof Creeper) {

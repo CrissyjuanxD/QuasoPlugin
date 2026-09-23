@@ -30,6 +30,7 @@ public class Mission29 implements Mission, Listener {
 
     private final Map<UUID, Long> lastNotifiedHour = new HashMap<>();
 
+    // Cada minuto revisa las horas jugadas (estadística de tiempo jugado) y avisa cada hora nueva
     public Mission29(JavaPlugin plugin, MissionHandler missionHandler) {
         this.plugin = plugin;
         this.missionHandler = missionHandler;

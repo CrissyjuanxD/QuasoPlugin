@@ -68,6 +68,7 @@ public class Achievement5 implements Achievement, Listener {
         return requiredBlocks;
     }
 
+    // Solo cuenta si tiene Mining Fatigue III o más
     @EventHandler
     public void onBlockBreak(BlockBreakEvent event) {
         if (!eventHandler.isEventActive()) return;

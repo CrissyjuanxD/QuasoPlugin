@@ -48,6 +48,7 @@ public class ShopManager {
         }
     }
 
+    // Aldeano quieto e invulnerable con 10 tradeos vacíos, identificado con un id en su PDC
     public void spawnShop(String name, Location location, Villager.Type type, Villager.Profession profession) {
         Villager villager = (Villager) location.getWorld().spawnEntity(location, EntityType.VILLAGER);
         String shopId = UUID.randomUUID().toString();
@@ -97,6 +98,7 @@ public class ShopManager {
         return item == null || item.getType() == Material.AIR || item.getType() == Material.STRUCTURE_VOID;
     }
 
+    // Compara por custom model data o por nombre si el item pedido los tiene, si no solo por material
     public boolean isMatch(ItemStack invItem, ItemStack reqItem) {
         if (isEmpty(invItem) || isEmpty(reqItem)) return false;
         if (invItem.getType() != reqItem.getType()) return false;
@@ -114,6 +116,7 @@ public class ShopManager {
         return true;
     }
 
+    // Cambia un ingrediente o el producto de un tradeo desde el menú de configuración
     public void updateVillagerTrade(Villager villager, int tradeNumber, String slotType, ItemStack item) {
         List<MerchantRecipe> recipes = new ArrayList<>(villager.getRecipes());
 
@@ -165,6 +168,7 @@ public class ShopManager {
         villager.setRecipes(recipes);
     }
 
+    // Guarda los tradeos del aldeano en tradeos.yml
     public void saveShopTrades(String shopId, List<MerchantRecipe> recipes) {
         FileConfiguration config = YamlConfiguration.loadConfiguration(tradesFile);
         config.set("shops." + shopId + ".trades", null);
@@ -189,6 +193,7 @@ public class ShopManager {
         try { config.save(tradesFile); } catch (IOException e) { plugin.getLogger().severe("Error guardando tradeos: " + e.getMessage()); }
     }
 
+    // Carga los 10 tradeos guardados y rellena con vacíos los que falten
     public void loadShopTrades(String shopId, Villager villager) {
         FileConfiguration config = YamlConfiguration.loadConfiguration(tradesFile);
         if (!config.contains("shops." + shopId)) return;

@@ -26,6 +26,7 @@ public class StatueGUI implements Listener {
         this.plugin = plugin;
     }
 
+    // Guarda qué item se está editando y muestra sus valores actuales
     public void openConfigGUI(Player player, ItemStack item) {
         editors.put(player.getUniqueId(), item);
         Inventory inv = Bukkit.createInventory(null, 36, ChatColor.DARK_AQUA + "Configurar Estatua");
@@ -71,6 +72,7 @@ public class StatueGUI implements Listener {
         return item;
     }
 
+    // Los números se piden por chat; el color, el efecto, la visibilidad y la invulnerabilidad se cambian con click
     @EventHandler
     public void onInventoryClick(InventoryClickEvent e) {
         if (!e.getView().getTitle().equals(ChatColor.DARK_AQUA + "Configurar Estatua")) return;
@@ -182,6 +184,7 @@ public class StatueGUI implements Listener {
         }
     }
 
+    // Lee el valor escrito en el chat y vuelve a abrir el menú
     @EventHandler
     public void onChat(AsyncPlayerChatEvent e) {
         Player p = e.getPlayer();
@@ -226,6 +229,7 @@ public class StatueGUI implements Listener {
         });
     }
 
+    // Al guardar pone en el lore un resumen de la configuración
     private void updateLore(ItemStack item) {
         ItemMeta meta = item.getItemMeta();
         StatueData data = new StatueData(meta);

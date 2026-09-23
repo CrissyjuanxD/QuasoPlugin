@@ -25,6 +25,7 @@ public class CofresHandler {
         this.plugin = plugin;
     }
 
+    // Guarda lo que tienen los cofres de la arena para dejarlos igual al terminar
     public void guardarContenidoCofres(int minX, int maxX, int minZ, int maxZ) {
         contenidoCofres.clear();
 
@@ -68,6 +69,7 @@ public class CofresHandler {
         plugin.getLogger().info("Contenido de cofres restaurado correctamente. Total de cofres restaurados: " + contenidoCofres.size());
     }
 
+    // Copia en contenido_cofres.yml por si el server se apaga en medio del evento
     public void guardarCofresEnArchivo() {
         File archivo = new File(plugin.getDataFolder(), "contenido_cofres.yml");
         YamlConfiguration config = new YamlConfiguration();

@@ -91,6 +91,7 @@ public class CustomBoat implements Listener {
         return fuelItem;
     }
 
+    // Pone la nave (un bote) con su dueño y el combustible que tenía guardado
     public Boat spawnBoat(Location location, Player owner) {
         Boat boat = (Boat) location.getWorld().spawnEntity(location, EntityType.OAK_BOAT);
 
@@ -138,6 +139,7 @@ public class CustomBoat implements Listener {
         event.setCancelled(true);
     }
 
+    // Con combustible en la mano recarga la nave; con shift + click el dueño la guarda en el inventario
     @EventHandler
     public void onBoatInteract(PlayerInteractAtEntityEvent event) {
         if (!(event.getRightClicked() instanceof Boat)) return;
@@ -284,6 +286,7 @@ public class CustomBoat implements Listener {
         player.stopSound(Sound.BLOCK_FURNACE_FIRE_CRACKLE);
     }
 
+    // Mientras el dueño va montado y corre, la nave vuela hacia donde mira y gasta combustible
     private void startBoatMovementTask(Boat boat, Player player) {
         int taskId = new BukkitRunnable() {
             private float pitch = 0.5f;
@@ -434,6 +437,7 @@ public class CustomBoat implements Listener {
         actionBarTasks.put(player.getUniqueId(), taskId);
     }
 
+    // La velocidad depende de la dimensión y se configura en fuel.yml
     private double getBoatSpeedForWorld(World world) {
         if (fuelData == null) {
             return 0.3;
@@ -453,6 +457,7 @@ public class CustomBoat implements Listener {
         return fuelData.getDouble("speed.overworld", 0.6);
     }
 
+    // Si se queda sin combustible la nave explota a los 3 segundos
     private void explodeBoat(Boat boat) {
         boat.setGlowing(true);
 

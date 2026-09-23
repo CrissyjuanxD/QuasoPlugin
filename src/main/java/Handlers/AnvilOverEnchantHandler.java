@@ -33,6 +33,7 @@ public class AnvilOverEnchantHandler implements Listener {
             if (bookMeta == null || !bookMeta.hasStoredEnchants()) return;
 
             ItemStack resultItem = event.getResult();
+            // Si el yunque por defecto no da resultado (por ej. coste alto o enchants incompatibles en vanilla), clonamos el primero
             if (resultItem == null || resultItem.getType() == Material.AIR) {
                 resultItem = firstItem.clone();
             }
@@ -41,14 +42,28 @@ public class AnvilOverEnchantHandler implements Listener {
             if (resultMeta == null) return;
 
             boolean hasOverEnchant = false;
+            boolean isResultBook = resultItem.getType() == Material.ENCHANTED_BOOK;
 
             for (Map.Entry<Enchantment, Integer> entry : bookMeta.getStoredEnchants().entrySet()) {
                 Enchantment enchant = entry.getKey();
                 int bookLevel = entry.getValue();
 
-                if (bookLevel > enchant.getMaxLevel() || bookLevel > resultItem.getEnchantmentLevel(enchant)) {
-                    resultMeta.addEnchant(enchant, bookLevel, true);
-                    hasOverEnchant = true;
+                // Lógica separada para evitar el bug visual de enchants duplicados
+                if (isResultBook) {
+                    EnchantmentStorageMeta resultStorageMeta = (EnchantmentStorageMeta) resultMeta;
+                    int currentLevel = resultStorageMeta.getStoredEnchantLevel(enchant);
+
+                    if (bookLevel > enchant.getMaxLevel() || bookLevel > currentLevel) {
+                        resultStorageMeta.addStoredEnchant(enchant, bookLevel, true);
+                        hasOverEnchant = true;
+                    }
+                } else {
+                    int currentLevel = resultItem.getEnchantmentLevel(enchant);
+
+                    if (bookLevel > enchant.getMaxLevel() || bookLevel > currentLevel) {
+                        resultMeta.addEnchant(enchant, bookLevel, true);
+                        hasOverEnchant = true;
+                    }
                 }
             }
 
@@ -56,6 +71,7 @@ public class AnvilOverEnchantHandler implements Listener {
                 resultItem.setItemMeta(resultMeta);
                 event.setResult(resultItem);
 
+                // Forzar el costo de reparación
                 Bukkit.getScheduler().runTask(
                         plugin,
                         () -> event.getInventory().setRepairCost(12)

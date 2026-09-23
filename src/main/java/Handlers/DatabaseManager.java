@@ -90,12 +90,64 @@ public class DatabaseManager {
                     "created_at DATETIME DEFAULT CURRENT_TIMESTAMP, " +
                     "updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP);");
 
+            stmt.executeUpdate("CREATE TABLE IF NOT EXISTS event_inventories (" +
+                    "uuid VARCHAR(36) PRIMARY KEY, " +
+                    "player_name VARCHAR(16), " +
+                    "inventory_contents LONGTEXT, " +
+                    "saved_at DATETIME DEFAULT CURRENT_TIMESTAMP);");
+
             plugin.getLogger().info("Conectado a MySQL y tablas verificadas.");
 
         }
     }
 
     public void closeConnection() {
+    }
+
+    public boolean saveEventInventory(UUID uuid, String playerName, ItemStack[] contents) {
+        String data = ItemSerializer.serialize(contents);
+        if (data == null || data.isEmpty()) return false;
+
+        String sql = "INSERT IGNORE INTO event_inventories (uuid, player_name, inventory_contents) VALUES (?, ?, ?)";
+
+        try (Connection conn = getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, uuid.toString());
+            stmt.setString(2, playerName);
+            stmt.setString(3, data);
+
+            int affectedRows = stmt.executeUpdate();
+            return affectedRows > 0;
+        } catch (SQLException e) {
+            plugin.getLogger().severe("Error guardando inventario: " + e.getMessage());
+            return false;
+        }
+    }
+
+    public ItemStack[] getEventInventory(UUID uuid) {
+        String sql = "SELECT inventory_contents FROM event_inventories WHERE uuid = ?";
+        try (Connection conn = getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, uuid.toString());
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                String data = rs.getString("inventory_contents");
+                if (data != null && !data.isEmpty()) {
+                    return ItemSerializer.deserialize(data);
+                }
+            }
+        } catch (SQLException e) {
+            plugin.getLogger().severe("Error cargando inventario de evento: " + e.getMessage());
+        }
+        return null;
+    }
+
+    public void deleteEventInventory(UUID uuid) {
+        String sql = "DELETE FROM event_inventories WHERE uuid = ?";
+        try (Connection conn = getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, uuid.toString());
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            plugin.getLogger().severe("Error borrando inventario de evento: " + e.getMessage());
+        }
     }
 
     public boolean hasJoinedBefore(UUID uuid) {

@@ -46,6 +46,11 @@ commands:
     usage: /lavaclash <start|battle|force|reglas|resetpurple|end|list|add|remove>
     permission: viciont_hardcore3.command.lavaclash
     permission-message: No tienes permiso para usar este comando.
+  buildbattle:
+    description: Comando principal del evento BuildBattle
+    usage: /buildbattle <start|tpzona|stick|addparcela|removeparcela|center|category|startbuild|endvote|resetbuild|reload|addvotador|removevotador|admin|addplayer|removeplayer|timeredit>
+    permission: viciont_hardcore3.command.buildbattle
+    permission-message: No tienes permiso para usar este comando.
   itemparty:
     description: Comando principal del evento ItemParty
     usage: /itemparty <start|end|reset|reload|castigo>
@@ -215,6 +220,56 @@ commands:
     description: Elimina un aldeano de la ShopSystem
     usage: /removeshop
     permission: viciont_hardcore3.command.removeshop
+    permission-message: No tienes permiso para usar este comando.
+  floor:
+    description: Cambia el suelo de tu parcela al bloque que tienes en la mano.
+    usage: /floor
+  bubble:
+    description: Activa o desactiva la burbuja de chat personalizada.
+    usage: /bubble <start|stop>
+    permission: viciont_hardcore3.command.bubble
+    permission-message: No tienes permiso para usar este comando.
+  wardencave:
+    description: Comando unificado de la dimensión WardenCave
+    usage: /wardencave <portal [remove] | join <jugador/@a> | leave <jugador/@a>>
+    permission: viciont_hardcore3.command.wardencave
+    permission-message: No tienes permiso para usar este comando.
+  tiendas:
+    description: Te teletransporta a las tiendas.
+  settiendas:
+    description: Fija el spawn de las tiendas.
+    usage: /settiendas
+    permission: viciont_hardcore3.command.settiendas
+    permission-message: No tienes permiso para usar este comando.
+  spawn:
+    description: Tepea al spawn central usando magia.
+    usage: /spawn
+  setspawn:
+    description: Define el punto de spawn.
+    usage: /setspawn
+    permission: viciont_hardcore3.command.setspawn
+    permission-message: No tienes permiso para usar este comando.
+  sethome:
+    description: Establecer tu casa
+    usage: /sethome
+  home:
+    description: Ir a tu casa
+    usage: /home
+  delhome:
+    description: Elimina tu casa
+    usage: /delhome
+  pesca:
+    description: Gestiona las zonas de pesca custom
+    usage: /pesca <give|set|reload|list>
+    permission: viciont_hardcore3.command.pesca
+    permission-message: No tienes permiso para usar este comando.
+  tumba:
+    description: Ver la lista de tus tumbas activas
+    usage: /tumba
+  tumbas:
+    description: Comando de administrador de tumbas
+    usage: /tumbas <list|remove|place|reload>
+    permission: viciont_hardcore3.command.tumbas
     permission-message: No tienes permiso para usar este comando.
 
 depend: [EliteMobs]

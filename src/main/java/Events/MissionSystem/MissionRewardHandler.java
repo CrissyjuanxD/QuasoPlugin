@@ -82,7 +82,7 @@ public class MissionRewardHandler implements Listener {
         ItemMeta meta = item.getItemMeta();
         if (meta == null || !meta.hasCustomModelData()) return false;
         int cmd = meta.getCustomModelData();
-        return cmd >= 3001 && cmd <= 3027;
+        return cmd >= 3001 && cmd <= 5000;
     }
 
     private int getMissionNumberFromToken(ItemStack item) {

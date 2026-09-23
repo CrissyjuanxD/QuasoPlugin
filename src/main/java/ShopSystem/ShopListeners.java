@@ -1,5 +1,6 @@
 package ShopSystem;
 
+import items.EconomyItems;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -120,12 +121,14 @@ public class ShopListeners implements Listener {
 
         String shopId = shopManager.activeShops.get(player.getUniqueId());
         if (shopId == null) return;
+
         Villager villager = shopManager.getVillagerById(shopId);
         if (villager == null) return;
 
         List<MerchantRecipe> recipes = villager.getRecipes();
         if (tradeIndex >= recipes.size()) return;
 
+        // 2. Obtener el tradeo
         MerchantRecipe recipe = recipes.get(tradeIndex);
         ItemStack result = recipe.getResult();
         if (shopManager.isEmpty(result)) return;
@@ -133,18 +136,42 @@ public class ShopListeners implements Listener {
         ItemStack ing1 = recipe.getIngredients().size() > 0 ? recipe.getIngredients().get(0) : null;
         ItemStack ing2 = recipe.getIngredients().size() > 1 ? recipe.getIngredients().get(1) : null;
 
+        // 3. Procesar la compra
         if (hasRequiredItems(player, ing1, ing2)) {
             executeTransaction(player, ing1, ing2);
 
-            player.getInventory().addItem(result.clone()).values().forEach(item ->
-                    player.getWorld().dropItem(player.getLocation(), item));
+            // ---> AQUI ESTA LA MAGIA PARA LAS MOCHILAS <---
+            if (items.EconomyItems.isMaterialMochila(result.getType())) {
+                // Generamos una mochila TOTALMENTE NUEVA basada en el modelo
+                int amountToGive = result.getAmount();
+                int customModelData = result.getItemMeta().getCustomModelData();
 
-            player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1f, 1f);
+                for (int i = 0; i < amountToGive; i++) {
+                    ItemStack freshMochila = getFreshMochila(customModelData);
+                    player.getInventory().addItem(freshMochila).values().forEach(item ->
+                            player.getWorld().dropItem(player.getLocation(), item));
+                }
+            } else {
+                // Comportamiento normal para ítems normales (comida, pociones, etc)
+                player.getInventory().addItem(result.clone()).values().forEach(item ->
+                        player.getWorld().dropItem(player.getLocation(), item));
+            }
+
+            player.playSound(player.getLocation(), org.bukkit.Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1f, 1f);
             player.setCooldown(Material.STRUCTURE_VOID, 6);
         } else {
             player.sendMessage(ChatColor.RED + "No tienes los materiales suficientes.");
-            player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_NO, 1f, 1f);
+            player.playSound(player.getLocation(), org.bukkit.Sound.ENTITY_VILLAGER_NO, 1f, 1f);
         }
+    }
+
+    private ItemStack getFreshMochila(int model) {
+        if (model == 2020) return EconomyItems.createNormalMochila();
+        if (model == 2021) return EconomyItems.createGreenMochila();
+        if (model == 2022) return EconomyItems.createRedMochila();
+        if (model == 2023) return EconomyItems.createBlueMochila();
+        if (model == 2024) return EconomyItems.createPurpleMochila();
+        return EconomyItems.createNormalMochila();
     }
 
     private void handleConfigClick(Player player, InventoryClickEvent event, int tradeIndex, String typeStr) {

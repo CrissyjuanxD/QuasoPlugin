@@ -49,6 +49,11 @@ public enum TeamType {
             ChatColor.GRAY + "" + ChatColor.BOLD + "[" + ChatColor.DARK_RED + ChatColor.BOLD + "H" + ChatColor.RED + ChatColor.BOLD + "PO" + ChatColor.GRAY + ChatColor.BOLD + "] ",
             org.bukkit.ChatColor.GOLD, "07_HotPotato"),
 
+    BUILDBATTLE("buildbattle", "#C056E6",
+            ChatColor.GRAY + "" + ChatColor.BOLD + "[" + ChatColor.DARK_PURPLE + ChatColor.BOLD + "BUILD" + ChatColor.LIGHT_PURPLE + ChatColor.BOLD + "BATTLE" + ChatColor.GRAY + ChatColor.BOLD + "] ",
+            ChatColor.GRAY + "" + ChatColor.BOLD + "[" + ChatColor.DARK_PURPLE + ChatColor.BOLD + "B" + ChatColor.LIGHT_PURPLE + ChatColor.BOLD + "BT" + ChatColor.GRAY + ChatColor.BOLD + "] ",
+            org.bukkit.ChatColor.DARK_PURPLE, "08_buildbattle"),
+
     Z_FANTASMA("ZFantasma", "#555555", "\uEB8C ", "\uEB91 ",
             org.bukkit.ChatColor.DARK_GRAY, "99_Fantasma");
 

@@ -50,6 +50,14 @@ public class DayOneChanges implements Listener {
     private final CorruptedBee corruptedBee;
     private final Bombita bombitaSpawner;;
     private final Iceologer iceologerSpawner;
+    private final InfestedCreeper infestedCreeper;
+    private final InfestedGhast infestedGhast;
+    private final InfestedSkeleton infestedSkeleton;
+    private final InfestedCaveSpider infestedCaveSpider;
+    private final EnderBlaze enderBlaze;
+    private final EnderCreeper enderCreeper;
+    private final EnderSpider enderSpider;
+
     private final NamespacedKey uuidKey;
     private final NamespacedKey upgradeKey;
 
@@ -66,6 +74,16 @@ public class DayOneChanges implements Listener {
         this.corruptedBee = new CorruptedBee(plugin);
         this.bombitaSpawner = new Bombita(plugin);
         this.iceologerSpawner = new Iceologer(plugin);
+
+        this.infestedCreeper = new InfestedCreeper(plugin);
+        this.infestedGhast = new InfestedGhast(plugin);
+        this.infestedSkeleton = new InfestedSkeleton(plugin);
+        this.infestedCaveSpider = new InfestedCaveSpider(plugin);
+
+        this.enderBlaze = new EnderBlaze(plugin);
+        this.enderCreeper = new EnderCreeper(plugin);
+        this.enderSpider = new EnderSpider(plugin);
+
         this.uuidKey = new NamespacedKey(plugin, "creator_uuid");
         this.upgradeKey = new NamespacedKey(plugin, "is_upgrade");
     }
@@ -86,6 +104,15 @@ public class DayOneChanges implements Listener {
             guardianCorruptedSkeleton.apply();
             corruptedInfernalSpider.apply();
             corruptedBee.apply();
+
+            infestedCreeper.apply();
+            infestedGhast.apply();
+            infestedSkeleton.apply();
+            infestedCaveSpider.apply();
+
+            enderBlaze.apply();
+            enderCreeper.apply();
+            enderSpider.apply();
         }
     }
 
@@ -108,6 +135,15 @@ public class DayOneChanges implements Listener {
             guardianCorruptedSkeleton.revert();
             corruptedInfernalSpider.revert();
             corruptedBee.revert();
+
+            infestedCreeper.revert();
+            infestedGhast.revert();
+            infestedSkeleton.revert();
+            infestedCaveSpider.revert();
+
+            enderBlaze.revert();
+            enderCreeper.revert();
+            enderSpider.revert();
             // Desregistrar eventos
             HandlerList.unregisterAll(this);
 

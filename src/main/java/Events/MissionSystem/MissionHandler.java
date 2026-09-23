@@ -126,7 +126,12 @@ public class MissionHandler implements Listener {
                 }
             }
 
-            playerCache.put(uuid, data);
+            Bukkit.getScheduler().runTask(plugin, () -> {
+                Player p = Bukkit.getPlayer(uuid);
+                if (p != null && p.isOnline()) {
+                    playerCache.put(uuid, data);
+                }
+            });
         });
     }
 
@@ -156,7 +161,14 @@ public class MissionHandler implements Listener {
     }
 
     public MissionData getData(Player player, int missionId) {
-        Map<Integer, MissionData> pData = playerCache.computeIfAbsent(player.getUniqueId(), k -> new HashMap<>());
+        // Evitar crear un perfil falso si la caché aún no carga o el jugador está saliendo
+        if (!playerCache.containsKey(player.getUniqueId())) {
+            MissionData dummy = new MissionData();
+            dummy.setActive(false);
+            return dummy;
+        }
+
+        Map<Integer, MissionData> pData = playerCache.get(player.getUniqueId());
         MissionData data = pData.computeIfAbsent(missionId, k -> new MissionData());
 
         data.setActive(globalActiveMissions.contains(missionId));
@@ -164,9 +176,13 @@ public class MissionHandler implements Listener {
     }
 
     public void saveData(Player player, int missionId, MissionData data) {
-        Map<Integer, MissionData> pData = playerCache.computeIfAbsent(player.getUniqueId(), k -> new HashMap<>());
-        pData.put(missionId, data);
+        // Evitar guardar si el jugador no tiene caché (evita corrupciones al reiniciar)
+        if (!playerCache.containsKey(player.getUniqueId())) {
+            return;
+        }
 
+        Map<Integer, MissionData> pData = playerCache.get(player.getUniqueId());
+        pData.put(missionId, data);
         data.setDirty(true);
     }
 

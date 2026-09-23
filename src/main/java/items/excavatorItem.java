@@ -23,6 +23,7 @@ import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.util.RayTraceResult;
+import org.bukkit.Tag;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -83,18 +84,7 @@ public class excavatorItem implements Listener {
     }
 
     private boolean isWhitelisted(Material type) {
-        if (type.name().endsWith("_ORE")) return true;
-
-        return type == Material.STONE ||
-                type == Material.DEEPSLATE ||
-                type == Material.TUFF ||
-                type == Material.ANDESITE ||
-                type == Material.GRANITE ||
-                type == Material.DIORITE ||
-                type == Material.NETHERRACK ||
-                type == Material.BASALT ||
-                type == Material.BLACKSTONE ||
-                type == Material.ANCIENT_DEBRIS;
+        return Tag.MINEABLE_PICKAXE.isTagged(type);
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)

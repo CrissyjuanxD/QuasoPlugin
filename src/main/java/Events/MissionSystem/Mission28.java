@@ -90,6 +90,8 @@ public class Mission28 implements Mission, Listener {
     @EventHandler
     public void onInventoryClose(InventoryCloseEvent event) {
         if (event.getPlayer() instanceof Player player) {
+            if (!player.isOnline()) return;
+
             checkArmorEquipped(player);
         }
     }

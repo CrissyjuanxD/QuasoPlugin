@@ -1,11 +1,7 @@
 package Commands;
 
-import Dificultades.CustomMobs.CustomBoat;
-import Dificultades.DayOneChanges;
-import Habilidades.HabilidadesBook;
+import Managers.ItemManager;
 import imp.crissyjuanxd.QuasoPlugin;
-import items.*;
-import items.IceBow.IceBowItem;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -21,27 +17,11 @@ import java.util.stream.Collectors;
 public class ItemsCommands implements CommandExecutor, TabCompleter {
 
     private final QuasoPlugin plugin;
-    private final DoubleLifeTotem doubleLifeTotem;
-    private final EconomyIceTotem economyIceTotem;
-    private final EconomyFlyTotem economyFlyTotem;
-    private final excavatorItem ExcavatorItem;
-    private final AmuletBloodM amuletBloodM;
-    private final AmuletInmortal amuletInmortal;
-    private final LifeCampfire lifeCampfire;
-    private final IceBowItem iceBowItem;
-    private final HappyGhastEnchant happyGhastEnchant;
+    private final ItemManager itemManager;
 
-    public ItemsCommands(QuasoPlugin plugin) {
+    public ItemsCommands(QuasoPlugin plugin, ItemManager itemManager) {
         this.plugin = plugin;
-        this.doubleLifeTotem = new DoubleLifeTotem(plugin);
-        this.economyIceTotem = new EconomyIceTotem(plugin);
-        this.economyFlyTotem = new EconomyFlyTotem(plugin);
-        this.ExcavatorItem = new excavatorItem(plugin);
-        this.amuletBloodM = new AmuletBloodM(plugin);
-        this.amuletInmortal = new AmuletInmortal(plugin);
-        this.lifeCampfire = new LifeCampfire(plugin);
-        this.iceBowItem = new IceBowItem(plugin);
-        this.happyGhastEnchant = new HappyGhastEnchant(plugin);
+        this.itemManager = itemManager;
         plugin.getCommand("giveqp").setExecutor(this);
         plugin.getCommand("giveqp").setTabCompleter(this);
     }
@@ -90,277 +70,41 @@ public class ItemsCommands implements CommandExecutor, TabCompleter {
             }
         }
 
-        ItemStack item;
-        switch (itemName) {
-            case "doubletotem":
-                item = doubleLifeTotem.createDoubleLifeTotem();
-                item.setAmount(cantidad);
-                break;
-            case "corrupted_steak":
-                item = DayOneChanges.corruptedSteak();
-                item.setAmount(cantidad);
-                break;
-            case "corrupted_golden_apple":
-                item = CorruptedGoldenApple.createCorruptedGoldenApple();
-                item.setAmount(cantidad);
-                break;
-            case "libro_habilidades":
-                item = HabilidadesBook.createHabilidadesBook();
-                item.setAmount(cantidad);
-                break;
-            case "dinocoins":
-                item = EconomyItems.createVithiumCoin();
-                item.setAmount(cantidad);
-                break;
-            case "dinofichas":
-                item = EconomyItems.createVithiumToken();
-                item.setAmount(cantidad);
-                break;
-            case "blood_fragment":
-                item = EconomyItems.createBloodFragment();
-                item.setAmount(cantidad);
-                break;
-            case "mochila_nivel_1":
-                item = EconomyItems.createNormalMochila();
-                item.setAmount(cantidad);
-                break;
-            case "mochila_nivel_2":
-                item = EconomyItems.createGreenMochila();
-                item.setAmount(cantidad);
-                break;
-            case "mochila_nivel_3":
-                item = EconomyItems.createRedMochila();
-                item.setAmount(cantidad);
-                break;
-            case "mochila_nivel_4":
-                item = EconomyItems.createBlueMochila();
-                item.setAmount(cantidad);
-                break;
-            case "mochila_nivel_5":
-                item = EconomyItems.createPurpleMochila();
-                item.setAmount(cantidad);
-                break;
-            case "enderbag":
-                item = EconomyItems.createEnderBag();
-                item.setAmount(cantidad);
-                break;
-            case "gancho":
-                item = EconomyItems.createGancho();
-                item.setAmount(cantidad);
-                break;
-            case "panic_apple":
-                item = EconomyItems.createManzanaPanico();
-                item.setAmount(cantidad);
-                break;
-            case "artefacto_nivel_1":
-                item = EconomyItems.createYunqueReparadorNivel1();
-                item.setAmount(cantidad);
-                break;
-            case "artefacto_nivel_2":
-                item = EconomyItems.createYunqueReparadorNivel2();
-                item.setAmount(cantidad);
-                break;
-            case "misiones":
-                item = Misionesitem.createMisiones();
-                item.setAmount(cantidad);
-                break;
-            case "icetotem":
-                item = economyIceTotem.createIceTotem();
-                item.setAmount(cantidad);
-                break;
-            case "flytotem":
-                item = economyFlyTotem.createFlyTotem();
-                item.setAmount(cantidad);
-                break;
-            case "excavator_pickaxe":
-                item = ExcavatorItem.createExcavator();
-                item.setAmount(cantidad);
-                break;
-            case "potion_resistance_2":
-                item = CustomPotions.getResistanceIIPotion();
-                item.setAmount(cantidad);
-                break;
-            case "splash_resistance_3":
-                item = CustomPotions.getSplashResistanceIIIPotion();
-                item.setAmount(cantidad);
-                break;
-            case "potion_slow_falling":
-                item = CustomPotions.getSlowFallingPotion();
-                item.setAmount(cantidad);
-                break;
-            case "splash_regeneration_3":
-                item = CustomPotions.getSplashRegenerationIIIPotion();
-                item.setAmount(cantidad);
-                break;
-            case "potion_haste_3":
-                item = CustomPotions.getHasteIIIPotion();
-                item.setAmount(cantidad);
-                break;
-            case "potion_haste_2":
-                item = CustomPotions.getHasteIIPotion();
-                item.setAmount(cantidad);
-                break;
-            case "splash_absorption_10":
-                item = CustomPotions.getSplashAbsorptionXPotion();
-                item.setAmount(cantidad);
-                break;
-            case "frasco_de_velocidad":
-                item = CustomPotions.getSpeedHoneyBottle();
-                item.setAmount(cantidad);
-                break;
-            case "amulet_bloodmoon":
-                item = amuletBloodM.createAmulet();
-                item.setAmount(cantidad);
-                break;
-            case "amuleto_inmortalidad":
-                item = amuletInmortal.createAmulet();
-                item.setAmount(cantidad);
-                break;
-            case "life_campfire":
-                item = lifeCampfire.createCampfire();
-                item.setAmount(cantidad);
-                break;
-            case "fuel_campfire":
-                item = lifeCampfire.createFuel();
-                item.setAmount(cantidad);
-                break;
-            case "special_totem":
-                item = ItemsTotems.createSpecialTotem();
-                item.setAmount(cantidad);
-                break;
-            case "cristal_hielo":
-                item = ItemsTotems.createIceCrystal();
-                item.setAmount(cantidad);
-                break;
-            case "arco_hielo":
-                item = iceBowItem.createIceBow();
-                item.setAmount(cantidad);
-                break;
-            case "happy_ghast_enchant":
-                item = happyGhastEnchant.createFastFlightBook(1);
-                item.setAmount(cantidad);
-                break;
-            case "tarta_calabaza_mejorada":
-                item = DayOneChanges.improvedPumpkinPie();
-                item.setAmount(cantidad);
-                break;
-            case "bar_tequila":
-                item = CustomPotions.getTequila();
-                item.setAmount(cantidad);
-                break;
-            case "bar_margarita":
-                item = CustomPotions.getMargarita();
-                item.setAmount(cantidad);
-                break;
-            case "bar_mezcal":
-                item = CustomPotions.getMezcal();
-                item.setAmount(cantidad);
-                break;
-            case "bar_pulque":
-                item = CustomPotions.getPulque();
-                item.setAmount(cantidad);
-                break;
-            case "bar_cerveza":
-                item = CustomPotions.getBeer();
-                item.setAmount(cantidad);
-                break;
-            case "bar_ron":
-                item = CustomPotions.getRum();
-                item.setAmount(cantidad);
-                break;
-            case "bar_vodka":
-                item = CustomPotions.getVodka();
-                item.setAmount(cantidad);
-                break;
-            case "bar_whisky":
-                item = CustomPotions.getWhisky();
-                item.setAmount(cantidad);
-                break;
-            case "bar_sake":
-                item = CustomPotions.getSake();
-                item.setAmount(cantidad);
-                break;
-            case "bar_ginebra":
-                item = CustomPotions.getGin();
-                item.setAmount(cantidad);
-                break;
-            case "bar_azulito":
-                item = CustomPotions.getAzulito();
-                item.setAmount(cantidad);
-                break;
-            case "bar_michelada":
-                item = CustomPotions.getMichelada();
-                item.setAmount(cantidad);
-                break;
-            default:
-                sender.sendMessage("§cEse item no existe.");
-                return true;
+        ItemStack item = itemManager.getItem(itemName, cantidad, target);
+
+        if (item == null) {
+            sender.sendMessage("§cEse item no existe: " + itemName);
+            return true;
         }
 
         target.getInventory().addItem(item);
         sender.sendMessage("§aHas dado " + cantidad + "x " + itemName + " a " + target.getName() + ".");
+
         return true;
     }
 
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
-        List<String> completions = new ArrayList<>();
-
         if (args.length == 1) {
-            completions.add("doubletotem");
-            completions.add("corrupted_steak");
-            completions.add("corrupted_golden_apple");
-            completions.add("libro_habilidades");
-            completions.add("dinocoins");
-            completions.add("dinofichas");
-            completions.add("blood_fragment");
-            completions.add("mochila_nivel_1");
-            completions.add("mochila_nivel_2");
-            completions.add("mochila_nivel_3");
-            completions.add("mochila_nivel_4");
-            completions.add("mochila_nivel_5");
-            completions.add("enderbag");
-            completions.add("gancho");
-            completions.add("panic_apple");
-            completions.add("artefacto_nivel_1");
-            completions.add("artefacto_nivel_2");
-            completions.add("misiones");
-            completions.add("icetotem");
-            completions.add("flytotem");
-            completions.add("excavator_pickaxe");
-            completions.add("potion_resistance_2");
-            completions.add("splash_resistance_3");
-            completions.add("potion_slow_falling");
-            completions.add("splash_regeneration_3");
-            completions.add("potion_haste_3");
-            completions.add("potion_haste_2");
-            completions.add("splash_absorption_10");
-            completions.add("frasco_de_velocidad");
-            completions.add("amulet_bloodmoon");
-            completions.add("amuleto_inmortalidad");
-            completions.add("life_campfire");
-            completions.add("fuel_campfire");
-            completions.add("special_totem");
-            completions.add("cristal_hielo");
-            completions.add("arco_hielo");
-            completions.add("happy_ghast_enchant");
-            completions.add("tarta_calabaza_mejorada");
-            completions.add("bar_tequila");
-            completions.add("bar_margarita");
-            completions.add("bar_mezcal");
-            completions.add("bar_pulque");
-            completions.add("bar_cerveza");
-            completions.add("bar_ron");
-            completions.add("bar_vodka");
-            completions.add("bar_whisky");
-            completions.add("bar_sake");
-            completions.add("bar_ginebra");
-            completions.add("bar_azulito");
-            completions.add("bar_michelada");
+            return itemManager.getRegisteredItems().stream()
+                    .filter(name -> name.toLowerCase().startsWith(args[0].toLowerCase()))
+                    .collect(Collectors.toList());
+
         } else if (args.length == 2) {
+            List<String> completions = new ArrayList<>();
             for (Player player : Bukkit.getOnlinePlayers()) {
                 completions.add(player.getName());
             }
+            // Agregamos algunas sugerencias numéricas básicas para la cantidad si no escribe un jugador
+            completions.add("1");
+            completions.add("16");
+            completions.add("32");
+            completions.add("64");
+
+            return completions.stream()
+                    .filter(name -> name.toLowerCase().startsWith(args[1].toLowerCase()))
+                    .collect(Collectors.toList());
+
         } else if (args.length == 3) {
             return Bukkit.getOnlinePlayers().stream()
                     .map(Player::getName)
@@ -368,6 +112,6 @@ public class ItemsCommands implements CommandExecutor, TabCompleter {
                     .collect(Collectors.toList());
         }
 
-        return completions;
+        return new ArrayList<>();
     }
 }

@@ -9,13 +9,22 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemRarity;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class EconomyItems {
+
+    private static void makeUnstackable(ItemMeta meta) {
+        // Obtenemos o creamos una key. Usamos "is_manu" como el namespace genérico de tu plugin
+        NamespacedKey unstackableKey = new NamespacedKey("is_manu", "unstackable_id");
+        // Le metemos un UUID aleatorio. Como cada item tendrá uno distinto, Minecraft se negará a juntarlos.
+        meta.getPersistentDataContainer().set(unstackableKey, PersistentDataType.STRING, UUID.randomUUID().toString());
+    }
 
     public static ItemStack createVithiumCoin() {
         ItemStack item = new ItemStack(Material.SUNFLOWER);
@@ -98,6 +107,7 @@ public class EconomyItems {
         meta.setRarity(ItemRarity.EPIC);
         meta.addEnchant(Enchantment.UNBREAKING, 1, true);
         meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+        makeUnstackable(meta);
         item.setItemMeta(meta);
         return item;
     }
@@ -120,6 +130,7 @@ public class EconomyItems {
         meta.setRarity(ItemRarity.EPIC);
         meta.addEnchant(Enchantment.UNBREAKING, 1, true);
         meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+        makeUnstackable(meta);
         item.setItemMeta(meta);
         return item;
     }
@@ -142,6 +153,7 @@ public class EconomyItems {
         meta.setRarity(ItemRarity.EPIC);
         meta.addEnchant(Enchantment.UNBREAKING, 1, true);
         meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+        makeUnstackable(meta);
         item.setItemMeta(meta);
         return item;
     }
@@ -164,6 +176,7 @@ public class EconomyItems {
         meta.setRarity(ItemRarity.EPIC);
         meta.addEnchant(Enchantment.UNBREAKING, 1, true);
         meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+        makeUnstackable(meta);
         item.setItemMeta(meta);
         return item;
     }
@@ -186,6 +199,7 @@ public class EconomyItems {
         meta.setRarity(ItemRarity.EPIC);
         meta.addEnchant(Enchantment.UNBREAKING, 1, true);
         meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+        makeUnstackable(meta);
         item.setItemMeta(meta);
         return item;
     }

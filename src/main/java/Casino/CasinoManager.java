@@ -1,5 +1,6 @@
 package Casino;
 
+import Managers.ItemManager;
 import net.md_5.bungee.api.ChatColor; // Importante para colores Hex
 import org.bukkit.*;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -16,6 +17,7 @@ import java.util.*;
 
 public class CasinoManager {
     private final JavaPlugin plugin;
+    private final ItemManager itemManager;
     private final File tableFile;
     private FileConfiguration tableConfig;
 
@@ -25,13 +27,14 @@ public class CasinoManager {
     private final SlotMachine slotMachine;
     private final BlackJack blackJack;
 
-    public CasinoManager(JavaPlugin plugin) {
+    public CasinoManager(JavaPlugin plugin, ItemManager itemManager) {
         this.plugin = plugin;
+        this.itemManager = itemManager;
         this.tableFile = new File(plugin.getDataFolder(), "CasinoTables.yml");
 
         loadTables();
 
-        this.slotMachine = new SlotMachine(plugin, this);
+        this.slotMachine = new SlotMachine(plugin, this, itemManager);
         this.blackJack = new BlackJack(plugin, this);
 
         startParticleTask();

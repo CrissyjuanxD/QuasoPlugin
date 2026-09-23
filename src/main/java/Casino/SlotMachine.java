@@ -2,6 +2,7 @@ package Casino;
 
 import Dificultades.DayOneChanges;
 import Habilidades.HabilidadesBook;
+import Managers.ItemManager;
 import items.*;
 import items.IceBow.IceBowItem;
 import net.md_5.bungee.api.ChatColor;
@@ -35,14 +36,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class SlotMachine implements Listener {
     private final JavaPlugin plugin;
-    private final DoubleLifeTotem doubleLifeTotem;
-    private final EconomyIceTotem economyIceTotem;
-    private final EconomyFlyTotem economyFlyTotem;
-    private final excavatorItem ExcavatorItem;
-    private final AmuletBloodM amuletBloodM;
-    private final AmuletInmortal amuletInmortal;
-    private final LifeCampfire lifeCampfire;
-    private final IceBowItem iceBowItem;
+    private final ItemManager itemManager;
     private final CasinoManager manager;
 
     // Título con colores del código antiguo
@@ -92,17 +86,10 @@ public class SlotMachine implements Listener {
         }
     }
 
-    public SlotMachine(JavaPlugin plugin, CasinoManager manager) {
+    public SlotMachine(JavaPlugin plugin, CasinoManager manager, ItemManager itemManager) {
         this.plugin = plugin;
         this.manager = manager;
-        this.doubleLifeTotem = new DoubleLifeTotem(plugin);
-        this.economyIceTotem = new EconomyIceTotem(plugin);
-        this.economyFlyTotem = new EconomyFlyTotem(plugin);
-        this.ExcavatorItem = new excavatorItem(plugin);
-        this.amuletBloodM = new AmuletBloodM(plugin);
-        this.amuletInmortal = new AmuletInmortal(plugin);
-        this.lifeCampfire = new LifeCampfire(plugin);
-        this.iceBowItem = new IceBowItem(plugin);
+        this.itemManager = itemManager;
         this.configFile = new File(plugin.getDataFolder(), "SlotMachine.yml");
 
         loadConfig();
@@ -690,121 +677,9 @@ public class SlotMachine implements Listener {
     }
 
     private ItemStack createRewardItem(String name, int amount) {
-        ItemStack item = null;
-
-        switch (name.toLowerCase()) {
-            case "doubletotem":
-                item = doubleLifeTotem.createDoubleLifeTotem();
-                break;
-            case "corrupted_steak":
-                item = DayOneChanges.corruptedSteak();
-                break;
-            case "corrupted_golden_apple":
-                item = CorruptedGoldenApple.createCorruptedGoldenApple();
-                break;
-            case "libro_habilidades":
-                item = HabilidadesBook.createHabilidadesBook();
-                break;
-            case "dinocoins":
-                item = EconomyItems.createVithiumCoin();
-                break;
-            case "dinofichas":
-                item = EconomyItems.createVithiumToken();
-                break;
-            case "mochila_nivel_1":
-                item = EconomyItems.createNormalMochila();
-                break;
-            case "mochila_nivel_2":
-                item = EconomyItems.createGreenMochila();
-                break;
-            case "mochila_nivel_3":
-                item = EconomyItems.createRedMochila();
-                break;
-            case "mochila_nivel_4":
-                item = EconomyItems.createBlueMochila();
-                break;
-            case "mochila_nivel_5":
-                item = EconomyItems.createPurpleMochila();
-                break;
-            case "enderbag":
-                item = EconomyItems.createEnderBag();
-                break;
-            case "gancho":
-                item = EconomyItems.createGancho();
-                break;
-            case "panic_apple":
-                item = EconomyItems.createManzanaPanico();
-                break;
-            case "artefacto_nivel_1":
-                item = EconomyItems.createYunqueReparadorNivel1();
-                break;
-            case "artefacto_nivel_2":
-                item = EconomyItems.createYunqueReparadorNivel2();
-                break;
-            case "misiones":
-                item = Misionesitem.createMisiones();
-                break;
-            case "icetotem":
-                item = economyIceTotem.createIceTotem();
-                break;
-            case "flytotem":
-                item = economyFlyTotem.createFlyTotem();
-                break;
-            case "excavator_pickaxe":
-                item = ExcavatorItem.createExcavator();
-                break;
-            case "potion_resistance_2":
-                item = CustomPotions.getResistanceIIPotion();
-                break;
-            case "splash_resistance_3":
-                item = CustomPotions.getSplashResistanceIIIPotion();
-                break;
-            case "potion_slow_falling":
-                item = CustomPotions.getSlowFallingPotion();
-                break;
-            case "splash_regeneration_3":
-                item = CustomPotions.getSplashRegenerationIIIPotion();
-                break;
-            case "potion_haste_3":
-                item = CustomPotions.getHasteIIIPotion();
-                break;
-            case "potion_haste_2":
-                item = CustomPotions.getHasteIIPotion();
-                break;
-            case "splash_absorption_10":
-                item = CustomPotions.getSplashAbsorptionXPotion();
-                break;
-            case "frasco_de_velocidad":
-                item = CustomPotions.getSpeedHoneyBottle();
-                break;
-            case "amulet_bloodmoon":
-                item = amuletBloodM.createAmulet();
-                break;
-            case "amuleto_inmortalidad":
-                item = amuletInmortal.createAmulet();
-                break;
-            case "life_campfire":
-                item = lifeCampfire.createCampfire();
-                break;
-            case "fuel_campfire":
-                item = lifeCampfire.createFuel();
-                break;
-            case "special_totem":
-                item = ItemsTotems.createSpecialTotem();
-                break;
-            case "cristal_hielo":
-                item = ItemsTotems.createIceCrystal();
-                break;
-            case "arco_hielo":
-                item = iceBowItem.createIceBow();
-                break;
-            case "tarta_calabaza_mejorada":
-                item = DayOneChanges.improvedPumpkinPie();
-                break;
-        }
+        ItemStack item = itemManager.getItem(name, amount, null);
 
         if (item != null) {
-            item.setAmount(amount);
             return item;
         }
 

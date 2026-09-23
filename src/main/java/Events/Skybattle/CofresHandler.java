@@ -30,7 +30,7 @@ public class CofresHandler {
 
         World world = Bukkit.getWorld("world");
         if (world == null) {
-            plugin.getLogger().severe("No se encontró el mundo 'world'.");
+            plugin.getLogger().severe("No se encontró el mundo 'survival'.");
             return;
         }
 

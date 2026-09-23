@@ -5,6 +5,7 @@ import mobcap.optimization.MobCapOptimizer;
 import mobcap.optimization.PerformanceMonitor;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
+import org.bukkit.entity.SpawnCategory;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitTask;
 
@@ -59,7 +60,7 @@ public class MobCapManager {
 
         // Guardar límites originales
         for (World world : Bukkit.getWorlds()) {
-            int originalLimit = world.getMonsterSpawnLimit();
+            int originalLimit = world.getSpawnLimit(SpawnCategory.MONSTER);
             originalLimits.put(world.getName(), originalLimit);
             currentLimits.put(world.getName(), originalLimit);
         }
@@ -174,7 +175,7 @@ public class MobCapManager {
         for (World world : Bukkit.getWorlds()) {
             Integer originalLimit = originalLimits.get(world.getName());
             if (originalLimit != null) {
-                world.setMonsterSpawnLimit(originalLimit);
+                world.setSpawnLimit(SpawnCategory.MONSTER, originalLimit);
                 currentLimits.put(world.getName(), originalLimit);
             }
         }
@@ -192,7 +193,7 @@ public class MobCapManager {
             try {
                 Integer currentLimit = currentLimits.get(world.getName());
                 if (currentLimit == null || !currentLimit.equals(effectiveMobCap)) {
-                    world.setMonsterSpawnLimit(effectiveMobCap);
+                    world.setSpawnLimit(SpawnCategory.MONSTER, effectiveMobCap);
                     currentLimits.put(world.getName(), effectiveMobCap);
 
                     plugin.getLogger().fine("Updated mob cap for " + world.getName() +
@@ -226,12 +227,12 @@ public class MobCapManager {
     public void handleNewWorld(World world) {
         if (!isInitialized) return;
 
-        int originalLimit = world.getMonsterSpawnLimit();
+        int originalLimit = world.getSpawnLimit(SpawnCategory.MONSTER);
         originalLimits.put(world.getName(), originalLimit);
 
         if (enabled) {
             int effectiveMobCap = getCurrentEffectiveMobCap();
-            world.setMonsterSpawnLimit(effectiveMobCap);
+            world.setSpawnLimit(SpawnCategory.MONSTER, effectiveMobCap);
             currentLimits.put(world.getName(), effectiveMobCap);
 
             plugin.getLogger().info("Applied mob cap to new world: " + world.getName() +

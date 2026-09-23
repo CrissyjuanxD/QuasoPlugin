@@ -2,12 +2,16 @@ package StatueManager;
 
 import org.bukkit.ChatColor;
 import org.bukkit.NamespacedKey;
+import org.bukkit.Registry;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.potion.PotionEffectType;
+
+import java.util.Locale;
+import java.util.Map;
 
 public class StatueData {
 
@@ -25,6 +29,18 @@ public class StatueData {
 
     // Nueva Key para el Anti-Grief
     private static final NamespacedKey KEY_ANTI_GRIEF = new NamespacedKey("viciont", "statue_anti_grief");
+
+    private static final Map<String, String> NOMBRES_VIEJOS = Map.of(
+            "slow", "slowness",
+            "fast_digging", "haste",
+            "slow_digging", "mining_fatigue",
+            "increase_damage", "strength",
+            "heal", "instant_health",
+            "harm", "instant_damage",
+            "jump", "jump_boost",
+            "confusion", "nausea",
+            "damage_resistance", "resistance"
+    );
 
     private PersistentDataContainer container;
 
@@ -86,7 +102,7 @@ public class StatueData {
     // Al asignar un efecto de poción, se desactiva el AntiGrief por seguridad.
     public void setEffect(PotionEffectType type, int amp) {
         if (type != null) {
-            container.set(KEY_EFF_TYPE, PersistentDataType.STRING, type.getName());
+            container.set(KEY_EFF_TYPE, PersistentDataType.STRING, type.getKey().toString());
             container.set(KEY_EFF_AMP, PersistentDataType.INTEGER, amp);
             setAntiGrief(false); // Excluyente
         } else {
@@ -98,7 +114,19 @@ public class StatueData {
     public PotionEffectType getEffectType() {
         String name = container.getOrDefault(KEY_EFF_TYPE, PersistentDataType.STRING, "NONE");
         if (name.equals("NONE")) return null;
-        return PotionEffectType.getByName(name);
+        return buscarEfecto(name);
+    }
+
+    // Busca el efecto por su key, aceptando también los nombres viejos de Bukkit (INCREASE_DAMAGE, SLOW...)
+    public static PotionEffectType buscarEfecto(String nombre) {
+        String clave = nombre.toLowerCase(Locale.ROOT);
+        clave = NOMBRES_VIEJOS.getOrDefault(clave, clave);
+        NamespacedKey key = NamespacedKey.fromString(clave);
+        return key == null ? null : Registry.MOB_EFFECT.get(key);
+    }
+
+    public static String nombreEfecto(PotionEffectType type) {
+        return type.getKey().getKey().toUpperCase(Locale.ROOT);
     }
 
     public void setEffectAmplifier(int amp) { container.set(KEY_EFF_AMP, PersistentDataType.INTEGER, amp); }

@@ -23,17 +23,18 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 public class HappyGhastEnchant implements Listener {
 
     private final JavaPlugin plugin;
     private final NamespacedKey enchantKey;
-    private static final UUID FAST_FLIGHT_UUID = UUID.fromString("11a11a11-22b2-33c3-44d4-55e55e55e55e");
+    private final NamespacedKey fastFlightKey;
+    private static final NamespacedKey FAST_FLIGHT_LEGACY_KEY = NamespacedKey.minecraft("11a11a11-22b2-33c3-44d4-55e55e55e55e");
 
     public HappyGhastEnchant(JavaPlugin plugin) {
         this.plugin = plugin;
         this.enchantKey = new NamespacedKey(plugin, "fast_flight_level");
+        this.fastFlightKey = new NamespacedKey(plugin, "fast_flight_bonus");
 
         iniciarControlDeVuelo();
     }
@@ -76,7 +77,7 @@ public class HappyGhastEnchant implements Listener {
                     event.setResult(result);
 
                     plugin.getServer().getScheduler().runTask(plugin, () -> {
-                        event.getInventory().setRepairCost(5);
+                        event.getView().setRepairCost(5);
                     });
                 }
             }
@@ -108,8 +109,8 @@ public class HappyGhastEnchant implements Listener {
                         event.setResult(result);
 
                         plugin.getServer().getScheduler().runTask(plugin, () -> {
-                            int cost = (event.getInventory().getRepairCost() > 0) ? event.getInventory().getRepairCost() : 0;
-                            event.getInventory().setRepairCost(cost + (bookLevel * 5));
+                            int cost = (event.getView().getRepairCost() > 0) ? event.getView().getRepairCost() : 0;
+                            event.getView().setRepairCost(cost + (bookLevel * 5));
                         });
                     }
                 }
@@ -134,14 +135,13 @@ public class HappyGhastEnchant implements Listener {
 
                         if (speedAttr != null) {
                             speedAttr.getModifiers().stream()
-                                    .filter(m -> m.getUniqueId().equals(FAST_FLIGHT_UUID))
+                                    .filter(m -> m.getKey().equals(fastFlightKey) || m.getKey().equals(FAST_FLIGHT_LEGACY_KEY))
                                     .forEach(speedAttr::removeModifier);
 
                             if (level > 0) {
                                 double bonus = (level == 1) ? 0.5 : 1.0;
                                 AttributeModifier modifier = new AttributeModifier(
-                                        FAST_FLIGHT_UUID,
-                                        "fast_flight_bonus",
+                                        fastFlightKey,
                                         bonus,
                                         AttributeModifier.Operation.ADD_SCALAR
                                 );

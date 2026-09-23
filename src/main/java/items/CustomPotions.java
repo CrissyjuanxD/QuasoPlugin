@@ -12,6 +12,7 @@ import net.md_5.bungee.api.ChatColor;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class CustomPotions {
 
@@ -251,20 +252,20 @@ public class CustomPotions {
                 meta.addCustomEffect(effect, true);
 
                 // Traducimos el nombre del efecto y le asignamos un color bonito
-                String effectName = effect.getType().getName();
+                String effectName = effect.getType().getKey().getKey().toUpperCase(Locale.ROOT);
                 String hexColor = "#FFFFFF";
 
-                if (effectName.equals("NAUSEA") || effectName.equals("CONFUSION")) {
+                if (effectName.equals("NAUSEA")) {
                     effectName = "Náuseas"; hexColor = "#99cc33";
                 } else if (effectName.equals("SATURATION")) {
                     effectName = "Saturación"; hexColor = "#cc3300";
-                } else if (effectName.equals("MINING_FATIGUE") || effectName.equals("SLOW_DIGGING")) {
+                } else if (effectName.equals("MINING_FATIGUE")) {
                     effectName = "Fatiga Minera"; hexColor = "#8B4513";
                 } else if (effectName.equals("NIGHT_VISION")) {
                     effectName = "Visión Nocturna"; hexColor = "#1E90FF";
                 } else if (effectName.equals("DARKNESS")) {
                     effectName = "Oscuridad"; hexColor = "#4B0082";
-                } else if (effectName.equals("SLOW") || effectName.equals("SLOWNESS")) {
+                } else if (effectName.equals("SLOWNESS")) {
                     effectName = "Lentitud"; hexColor = "#FFA500";
                 }
 

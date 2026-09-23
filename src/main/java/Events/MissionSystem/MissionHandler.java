@@ -252,7 +252,7 @@ public class MissionHandler implements Listener {
                         "{\"text\":\"NUEVA MISIÓN DESBLOQUEADA\",\"bold\":true,\"color\":\"#FFA500\"}," +
                         "{\"text\":\"\\n[\",\"color\":\"white\"}," +
                         "{\"text\":\"%s\",\"bold\":true,\"color\":\"#dda0dd\"," +
-                        "\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"%s\",\"color\":\"gray\"}}}," +
+                        "\"hover_event\":{\"action\":\"show_text\",\"value\":{\"text\":\"%s\",\"color\":\"gray\"}}}," +
                         "{\"text\":\"]\\n\\n\",\"color\":\"white\"}," +
                         "{\"text\":\"usa /misiones para abrir su interfaz o usa el item de Misiones\",\"color\":\"gray\"}]",
                 missionName,

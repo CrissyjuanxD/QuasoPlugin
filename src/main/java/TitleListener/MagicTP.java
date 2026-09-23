@@ -98,7 +98,7 @@ public class MagicTP implements CommandExecutor, TabCompleter {
 
                 for (Player player : players) {
                     if (useSpawn) {
-                        Location bedSpawn = player.getBedSpawnLocation();
+                        Location bedSpawn = player.getRespawnLocation();
                         if (bedSpawn != null) {
                             player.teleport(bedSpawn);
                         } else {

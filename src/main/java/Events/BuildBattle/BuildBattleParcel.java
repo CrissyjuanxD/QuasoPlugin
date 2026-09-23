@@ -3,7 +3,6 @@ package Events.BuildBattle;
 import com.sk89q.worldedit.EditSession;
 import com.sk89q.worldedit.WorldEdit;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
-import com.sk89q.worldedit.function.pattern.BlockPattern;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.regions.CuboidRegion;
 import com.sk89q.worldedit.world.block.BlockTypes;
@@ -102,12 +101,10 @@ public class BuildBattleParcel {
 
         try (EditSession editSession = WorldEdit.getInstance().newEditSession(weWorld)) {
             CuboidRegion airRegion = new CuboidRegion(weWorld, BlockVector3.at(minX, minY + 1, minZ), BlockVector3.at(maxX, maxY, maxZ));
-            BlockPattern airPattern = new BlockPattern(BlockTypes.AIR.getDefaultState());
-            editSession.setBlocks((com.sk89q.worldedit.regions.Region) airRegion, airPattern);
+            editSession.setBlocks((com.sk89q.worldedit.regions.Region) airRegion, BlockTypes.AIR.getDefaultState());
 
             CuboidRegion floorRegion = new CuboidRegion(weWorld, BlockVector3.at(minX, minY, minZ), BlockVector3.at(maxX, minY, maxZ));
-            BlockPattern concretePattern = new BlockPattern(BlockTypes.GRAY_CONCRETE.getDefaultState());
-            editSession.setBlocks((com.sk89q.worldedit.regions.Region) floorRegion, concretePattern);
+            editSession.setBlocks((com.sk89q.worldedit.regions.Region) floorRegion, BlockTypes.GRAY_CONCRETE.getDefaultState());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -119,8 +116,7 @@ public class BuildBattleParcel {
 
         try (EditSession editSession = WorldEdit.getInstance().newEditSession(weWorld)) {
             CuboidRegion floorRegion = new CuboidRegion(weWorld, BlockVector3.at(minX, minY, minZ), BlockVector3.at(maxX, minY, maxZ));
-            BlockPattern materialPattern = new BlockPattern(BukkitAdapter.adapt(mat.createBlockData()));
-            editSession.setBlocks((com.sk89q.worldedit.regions.Region) floorRegion, materialPattern);
+            editSession.setBlocks((com.sk89q.worldedit.regions.Region) floorRegion, BukkitAdapter.adapt(mat.createBlockData()));
         } catch (Exception e) {
             e.printStackTrace();
         }

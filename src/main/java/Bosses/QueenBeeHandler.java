@@ -264,10 +264,6 @@ public class QueenBeeHandler extends BaseBoss implements Listener {
                 p.stopSound(Sound.MUSIC_DISC_TEARS, SoundCategory.RECORDS);
                 p.stopSound(Sound.MUSIC_DISC_PIGSTEP, SoundCategory.RECORDS);
                 p.stopSound(Sound.MUSIC_DISC_CREATOR, SoundCategory.RECORDS);
-                try {
-                    p.stopSound(Sound.valueOf("MUSIC_DISC_CREATOR"), SoundCategory.RECORDS);
-                } catch (Exception ignored) {
-                }
             }
         }
     }

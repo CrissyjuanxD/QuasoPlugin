@@ -135,21 +135,19 @@ public class ExplosiveBow implements Listener {
                 default -> 1;
             };
 
-            // Verificar si el arco tiene infinidad
             boolean hasInfinity = event.getBow().containsEnchantment(Enchantment.INFINITY);
+            ItemStack flecha = event.getConsumable();
+            boolean disparoGratis = hasInfinity && flecha != null && flecha.getType() == Material.ARROW;
 
-            // Si tiene infinidad, perdonamos 1 flecha del coste total
             int amountToConsume = hasInfinity ? (requiredArrows - 1) : requiredArrows;
+            if (!disparoGratis) amountToConsume = Math.max(0, amountToConsume - 1);
 
             if (!consumeArrows(player, amountToConsume)) {
-                // No tiene suficientes flechas
                 event.setCancelled(true);
+                if (!disparoGratis && flecha != null) player.getInventory().addItem(flecha.asOne());
                 player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 1.0f, 0.5f);
                 return;
             }
-
-            // Cancelar el consumo automático del juego para tener control manual perfecto
-            event.setConsumeItem(false);
         }
 
         // Reemplazar la flecha normal por una espectral

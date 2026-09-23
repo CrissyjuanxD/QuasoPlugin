@@ -163,7 +163,7 @@ public class BlackJack implements Listener {
         ItemStack dealerHead = new ItemStack(Material.PLAYER_HEAD);
         SkullMeta dMeta = (SkullMeta) dealerHead.getItemMeta();
         dMeta.setDisplayName(ChatColor.RED + "Crupier");
-        dMeta.setOwner("MHF_Villager");
+        dMeta.setPlayerProfile(Bukkit.createProfile("MHF_Villager"));
         dealerHead.setItemMeta(dMeta);
         inv.setItem(dealerHeadSlot, dealerHead);
 

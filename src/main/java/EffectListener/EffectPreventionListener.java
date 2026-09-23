@@ -19,7 +19,6 @@ import org.bukkit.potion.PotionEffectType;
 import org.bukkit.potion.PotionType;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 public class EffectPreventionListener implements Listener {
@@ -40,16 +39,15 @@ public class EffectPreventionListener implements Listener {
             }
         }
 
-        try {
-            if (meta.getBasePotionData() != null) {
-                PotionType type = meta.getBasePotionData().getType();
-                PotionEffectType baseType = PotionEffectType.getByName(type.name());
-                if (baseType != null && BLOCKED_EFFECTS.contains(baseType)) {
-                    return true;
-                }
-            }
-        } catch (Exception ignored) {}
+        return hasBlockedBaseType(meta.getBasePotionType());
+    }
 
+    private boolean hasBlockedBaseType(PotionType type) {
+        if (type == null) return false;
+
+        for (PotionEffect effect : type.getPotionEffects()) {
+            if (BLOCKED_EFFECTS.contains(effect.getType())) return true;
+        }
         return false;
     }
 
@@ -136,29 +134,16 @@ public class EffectPreventionListener implements Listener {
         AreaEffectCloud cloud = event.getEntity();
         boolean blocked = false;
 
-        try {
-            List<PotionEffect> effects = (List<PotionEffect>) cloud.getClass()
-                    .getMethod("getCustomEffects")
-                    .invoke(cloud);
-
-            if (effects != null) {
-                for (PotionEffect effect : effects) {
-                    if (BLOCKED_EFFECTS.contains(effect.getType())) {
-                        blocked = true;
-                        break;
-                    }
-                }
+        for (PotionEffect effect : cloud.getCustomEffects()) {
+            if (BLOCKED_EFFECTS.contains(effect.getType())) {
+                blocked = true;
+                break;
             }
+        }
 
-            if (!blocked && cloud.getBasePotionData() != null) {
-                PotionType type = cloud.getBasePotionData().getType();
-                PotionEffectType baseType = PotionEffectType.getByName(type.name());
-                if (baseType != null && BLOCKED_EFFECTS.contains(baseType)) {
-                    blocked = true;
-                }
-            }
-
-        } catch (Exception ignored) {}
+        if (!blocked) {
+            blocked = hasBlockedBaseType(cloud.getBasePotionType());
+        }
 
         if (blocked) {
             event.getAffectedEntities().clear();

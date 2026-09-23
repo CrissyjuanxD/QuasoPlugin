@@ -12,6 +12,7 @@ import org.bukkit.block.Biome;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageByBlockEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
@@ -83,9 +84,16 @@ public class Mission12 implements Mission, Listener {
                 event.getCause() == EntityDamageEvent.DamageCause.FIRE ||
                 event.getCause() == EntityDamageEvent.DamageCause.FIRE_TICK ||
                 event.getCause() == EntityDamageEvent.DamageCause.LAVA ||
-                event.getCause() == EntityDamageEvent.DamageCause.HOT_FLOOR) {
+                esDanoPorMagma(event)) {
             event.setCancelled(true);
         }
+    }
+
+    // Desde la 26.2 la magma ya no da HOT_FLOOR, llega como CONTACT con el bloque
+    private boolean esDanoPorMagma(EntityDamageEvent event) {
+        if (event.getCause() != EntityDamageEvent.DamageCause.CONTACT) return false;
+        if (!(event instanceof EntityDamageByBlockEvent byBlock) || byBlock.getDamager() == null) return false;
+        return byBlock.getDamager().getType() == Material.MAGMA_BLOCK;
     }
 
     @EventHandler

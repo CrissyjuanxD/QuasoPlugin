@@ -191,6 +191,7 @@ public class EconomyIceTotem implements Listener {
     private boolean isHostileOrNeutral(LivingEntity entity) {
         return entity instanceof Monster ||
                 entity instanceof Slime ||
+                entity instanceof MagmaCube ||
                 entity instanceof Phantom ||
                 entity instanceof Bee;
     }

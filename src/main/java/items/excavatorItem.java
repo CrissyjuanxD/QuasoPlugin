@@ -15,7 +15,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.inventory.EquipmentSlot;
+import org.bukkit.inventory.EquipmentSlotGroup;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -60,11 +60,10 @@ public class excavatorItem implements Listener {
             meta.setLore(lore);
 
             AttributeModifier modifier = new AttributeModifier(
-                    UUID.randomUUID(),
-                    "block_interaction_range",
+                    new NamespacedKey(plugin, "excavadora_rango"),
                     5.0,
                     AttributeModifier.Operation.ADD_NUMBER,
-                    EquipmentSlot.HAND
+                    EquipmentSlotGroup.MAINHAND
             );
             meta.addAttributeModifier(Attribute.BLOCK_INTERACTION_RANGE, modifier);
 

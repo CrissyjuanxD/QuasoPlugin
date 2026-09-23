@@ -6,6 +6,7 @@ import Habilidades.HabilidadesManager;
 import TitleListener.EventoAnimation;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.*;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.block.Block;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -133,21 +134,20 @@ public class HotPotatoHandler implements Listener {
 
         config = YamlConfiguration.loadConfiguration(configFile);
 
-        config.options().header(
-                "==========================================================\n" +
-                        "Configuración General de HotPotato\n" +
-                        "==========================================================\n" +
-                        "tiempo_por_ronda_segundos: Cuánto dura cada ronda.\n" +
-                        "poderes_activados: Si los ítems especiales aparecen en el suelo.\n" +
-                        "timer_start: Cuánto tiempo esperan en el lobby antes del TP.\n" +
-                        "modo_rondas:\n" +
-                        "  'rapida' -> Escala la cantidad de bombas en +1 por ronda.\n" +
-                        "  'lenta'  -> Sube, se mantiene, sube, se mantiene.\n" +
-                        "  'max'    -> Fuerza a que haya un máximo de 10 rondas (o las\n" +
-                        "              máximas posibles con los jugadores actuales).\n" +
-                        "=========================================================="
-        );
-        config.options().copyHeader(true);
+        config.options().setHeader(List.of(
+                "==========================================================",
+                "Configuración General de HotPotato",
+                "==========================================================",
+                "tiempo_por_ronda_segundos: Cuánto dura cada ronda.",
+                "poderes_activados: Si los ítems especiales aparecen en el suelo.",
+                "timer_start: Cuánto tiempo esperan en el lobby antes del TP.",
+                "modo_rondas:",
+                "  'rapida' -> Escala la cantidad de bombas en +1 por ronda.",
+                "  'lenta'  -> Sube, se mantiene, sube, se mantiene.",
+                "  'max'    -> Fuerza a que haya un máximo de 10 rondas (o las",
+                "              máximas posibles con los jugadores actuales).",
+                "=========================================================="
+        ));
 
         if (!config.contains("tiempo_por_ronda_segundos")) {
             config.set("tiempo_por_ronda_segundos", 120);
@@ -269,7 +269,7 @@ public class HotPotatoHandler implements Listener {
         }
 
         World world = Bukkit.getWorld("world");
-        if (world != null) world.setGameRule(GameRule.SEND_COMMAND_FEEDBACK, false);
+        if (world != null) world.setGameRule(GameRules.SEND_COMMAND_FEEDBACK, false);
 
         int totalSeconds = parseTimeToSeconds(timerStart);
         int minutosTimer = totalSeconds / 60;
@@ -300,7 +300,7 @@ public class HotPotatoHandler implements Listener {
                 aplicarTeamHotPotato(p);
             }
             World world = Bukkit.getWorld("world");
-            if (world != null) world.setGameRule(GameRule.SEND_COMMAND_FEEDBACK, false);
+            if (world != null) world.setGameRule(GameRules.SEND_COMMAND_FEEDBACK, false);
         }
 
         cancelarTareasActivas();
@@ -320,7 +320,7 @@ public class HotPotatoHandler implements Listener {
             Player p = Bukkit.getPlayer(nombre);
             if (p != null) {
                 p.getInventory().clear();
-                p.setHealth(p.getMaxHealth());
+                p.setHealth(p.getAttribute(Attribute.MAX_HEALTH).getValue());
                 p.setGameMode(GameMode.SURVIVAL);
                 Location loc = getSafeLocation(world);
 
@@ -635,7 +635,7 @@ public class HotPotatoHandler implements Listener {
             restaurarTeamOriginal(eliminado);
             jugador.setScoreboard(Bukkit.getScoreboardManager().getMainScoreboard());
 
-            jugador.setHealth(jugador.getMaxHealth());
+            jugador.setHealth(jugador.getAttribute(Attribute.MAX_HEALTH).getValue());
             jugador.getInventory().clear();
             quitarEfectos(jugador);
             habilidadesManager.enableHabilidades(jugador);
@@ -729,7 +729,7 @@ public class HotPotatoHandler implements Listener {
                             } else {
                                 if (p.getGameMode() == GameMode.CREATIVE || p.getGameMode() == GameMode.SPECTATOR) {
                                     p.setHealth(nuevaVida);
-                                    p.playEffect(EntityEffect.HURT);
+                                    p.playHurtAnimation(0);
                                 } else {
                                     p.damage(danioAmount);
                                 }
@@ -793,7 +793,7 @@ public class HotPotatoHandler implements Listener {
                 victima.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 200, 0));
                 victima.getWorld().playSound(victima.getLocation(), Sound.ITEM_TOTEM_USE, 1f, 1f);
                 victima.getWorld().spawnParticle(Particle.TOTEM_OF_UNDYING, victima.getLocation(), 50);
-                victima.playEffect(EntityEffect.TOTEM_RESURRECT);
+                victima.playEffect(EntityEffect.PROTECTED_FROM_DEATH);
                 actualizarScoreboard();
                 return;
             }
@@ -1092,7 +1092,7 @@ public class HotPotatoHandler implements Listener {
 
         World world = Bukkit.getWorld("world");
         if (world != null) {
-            world.setGameRule(GameRule.SEND_COMMAND_FEEDBACK, true);
+            world.setGameRule(GameRules.SEND_COMMAND_FEEDBACK, true);
         }
     }
 

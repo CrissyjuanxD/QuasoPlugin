@@ -11,16 +11,15 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import java.util.UUID;
-
 public class HabilidadesEffects {
 
     private final JavaPlugin plugin;
-    // UUID Constante para que el modificador de vida no se duplique infinitamente
-    private static final UUID VITALIDAD_MODIFIER_UUID = UUID.fromString("c07bb6b6-3dc9-4a94-81d3-3561937dbf24");
+    private final NamespacedKey vitalidadKey;
+    private static final NamespacedKey VITALIDAD_LEGACY_KEY = NamespacedKey.minecraft("c07bb6b6-3dc9-4a94-81d3-3561937dbf24");
 
     public HabilidadesEffects(JavaPlugin plugin) {
         this.plugin = plugin;
+        this.vitalidadKey = new NamespacedKey(plugin, "habilidad_vitalidad");
     }
 
     public void playUnlockAnimation(Player player, HabilidadesType type, int level) {
@@ -436,13 +435,12 @@ public class HabilidadesEffects {
 
         if (healthAttr != null) {
             healthAttr.getModifiers().stream()
-                    .filter(m -> m.getUniqueId().equals(VITALIDAD_MODIFIER_UUID))
+                    .filter(m -> m.getKey().equals(vitalidadKey) || m.getKey().equals(VITALIDAD_LEGACY_KEY))
                     .forEach(healthAttr::removeModifier);
 
             if (vitLevel > 0) {
                 AttributeModifier modifier = new AttributeModifier(
-                        VITALIDAD_MODIFIER_UUID,
-                        "Habilidad_Vitalidad",
+                        vitalidadKey,
                         calculateExtraHealth(vitLevel),
                         AttributeModifier.Operation.ADD_NUMBER
                 );

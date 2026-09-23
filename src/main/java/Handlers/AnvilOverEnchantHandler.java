@@ -74,7 +74,7 @@ public class AnvilOverEnchantHandler implements Listener {
                 // Forzar el costo de reparación
                 Bukkit.getScheduler().runTask(
                         plugin,
-                        () -> event.getInventory().setRepairCost(12)
+                        () -> event.getView().setRepairCost(12)
                 );
             }
         }

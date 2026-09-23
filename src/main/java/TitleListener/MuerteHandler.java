@@ -2,6 +2,7 @@ package TitleListener;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TranslatableComponent;
+import net.kyori.adventure.text.TranslationArgument;
 import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.Bukkit;
@@ -26,7 +27,7 @@ public class MuerteHandler implements Listener {
     public void onPlayerDeath(PlayerDeathEvent event) {
         Component original = event.deathMessage();
 
-        event.setDeathMessage(null);
+        event.deathMessage(null);
 
         if (original == null) return;
 
@@ -38,10 +39,10 @@ public class MuerteHandler implements Listener {
 
         if (original instanceof TranslatableComponent translatable) {
             List<Component> coloredArgs = new ArrayList<>();
-            List<Component> args = translatable.args();
+            List<TranslationArgument> args = translatable.arguments();
 
             for (int i = 0; i < args.size(); i++) {
-                Component arg = args.get(i);
+                Component arg = args.get(i).asComponent();
                 Component colored;
 
                 if (i == 0) {

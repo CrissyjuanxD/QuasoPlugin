@@ -2,6 +2,7 @@ package Events.AchievementParty;
 
 import TitleListener.SuccessNotification;
 import org.bukkit.Material;
+import org.bukkit.block.Biome;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -61,8 +62,7 @@ public class Achievement8 implements Achievement, Listener {
         Player player = event.getPlayer();
 
         // Verificar que es un Sculk Shrieker y está en Deep Dark
-        if (block.getType() != Material.SCULK_SHRIEKER ||
-                !block.getBiome().name().equalsIgnoreCase("DEEP_DARK")) {
+        if (block.getType() != Material.SCULK_SHRIEKER || block.getBiome() != Biome.DEEP_DARK) {
             return;
         }
 

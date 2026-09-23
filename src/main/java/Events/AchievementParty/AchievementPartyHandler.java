@@ -358,7 +358,7 @@ public class AchievementPartyHandler implements Listener {
                             "{\"text\":\" ha completado el logro \",\"color\":\"#1986DE\"}," +
                             "{\"text\":\"[\",\"color\":\"white\"}," +
                             "{\"text\":\"%s\",\"bold\":true,\"color\":\"#AA66E7\"," +
-                            "\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"\",\"extra\":[{\"text\":\"%s\",\"color\":\"green\"}]}}}," +
+                            "\"hover_event\":{\"action\":\"show_text\",\"value\":{\"text\":\"\",\"extra\":[{\"text\":\"%s\",\"color\":\"green\"}]}}}," +
                             "{\"text\":\"]\\n\",\"color\":\"white\"}]",
                     player.getName(),
                     achievementName,

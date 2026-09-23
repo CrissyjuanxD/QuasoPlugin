@@ -176,7 +176,7 @@ public class PortalManager implements Listener {
 
     private void teleportToOverworld(Player p) {
         World overworld = Bukkit.getWorlds().get(0);
-        Location spawn = p.getBedSpawnLocation();
+        Location spawn = p.getRespawnLocation();
         if (spawn == null) spawn = overworld.getSpawnLocation();
         p.teleport(spawn);
         p.playSound(p.getLocation(), Sound.BLOCK_PORTAL_TRAVEL, 0.5f, 1f);

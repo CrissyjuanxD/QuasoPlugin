@@ -202,7 +202,7 @@ public class QuasoPlugin extends JavaPlugin implements Listener {
     @Override
     public void onEnable() {
         instance = this;
-        this.Version = getDescription().getVersion();
+        this.Version = getPluginMeta().getVersion();
 
         logStartup();
         registerBaseListeners();
@@ -764,7 +764,7 @@ public class QuasoPlugin extends JavaPlugin implements Listener {
             World world = creator.createWorld();
             if (world != null) {
                 // Evitar ciclo día/noche si quieres que sea oscuro siempre
-                world.setGameRule(org.bukkit.GameRule.DO_DAYLIGHT_CYCLE, false);
+                world.setGameRule(org.bukkit.GameRules.ADVANCE_TIME, false);
                 world.setTime(18000); // Medianoche
                 getLogger().info("Dimensión " + WORLD_NAME + " cargada/creada.");
             }

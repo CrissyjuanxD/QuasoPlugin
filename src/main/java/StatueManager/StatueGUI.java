@@ -44,7 +44,7 @@ public class StatueGUI implements Listener {
             inv.setItem(19, createIcon(Material.SHIELD, "Modo: ANTI-GRIEF", "Protege bloques de explosiones y mobs"));
             inv.setItem(20, createIcon(Material.BARRIER, "Nivel Efecto", "N/A (Modo Anti-Grief activo)"));
         } else {
-            String effectName = data.getEffectType() != null ? data.getEffectType().getName() : "NINGUNO";
+            String effectName = data.getEffectType() != null ? StatueData.nombreEfecto(data.getEffectType()) : "NINGUNO";
             inv.setItem(19, createIcon(Material.POTION, "Modo: EFECTO DE POCIÓN", effectName + " (Click para cambiar / escribir)"));
             inv.setItem(20, createIcon(Material.BREWING_STAND, "Nivel Efecto", "Nivel: " + (data.getEffectAmplifier() + 1)));
         }
@@ -217,10 +217,10 @@ public class StatueGUI implements Listener {
                     data.setEffectAmplifier(Math.max(0, lvl - 1));
                 }
                 if (mode.equals("EFF_NAME")) {
-                    PotionEffectType type = PotionEffectType.getByName(msg.toUpperCase());
+                    PotionEffectType type = StatueData.buscarEfecto(msg.trim());
                     if (type != null) {
                         data.setEffect(type, data.getEffectAmplifier());
-                        p.sendMessage(ChatColor.GREEN + "Efecto establecido: " + type.getName());
+                        p.sendMessage(ChatColor.GREEN + "Efecto establecido: " + StatueData.nombreEfecto(type));
                     } else {
                         p.sendMessage(ChatColor.RED + "Efecto no encontrado. Usa nombres en inglés (ej: BLINDNESS, LUCK).");
                     }
@@ -243,7 +243,7 @@ public class StatueGUI implements Listener {
         if (data.isAntiGrief()) {
             lore.add(ChatColor.GRAY + "Modo: " + ChatColor.AQUA + "ANTI-GRIEF ZONA");
         } else {
-            String eff = data.getEffectType() != null ? data.getEffectType().getName() + " " + (data.getEffectAmplifier()+1) : "N/A";
+            String eff = data.getEffectType() != null ? StatueData.nombreEfecto(data.getEffectType()) + " " + (data.getEffectAmplifier()+1) : "N/A";
             lore.add(ChatColor.GRAY + "Modo: " + ChatColor.AQUA + eff);
         }
 

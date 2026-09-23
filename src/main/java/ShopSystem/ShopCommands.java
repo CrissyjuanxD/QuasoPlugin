@@ -1,8 +1,11 @@
 package ShopSystem;
 
 import org.bukkit.ChatColor;
+import org.bukkit.Keyed;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
+import org.bukkit.Registry;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -17,6 +20,7 @@ import org.bukkit.util.RayTraceResult;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -82,21 +86,21 @@ public class ShopCommands implements CommandExecutor, TabCompleter {
                 }
 
                 if (remainingArgs.length > argIndex) {
-                    try {
-                        type = Villager.Type.valueOf(remainingArgs[argIndex].toUpperCase());
+                    Villager.Type tipo = buscarEnRegistro(Registry.VILLAGER_TYPE, remainingArgs[argIndex]);
+                    if (tipo != null) {
+                        type = tipo;
                         argIndex++;
-                    } catch (IllegalArgumentException ignored) {}
+                    }
                 }
 
                 if (remainingArgs.length > argIndex) {
-                    try {
-                        profession = Villager.Profession.valueOf(remainingArgs[argIndex].toUpperCase());
-                    } catch (IllegalArgumentException ignored) {}
+                    Villager.Profession prof = buscarEnRegistro(Registry.VILLAGER_PROFESSION, remainingArgs[argIndex]);
+                    if (prof != null) profession = prof;
                 }
             }
 
             shopManager.spawnShop(name, loc, type, profession);
-            player.sendMessage(ChatColor.GREEN + "Tienda creada: " + ChatColor.RESET + ChatColor.translateAlternateColorCodes('&', name) + ChatColor.GREEN + " (" + type.name() + " / " + profession.name() + ")");
+            player.sendMessage(ChatColor.GREEN + "Tienda creada: " + ChatColor.RESET + ChatColor.translateAlternateColorCodes('&', name) + ChatColor.GREEN + " (" + nombreClave(type) + " / " + nombreClave(profession) + ")");
             return true;
         }
 
@@ -205,6 +209,15 @@ public class ShopCommands implements CommandExecutor, TabCompleter {
         }
     }
 
+    private <T extends Keyed> T buscarEnRegistro(Registry<T> registry, String nombre) {
+        NamespacedKey key = NamespacedKey.fromString(nombre.toLowerCase(Locale.ROOT));
+        return key == null ? null : registry.get(key);
+    }
+
+    private String nombreClave(Keyed keyed) {
+        return keyed.getKey().getKey().toUpperCase(Locale.ROOT);
+    }
+
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
         if (command.getName().equalsIgnoreCase("trade")) {
@@ -242,11 +255,11 @@ public class ShopCommands implements CommandExecutor, TabCompleter {
 
                 if (currentArgIndex == 3 || currentArgIndex == 0) {
                     List<String> suggestions = new ArrayList<>();
-                    for (Villager.Type t : Villager.Type.values()) suggestions.add(t.name());
+                    for (Villager.Type t : Registry.VILLAGER_TYPE) suggestions.add(nombreClave(t));
                     return suggestions.stream().filter(s -> s.startsWith(lastArg)).collect(Collectors.toList());
                 } else if (currentArgIndex == 4 || currentArgIndex == 1) { // Profesión
                     List<String> suggestions = new ArrayList<>();
-                    for (Villager.Profession p : Villager.Profession.values()) suggestions.add(p.name());
+                    for (Villager.Profession p : Registry.VILLAGER_PROFESSION) suggestions.add(nombreClave(p));
                     return suggestions.stream().filter(s -> s.startsWith(lastArg)).collect(Collectors.toList());
                 }
             }

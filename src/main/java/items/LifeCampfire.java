@@ -1,5 +1,8 @@
 package items;
 
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.TextColor;
+import net.kyori.adventure.text.format.TextDecoration;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.*;
 import org.bukkit.block.Block;
@@ -158,8 +161,7 @@ public class LifeCampfire implements Listener {
 
                         campfire.addFuel();
 
-                        String msg = "[\"\",{\"text\":\"+2 Bloques de Radio\",\"bold\":true,\"color\":\"#ee5b2b\"}]";
-                        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "tellraw " + event.getPlayer().getName() + " actionbar " + msg);
+                        event.getPlayer().sendActionBar(Component.text("+2 Bloques de Radio", TextColor.color(0xEE5B2B), TextDecoration.BOLD));
                     }
                 }
             }

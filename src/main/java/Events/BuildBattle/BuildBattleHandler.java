@@ -388,7 +388,7 @@ public class BuildBattleHandler implements Listener {
         try { puntajesConfig.save(puntajesFile); } catch (IOException ignored) {}
 
         World w = Bukkit.getWorlds().get(0);
-        if (w != null) w.setGameRule(GameRule.SEND_COMMAND_FEEDBACK, false);
+        if (w != null) w.setGameRule(GameRules.SEND_COMMAND_FEEDBACK, false);
 
         inicializarTeam();
         Collections.shuffle(cancionesDisponibles);
@@ -1132,7 +1132,7 @@ public class BuildBattleHandler implements Listener {
         cancelarTareasActivas();
 
         World w = Bukkit.getWorlds().get(0);
-        if (w != null) w.setGameRule(GameRule.SEND_COMMAND_FEEDBACK, true);
+        if (w != null) w.setGameRule(GameRules.SEND_COMMAND_FEEDBACK, true);
 
         pendingTpFinal.clear();
 
@@ -1208,7 +1208,7 @@ public class BuildBattleHandler implements Listener {
         }
         for (String name : pendingTpFinal) {
             Player p = Bukkit.getPlayer(name);
-            if (p != null) teleportMagico(p, p.getBedSpawnLocation() != null ? p.getBedSpawnLocation() : Bukkit.getWorlds().get(0).getSpawnLocation());
+            if (p != null) teleportMagico(p, p.getRespawnLocation() != null ? p.getRespawnLocation() : Bukkit.getWorlds().get(0).getSpawnLocation());
         }
         pendingTpFinal.clear();
         broadcastEventZona(cPrimary + "Todos han sido teletransportados a sus bases.");
@@ -1576,7 +1576,7 @@ public class BuildBattleHandler implements Listener {
             restaurarTeamOriginal(p.getName());
             restoreInventorySafe(p);
             if (isInsideArenaFast(p.getLocation())) {
-                p.teleportAsync(p.getBedSpawnLocation() != null ? p.getBedSpawnLocation() : Bukkit.getWorlds().get(0).getSpawnLocation());
+                p.teleportAsync(p.getRespawnLocation() != null ? p.getRespawnLocation() : Bukkit.getWorlds().get(0).getSpawnLocation());
             }
             if (p.getGameMode() == GameMode.CREATIVE || p.getGameMode() == GameMode.ADVENTURE) p.setGameMode(GameMode.SURVIVAL);
         } else {
@@ -2161,7 +2161,7 @@ public class BuildBattleHandler implements Listener {
                 p.setAllowFlight(false);
                 p.setFlying(false);
                 p.setScoreboard(Bukkit.getScoreboardManager().getMainScoreboard());
-                Location spawn = p.getBedSpawnLocation() != null ? p.getBedSpawnLocation() : Bukkit.getWorlds().get(0).getSpawnLocation();
+                Location spawn = p.getRespawnLocation() != null ? p.getRespawnLocation() : Bukkit.getWorlds().get(0).getSpawnLocation();
                 p.teleport(spawn);
             }
         }
@@ -2210,7 +2210,7 @@ public class BuildBattleHandler implements Listener {
                 p.setAllowFlight(false);
                 p.setFlying(false);
                 p.setScoreboard(Bukkit.getScoreboardManager().getMainScoreboard());
-                Location spawn = p.getBedSpawnLocation() != null ? p.getBedSpawnLocation() : Bukkit.getWorlds().get(0).getSpawnLocation();
+                Location spawn = p.getRespawnLocation() != null ? p.getRespawnLocation() : Bukkit.getWorlds().get(0).getSpawnLocation();
                 p.teleport(spawn);
             }
         }
@@ -2288,7 +2288,7 @@ public class BuildBattleHandler implements Listener {
                 p.setAllowFlight(false);
                 p.setFlying(false);
 
-                Location spawn = p.getBedSpawnLocation() != null ? p.getBedSpawnLocation() : Bukkit.getWorlds().get(0).getSpawnLocation();
+                Location spawn = p.getRespawnLocation() != null ? p.getRespawnLocation() : Bukkit.getWorlds().get(0).getSpawnLocation();
                 p.teleport(spawn);
 
                 p.setScoreboard(Bukkit.getScoreboardManager().getMainScoreboard());

@@ -9,6 +9,7 @@ import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.chat.ComponentSerializer;
 import org.bukkit.*;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.block.Block;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -129,8 +130,7 @@ public class EventoHandler implements Listener {
 
         config = YamlConfiguration.loadConfiguration(configFile);
 
-        config.options().header("=== Configuración de LavaClash ===");
-        config.options().copyHeader(true);
+        config.options().setHeader(List.of("=== Configuración de LavaClash ==="));
 
         if (!config.contains("modo_ingreso")) {
             config.set("modo_ingreso", "block");
@@ -260,7 +260,7 @@ public class EventoHandler implements Listener {
             }
 
             World world = Bukkit.getWorld("world");
-            if (world != null) world.setGameRule(GameRule.SEND_COMMAND_FEEDBACK, false);
+            if (world != null) world.setGameRule(GameRules.SEND_COMMAND_FEEDBACK, false);
             guardarEstadoEvento();
 
             if (participantes.size() == MAX_PARTICIPANTES) {
@@ -298,7 +298,7 @@ public class EventoHandler implements Listener {
             }
 
             World world = Bukkit.getWorld("world");
-            if (world != null) world.setGameRule(GameRule.SEND_COMMAND_FEEDBACK, false);
+            if (world != null) world.setGameRule(GameRules.SEND_COMMAND_FEEDBACK, false);
             guardarEstadoEvento();
         }
     }
@@ -399,7 +399,7 @@ public class EventoHandler implements Listener {
                     entity.remove();
                 }
             }
-            world.setGameRule(GameRule.SEND_COMMAND_FEEDBACK, true);
+            world.setGameRule(GameRules.SEND_COMMAND_FEEDBACK, true);
         }
 
         participantes.clear();
@@ -558,7 +558,7 @@ public class EventoHandler implements Listener {
                         eventInventoryManager.saveAndClearInventory(p);
                     }
 
-                    p.setHealth(p.getMaxHealth());
+                    p.setHealth(p.getAttribute(Attribute.MAX_HEALTH).getValue());
 
                     Location loc = shroomlightLocations.get(i).add(0.5, 1, 0.5);
                     String comando = String.format(Locale.US, "magictp %s %.2f %.2f %.2f", jugador, loc.getX(), loc.getY(), loc.getZ());
@@ -1104,7 +1104,7 @@ public class EventoHandler implements Listener {
     }
 
     private void procesarEliminacionJugador(Player jugador, Player atacante, String eliminado, String asesino) {
-        jugador.setHealth(jugador.getMaxHealth());
+        jugador.setHealth(jugador.getAttribute(Attribute.MAX_HEALTH).getValue());
 
         jugador.getInventory().forEach(item -> {
             if (item != null) {
@@ -1355,7 +1355,7 @@ public class EventoHandler implements Listener {
                 ganador.teleport(zonaEspectadores);
                 ganador.getInventory().clear();
 
-                ganador.setHealth(ganador.getMaxHealth());
+                ganador.setHealth(ganador.getAttribute(Attribute.MAX_HEALTH).getValue());
 
                 for (Player p : getJugadoresEnZona()) {
                     p.sendTitle(

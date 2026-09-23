@@ -1,7 +1,7 @@
 name: QuasoPlugin
 main: imp.crissyjuanxd.QuasoPlugin
 version: ${project.version}
-api-version: 1.21
+api-version: '26.2'
 author: CrissyJuanXD
 description: Plugin dedicado para el streamer Crosszy
 commands:
@@ -273,3 +273,4 @@ commands:
     permission-message: No tienes permiso para usar este comando.
 
 depend: [EliteMobs]
+softdepend: [FastAsyncWorldEdit, BloodMoon]

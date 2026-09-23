@@ -21,6 +21,7 @@ import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BundleMeta;
+import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
@@ -70,7 +71,7 @@ public class EconomyItemsFunctions implements Listener {
 
         // Mantener el color y la negrita al renombrar la mochila
         if (isMochila(leftItem)) {
-            String renameText = event.getInventory().getRenameText();
+            String renameText = event.getView().getRenameText();
             ItemStack result = event.getResult();
 
             if (result != null && renameText != null && !renameText.isEmpty()) {
@@ -500,8 +501,9 @@ public class EconomyItemsFunctions implements Listener {
         player.setCooldown(Material.FISHING_ROD, 40);
         new BukkitRunnable() { @Override public void run() { cooldownGancho.remove(player.getUniqueId()); } }.runTaskLater(plugin, 40);
 
-        if (gancho.getDurability() < gancho.getType().getMaxDurability()) {
-            gancho.setDurability((short) (gancho.getDurability() + 1));
+        if (gancho.getItemMeta() instanceof Damageable dmg && dmg.getDamage() < gancho.getType().getMaxDurability()) {
+            dmg.setDamage(dmg.getDamage() + 1);
+            gancho.setItemMeta(dmg);
         } else {
             player.getInventory().removeItem(gancho);
             player.playSound(player.getLocation(), Sound.ENTITY_ITEM_BREAK, 1.0f, 1.0f);
@@ -526,10 +528,12 @@ public class EconomyItemsFunctions implements Listener {
     private void repararArmadura(Player player, double porcentaje) {
         ItemStack[] armadura = player.getInventory().getArmorContents();
         for (ItemStack item : armadura) {
-            if (item != null && item.getType() != Material.AIR && item.getDurability() > 0) {
-                int repairAmount = (int) (item.getType().getMaxDurability() * porcentaje);
-                item.setDurability((short) Math.max(0, item.getDurability() - repairAmount));
-            }
+            if (item == null || item.getType() == Material.AIR) continue;
+            if (!(item.getItemMeta() instanceof Damageable dmg) || dmg.getDamage() <= 0) continue;
+
+            int repairAmount = (int) (item.getType().getMaxDurability() * porcentaje);
+            dmg.setDamage(Math.max(0, dmg.getDamage() - repairAmount));
+            item.setItemMeta(dmg);
         }
         player.getInventory().setArmorContents(armadura);
     }

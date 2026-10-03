@@ -2,6 +2,7 @@ package imp.crissyjuanxd;
 
 import Armors.WardenArmor;
 import Bosses.BossChunkListener;
+import Bosses.BossRewards;
 import Casino.CasinoCommands;
 import Casino.CasinoManager;
 import Commands.*;
@@ -564,6 +565,7 @@ public class QuasoPlugin extends JavaPlugin implements Listener {
         Bukkit.getPluginManager().registerEvents(removeParticlesCreeper, this);
 
         getServer().getPluginManager().registerEvents(new BossChunkListener(this), this);
+        getServer().getPluginManager().registerEvents(new BossRewards(this), this);
         Objects.requireNonNull(getCommand("debugarena")).setExecutor(new DebugArenaCommand());
     }
 

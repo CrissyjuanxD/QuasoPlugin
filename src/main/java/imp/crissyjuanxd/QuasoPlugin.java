@@ -271,7 +271,8 @@ public class QuasoPlugin extends JavaPlugin implements Listener {
 
     private void itemandmobManager() {
         itemManager = new ItemManager(this);
-        mobManager = new MobManager(this);
+        infestedBeeHandler = new InfestedBeeHandler(this);
+        mobManager = new MobManager(this, infestedBeeHandler);
     }
 
     private void initItemsSystem() {
@@ -355,7 +356,7 @@ public class QuasoPlugin extends JavaPlugin implements Listener {
         getCommand("setspawn").setExecutor(new SetSpawnCommand(this));
         getCommand("anuncio").setExecutor(new AnuncioCommand());
 
-        customSpawnerHandler = new CustomSpawnerHandler(this);
+        customSpawnerHandler = new CustomSpawnerHandler(this, infestedBeeHandler);
         new GiveSpawnerCommand(this);
 
         Objects.requireNonNull(this.getCommand("reloadcustomspawn"))
@@ -561,7 +562,6 @@ public class QuasoPlugin extends JavaPlugin implements Listener {
 
         removeParticlesCreeper = new RemoveParticlesCreeper(this);
         Bukkit.getPluginManager().registerEvents(removeParticlesCreeper, this);
-        infestedBeeHandler = new InfestedBeeHandler(this);
 
         getServer().getPluginManager().registerEvents(new BossChunkListener(this), this);
         Objects.requireNonNull(getCommand("debugarena")).setExecutor(new DebugArenaCommand());

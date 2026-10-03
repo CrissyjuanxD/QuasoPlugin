@@ -113,7 +113,7 @@ public class CustomSpawnerHandler implements Listener {
         }
     }
 
-    public CustomSpawnerHandler(JavaPlugin plugin) {
+    public CustomSpawnerHandler(JavaPlugin plugin, InfestedBeeHandler infestedBeeHandler) {
         this.plugin = plugin;
         this.spawnerKey = new NamespacedKey(plugin, "custom_spawner");
         this.spawnModeKey = new NamespacedKey(plugin, "spawn_mode");
@@ -122,7 +122,7 @@ public class CustomSpawnerHandler implements Listener {
         this.iceologerSpawner = new Iceologer(plugin);
         this.corruptedZombieSpawner = new CorruptedZombies(plugin);
         this.corruptedSpider = new CorruptedSpider(plugin);
-        this.infestedBeeHandler = new InfestedBeeHandler(plugin);
+        this.infestedBeeHandler = infestedBeeHandler;
         this.guardianBlaze = new GuardianBlaze(plugin);
         this.guardianCorruptedSkeleton = new GuardianCorruptedSkeleton(plugin);
         this.corruptedInfernalSpider = new CorruptedInfernalSpider(plugin);

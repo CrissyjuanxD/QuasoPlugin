@@ -21,7 +21,6 @@ public class MobManager {
     private final GuardianBlaze guardianBlaze;
     private final GuardianCorruptedSkeleton guardianCorruptedSkeleton;
     private final CorruptedInfernalSpider corruptedInfernalSpider;
-    private final CustomBoat customBoat;
     private final InfestedBeeHandler infestedBeeHandler;
     private final CorruptedBee corruptedBee;
     private final InfestedCreeper infestedCreeper;
@@ -56,7 +55,7 @@ public class MobManager {
         cb.onSpawned(entity);
     }
 
-    public MobManager(QuasoPlugin plugin) {
+    public MobManager(QuasoPlugin plugin, InfestedBeeHandler infestedBeeHandler) {
         this.plugin = plugin;
 
         this.bombitaSpawner = new Bombita(plugin);
@@ -66,8 +65,7 @@ public class MobManager {
         this.guardianBlaze = new GuardianBlaze(plugin);
         this.guardianCorruptedSkeleton = new GuardianCorruptedSkeleton(plugin);
         this.corruptedInfernalSpider = new CorruptedInfernalSpider(plugin);
-        this.customBoat = new CustomBoat(plugin);
-        this.infestedBeeHandler = new InfestedBeeHandler(plugin);
+        this.infestedBeeHandler = infestedBeeHandler;
         this.corruptedBee = new CorruptedBee(plugin);
         this.infestedCreeper = new InfestedCreeper(plugin);
         this.infestedGhast = new InfestedGhast(plugin);

@@ -17,13 +17,14 @@ public final class WardenDatapack {
             "data/quaso/worldgen/biome/caverna_sculk.json",
             "data/quaso/worldgen/biome/pantano_profundo.json",
             "data/quaso/worldgen/biome/abismo_flotante.json",
-            "data/quaso/worldgen/biome/ruinas_de_ceniza.json"
+            "data/quaso/worldgen/biome/ruinas_de_ceniza.json",
+            "data/minecraft/tags/worldgen/biome/has_structure/ancient_city.json"
     };
 
     private WardenDatapack() {}
 
-    // Copia el datapack de los biomas a world/datapacks. Devuelve true si lo instaló o lo actualizó,
-    // y en ese caso hay que reiniciar porque los biomas solo se cargan al prender el server
+    // Copia el datapack (los biomas y la lista de biomas donde sale la Ancient City) a world/datapacks.
+    // Devuelve true si lo instaló o lo actualizó, y en ese caso hay que reiniciar porque se carga al prender el server
     public static boolean install(JavaPlugin plugin) {
         Path target = Bukkit.getServer().getLevelDirectory().resolve("datapacks").resolve(NAME);
         boolean changed = false;

@@ -1,81 +1,78 @@
 package InfestedCaves;
 
+import java.util.Map;
+import java.util.Optional;
 import java.util.Random;
+import java.util.concurrent.ConcurrentHashMap;
 
+// Las Ancient City de la dimensión son las vanilla. Acá se calcula dónde las va a poner el juego (misma cuenta
+// que el structure_set "ancient_cities") para que el generador les vacíe la caverna antes
 public final class AncientCityLocator {
 
-    public static final int SIZE_X = 222;
-    public static final int SIZE_Y = 37;
-    public static final int SIZE_Z = 230;
+    // Valores del structure_set vanilla: una ciudad por región de 24x24 chunks, separadas al menos 8
+    private static final int SPACING = 24;
+    private static final int SEPARATION = 8;
+    private static final int SALT = 20083232;
 
-    public static final int BASE_Y = -59;
-
-    public static final int CLEAR_RADIUS = Math.max(SIZE_X, SIZE_Z) / 2 + 10;
-
+    // Las piezas llegan hasta unos 130 bloques del centro (medido en un server de prueba)
+    public static final int CLEAR_RADIUS = 134;
     public static final int CLEAR_TRANSITION = 18;
 
-    public static final int CLEAR_HEIGHT_PADDING = 0;
+    // Las piezas van de Y -52 a -22 (el ancla está en -27). Abajo de MIN_Y queda piso firme y MAX_Y es el
+    // techo de la caverna en los bordes; en el centro sube hasta 16 bloques más
+    public static final int MIN_Y = -53;
+    public static final int MAX_Y = -16;
 
     private static final int MIN_DIST_TO_SPAWN = 500;
 
-    public static final int CELL_SIZE = 512;
-
-    private static final int CHANCE = 6;
+    private static final Map<Long, Optional<CityInfo>> CACHE = new ConcurrentHashMap<>();
 
     private AncientCityLocator() {}
 
     public static final class CityInfo {
-        public final long cellX;
-        public final long cellZ;
-
-        public final int originX;
-        public final int originY;
-        public final int originZ;
-
+        public final int chunkX;
+        public final int chunkZ;
         public final int centerX;
         public final int centerZ;
 
-        CityInfo(long cellX, long cellZ,
-                 int originX, int originY, int originZ,
-                 int centerX, int centerZ) {
-            this.cellX   = cellX;
-            this.cellZ   = cellZ;
-            this.originX = originX;
-            this.originY = originY;
-            this.originZ = originZ;
-            this.centerX = centerX;
-            this.centerZ = centerZ;
+        CityInfo(int chunkX, int chunkZ) {
+            this.chunkX = chunkX;
+            this.chunkZ = chunkZ;
+            this.centerX = chunkX << 4;
+            this.centerZ = chunkZ << 4;
         }
 
-        public int minY() { return originY; }
+        public int minY() { return MIN_Y; }
 
-        public int maxY() { return originY + SIZE_Y - 1; }
+        public int maxY() { return MAX_Y; }
     }
 
-    // El mundo se divide en celdas de 512x512 y cada una tiene 1 en 6 de tener una Ancient City (solo con la seed)
-    public static CityInfo getCityForCell(long worldSeed, long cellX, long cellZ) {
-        int cellCenterX = (int)(cellX * CELL_SIZE + CELL_SIZE / 2);
-        int cellCenterZ = (int)(cellZ * CELL_SIZE + CELL_SIZE / 2);
-
-        double distToSpawn = Math.sqrt((double) cellCenterX * cellCenterX
-                + (double) cellCenterZ * cellCenterZ);
-        if (distToSpawn < MIN_DIST_TO_SPAWN) return null;
-
-        Random rng = new Random(worldSeed ^ (cellX * 341873128712L) ^ (cellZ * 132897987541L));
-        if (rng.nextInt(CHANCE) != 0) return null;
-        if (touchesAbyss(worldSeed, cellCenterX, cellCenterZ)) return null;
-
-        int originX = cellCenterX - SIZE_X / 2;
-        int originZ = cellCenterZ - SIZE_Z / 2;
-
-        return new CityInfo(cellX, cellZ,
-                originX, BASE_Y, originZ,
-                cellCenterX, cellCenterZ);
+    // La ciudad de una región o null. El chunk sale igual que en RandomSpreadStructurePlacement (spread lineal)
+    // y además se descartan las que caen cerca del spawn o tocan el Abismo, que no tiene suelo
+    public static CityInfo getCityForRegion(long seed, int regionX, int regionZ) {
+        long key = seed ^ ((long) regionX << 32) ^ (regionZ & 0xFFFFFFFFL);
+        return CACHE.computeIfAbsent(key, k -> Optional.ofNullable(compute(seed, regionX, regionZ))).orElse(null);
     }
 
-    // Las ciudades no van en el Abismo Flotante: abajo no hay suelo
-    private static boolean touchesAbyss(long worldSeed, int centerX, int centerZ) {
-        WardenBiomeMap map = WardenBiomeMap.forSeed(worldSeed);
+    private static CityInfo compute(long seed, int regionX, int regionZ) {
+        Random random = new Random((long) regionX * 341873128712L + (long) regionZ * 132897987541L + seed + SALT);
+        int chunkX = regionX * SPACING + random.nextInt(SPACING - SEPARATION);
+        int chunkZ = regionZ * SPACING + random.nextInt(SPACING - SEPARATION);
+        CityInfo info = new CityInfo(chunkX, chunkZ);
+
+        if (Math.hypot(info.centerX, info.centerZ) < MIN_DIST_TO_SPAWN) return null;
+        if (touchesAbyss(seed, info.centerX, info.centerZ)) return null;
+        return info;
+    }
+
+    // El generador solo deja empezar estructuras en estos chunks, así nunca sale una ciudad sin su caverna
+    public static boolean isStartChunk(long seed, int chunkX, int chunkZ) {
+        CityInfo info = getCityForRegion(seed, Math.floorDiv(chunkX, SPACING), Math.floorDiv(chunkZ, SPACING));
+        return info != null && info.chunkX == chunkX && info.chunkZ == chunkZ;
+    }
+
+    private static boolean touchesAbyss(long seed, int centerX, int centerZ) {
+        WardenBiomeMap map = WardenBiomeMap.forSeed(seed);
         int r = CLEAR_RADIUS;
         int[][] points = {{0, 0}, {r, 0}, {-r, 0}, {0, r}, {0, -r}};
         for (int[] p : points) {
@@ -84,47 +81,31 @@ public final class AncientCityLocator {
         return false;
     }
 
-    public static long cellOf(int blockCoord) {
-        return Math.floorDiv(blockCoord, CELL_SIZE);
+    public static CityInfo findCityNear(long seed, int blockX, int blockZ) {
+        return findCityNear(seed, blockX, blockZ, 0);
     }
 
-    // Revisa la celda actual y las 8 de alrededor por si hay una ciudad que afecte a ese bloque
-    public static CityInfo findCityNear(long worldSeed, int blockX, int blockZ) {
-        return findCityNear(worldSeed, blockX, blockZ, 0);
-    }
-
-    // Con margen: el generador busca desde el centro del chunk y necesita encontrar la ciudad aunque solo
-    // le toque una esquina; si no, ese chunk no se vacía y queda una pared recta en el borde
-    public static CityInfo findCityNear(long worldSeed, int blockX, int blockZ, double margin) {
-        long ccx = cellOf(blockX);
-        long ccz = cellOf(blockZ);
+    // Revisa la región del bloque y las de alrededor. Con margen: el generador busca desde el centro del chunk
+    // y tiene que encontrar la ciudad aunque solo le toque una esquina
+    public static CityInfo findCityNear(long seed, int blockX, int blockZ, double margin) {
+        int regionX = Math.floorDiv(Math.floorDiv(blockX, 16), SPACING);
+        int regionZ = Math.floorDiv(Math.floorDiv(blockZ, 16), SPACING);
         double maxDist = CLEAR_RADIUS + CLEAR_TRANSITION + margin;
 
-        for (long dx = -1; dx <= 1; dx++) {
-            for (long dz = -1; dz <= 1; dz++) {
-                CityInfo info = getCityForCell(worldSeed, ccx + dx, ccz + dz);
-                if (info == null) continue;
-                if (distance(blockX, blockZ, info.centerX, info.centerZ) <= maxDist)
-                    return info;
+        for (int dx = -1; dx <= 1; dx++) {
+            for (int dz = -1; dz <= 1; dz++) {
+                CityInfo info = getCityForRegion(seed, regionX + dx, regionZ + dz);
+                if (info != null && Math.hypot(blockX - info.centerX, blockZ - info.centerZ) <= maxDist) return info;
             }
         }
         return null;
     }
 
-    // 1 dentro del radio de la ciudad y baja hasta 0 en la transición; sirve para vaciar la cueva donde va la ciudad
+    // 1 dentro del radio de la ciudad y baja hasta 0 en la transición
     public static double computeInfluence(CityInfo info, int x, int z) {
-        double d = distance(x, z, info.centerX, info.centerZ);
-        if (d <= CLEAR_RADIUS)                      return 1.0;
-        if (d >= CLEAR_RADIUS + CLEAR_TRANSITION)   return 0.0;
+        double d = Math.hypot(x - info.centerX, z - info.centerZ);
+        if (d <= CLEAR_RADIUS) return 1.0;
+        if (d >= CLEAR_RADIUS + CLEAR_TRANSITION) return 0.0;
         return 1.0 - (d - CLEAR_RADIUS) / CLEAR_TRANSITION;
-    }
-
-    private static double distance(double x1, double z1, double x2, double z2) {
-        double dx = x1 - x2, dz = z1 - z2;
-        return Math.sqrt(dx * dx + dz * dz);
-    }
-
-    public static long cellKey(long cellX, long cellZ) {
-        return (cellX << 32) ^ (cellZ & 0xFFFFFFFFL);
     }
 }

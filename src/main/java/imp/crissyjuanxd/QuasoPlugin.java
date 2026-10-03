@@ -2,6 +2,8 @@ package imp.crissyjuanxd;
 
 import Armors.WardenArmor;
 import Bosses.BossChunkListener;
+import Bosses.BossRewards;
+import Bosses.InfestedWardenLairs;
 import Casino.CasinoCommands;
 import Casino.CasinoManager;
 import Commands.*;
@@ -271,7 +273,8 @@ public class QuasoPlugin extends JavaPlugin implements Listener {
 
     private void itemandmobManager() {
         itemManager = new ItemManager(this);
-        mobManager = new MobManager(this);
+        infestedBeeHandler = new InfestedBeeHandler(this);
+        mobManager = new MobManager(this, infestedBeeHandler);
     }
 
     private void initItemsSystem() {
@@ -355,7 +358,7 @@ public class QuasoPlugin extends JavaPlugin implements Listener {
         getCommand("setspawn").setExecutor(new SetSpawnCommand(this));
         getCommand("anuncio").setExecutor(new AnuncioCommand());
 
-        customSpawnerHandler = new CustomSpawnerHandler(this);
+        customSpawnerHandler = new CustomSpawnerHandler(this, infestedBeeHandler);
         new GiveSpawnerCommand(this);
 
         Objects.requireNonNull(this.getCommand("reloadcustomspawn"))
@@ -561,9 +564,9 @@ public class QuasoPlugin extends JavaPlugin implements Listener {
 
         removeParticlesCreeper = new RemoveParticlesCreeper(this);
         Bukkit.getPluginManager().registerEvents(removeParticlesCreeper, this);
-        infestedBeeHandler = new InfestedBeeHandler(this);
 
         getServer().getPluginManager().registerEvents(new BossChunkListener(this), this);
+        getServer().getPluginManager().registerEvents(new BossRewards(this), this);
         Objects.requireNonNull(getCommand("debugarena")).setExecutor(new DebugArenaCommand());
     }
 
@@ -608,7 +611,8 @@ public class QuasoPlugin extends JavaPlugin implements Listener {
         getServer().getPluginManager().registerEvents(listeners, this);
         getServer().getPluginManager().registerEvents(portalManager, this);
 
-        WardenCaveCommand wardenCommand = new WardenCaveCommand(this, portalManager);
+        InfestedWardenLairs wardenLairs = new InfestedWardenLairs(this);
+        WardenCaveCommand wardenCommand = new WardenCaveCommand(this, portalManager, wardenLairs);
         getCommand("wardencave").setExecutor(wardenCommand);
         getCommand("wardencave").setTabCompleter(wardenCommand);
 

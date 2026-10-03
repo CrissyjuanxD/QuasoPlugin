@@ -228,7 +228,7 @@ commands:
     permission-message: No tienes permiso para usar este comando.
   wardencave:
     description: Comando unificado de la dimensión WardenCave
-    usage: /wardencave <portal [remove] | join <jugador/@a> | leave <jugador/@a>>
+    usage: /wardencave <portal [remove] | join <jugador/@a> [spawn] | leave <jugador/@a> | boss <list/spawn>>
     permission: viciont_hardcore3.command.wardencave
     permission-message: No tienes permiso para usar este comando.
   tiendas:

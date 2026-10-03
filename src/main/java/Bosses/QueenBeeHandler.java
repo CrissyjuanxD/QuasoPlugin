@@ -1264,79 +1264,12 @@ public class QueenBeeHandler extends BaseBoss implements Listener {
         }.runTaskTimer(plugin, 0L, 1L);
     }
 
-    // Da la recompensa según cuántas veces haya matado cada jugador a la reina
+    // Las DinoCoins y los topes diarios los da BossRewards con el BossDefeatedEvent
     private void finalizeDeath() {
         onDeath();
 
         ExperienceOrb orb = (ExperienceOrb) bee.getWorld().spawnEntity(bee.getLocation(), EntityType.EXPERIENCE_ORB);
         orb.setExperience(3500);
-
-        NamespacedKey killsKey = new NamespacedKey(plugin, "queen_bee_kills");
-
-        Set<UUID> rewardPlayers = new HashSet<>(currentPlayers);
-        rewardPlayers.addAll(attackers);
-
-        for (UUID uuid : rewardPlayers) {
-            Player p = Bukkit.getPlayer(uuid);
-            if (p == null || !p.isOnline() || (p.getGameMode() != GameMode.SURVIVAL && p.getGameMode() != GameMode.ADVENTURE)) continue;
-
-            int kills = p.getPersistentDataContainer().getOrDefault(killsKey, PersistentDataType.INTEGER, 0);
-            kills++;
-            p.getPersistentDataContainer().set(killsKey, PersistentDataType.INTEGER, kills);
-
-            if (kills == 1) {
-                ItemStack bundle = new ItemStack(Material.BUNDLE);
-                org.bukkit.inventory.meta.BundleMeta meta = (org.bukkit.inventory.meta.BundleMeta) bundle.getItemMeta();
-
-                ItemStack coins = items.EconomyItems.createVithiumCoin();
-                coins.setAmount(20);
-                meta.addItem(coins);
-
-                meta.addItem(new ItemStack(Material.ENCHANTED_GOLDEN_APPLE, 5));
-
-                ItemStack speed = items.CustomPotions.getSpeedHoneyBottle();
-                speed.setAmount(16);
-                meta.addItem(speed);
-
-                bundle.setItemMeta(meta);
-                giveOrDropItem(p, bundle);
-
-                p.sendMessage(ChatColor.of("#EFDC93") + "¡Has derrotado a la Abeja Reina por primera vez! Se te ha entregado un Bundle de recompensa especial.");
-
-            } else if (kills == 2) {
-                ItemStack coins = items.EconomyItems.createVithiumCoin();
-                coins.setAmount(15);
-                giveOrDropItem(p, coins);
-
-                giveOrDropItem(p, new ItemStack(Material.ENCHANTED_GOLDEN_APPLE, 3));
-
-                ItemStack speed = items.CustomPotions.getSpeedHoneyBottle();
-                speed.setAmount(8);
-                giveOrDropItem(p, speed);
-
-                p.sendMessage(ChatColor.of("#EFDC93") + "¡Has derrotado a la Abeja Reina por segunda vez! Recibes tu recompensa.");
-
-            } else {
-                ItemStack coins = items.EconomyItems.createVithiumCoin();
-                coins.setAmount(10);
-                giveOrDropItem(p, coins);
-
-                ItemStack speed = items.CustomPotions.getSpeedHoneyBottle();
-                speed.setAmount(3);
-                giveOrDropItem(p, speed);
-
-                p.sendMessage(ChatColor.of("#EFDC93") + "¡Has derrotado a la Abeja Reina (" + kills + " veces)! Recibes la recompensa estándar.");
-            }
-
-            p.playSound(p.getLocation(), Sound.UI_TOAST_CHALLENGE_COMPLETE, 1f, 1f);
-        }
-    }
-
-    private void giveOrDropItem(Player p, ItemStack item) {
-        HashMap<Integer, ItemStack> leftover = p.getInventory().addItem(item);
-        for (ItemStack left : leftover.values()) {
-            p.getWorld().dropItemNaturally(p.getLocation(), left);
-        }
     }
 
     @EventHandler

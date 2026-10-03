@@ -8,6 +8,7 @@ import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.Sound;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Item;
@@ -22,8 +23,11 @@ import org.bukkit.event.player.PlayerToggleSneakEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.persistence.PersistentDataContainer;
+import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.util.Vector;
 
+import java.time.LocalDate;
 import java.util.*;
 
 public class FishingListener implements Listener {
@@ -36,10 +40,14 @@ public class FishingListener implements Listener {
     private final Set<UUID> playersInZone = new HashSet<>();
     private final Map<UUID, Long> tutorialCooldowns = new HashMap<>();
 
+    // Premio especial y su peso (suman 100): los raros salen menos y valen más en la tienda
     private static final String[] CUSTOM_LOOT = {
-            "zanahoria_encantada", "pepitas_hierro_oxidadas", "pepitas_diamante",
-            "fragmentos_ambar", "fosiles_pequenos", "lingote_platino"
+            "chatarra", "manzana_podrida", "zanahoria_encantada", "pepitas_hierro_oxidadas",
+            "pepitas_diamante", "fragmentos_ambar", "fosiles_pequenos", "lingote_platino"
     };
+    private static final int[] CUSTOM_WEIGHTS = {30, 25, 15, 12, 8, 5, 3, 2};
+
+    private static final int DAILY_CUSTOM_CAP = 60;
 
     private static final Random RANDOM = new Random();
 
@@ -161,11 +169,17 @@ public class FishingListener implements Listener {
         }
 
         final int slotType = game.getCurrentSlotType();
-        final boolean giveCustom = switch (slotType) {
+        boolean rolledCustom = switch (slotType) {
             case 1 -> RANDOM.nextInt(100) < 35;
             case 2 -> true;
             default -> false;
         };
+        boolean capped = rolledCustom && !takeDailyCustom(player);
+        final boolean giveCustom = rolledCustom && !capped;
+        if (capped) {
+            player.sendMessage(ChatColor.of("#4BA3DD") + "✦ Ya pescaste los " + DAILY_CUSTOM_CAP
+                    + " premios especiales de hoy, ahora sale loot normal. Mañana se reinicia.");
+        }
 
         ItemStack reward = giveCustom ? getCustomLoot() : game.getVanillaLoot();
         if (reward == null) return;
@@ -215,12 +229,34 @@ public class FishingListener implements Listener {
         }
     }
 
+    // Suma un premio especial al contador del día; false si ya llegó al tope
+    private boolean takeDailyCustom(Player player) {
+        NamespacedKey key = new NamespacedKey(plugin, "fishing_daily");
+        PersistentDataContainer data = player.getPersistentDataContainer();
+        String today = LocalDate.now().toString();
+        String saved = data.getOrDefault(key, PersistentDataType.STRING, "");
+        int count = saved.startsWith(today + ":") ? Integer.parseInt(saved.substring(today.length() + 1)) : 0;
+        if (count >= DAILY_CUSTOM_CAP) return false;
+        data.set(key, PersistentDataType.STRING, today + ":" + (count + 1));
+        return true;
+    }
+
     private ItemStack getCustomLoot() {
-        String key = CUSTOM_LOOT[RANDOM.nextInt(CUSTOM_LOOT.length)];
+        int roll = RANDOM.nextInt(100);
+        String key = CUSTOM_LOOT[CUSTOM_LOOT.length - 1];
+        for (int i = 0; i < CUSTOM_LOOT.length; i++) {
+            roll -= CUSTOM_WEIGHTS[i];
+            if (roll < 0) {
+                key = CUSTOM_LOOT[i];
+                break;
+            }
+        }
         ItemStack item = itemManager.getItem(key, 1, null);
         if (item != null) return item;
 
         return switch (key) {
+            case "chatarra"               -> FishingItems.createChatarra();
+            case "manzana_podrida"        -> FishingItems.createManzanaPodrida();
             case "zanahoria_encantada"    -> FishingItems.createZanahoriaEncantada();
             case "pepitas_hierro_oxidadas"-> FishingItems.createPepitasHierroOxidadas();
             case "pepitas_diamante"       -> FishingItems.createPepitasDiamante();

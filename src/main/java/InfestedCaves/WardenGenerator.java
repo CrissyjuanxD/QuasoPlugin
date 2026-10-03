@@ -78,6 +78,20 @@ public class WardenGenerator extends ChunkGenerator {
         return List.of(new WardenPopulator());
     }
 
+    // Las Ancient City son las vanilla: solo pueden empezar en los chunks que calcula AncientCityLocator,
+    // que son los que este generador deja vaciados
+    @Override
+    public boolean shouldGenerateStructures(WorldInfo info, Random random, int chunkX, int chunkZ) {
+        return AncientCityLocator.isStartChunk(info.getSeed(), chunkX, chunkZ);
+    }
+
+    // Las piezas de las estructuras se ponen en el paso de decoración; los biomas del datapack no tienen
+    // features, así que esto solo coloca las ciudades
+    @Override
+    public boolean shouldGenerateDecorations(WorldInfo info, Random random, int chunkX, int chunkZ) {
+        return true;
+    }
+
     // Genera todo el chunk: las montañas de arriba y las cuevas de adentro según el bioma (mezclados en los bordes),
     // el agua y la lava, las superficies con su decoración y al final las vetas de mineral
     @Override
@@ -288,11 +302,16 @@ public class WardenGenerator extends ChunkGenerator {
         return dominant(w);
     }
 
-    // Vacía el lugar donde va la Ancient City y deja la transición irregular arriba de ella
+    // Caverna de la Ancient City: piso firme abajo de las piezas y techo en cúpula irregular (alto en el centro y
+    // bajando hacia los bordes), con una transición con ruido para que no se note el corte
     private double cityCarve(Noises n, AncientCityLocator.CityInfo city, double cityInfluence, int x, int y, int z) {
-        if (y > city.minY() && y <= city.maxY()) return cityInfluence * 1.2;
-        if (y > city.maxY() && y <= city.maxY() + 15) {
-            double transition = (double) (y - city.maxY()) / 15.0;
+        if (y <= city.minY()) return -cityInfluence * 1.2;
+
+        double d = Math.hypot(x - city.centerX, z - city.centerZ) / AncientCityLocator.CLEAR_RADIUS;
+        double roof = city.maxY() + 16 * (1 - Math.min(1, d * d)) + n.crustVariation.noise(x, z, 0.5, 0.5, true) * 5;
+        if (y <= roof) return cityInfluence * 1.2;
+        if (y <= roof + 12) {
+            double transition = (y - roof) / 12.0;
             double extraNoise = n.sculk.noise(x * 3.7, y * 2.1, z * 3.7, 0.5, 0.5);
             return cityInfluence * (1.0 - transition) * extraNoise * 0.6;
         }

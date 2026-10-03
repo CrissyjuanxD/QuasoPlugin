@@ -49,7 +49,7 @@ public class WardenCaveListeners implements Listener {
         }
     }
 
-    // Genera el templo cuando carga el chunk 0,0 y las ciudades en los chunks nuevos
+    // Pega el templo cuando carga el chunk 0,0
     @EventHandler
     public void onChunkLoad(ChunkLoadEvent e) {
         World world = e.getWorld();
@@ -57,10 +57,6 @@ public class WardenCaveListeners implements Listener {
 
         if (e.getChunk().getX() == 0 && e.getChunk().getZ() == 0) {
             pasteTempleIfNeeded(world);
-        }
-
-        if (e.isNewChunk()) {
-            structureManager.tryGenerateAncientCity(e.getChunk());
         }
     }
 

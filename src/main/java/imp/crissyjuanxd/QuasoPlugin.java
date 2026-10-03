@@ -3,6 +3,7 @@ package imp.crissyjuanxd;
 import Armors.WardenArmor;
 import Bosses.BossChunkListener;
 import Bosses.BossRewards;
+import Bosses.InfestedWardenLairs;
 import Casino.CasinoCommands;
 import Casino.CasinoManager;
 import Commands.*;
@@ -610,7 +611,8 @@ public class QuasoPlugin extends JavaPlugin implements Listener {
         getServer().getPluginManager().registerEvents(listeners, this);
         getServer().getPluginManager().registerEvents(portalManager, this);
 
-        WardenCaveCommand wardenCommand = new WardenCaveCommand(this, portalManager);
+        InfestedWardenLairs wardenLairs = new InfestedWardenLairs(this);
+        WardenCaveCommand wardenCommand = new WardenCaveCommand(this, portalManager, wardenLairs);
         getCommand("wardencave").setExecutor(wardenCommand);
         getCommand("wardencave").setTabCompleter(wardenCommand);
 

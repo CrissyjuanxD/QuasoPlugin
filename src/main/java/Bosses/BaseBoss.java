@@ -133,7 +133,7 @@ public abstract class BaseBoss {
     }
 
     private void setupBars() {
-        mainBar = Bukkit.createBossBar(getBossTitle(), BarColor.PINK, BarStyle.SOLID);
+        mainBar = Bukkit.createBossBar(getBossTitle(), getBarColor(), BarStyle.SOLID);
         staticBar = Bukkit.createBossBar(" ", BarColor.WHITE, BarStyle.SOLID);
         staticBar.setProgress(1.0);
     }
@@ -244,7 +244,7 @@ public abstract class BaseBoss {
     }
 
     private void sendSummonMessage() {
-        if (currentPlayers.isEmpty()) return;
+        if (!announceSummon() || currentPlayers.isEmpty()) return;
 
         List<String> names = currentPlayers.stream()
                 .map(id -> Bukkit.getPlayer(id))
@@ -263,10 +263,10 @@ public abstract class BaseBoss {
 
         if (names.size() == 1) {
             msg = prefix + colorText + " El jugador " + colorName + names.get(0) +
-                    colorText + " ha invocado a la " + bossName;
+                    colorText + " ha invocado " + getBossArticle() + " " + bossName;
         } else {
             msg = prefix + colorText + " Los jugadores " + colorName + String.join(", ", names) +
-                    colorText + " han invocado a la " + bossName;
+                    colorText + " han invocado " + getBossArticle() + " " + bossName;
         }
 
         Bukkit.broadcastMessage(msg);
@@ -293,13 +293,27 @@ public abstract class BaseBoss {
 
         if (names.size() == 1) {
             msg = prefix + colorText + " El jugador " + colorName + names.get(0) +
-                    colorText + " ha derrotado a la " + bossName;
+                    colorText + " ha derrotado " + getBossArticle() + " " + bossName;
         } else {
             msg = prefix + colorText + " Los jugadores " + colorName + String.join(", ", names) +
-                    colorText + " han derrotado a la " + bossName;
+                    colorText + " han derrotado " + getBossArticle() + " " + bossName;
         }
 
         Bukkit.broadcastMessage(msg);
+    }
+
+    // "a la" para la Abeja Reina, "al" para un boss masculino
+    protected String getBossArticle() {
+        return "a la";
+    }
+
+    // Los mini boss que aparecen solos no anuncian que alguien los invocó
+    protected boolean announceSummon() {
+        return true;
+    }
+
+    protected BarColor getBarColor() {
+        return BarColor.PINK;
     }
 
     protected abstract String getBossTitle();

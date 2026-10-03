@@ -1,5 +1,6 @@
 package InfestedCaves;
 
+import Bosses.InfestedWardenLairs;
 import imp.crissyjuanxd.QuasoPlugin;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -18,10 +19,12 @@ public class WardenCaveCommand implements CommandExecutor, TabCompleter {
 
     private final QuasoPlugin plugin;
     private final PortalManager portalManager;
+    private final InfestedWardenLairs wardenLairs;
 
-    public WardenCaveCommand(QuasoPlugin plugin, PortalManager portalManager) {
+    public WardenCaveCommand(QuasoPlugin plugin, PortalManager portalManager, InfestedWardenLairs wardenLairs) {
         this.plugin = plugin;
         this.portalManager = portalManager;
+        this.wardenLairs = wardenLairs;
     }
 
     // portal crea o quita un portal donde estás; join y leave mandan jugadores a la dimensión o al spawn
@@ -40,6 +43,8 @@ public class WardenCaveCommand implements CommandExecutor, TabCompleter {
             case "join":
             case "leave":
                 return handleJoinLeave(sender, sub, args);
+            case "boss":
+                return handleBoss(sender, args);
             default:
                 sendUsage(sender);
                 return true;
@@ -47,7 +52,27 @@ public class WardenCaveCommand implements CommandExecutor, TabCompleter {
     }
 
     private void sendUsage(CommandSender sender) {
-        sender.sendMessage(ChatColor.RED + "Uso: /wardencave <portal [remove] | join <jugador/@a> [spawn] | leave <jugador/@a>>");
+        sender.sendMessage(ChatColor.RED + "Uso: /wardencave <portal [remove] | join <jugador/@a> [spawn] | leave <jugador/@a> | boss <list/spawn>>");
+    }
+
+    // list muestra cada Ancient City y su Infested Warden; spawn lo saca ya en la ciudad más cercana
+    private boolean handleBoss(CommandSender sender, String[] args) {
+        if (args.length > 1 && args[1].equalsIgnoreCase("spawn")) {
+            if (!(sender instanceof Player p)) {
+                sender.sendMessage(ChatColor.RED + "Solo un jugador puede usar este subcomando.");
+                return true;
+            }
+            sender.sendMessage(ChatColor.AQUA + wardenLairs.forceSpawn(p));
+            return true;
+        }
+        List<String> lines = wardenLairs.describe();
+        if (lines.isEmpty()) {
+            sender.sendMessage(ChatColor.GRAY + "Todavía no se cargó ninguna Ancient City.");
+            return true;
+        }
+        sender.sendMessage(ChatColor.AQUA + "Infested Warden por ciudad:");
+        lines.forEach(line -> sender.sendMessage(ChatColor.GRAY + "- " + line));
+        return true;
     }
 
     private boolean handlePortal(CommandSender sender, String[] args) {
@@ -135,10 +160,14 @@ public class WardenCaveCommand implements CommandExecutor, TabCompleter {
             completions.add("portal");
             completions.add("join");
             completions.add("leave");
+            completions.add("boss");
         } else if (args.length == 2) {
             String sub = args[0].toLowerCase();
             if (sub.equals("portal")) {
                 completions.add("remove");
+            } else if (sub.equals("boss")) {
+                completions.add("list");
+                completions.add("spawn");
             } else if (sub.equals("join") || sub.equals("leave")) {
                 completions.add("@a");
                 for (Player p : Bukkit.getOnlinePlayers()) {

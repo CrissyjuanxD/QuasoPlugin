@@ -1,6 +1,5 @@
 package Habilidades;
 
-import Handlers.DayHandler;
 import items.EconomyItems;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
@@ -28,16 +27,14 @@ public class HabilidadesGUI implements Listener {
 
     private final JavaPlugin plugin;
     private final HabilidadesManager manager;
-    private final DayHandler dayHandler;
     private final String GUI_TITLE = ChatColor.of("#C77DFF") + "Libro de Habilidades";
 
     private final Map<UUID, Integer> playerPages = new HashMap<>();
     private final int MAX_PAGES = 2;
 
-    public HabilidadesGUI(JavaPlugin plugin, HabilidadesManager manager, DayHandler dayHandler) {
+    public HabilidadesGUI(JavaPlugin plugin, HabilidadesManager manager) {
         this.plugin = plugin;
         this.manager = manager;
-        this.dayHandler = dayHandler;
     }
 
     public void openHabilidadesGUI(Player player) {

@@ -58,10 +58,17 @@ public class StructureManager {
         }
     }
 
-    public void pasteTempleAtSpawn(World world) {
-        if (templeSchematic == null) return;
-        plugin.getLogger().info("Pegando TemploRunico en 0, -56, 0");
-        pasteSchematicAsync(templeSchematic, new Location(world, 0, -56, 0), null);
+    // Devuelve false si el schematic todavía no cargó, para intentarlo de nuevo la próxima vez
+    // Se pega centrado en el 0 0 y apoyado sobre la meseta del spawn (la build con el portal de salida)
+    public boolean pasteTempleAtSpawn(World world) {
+        if (templeSchematic == null) return false;
+        BlockVector3 size = templeSchematic.getDimensions();
+        int x = -size.x() / 2;
+        int y = WardenGenerator.SPAWN_Y + 1;
+        int z = -size.z() / 2;
+        plugin.getLogger().info("Pegando TemploRunico en " + x + ", " + y + ", " + z);
+        pasteSchematicAsync(templeSchematic, new Location(world, x, y, z), null);
+        return true;
     }
 
     // Al generar un chunk nuevo revisa si le toca una ciudad y la pega una sola vez por celda

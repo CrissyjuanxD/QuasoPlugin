@@ -1227,7 +1227,7 @@ public class QueenBeeHandler extends BaseBoss implements Listener {
                 if (ticks >= 60) {
                     try {
                         w.spawnParticle(Particle.EXPLOSION_EMITTER, bee.getLocation(), 5);
-                        w.spawnParticle(Particle.FLASH, bee.getLocation(), 1);
+                        w.spawnParticle(Particle.FLASH, bee.getLocation(), 1, Color.WHITE);
                         w.playSound(bee.getLocation(), Sound.ENTITY_GENERIC_EXPLODE, 5.0f, 0.6f);
                     } catch (Exception ignored) {}
 

@@ -10,4 +10,9 @@ public interface Mission {
     void checkCompletion(String playerName);
     List<ItemStack> getRewards();
     int getMissionNumber();
+
+    // Las misiones extra devuelven la misión normal con la que se activan (0 si no es extra)
+    default int getParentMission() {
+        return 0;
+    }
 }

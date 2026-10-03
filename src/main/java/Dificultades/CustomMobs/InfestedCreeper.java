@@ -1,6 +1,7 @@
 package Dificultades.CustomMobs;
 
 import Dificultades.Features.InfestedMob;
+import items.InfestedSoulsItems;
 import org.bukkit.*;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.*;
@@ -55,10 +56,15 @@ public class InfestedCreeper extends InfestedMob implements Listener {
 
     public Creeper spawnInfestedCreeper(Location location) {
         Creeper creeper = (Creeper) location.getWorld().spawnEntity(location, EntityType.CREEPER);
+        infest(creeper);
+        return creeper;
+    }
+
+    // Convierte un creeper que ya existe (por ejemplo el que spawnea el juego) en Infested Creeper
+    public void infest(Creeper creeper) {
         applyAttributes(creeper);
         activeMobs.add(creeper.getUniqueId());
         startGlobalParticleTask();
-        return creeper;
     }
 
     private void applyAttributes(Creeper creeper) {
@@ -153,6 +159,9 @@ public class InfestedCreeper extends InfestedMob implements Listener {
         if (!isCustomMob(event.getEntity())) return;
         Creeper creeper = (Creeper) event.getEntity();
         event.getDrops().clear();
+        if (Math.random() < SOUL_CHANCE) {
+            event.getDrops().add(new InfestedSoulsItems(plugin).createInfestedCreeperSoul());
+        }
 
         creeper.getWorld().playSound(creeper.getLocation(), Sound.ENTITY_WARDEN_DEATH, 1.5f, 0.8f);
         creeper.getWorld().spawnParticle(Particle.SOUL, creeper.getLocation(), 50, 1, 1, 1, 0.3);

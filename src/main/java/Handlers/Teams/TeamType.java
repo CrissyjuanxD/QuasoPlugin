@@ -22,6 +22,11 @@ public enum TeamType {
     T_SURVIVOR("TSurvivor", "#9455ED", "\uEB8A ", "\uEB8F ",
             org.bukkit.ChatColor.LIGHT_PURPLE, "04_TSurvivor"),
 
+    X_LEYENDA("XLeyenda", "#FFD166",
+            ChatColor.GRAY + "" + ChatColor.BOLD + "[" + ChatColor.of("#FFD166") + ChatColor.BOLD + "DinoLeyenda" + ChatColor.GRAY + ChatColor.BOLD + "] ",
+            ChatColor.GRAY + "" + ChatColor.BOLD + "[" + ChatColor.of("#FFD166") + ChatColor.BOLD + "DLY" + ChatColor.GRAY + ChatColor.BOLD + "] ",
+            org.bukkit.ChatColor.GOLD, "97_Leyenda"),
+
     Y_MIEMBRO("YMiembro", "#F7A1F0",
             ChatColor.GRAY + "" + ChatColor.BOLD + "[" + ChatColor.DARK_PURPLE + ChatColor.BOLD + "DinoNugget" + ChatColor.GOLD + ChatColor.BOLD + "+" + ChatColor.GRAY + ChatColor.BOLD + "] ",
             ChatColor.GRAY + "" + ChatColor.BOLD + "[" + ChatColor.DARK_PURPLE + ChatColor.BOLD + "DNT" + ChatColor.GOLD + ChatColor.BOLD + "+" + ChatColor.GRAY + ChatColor.BOLD + "] ",

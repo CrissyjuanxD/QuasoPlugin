@@ -217,6 +217,18 @@ public class DatabaseManager {
         }
     }
 
+    // Borra el progreso de misiones de todos los jugadores y deja todas desactivadas
+    public void deleteAllMissionData() {
+        try (Connection conn = getConnection();
+             PreparedStatement players = conn.prepareStatement("DELETE FROM player_missions");
+             PreparedStatement global = conn.prepareStatement("DELETE FROM global_missions")) {
+            players.executeUpdate();
+            global.executeUpdate();
+        } catch (SQLException e) {
+            plugin.getLogger().severe("Error borrando los datos de misiones: " + e.getMessage());
+        }
+    }
+
     public Map<Integer, MissionData> loadPlayerMissions(UUID uuid) {
         Map<Integer, MissionData> missions = new HashMap<>();
         String sql = "SELECT mission_id, is_completed, reward_claimed, progress_json FROM player_missions WHERE uuid = ?";

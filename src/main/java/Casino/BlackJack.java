@@ -1,5 +1,6 @@
 package Casino;
 
+import Events.MissionSystem.MissionTriggerEvent;
 import items.EconomyItems;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.*;
@@ -360,6 +361,7 @@ public class BlackJack implements Listener {
 
             if (multiplier > 1) {
                 player.sendMessage(ChatColor.of("#B5EAD7") + "۞ Recibes " + ChatColor.of("#FFD3A5") + winAmount + ChatColor.of("#B5EAD7") + " DinoFichas.");
+                MissionTriggerEvent.call(player, "blackjack_ganada");
             }
         }
 

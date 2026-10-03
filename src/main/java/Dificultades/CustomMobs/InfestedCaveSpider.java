@@ -1,6 +1,7 @@
 package Dificultades.CustomMobs;
 
 import Dificultades.Features.InfestedMob;
+import items.InfestedSoulsItems;
 import org.bukkit.*;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.*;
@@ -65,10 +66,15 @@ public class InfestedCaveSpider extends InfestedMob implements Listener {
 
     public CaveSpider spawnInfestedCaveSpider(Location location) {
         CaveSpider spider = (CaveSpider) location.getWorld().spawnEntity(location, EntityType.CAVE_SPIDER);
+        infest(spider);
+        return spider;
+    }
+
+    // Convierte una araña de cueva que ya existe (por ejemplo la que spawnea el juego) en Infested Cave Spider
+    public void infest(CaveSpider spider) {
         applyAttributes(spider);
         activeMobs.add(spider.getUniqueId());
         startGlobalParticleTask();
-        return spider;
     }
 
     // Araña de cueva más grande con 100 de vida y entre 3 y 5 efectos al azar
@@ -132,6 +138,9 @@ public class InfestedCaveSpider extends InfestedMob implements Listener {
         if (!isCustomMob(event.getEntity())) return;
         CaveSpider spider = (CaveSpider) event.getEntity();
         event.getDrops().clear();
+        if (Math.random() < SOUL_CHANCE) {
+            event.getDrops().add(new InfestedSoulsItems(plugin).createInfestedCaveSpiderSoul());
+        }
 
         spider.getWorld().playSound(spider.getLocation(), Sound.ENTITY_SPIDER_DEATH, 2.0f, 0.5f);
         spider.getWorld().playSound(spider.getLocation(), Sound.ENTITY_WARDEN_DEATH, 1.0f, 1.2f);

@@ -1,88 +1,69 @@
 package Events.MissionSystem;
 
-import Handlers.ActionBarHandler;
-import TitleListener.SuccessNotification;
-import items.EconomyItems;
-import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.enchantments.Enchantment;
-import org.bukkit.entity.Bee;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.EnchantmentStorageMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
-public class Mission10 implements Mission, Listener {
-    private final JavaPlugin plugin;
-    private final MissionHandler missionHandler;
-    private final SuccessNotification successNotification;
-    private final ActionBarHandler actionBarHandler;
+import static Events.MissionSystem.MissionRewards.*;
 
-    public Mission10(JavaPlugin plugin, MissionHandler missionHandler) {
-        this.plugin = plugin;
-        this.missionHandler = missionHandler;
-        this.successNotification = new SuccessNotification(plugin);
-        this.actionBarHandler = new ActionBarHandler(plugin);
+public class Mission10 extends BaseMission {
+    private static final Map<Material, String> FLOWERS = new LinkedHashMap<>();
+
+    static {
+        FLOWERS.put(Material.DANDELION, "Diente de León");
+        FLOWERS.put(Material.POPPY, "Amapola");
+        FLOWERS.put(Material.BLUE_ORCHID, "Orquídea Azul");
+        FLOWERS.put(Material.ALLIUM, "Allium");
+        FLOWERS.put(Material.AZURE_BLUET, "Bluet Azur");
+        FLOWERS.put(Material.RED_TULIP, "Tulipán Rojo");
+        FLOWERS.put(Material.ORANGE_TULIP, "Tulipán Naranja");
+        FLOWERS.put(Material.WHITE_TULIP, "Tulipán Blanco");
+        FLOWERS.put(Material.PINK_TULIP, "Tulipán Rosa");
+        FLOWERS.put(Material.OXEYE_DAISY, "Margarita");
+        FLOWERS.put(Material.CORNFLOWER, "Aciano");
+        FLOWERS.put(Material.LILY_OF_THE_VALLEY, "Lirio de los Valles");
+        FLOWERS.put(Material.WITHER_ROSE, "Rosa Wither");
+        FLOWERS.put(Material.SUNFLOWER, "Girasol");
+        FLOWERS.put(Material.LILAC, "Lila");
+        FLOWERS.put(Material.ROSE_BUSH, "Rosal");
+        FLOWERS.put(Material.PEONY, "Peonía");
+        FLOWERS.put(Material.TORCHFLOWER, "Flor Antorcha");
+        FLOWERS.put(Material.PITCHER_PLANT, "Planta Jarra");
+        FLOWERS.put(Material.PINK_PETALS, "Pétalos Rosas");
+        FLOWERS.put(Material.SPORE_BLOSSOM, "Flor de Esporas");
+        FLOWERS.put(Material.OPEN_EYEBLOSSOM, "Eyeblossom Abierta");
+        FLOWERS.put(Material.CLOSED_EYEBLOSSOM, "Eyeblossom Cerrada");
+        FLOWERS.put(Material.WILDFLOWERS, "Flores Silvestres");
+        FLOWERS.put(Material.CACTUS_FLOWER, "Flor de Cactus");
+        FLOWERS.put(Material.GOLDEN_DANDELION, "Diente de León Dorado");
+    }
+
+    public Mission10(JavaPlugin plugin, MissionHandler handler) {
+        super(plugin, handler, 10, "Stardew Valley", MissionDifficulty.MEDIA, 14,
+                "Consigue todas las flores del juego, también las nuevas: eyeblossom, wildflowers, cactus flower y golden dandelion.");
+        FLOWERS.forEach((flower, label) -> flag(flower.name(), label));
     }
 
     @Override
-    public String getName() { return "Cazador de Abejas"; }
-
-    @Override
-    public String getDescription() { return "Elimina a una Abeja Reina.\nUsa /bosstp para ir a su Dungeon.\nInteractua con el panal del altar."; }
-
-    @Override
-    public int getMissionNumber() { return 10; }
-
-    @Override
-    public List<ItemStack> getRewards() {
-        List<ItemStack> rewards = new ArrayList<>();
-        ItemStack coins = EconomyItems.createVithiumCoin();
-        coins.setAmount(14);
-        ItemStack goldenApples = new ItemStack(Material.GOLD_BLOCK, 15);
-        ItemStack unBook = new ItemStack(Material.ENCHANTED_BOOK);
-        EnchantmentStorageMeta meta = (EnchantmentStorageMeta) unBook.getItemMeta();
-        if (meta != null) {
-            meta.addStoredEnchant(Enchantment.UNBREAKING, 4, true);
-            unBook.setItemMeta(meta);
-        }
-        ItemStack xpFill = new ItemStack(Material.HONEY_BOTTLE, 1);
-        for (int i = 0; i < 27; i++) {
-            if (i == 10 || i == 11 || i == 12) rewards.add(unBook);
-            else if (i == 14) rewards.add(coins);
-            else if (i == 16) rewards.add(goldenApples);
-            else rewards.add(xpFill.clone());
-        }
-        return rewards;
+    protected List<List<ItemStack>> rewardItems() {
+        return of(item(Material.BONE_BLOCK, 32), item(Material.DIAMOND, 25));
     }
 
     @Override
-    public void initializePlayerData(String playerName) {}
+    protected int tickSeconds() {
+        return 3;
+    }
 
+    // Marca cada flor que tenga en el inventario
     @Override
-    public void checkCompletion(String playerName) {}
-
-    // Se completa al matar a la Abeja Reina
-    @EventHandler
-    public void onEntityDeath(EntityDeathEvent event) {
-        Entity entity = event.getEntity();
-        if (entity instanceof Bee && entity.getCustomName() != null && entity.getCustomName().contains("Abeja Reina")) {
-            Player killer = event.getEntity().getKiller();
-            if (killer == null) return;
-
-            if (missionHandler.isMissionActive(killer, 10) && !missionHandler.isMissionCompleted(killer, 10)) {
-                successNotification.showSuccess(killer);
-                String msg = ChatColor.GOLD + "۞ " + ChatColor.of("#FFCC99") + "¡La Reina ha caído!";
-                actionBarHandler.sendActionBar(killer, msg);
-                missionHandler.completeMission(killer, 10);
-            }
+    protected void tick(Player player) {
+        for (Material flower : FLOWERS.keySet()) {
+            if (player.getInventory().contains(flower)) mark(player, flower.name());
         }
     }
 }

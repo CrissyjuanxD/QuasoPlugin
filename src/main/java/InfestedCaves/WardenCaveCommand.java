@@ -4,6 +4,7 @@ import imp.crissyjuanxd.QuasoPlugin;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -46,7 +47,7 @@ public class WardenCaveCommand implements CommandExecutor, TabCompleter {
     }
 
     private void sendUsage(CommandSender sender) {
-        sender.sendMessage(ChatColor.RED + "Uso: /wardencave <portal [remove] | join <jugador/@a> | leave <jugador/@a>>");
+        sender.sendMessage(ChatColor.RED + "Uso: /wardencave <portal [remove] | join <jugador/@a> [spawn] | leave <jugador/@a>>");
     }
 
     private boolean handlePortal(CommandSender sender, String[] args) {
@@ -66,21 +67,22 @@ public class WardenCaveCommand implements CommandExecutor, TabCompleter {
         return true;
     }
 
+    // join <jugador> manda a un lugar al azar como el portal; con "spawn" lo manda al centro (solo admins)
     private boolean handleJoinLeave(CommandSender sender, String action, String[] args) {
         if (!sender.hasPermission("viciont.admin")) {
             sender.sendMessage(ChatColor.RED + "No tienes permiso.");
             return true;
         }
         if (args.length < 2) {
-            sender.sendMessage(ChatColor.RED + "Uso: /wardencave " + action + " <jugador/@a>");
+            sender.sendMessage(ChatColor.RED + "Uso: /wardencave " + action + " <jugador/@a>" + (action.equals("join") ? " [spawn]" : ""));
             return true;
         }
 
         String target = args[1];
+        boolean center = args.length > 2 && args[2].equalsIgnoreCase("spawn");
 
         if (target.equalsIgnoreCase("@a")) {
-            for (Player p : Bukkit.getOnlinePlayers()) executeJoinLeave(p, action);
-            sender.sendMessage(ChatColor.GREEN + "Ejecutado para todos.");
+            for (Player p : Bukkit.getOnlinePlayers()) executeJoinLeave(sender, p, action, center);
             return true;
         }
 
@@ -90,24 +92,39 @@ public class WardenCaveCommand implements CommandExecutor, TabCompleter {
             return true;
         }
 
-        executeJoinLeave(pTarget, action);
-        sender.sendMessage(ChatColor.GREEN + "Ejecutado para " + pTarget.getName());
+        executeJoinLeave(sender, pTarget, action, center);
         return true;
     }
 
-    private void executeJoinLeave(Player p, String action) {
-        if (action.equalsIgnoreCase("join")) {
-            if (Bukkit.getWorld(QuasoPlugin.WORLD_NAME) == null) {
-                p.sendMessage(ChatColor.RED + "El mundo no está cargado.");
-                return;
-            }
-            Location loc = portalManager.findSafeSpawn(Bukkit.getWorld(QuasoPlugin.WORLD_NAME));
-            p.teleport(loc);
-            p.sendMessage(ChatColor.GREEN + "Teletransportado a WardenCave.");
-        } else if (action.equalsIgnoreCase("leave")) {
+    private void executeJoinLeave(CommandSender sender, Player p, String action, boolean center) {
+        if (action.equals("leave")) {
             p.teleport(Bukkit.getWorlds().get(0).getSpawnLocation());
             p.sendMessage(ChatColor.GREEN + "Enviado al spawn del Overworld.");
+            sender.sendMessage(ChatColor.GREEN + "Ejecutado para " + p.getName());
+            return;
         }
+
+        World world = Bukkit.getWorld(QuasoPlugin.WORLD_NAME);
+        if (world == null) {
+            sender.sendMessage(ChatColor.RED + "El mundo no está cargado.");
+            return;
+        }
+
+        if (center) {
+            Location location = portalManager.findCenterSpawn(world);
+            portalManager.teleportToInfested(p, location);
+            sender.sendMessage(ChatColor.GREEN + p.getName() + " enviado al centro de la Warden Cave (" + coords(location) + ").");
+            return;
+        }
+
+        portalManager.findRandomSpawn(world).thenAccept(location -> {
+            portalManager.teleportToInfested(p, location);
+            sender.sendMessage(ChatColor.GREEN + p.getName() + " enviado a un lugar al azar de la Warden Cave (" + coords(location) + ").");
+        });
+    }
+
+    private String coords(Location location) {
+        return location.getBlockX() + ", " + location.getBlockY() + ", " + location.getBlockZ();
     }
 
     @Override
@@ -128,6 +145,8 @@ public class WardenCaveCommand implements CommandExecutor, TabCompleter {
                     completions.add(p.getName());
                 }
             }
+        } else if (args.length == 3 && args[0].equalsIgnoreCase("join")) {
+            completions.add("spawn");
         }
 
         return completions;

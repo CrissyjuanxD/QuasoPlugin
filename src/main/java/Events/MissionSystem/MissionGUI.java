@@ -1,9 +1,11 @@
 package Events.MissionSystem;
 
+import items.ItemModels;
+import items.Misionesitem;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.Statistic;
+import org.bukkit.Sound;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -14,496 +16,189 @@ import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.UUID;
 
 public class MissionGUI implements Listener {
+    // El fondo del menú es una textura del resource pack que se dibuja con estos caracteres del título
+    private static final String TITLE = "㈁㈁" + org.bukkit.ChatColor.WHITE + "㈂";
+    private static final int PANEL_SLOTS = 18;
+    private static final int PREV_SLOT = 45;
+    private static final int NEXT_SLOT = 53;
+    private static final int[] MISSION_SLOTS = buildMissionSlots();
+
     private final JavaPlugin plugin;
     private final MissionHandler missionHandler;
-    private final String guiTitle;
 
-    private final ItemStack purpleDye;
-    private final ItemStack blackDye;
-    private final ItemStack nextArrow;
-    private final ItemStack prevArrow;
+    // Marca el inventario como menú de misiones y recuerda la página
+    private static class MissionMenu implements InventoryHolder {
+        private final int page;
+        private Inventory inventory;
 
-    private final Map<UUID, Integer> playerPages = new HashMap<>();
-    private final int MAX_PAGES = 3;
+        MissionMenu(int page) {
+            this.page = page;
+        }
 
-    private final int[] MISSION_SLOTS = {
-            9, 10, 11, 12, 13, 14, 15, 16, 17,
-            18, 19, 20, 21, 22, 23, 24, 25, 26,
-            27, 28, 29, 30, 31, 32, 33, 34, 35,
-            37, 38, 39, 40, 41, 42, 43
-    };
+        @Override
+        public Inventory getInventory() {
+            return inventory;
+        }
+    }
 
     public MissionGUI(JavaPlugin plugin, MissionHandler missionHandler) {
         this.plugin = plugin;
         this.missionHandler = missionHandler;
-        this.guiTitle = ChatColor.of("#FFA500") + "Misiones";
-
-        this.purpleDye = createDecorativeItem(Material.PURPLE_DYE);
-        this.blackDye = createDecorativeItem(Material.BLACK_DYE);
-
-        this.nextArrow = createArrow("§eSiguiente Página ➔");
-        this.prevArrow = createArrow("§e⬅ Anterior Página");
-
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
 
-    private ItemStack createDecorativeItem(Material mat) {
-        ItemStack item = new ItemStack(mat);
-        ItemMeta meta = item.getItemMeta();
-        if (meta != null) {
-            meta.setDisplayName("§r ");
-            item.setItemMeta(meta);
+    // Misiones del slot 18 al 52, menos el 45 que es la flecha (34 por página)
+    private static int[] buildMissionSlots() {
+        List<Integer> slots = new ArrayList<>();
+        for (int slot = PANEL_SLOTS; slot < 54; slot++) {
+            if (slot != PREV_SLOT && slot != NEXT_SLOT) slots.add(slot);
         }
-        return item;
+        return slots.stream().mapToInt(Integer::intValue).toArray();
     }
 
-    private ItemStack createArrow(String name) {
-        ItemStack item = new ItemStack(Material.SPECTRAL_ARROW);
-        ItemMeta meta = item.getItemMeta();
-        if (meta != null) {
-            meta.setDisplayName(name);
-            meta.addEnchant(Enchantment.UNBREAKING, 1, true);
-            meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
-            item.setItemMeta(meta);
-        }
-        return item;
+    // Las páginas salen de la misión con el número más alto (119 misiones = 4 páginas)
+    private int maxPages() {
+        int highest = 1;
+        for (int number : missionHandler.getMissions().keySet()) highest = Math.max(highest, number);
+        return (highest + MISSION_SLOTS.length - 1) / MISSION_SLOTS.length;
     }
 
-    // El mapa con custom model data 9999 abre el menú de misiones
+    // El item de Misiones abre el menú (los viejos con custom model data 9999 también sirven)
     @EventHandler
     public void onItemInteract(PlayerInteractEvent event) {
         if (event.getHand() != EquipmentSlot.HAND) return;
         if (event.getAction() != Action.RIGHT_CLICK_AIR && event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
+        if (!Misionesitem.isMisiones(event.getItem())) return;
 
-        ItemStack item = event.getItem();
-        if (item == null || item.getType() != Material.MAP) return;
-        if (!item.hasItemMeta() || !item.getItemMeta().hasCustomModelData()) return;
-
-        if (item.getItemMeta().getCustomModelData() == 9999) {
-            event.setCancelled(true);
-            openMissionGUI(event.getPlayer(), 1);
-        }
+        event.setCancelled(true);
+        openMissionGUI(event.getPlayer(), 1);
     }
 
     public void openMissionGUI(Player player) {
         openMissionGUI(player, 1);
     }
 
-    // Menú paginado; cada item muestra si la misión está activa, completada y su progreso
     public void openMissionGUI(Player player, int page) {
-        playerPages.put(player.getUniqueId(), page);
-        Inventory gui = Bukkit.createInventory(null, 54, guiTitle + " - Pág " + page);
+        int pages = maxPages();
+        MissionMenu menu = new MissionMenu(page);
+        Inventory gui = Bukkit.createInventory(menu, 54, TITLE);
+        menu.inventory = gui;
 
-        int[] purpleSlots = {0, 4, 8, 45, 49, 53};
-        for (int slot : purpleSlots) {
-            gui.setItem(slot, purpleDye);
+        ItemStack panel = createPanel();
+        for (int slot = 0; slot < PANEL_SLOTS; slot++) {
+            gui.setItem(slot, panel);
         }
 
-        int[] blackSlots = {1, 2, 3, 5, 6, 7, 46, 47, 48, 50, 51, 52};
-        for (int slot : blackSlots) {
-            gui.setItem(slot, blackDye);
-        }
+        gui.setItem(PREV_SLOT, createArrow("§e⬅ Anterior Página", page, pages));
+        gui.setItem(NEXT_SLOT, createArrow("§eSiguiente Página ➔", page, pages));
 
-        gui.setItem(36, prevArrow);
-        gui.setItem(44, nextArrow);
-
-        Map<Integer, Mission> allMissions = missionHandler.getMissions();
-        int startIndex = (page - 1) * MISSION_SLOTS.length;
-
+        int first = (page - 1) * MISSION_SLOTS.length + 1;
         for (int i = 0; i < MISSION_SLOTS.length; i++) {
-            int slot = MISSION_SLOTS[i];
-            int missionNum = startIndex + i + 1;
-
-            if (allMissions.containsKey(missionNum)) {
-                Mission mission = allMissions.get(missionNum);
-                MissionData data = missionHandler.getData(player, missionNum);
-
-                boolean isActive = data.isActive();
-                boolean isCompleted = data.isCompleted();
-
-                gui.setItem(slot, createMissionItem(mission, isActive, isCompleted, player, data, missionNum));
-            } else {
-                gui.setItem(slot, createMissionItem(null, false, false, player, null, missionNum));
-            }
+            int missionNum = first + i;
+            Mission mission = missionHandler.getMissions().get(missionNum);
+            MissionData data = mission != null ? missionHandler.getData(player, missionNum) : null;
+            gui.setItem(MISSION_SLOTS[i], createMissionItem(mission, player, data, missionNum));
         }
 
         player.openInventory(gui);
     }
 
-    private ItemStack createMissionItem(Mission mission, boolean isActive, boolean isCompleted, Player player, MissionData data, int missionNum) {
-        ItemStack item;
-        ItemMeta meta;
-        String displayName;
-        List<String> lore = new ArrayList<>();
+    private ItemStack createPanel() {
+        ItemStack panel = new ItemStack(Material.BLACK_STAINED_GLASS_PANE);
+        ItemMeta meta = panel.getItemMeta();
+        meta.setDisplayName(" ");
+        meta.setHideTooltip(true);
+        ItemModels.apply(meta, "gui_panel");
+        panel.setItemMeta(meta);
+        return panel;
+    }
 
-        if (mission == null) {
-            item = new ItemStack(Material.MAP);
-            meta = item.getItemMeta();
-            meta.setDisplayName("§7Misión no implementada.");
-            lore.add("§8Esta misión aún no ha sido programada.");
-            meta.setLore(lore);
-            meta.addItemFlags(ItemFlag.HIDE_ADDITIONAL_TOOLTIP);
-            item.setItemMeta(meta);
-            return item;
-        }
-
-        if (!isActive) {
-            item = new ItemStack(Material.MAP);
-            displayName = "§7???";
-        } else if (isCompleted) {
-            item = new ItemStack(Material.LIME_BANNER);
-            org.bukkit.inventory.meta.BannerMeta bannerMeta = (org.bukkit.inventory.meta.BannerMeta) item.getItemMeta();
-            if (bannerMeta != null) {
-                bannerMeta.addPattern(new org.bukkit.block.banner.Pattern(org.bukkit.DyeColor.WHITE, org.bukkit.block.banner.PatternType.FLOWER));
-                item.setItemMeta(bannerMeta);
-            }
-            displayName = "§a" + mission.getName();
-        } else {
-            item = new ItemStack(Material.GUSTER_BANNER_PATTERN);
-            displayName = ChatColor.of("#FFA500") + mission.getName();
-        }
-
-        meta = item.getItemMeta();
-        meta.setDisplayName(displayName);
-        meta.addItemFlags(ItemFlag.HIDE_ADDITIONAL_TOOLTIP);
-
-        if (isActive) {
-            String[] descriptionLines = mission.getDescription().split("\n");
-            for (String line : descriptionLines) {
-                lore.add("§7" + line);
-            }
-
-            lore.add("");
-            lore.add(isCompleted ? "§a✔ Completada" : "§c✖ Pendiente");
-
-            addMissionSpecificProgress(mission, data, lore, player);
-        } else {
-            lore.add("§7Misión no descubierta");
-        }
-
-        meta.setLore(lore);
+    private ItemStack createArrow(String name, int page, int pages) {
+        ItemStack item = new ItemStack(Material.SPECTRAL_ARROW);
+        ItemMeta meta = item.getItemMeta();
+        meta.setDisplayName(name);
+        meta.setLore(List.of(ChatColor.of("#D3D3D3") + "Página " + page + " de " + pages));
+        meta.addEnchant(Enchantment.UNBREAKING, 1, true);
+        meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
         item.setItemMeta(meta);
         return item;
     }
 
-    // Agrega al lore el progreso detallado según qué misión es
-    private void addMissionSpecificProgress(Mission mission, MissionData data, List<String> lore, Player player) {
-        if (mission instanceof Mission1) {
+    // Papel con el item model según el estado: bloqueada, pendiente o completada
+    private ItemStack createMissionItem(Mission mission, Player player, MissionData data, int missionNum) {
+        ItemStack item = new ItemStack(Material.PAPER);
+        ItemMeta meta = item.getItemMeta();
+        List<String> lore = new ArrayList<>();
+
+        if (mission == null || !data.isActive()) {
+            meta.setDisplayName(ChatColor.of("#A0A0A0") + "#" + missionNum + " ???");
+            lore.add(ChatColor.of("#D3D3D3") + (mission == null ? "Misión no implementada" : "Misión no descubierta"));
+            ItemModels.apply(meta, "mision_bloqueada");
+        } else {
+            boolean completed = data.isCompleted();
+            meta.setDisplayName(ChatColor.of(completed ? "#90EE90" : "#FFB6C1") + missionHandler.displayName(missionNum));
+            ItemModels.apply(meta, completed ? "mision_completada" : "mision_pendiente");
+
+            for (String line : mission.getDescription().split("\n")) {
+                lore.add(ChatColor.of("#D3D3D3") + line);
+            }
             lore.add("");
-            lore.add(ChatColor.of("#FFCC99") + "Progreso:");
+            if (mission instanceof BaseMission base) {
+                lore.add(ChatColor.of("#F0E68C") + "Dificultad: " + base.getDifficulty().colored());
+                lore.add(ChatColor.of("#F0E68C") + "Recompensa: " + ChatColor.of("#FFD700") + base.getCoins() + " DinoCoins "
+                        + ChatColor.of("#D3D3D3") + "+ objetos");
+            }
+            if (mission.getParentMission() > 0) {
+                lore.add(ChatColor.of("#7FD4FF") + "Misión extra (sale con la #" + mission.getParentMission() + ")");
+            }
+            lore.add(completed ? ChatColor.of("#98FB98") + "✔ Completada" : ChatColor.of("#FFA07A") + "✖ Pendiente");
 
-            Mission1 m1 = (Mission1) mission;
-            List<Material> ores = m1.getRequiredOres();
-            StringBuilder currentLine = new StringBuilder();
-
-            for (int i = 0; i < ores.size(); i++) {
-                Material ore = ores.get(i);
-                int mined = data.getProgressInt("ore_" + ore.name());
-
-                String name = ore.name();
-                name = name.replace("DEEPSLATE_", "Piz. ");
-                name = name.replace("NETHER_GOLD_ORE", "Oro Nether");
-                name = name.replace("NETHER_QUARTZ_ORE", "Cuarzo");
-                name = name.replace("ANCIENT_DEBRIS", "Escombro Ancestral");
-
-                name = name.replace("COAL_ORE", "Carbón");
-                name = name.replace("COPPER_ORE", "Cobre");
-                name = name.replace("IRON_ORE", "Hierro");
-                name = name.replace("GOLD_ORE", "Oro");
-                name = name.replace("LAPIS_ORE", "Lapislázuli");
-                name = name.replace("REDSTONE_ORE", "Redstone");
-                name = name.replace("DIAMOND_ORE", "Diamante");
-                name = name.replace("EMERALD_ORE", "Esmeralda");
-
-                String color = (mined >= 10 ? ChatColor.GREEN.toString() : ChatColor.of("#FFA07A").toString());
-                String formattedOre = ChatColor.GRAY + "- " + name + ": " + color + mined + "/10";
-
-                if (i % 2 == 0) {
-                    currentLine.append(formattedOre);
-                    if (i == ores.size() - 1) {
-                        lore.add(currentLine.toString());
-                    }
-                } else {
-                    currentLine.append(ChatColor.DARK_GRAY).append(" │ ").append(formattedOre);
-                    lore.add(currentLine.toString());
-                    currentLine = new StringBuilder();
+            if (mission instanceof BaseMission base && !completed) {
+                List<String> progress = base.progressLines(player, data);
+                if (!progress.isEmpty()) {
+                    lore.add("");
+                    lore.addAll(progress);
                 }
             }
-        } else if (mission instanceof Mission2) {
-            lore.add("");
-            lore.add(ChatColor.of("#FFCC99") + "Progreso:");
-            int kills = data.getProgressInt("bloodmoon_kills");
-            lore.add(ChatColor.GRAY + "- Mobs en BloodMoon: " + (kills >= 125 ? ChatColor.GREEN : ChatColor.of("#FFA07A")) + kills + "/125");
-        } else if (mission instanceof Mission3) {
-            lore.add("");
-            int raids = data.getProgressInt("raids_completed");
-            int apples = data.getProgressInt("apples_crafted");
-            lore.add(ChatColor.GRAY + "- Raids: " + (raids >= 5 ? ChatColor.GREEN : ChatColor.of("#FFA07A")) + raids + "/5");
-            lore.add(ChatColor.GRAY + "- Manzanas: " + (apples >= 64 ? ChatColor.GREEN : ChatColor.of("#FFA07A")) + apples + "/64");
-        } else if (mission instanceof Mission4) {
-            lore.add("");
-            lore.add(ChatColor.of("#FFCC99") + "Progreso:");
-            String[] types = {"LEATHER", "GOLDEN", "CHAINMAIL", "IRON", "DIAMOND", "NETHERITE", "COPPER"};
-            String[] names = {"Cuero", "Oro", "Malla", "Hierro", "Diamante", "Netherite", "Cobre"};
-            String[] parts = {"_HELMET", "_CHESTPLATE", "_LEGGINGS", "_BOOTS"};
-            int totalEquipped = 0;
-            for (int i = 0; i < types.length; i++) {
-                int typeCount = 0;
-                for (String part : parts) {
-                    if (data.getProgressBool("armor_" + types[i] + part)) {
-                        typeCount++;
-                        totalEquipped++;
-                    }
-                }
-                String color = (typeCount >= 4) ? ChatColor.GREEN.toString() : ChatColor.GRAY.toString();
-                lore.add(color + "- " + names[i] + ": " + typeCount + "/4");
-            }
-            lore.add("");
-            lore.add(ChatColor.of("#FFA07A") + "Total: " + totalEquipped + "/28");
-        } else if (mission instanceof Mission5) {
-            lore.add("");
-            lore.add(ChatColor.of("#FFCC99") + "Progreso:");
-            int killed = data.getProgressInt("elite_zombies_killed");
-            lore.add(ChatColor.GRAY + "- Elite Zombies: " + (killed >= 25 ? ChatColor.GREEN : ChatColor.of("#FFA07A")) + killed + "/25");
-        } else if (mission instanceof Mission6) {
-            lore.add("");
-            lore.add(ChatColor.of("#FFCC99") + "Progreso:");
-            int z = data.getProgressInt("zombies_killed");
-            int s = data.getProgressInt("spiders_killed");
-            lore.add(ChatColor.GRAY + "- Zombies Corr.: " + (z >= 30 ? ChatColor.GREEN : ChatColor.of("#FFA07A")) + z + "/30");
-            lore.add(ChatColor.GRAY + "- Arañas Corr.: " + (s >= 30 ? ChatColor.GREEN : ChatColor.of("#FFA07A")) + s + "/30");
-        } else if (mission instanceof Mission7) {
-            lore.add("");
-            lore.add(ChatColor.GRAY + "- Salto: " + (data.isCompleted() ? ChatColor.GREEN + "Completado" : ChatColor.RED + "Pendiente"));
-        } else if (mission instanceof Mission8) {
-            lore.add("");
-            lore.add(ChatColor.of("#FFCC99") + "Progreso:");
-            int killed = data.getProgressInt("wardens_snowballed_killed");
-            lore.add(ChatColor.GRAY + "- Wardens Eliminados: " + (killed >= 5 ? ChatColor.GREEN : ChatColor.of("#FFA07A")) + killed + "/5");
-        } else if (mission instanceof Mission9) {
-            lore.add("");
-            lore.add(ChatColor.of("#FFCC99") + "Progreso:");
-            int killed = data.getProgressInt("iceologers_spotted_killed");
-            lore.add(ChatColor.GRAY + "- Iceologers Eliminados: " + (killed >= 10 ? ChatColor.GREEN : ChatColor.of("#FFA07A")) + killed + "/10");
-        } else if (mission instanceof Mission10) {
-            lore.add("");
-            lore.add(ChatColor.GRAY + "- Reina Derrotada: " + (data.isCompleted() ? ChatColor.GREEN + "✔" : ChatColor.RED + "✖"));
-        } else if (mission instanceof Mission11) {
-            lore.add("");
-            lore.add(ChatColor.of("#FFCC99") + "Progreso:");
-            int spiders = data.getProgressInt("elite_spiders_killed");
-            int skeletons = data.getProgressInt("elite_skeletons_killed");
-            lore.add(ChatColor.GRAY + "- Elite Spiders: " + (spiders >= 30 ? ChatColor.GREEN : ChatColor.of("#FFA07A")) + spiders + "/30");
-            lore.add(ChatColor.GRAY + "- Elite Skeletons: " + (skeletons >= 30 ? ChatColor.GREEN : ChatColor.of("#FFA07A")) + skeletons + "/30");
-        } else if (mission instanceof Mission12) {
-            lore.add("");
-            lore.add(ChatColor.of("#FFCC99") + "Progreso:");
-            int melted = data.getProgressInt("snowmen_melted");
-            lore.add(ChatColor.GRAY + "- Golems Derretidos: " + (melted >= 10 ? ChatColor.GREEN : ChatColor.of("#FFA07A")) + melted + "/10");
-        } else if (mission instanceof Mission13) {
-            lore.add("");
-            int bees = data.getProgressInt("bees_killed");
-            int bombs = data.getProgressInt("bombitas_killed");
-            lore.add(ChatColor.GRAY + "- Corrupted Bees: " + (bees >= 30 ? ChatColor.GREEN : ChatColor.of("#FFA07A")) + bees + "/30");
-            lore.add(ChatColor.GRAY + "- Bombitas: " + (bombs >= 30 ? ChatColor.GREEN : ChatColor.of("#FFA07A")) + bombs + "/30");
-        } else if (mission instanceof Mission14 m14) {
-            lore.add("");
-            lore.add(ChatColor.of("#FFCC99") + "Progreso de flores:");
-
-            List<Material> flowers = m14.getRequiredFlowers();
-            int completedTypes = 0;
-            StringBuilder currentLine = new StringBuilder();
-
-            for (int i = 0; i < flowers.size(); i++) {
-                Material flower = flowers.get(i);
-                int count = data.getProgressInt("collected_" + flower.name());
-                if (count >= 25) completedTypes++;
-
-                String name = flower.name();
-                name = name.replace("DANDELION", "Diente de León");
-                name = name.replace("POPPY", "Amapola");
-                name = name.replace("BLUE_ORCHID", "Orquídea Azul");
-                name = name.replace("ALLIUM", "Allium");
-                name = name.replace("AZURE_BLUET", "Bluet Azur");
-                name = name.replace("RED_TULIP", "Tulipán Rojo");
-                name = name.replace("ORANGE_TULIP", "Tulipán Naranja");
-                name = name.replace("WHITE_TULIP", "Tulipán Blanco");
-                name = name.replace("PINK_TULIP", "Tulipán Rosa");
-                name = name.replace("OXEYE_DAISY", "Margarita");
-                name = name.replace("CORNFLOWER", "Aciano");
-                name = name.replace("LILY_OF_THE_VALLEY", "Lirio de los Valles");
-                name = name.replace("WITHER_ROSE", "Rosa Wither");
-                name = name.replace("SUNFLOWER", "Girasol");
-                name = name.replace("LILAC", "Lila");
-                name = name.replace("ROSE_BUSH", "Rosal");
-                name = name.replace("PEONY", "Peonía");
-                name = name.replace("TORCHFLOWER", "Flor Antorcha");
-                name = name.replace("PITCHER_PLANT", "Planta Jarra");
-                name = name.replace("PINK_PETALS", "Pétalos Rosas");
-                name = name.replace("SPORE_BLOSSOM", "Flor de Esporas");
-
-                String color = (count >= 25 ? ChatColor.GREEN.toString() : ChatColor.GRAY.toString());
-                String countColor = (count >= 25 ? ChatColor.GREEN.toString() : ChatColor.of("#FFA07A").toString());
-                String formattedFlower = color + "- " + name + " " + countColor + count + ChatColor.GRAY + "/25";
-
-                if (i % 2 == 0) {
-                    currentLine.append(formattedFlower);
-                    if (i == flowers.size() - 1) {
-                        lore.add(currentLine.toString());
-                    }
-                } else {
-                    currentLine.append(ChatColor.DARK_GRAY).append(" │ ").append(formattedFlower);
-                    lore.add(currentLine.toString());
-                    currentLine = new StringBuilder();
-                }
-            }
-            lore.add("");
-            String totalColor = completedTypes >= flowers.size() ? ChatColor.GREEN.toString() : ChatColor.of("#FFA07A").toString();
-            lore.add(ChatColor.of("#FFCC99") + "Tipos Completados: " + totalColor + completedTypes + ChatColor.of("#FFE4B5") + "/" + flowers.size());
-        } else if (mission instanceof Mission15) {
-            lore.add("");
-            lore.add(ChatColor.GRAY + "- 400 Bloques en 7s: " + (data.isCompleted() ? ChatColor.GREEN + "✔" : ChatColor.RED + "✖"));
-        } else if (mission instanceof Mission16) {
-            lore.add("");
-            int killed = data.getProgressInt("withers_killed");
-            lore.add(ChatColor.GRAY + "- Withers: " + (killed >= 5 ? ChatColor.GREEN : ChatColor.of("#FFA07A")) + killed + "/5");
-        } else if (mission instanceof Mission17) {
-            lore.add("");
-            lore.add(ChatColor.of("#FFCC99") + "Progreso:");
-            int endermen = data.getProgressInt("elite_endermen_killed");
-            int creepers = data.getProgressInt("elite_creepers_killed");
-            lore.add(ChatColor.GRAY + "- Elite Endermans: " + (endermen >= 40 ? ChatColor.GREEN : ChatColor.of("#FFA07A")) + endermen + "/40");
-            lore.add(ChatColor.GRAY + "- Elite Creepers: " + (creepers >= 40 ? ChatColor.GREEN : ChatColor.of("#FFA07A")) + creepers + "/40");
-        } else if (mission instanceof Mission18) {
-            lore.add("");
-            int popped = data.getProgressInt("totems_popped");
-            lore.add(ChatColor.GRAY + "- Totems Usados: " + (popped >= 10 ? ChatColor.GREEN : ChatColor.of("#FFA07A")) + popped + "/10");
-        } else if (mission instanceof Mission19) {
-            lore.add("");
-            int hearts = data.getProgressInt("hearts_broken");
-            lore.add(ChatColor.GRAY + "- Corazones de Creaking Rotos: " + (hearts >= 35 ? ChatColor.GREEN : ChatColor.of("#FFA07A")) + hearts + "/35");
-        } else if (mission instanceof Mission20) {
-            lore.add("");
-            int broken = data.getProgressInt("shriekers_broken");
-            lore.add(ChatColor.GRAY + "- Chilladores: " + (broken >= 35 ? ChatColor.GREEN : ChatColor.of("#FFA07A")) + broken + "/35");
-        } else if (mission instanceof Mission21) {
-            lore.add("");
-            lore.add(ChatColor.GRAY + "- Desafío: " + (data.isCompleted() ? ChatColor.GREEN + "✔" : ChatColor.RED + "✖"));
-        } else if (mission instanceof Mission22) {
-            lore.add("");
-            int killed = data.getProgressInt("guardians_killed");
-            lore.add(ChatColor.GRAY + "- Elders Guardians: " + (killed >= 5 ? ChatColor.GREEN : ChatColor.of("#FFA07A")) + killed + "/5");
-        } else if (mission instanceof Mission23) {
-            lore.add("");
-            int killed = data.getProgressInt("piglin_brutes_killed");
-            lore.add(ChatColor.GRAY + "- Piglin Brutes: " + (killed >= 10 ? ChatColor.GREEN : ChatColor.of("#FFA07A")) + killed + "/10");
-        } else if (mission instanceof Mission24) {
-            lore.add("");
-            lore.add(ChatColor.GRAY + "- Riesgo Mortal: " + (data.isCompleted() ? ChatColor.GREEN + "✔" : ChatColor.RED + "✖"));
-        } else if (mission instanceof Mission25) {
-            lore.add("");
-            lore.add(ChatColor.of("#FFCC99") + "Progreso:");
-            int witherSkeletons = data.getProgressInt("elite_wither_skeletons_killed");
-            int piglins = data.getProgressInt("elite_piglins_killed");
-            lore.add(ChatColor.GRAY + "- Elite Wither Skeletons: " + (witherSkeletons >= 35 ? ChatColor.GREEN : ChatColor.of("#FFA07A")) + witherSkeletons + "/35");
-            lore.add(ChatColor.GRAY + "- Elite Piglins: " + (piglins >= 40 ? ChatColor.GREEN : ChatColor.of("#FFA07A")) + piglins + "/40");
-        } else if (mission instanceof Mission26 m26) {
-            lore.add("");
-            lore.add(ChatColor.of("#FFCC99") + "Bloques Rotos:");
-            for (Material m : m26.getRequiredBlocks()) {
-                boolean has = data.getProgressBool("broken_" + m.name());
-                String name = m.name().toLowerCase().replace("_", " ");
-                name = name.substring(0, 1).toUpperCase() + name.substring(1);
-                lore.add((has ? ChatColor.GREEN : ChatColor.GRAY) + "- " + name);
-            }
-        } else if (mission instanceof Mission27) {
-            lore.add("");
-            lore.add(ChatColor.GRAY + "- Prieto Eliminado: " + (data.isCompleted() ? ChatColor.GREEN + "✔" : ChatColor.RED + "✖"));
-        } else if (mission instanceof Mission28) {
-            lore.add("");
-            lore.add(ChatColor.of("#FFCC99") + "Progreso de armadura:");
-
-            String[] armorPieces = {"helmet", "chestplate", "leggings", "boots"};
-            String[] armorNames = {"Casco", "Peto", "Pantalones", "Botas"};
-            int totalEquipped = 0;
-
-            for (int i = 0; i < armorPieces.length; i++) {
-                boolean hasPiece = data.getProgressBool("netherite_prot5_" + armorPieces[i]);
-
-                if (hasPiece) {
-                    totalEquipped++;
-                    lore.add(ChatColor.of("#98FB98") + "- " + armorNames[i] + " de Netherite con Protección V ✓");
-                } else {
-                    lore.add(ChatColor.of("#D3D3D3") + "- " + armorNames[i] + " de Netherite con Protección V ✖");
-                }
-            }
-
-            lore.add("");
-            lore.add(ChatColor.of("#FFA07A") + "Total Equipado: " + totalEquipped + "/4");
-        } else if (mission instanceof Mission29) {
-            lore.add("");
-            lore.add(ChatColor.of("#FFCC99") + "Progreso:");
-
-            long ticks = player.getStatistic(Statistic.PLAY_ONE_MINUTE);
-            long hoursPlayed = ticks / (20 * 60 * 60);
-
-            String color = hoursPlayed >= 300 ? ChatColor.GREEN.toString() : ChatColor.of("#FFA07A").toString();
-
-            lore.add(ChatColor.GRAY + "- Horas jugadas: " + color + hoursPlayed + ChatColor.of("#FFE4B5") + "/300");
-        } else if (mission instanceof Mission30) {
-            lore.add("");
-            lore.add(ChatColor.of("#FFCC99") + "Progreso:");
-
-            int completedMissions = 0;
-            for (int i = 1; i <= 29; i++) {
-                if (missionHandler.isMissionCompleted(player, i)) {
-                    completedMissions++;
-                }
-            }
-
-            String color = completedMissions >= 29 ? ChatColor.GREEN.toString() : ChatColor.of("#FFA07A").toString();
-            lore.add(ChatColor.GRAY + "- Misiones completadas: " + color + completedMissions + ChatColor.of("#FFE4B5") + "/29");
         }
+
+        meta.setLore(lore);
+        meta.addItemFlags(ItemFlag.HIDE_ADDITIONAL_TOOLTIP);
+        item.setItemMeta(meta);
+        return item;
     }
 
     // Flechas para cambiar de página (dan la vuelta al llegar al final)
     @EventHandler
     public void onInventoryClick(InventoryClickEvent event) {
-        if (event.getView().getTitle().startsWith(guiTitle)) {
-            event.setCancelled(true);
+        if (!(event.getInventory().getHolder() instanceof MissionMenu menu)) return;
+        event.setCancelled(true);
 
-            if (!(event.getWhoClicked() instanceof Player player)) return;
+        if (!(event.getWhoClicked() instanceof Player player)) return;
 
-            int slot = event.getRawSlot();
-            int currentPage = playerPages.getOrDefault(player.getUniqueId(), 1);
-
-            if (slot == 36) {
-                player.playSound(player.getLocation(), org.bukkit.Sound.ITEM_BOOK_PAGE_TURN, 1f, 1f);
-                int newPage = (currentPage == 1) ? MAX_PAGES : currentPage - 1;
-                openMissionGUI(player, newPage);
-            } else if (slot == 44) {
-                player.playSound(player.getLocation(), org.bukkit.Sound.ITEM_BOOK_PAGE_TURN, 1f, 1f);
-                int newPage = (currentPage == MAX_PAGES) ? 1 : currentPage + 1;
-                openMissionGUI(player, newPage);
-            }
+        int pages = maxPages();
+        if (event.getRawSlot() == PREV_SLOT) {
+            player.playSound(player.getLocation(), Sound.ITEM_BOOK_PAGE_TURN, 1f, 1f);
+            openMissionGUI(player, menu.page <= 1 ? pages : menu.page - 1);
+        } else if (event.getRawSlot() == NEXT_SLOT) {
+            player.playSound(player.getLocation(), Sound.ITEM_BOOK_PAGE_TURN, 1f, 1f);
+            openMissionGUI(player, menu.page >= pages ? 1 : menu.page + 1);
         }
     }
 
     @EventHandler
     public void onInventoryDrag(InventoryDragEvent event) {
-        if (event.getView().getTitle().equals(guiTitle)) {
+        if (event.getInventory().getHolder() instanceof MissionMenu) {
             event.setCancelled(true);
         }
     }

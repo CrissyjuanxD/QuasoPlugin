@@ -1,103 +1,43 @@
 package Events.MissionSystem;
 
-import Handlers.ActionBarHandler;
-import TitleListener.SuccessNotification;
-import items.CustomPotions;
-import items.EconomyItems;
-import net.md_5.bungee.api.ChatColor;
-import org.bukkit.Material;
-import org.bukkit.World;
+import InfestedCaves.WardenBiome;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.EntityResurrectEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
-public class Mission21 implements Mission, Listener {
-    private final JavaPlugin plugin;
-    private final MissionHandler missionHandler;
-    private final SuccessNotification successNotification;
-    private final ActionBarHandler actionBarHandler;
+import static Events.MissionSystem.MissionRewards.*;
 
-    public Mission21(JavaPlugin plugin, MissionHandler missionHandler) {
-        this.plugin = plugin;
-        this.missionHandler = missionHandler;
-        this.successNotification = new SuccessNotification(plugin);
-        this.actionBarHandler = new ActionBarHandler(plugin);
+public class Mission21 extends BaseMission {
+
+    public Mission21(JavaPlugin plugin, MissionHandler handler) {
+        super(plugin, handler, 21, "Turista profundo", MissionDifficulty.MEDIA, 14,
+                "Visita los 4 biomas de la Warden Cave.");
+        flag(key(WardenBiome.CAVERNA_SCULK), "Caverna Sculk");
+        flag(key(WardenBiome.PANTANO_PROFUNDO), "Pantano Profundo");
+        flag(key(WardenBiome.ABISMO_FLOTANTE), "Abismo Flotante");
+        flag(key(WardenBiome.RUINAS_DE_CENIZA), "Ruinas de Ceniza");
+    }
+
+    private static String key(WardenBiome biome) {
+        return biome.name().toLowerCase(Locale.ROOT);
     }
 
     @Override
-    public String getName() { return "¿Confías en mí?"; }
-
-    @Override
-    public String getDescription() { return "Sobrevive al vacío activando un tótem."; }
-
-    @Override
-    public int getMissionNumber() { return 21; }
-
-    @Override
-    public List<ItemStack> getRewards() {
-        List<ItemStack> rewards = new ArrayList<>();
-
-        ItemStack coins = EconomyItems.createVithiumCoin();
-        coins.setAmount(10);
-        ItemStack potion = CustomPotions.getSplashResistanceIIIPotion();
-        potion.setAmount(1);
-        ItemStack diamondBlocks = new ItemStack(Material.DIAMOND_BLOCK, 3);
-        ItemStack xpFill = new ItemStack(Material.EXPERIENCE_BOTTLE, 1);
-
-        for (int i = 0; i < 27; i++) {
-            if (i == 10 || i == 11 || i == 12) {
-                rewards.add(potion.clone());
-            }
-            else if (i == 14) {
-                rewards.add(coins);
-            }
-            else if (i == 16) {
-                rewards.add(diamondBlocks);
-            }
-            else {
-                rewards.add(xpFill.clone());
-            }
-        }
-        return rewards;
+    protected List<List<ItemStack>> rewardItems() {
+        return of(custom("mochila_nivel_2", 1), custom("frasco_de_velocidad", 3));
     }
 
     @Override
-    public void initializePlayerData(String playerName) {}
+    protected int tickSeconds() {
+        return 2;
+    }
 
+    // El bioma sale del mismo mapa que usa el generador, así funciona aunque no esté el datapack
     @Override
-    public void checkCompletion(String playerName) {}
-
-    // El tótem tiene que salvarlo del vacío (o de caer por debajo de Y -50 en el End)
-    @EventHandler
-    public void onResurrect(EntityResurrectEvent event) {
-        if (event.isCancelled()) return;
-        if (!(event.getEntity() instanceof Player player)) return;
-        if (!missionHandler.isMissionActive(player, 21)) return;
-
-        MissionData data = missionHandler.getData(player, 21);
-        if (data.isCompleted()) return;
-
-        EntityDamageEvent lastDamage = player.getLastDamageCause();
-        boolean isVoidDeath = false;
-
-        if (lastDamage != null && lastDamage.getCause() == EntityDamageEvent.DamageCause.VOID) {
-            isVoidDeath = true;
-        } else if (player.getWorld().getEnvironment() == World.Environment.THE_END && player.getLocation().getY() < -50) {
-            isVoidDeath = true;
-        }
-
-        if (isVoidDeath) {
-            successNotification.showSuccess(player);
-            String msg = ChatColor.GOLD + "۞ " + ChatColor.of("#FFCC99") + "¡Has desafiado al vacío!";
-            actionBarHandler.sendActionBar(player, msg);
-            missionHandler.completeMission(player, 21);
-        }
+    protected void tick(Player player) {
+        if (MissionUtils.inWardenCave(player)) mark(player, key(MissionUtils.wardenBiome(player.getLocation())));
     }
 }

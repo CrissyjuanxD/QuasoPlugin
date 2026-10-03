@@ -1,6 +1,6 @@
 package Casino;
 
-import Dificultades.DayOneChanges;
+import Dificultades.OneChanges;
 import Habilidades.HabilidadesBook;
 import Managers.ItemManager;
 import items.*;

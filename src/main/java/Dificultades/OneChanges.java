@@ -3,7 +3,6 @@ package Dificultades;
 import Bosses.QueenBeeHandler;
 import Dificultades.CustomMobs.*;
 import Dificultades.Features.AltarActivateEvent;
-import Handlers.DayHandler;
 import items.CorruptedGoldenApple;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.*;
@@ -30,8 +29,7 @@ import org.spectralmemories.bloodmoon.BloodmoonActuator;
 
 import java.util.*;
 
-public class DayOneChanges implements Listener {
-    private final DayHandler dayHandler;
+public class OneChanges implements Listener, Change {
     private final JavaPlugin plugin;
     private final Random random = new Random();
     private boolean isApplied = false;
@@ -48,10 +46,6 @@ public class DayOneChanges implements Listener {
     private final CorruptedBee corruptedBee;
     private final Bombita bombitaSpawner;;
     private final Iceologer iceologerSpawner;
-    private final InfestedCreeper infestedCreeper;
-    private final InfestedGhast infestedGhast;
-    private final InfestedSkeleton infestedSkeleton;
-    private final InfestedCaveSpider infestedCaveSpider;
     private final EnderBlaze enderBlaze;
     private final EnderCreeper enderCreeper;
     private final EnderSpider enderSpider;
@@ -59,11 +53,10 @@ public class DayOneChanges implements Listener {
     private final NamespacedKey uuidKey;
     private final NamespacedKey upgradeKey;
 
-    public DayOneChanges(JavaPlugin plugin, DayHandler handler) {
+    public OneChanges(JavaPlugin plugin) {
         this.plugin = plugin;
-        this.dayHandler = handler;
         this.corruptedZombies = new CorruptedZombies(plugin);
-        this.corruptedSpider = new CorruptedSpider(plugin, handler);
+        this.corruptedSpider = new CorruptedSpider(plugin);
 
         this.blazespawmer = new GuardianBlaze(plugin);
         this.guardianCorruptedSkeleton = new GuardianCorruptedSkeleton(plugin);
@@ -71,11 +64,6 @@ public class DayOneChanges implements Listener {
         this.corruptedBee = new CorruptedBee(plugin);
         this.bombitaSpawner = new Bombita(plugin);
         this.iceologerSpawner = new Iceologer(plugin);
-
-        this.infestedCreeper = new InfestedCreeper(plugin);
-        this.infestedGhast = new InfestedGhast(plugin);
-        this.infestedSkeleton = new InfestedSkeleton(plugin);
-        this.infestedCaveSpider = new InfestedCaveSpider(plugin);
 
         this.enderBlaze = new EnderBlaze(plugin);
         this.enderCreeper = new EnderCreeper(plugin);
@@ -85,7 +73,23 @@ public class DayOneChanges implements Listener {
         this.upgradeKey = new NamespacedKey(plugin, "is_upgrade");
     }
 
-    // Activa todo lo del día 1: mobs corruptos, infestados y del End, la receta de la carne y la tarea de targets
+    @Override
+    public String id() {
+        return "uno";
+    }
+
+    @Override
+    public String description() {
+        return "Día 1: mobs corruptos y del End, raids modificadas, BloodMoon, altar de la Abeja Reina y la carne corrupta";
+    }
+
+    @Override
+    public boolean isApplied() {
+        return isApplied;
+    }
+
+    // Activa todo lo del día 1: mobs corruptos y del End, la receta de la carne y la tarea de targets
+    @Override
     public void apply() {
         if (!isApplied) {
             Bukkit.getPluginManager().registerEvents(this, plugin);
@@ -101,18 +105,14 @@ public class DayOneChanges implements Listener {
             corruptedInfernalSpider.apply();
             corruptedBee.apply();
 
-            infestedCreeper.apply();
-            infestedGhast.apply();
-            infestedSkeleton.apply();
-            infestedCaveSpider.apply();
-
             enderBlaze.apply();
             enderCreeper.apply();
             enderSpider.apply();
         }
     }
 
-    // Deshace todo lo de apply(), se usa al bajar de día
+    // Deshace todo lo de apply(), se usa al desactivar el cambio con /changes
+    @Override
     public void revert() {
         if (isApplied) {
             corruptedZombies.revert();
@@ -130,11 +130,6 @@ public class DayOneChanges implements Listener {
             guardianCorruptedSkeleton.revert();
             corruptedInfernalSpider.revert();
             corruptedBee.revert();
-
-            infestedCreeper.revert();
-            infestedGhast.revert();
-            infestedSkeleton.revert();
-            infestedCaveSpider.revert();
 
             enderBlaze.revert();
             enderCreeper.revert();

@@ -40,17 +40,15 @@ public class MissionRewardHandler implements Listener {
 
         Player player = event.getPlayer();
         ItemStack item = player.getInventory().getItemInMainHand();
+        int missionNumber = MissionHandler.getTokenMission(item);
 
-        if (!isMissionToken(item)) {
+        if (missionNumber == -1) {
             player.sendMessage(ChatColor.RED + "✖ " + ChatColor.GRAY + "Solo puedes interactuar usando una " +
                     ChatColor.GOLD + ChatColor.BOLD + "Ficha de Misión" + ChatColor.GRAY +
                     ", las cuales se consiguen completando misiones, para recibir tu recompensa.");
             player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_GUITAR, 1.0f, 0.6f);
             return;
         }
-
-        int missionNumber = getMissionNumberFromToken(item);
-        if (missionNumber == -1) return;
 
         event.setCancelled(true);
 
@@ -76,22 +74,6 @@ public class MissionRewardHandler implements Listener {
 
         data.setRewardClaimed(true);
         missionHandler.saveData(player, missionNumber, data);
-    }
-
-    // Las fichas usan custom model data 3000 + número de misión
-    private boolean isMissionToken(ItemStack item) {
-        if (item == null || item.getType() != Material.POPPED_CHORUS_FRUIT) return false;
-        ItemMeta meta = item.getItemMeta();
-        if (meta == null || !meta.hasCustomModelData()) return false;
-        int cmd = meta.getCustomModelData();
-        return cmd >= 3001 && cmd <= 5000;
-    }
-
-    private int getMissionNumberFromToken(ItemStack item) {
-        if (!isMissionToken(item)) return -1;
-
-        ItemMeta meta = item.getItemMeta();
-        return meta.getCustomModelData() - 3000;
     }
 
     private void startRewardAnimation(Player player, Location blockLocation, int missionNumber) {

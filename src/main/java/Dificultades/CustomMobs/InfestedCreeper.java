@@ -76,7 +76,8 @@ public class InfestedCreeper extends InfestedMob implements Listener {
 
         creeper.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, PotionEffect.INFINITE_DURATION, 1, false, false));
 
-        creeper.setExplosionRadius(8);
+        // Cargado (por el aura) y con radio 2: la explosión queda en potencia 4. Con 8 era potencia 16 y mataba de lejos
+        creeper.setExplosionRadius(2);
         creeper.setPowered(true);
 
         creeper.getPersistentDataContainer().set(mobKey, PersistentDataType.BYTE, (byte) 1);
@@ -100,8 +101,8 @@ public class InfestedCreeper extends InfestedMob implements Listener {
 
         for (Player player : world.getPlayers()) {
             if (player.getLocation().distance(explosionLoc) <= EXPLOSION_EFFECT_RADIUS) {
-                player.addPotionEffect(new PotionEffect(PotionEffectType.DARKNESS, 600, 1, false, true));
-                player.addPotionEffect(new PotionEffect(PotionEffectType.POISON, 600, 1, false, true));
+                player.addPotionEffect(new PotionEffect(PotionEffectType.DARKNESS, 200, 0, false, true));
+                player.addPotionEffect(new PotionEffect(PotionEffectType.POISON, 200, 0, false, true));
                 player.spawnParticle(Particle.SQUID_INK, player.getLocation().add(0, 1, 0), 20, 0.5, 1, 0.5, 0.05);
                 player.spawnParticle(Particle.SPORE_BLOSSOM_AIR, player.getLocation().add(0, 1, 0), 20, 0.5, 1, 0.5, 0.03);
             }

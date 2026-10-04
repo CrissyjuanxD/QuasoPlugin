@@ -57,7 +57,8 @@ import java.util.UUID;
 
 // Mini boss de las Ancient City de la Warden Cave. Pelea como la Abeja Reina: de 1 a 3 ataques cuerpo a cuerpo
 // y después uno especial. Los especiales se pueden esquivar: rayos que se marcan antes, una onda que se salta
-// y círculos en el suelo de los que hay que salir
+// y círculos en el suelo de los que hay que salir. Va cambiando de jugador cada tanto, así no persigue siempre al mismo
+// (el daño está pensado para Netherite con Protección IV)
 public class InfestedWardenBoss extends BaseBoss implements Listener {
 
     public static final String BOSS_ID = "infested_warden_boss";
@@ -86,6 +87,8 @@ public class InfestedWardenBoss extends BaseBoss implements Listener {
     private boolean customBoom = false;
     private int meleeSinceSpecial = 0;
     private int meleeBeforeSpecial = 2;
+    private UUID focus;
+    private int focusUntil = 0;
 
     // Si el warden ya era boss (chunk recargado) recupera el centro de la arena de su PDC
     public InfestedWardenBoss(JavaPlugin plugin, Warden warden) {
@@ -124,7 +127,7 @@ public class InfestedWardenBoss extends BaseBoss implements Listener {
             w.setPersistent(true);
             setAttribute(w.getAttribute(Attribute.MAX_HEALTH), MAX_HEALTH);
             w.setHealth(MAX_HEALTH);
-            setAttribute(w.getAttribute(Attribute.ATTACK_DAMAGE), 12);
+            setAttribute(w.getAttribute(Attribute.ATTACK_DAMAGE), 18);
             setAttribute(w.getAttribute(Attribute.KNOCKBACK_RESISTANCE), 1);
             setAttribute(w.getAttribute(Attribute.FOLLOW_RANGE), 40);
             setAttribute(w.getAttribute(Attribute.SCALE), 1.2);
@@ -163,20 +166,20 @@ public class InfestedWardenBoss extends BaseBoss implements Listener {
         return BarColor.BLUE;
     }
 
+    // La arena es toda la caverna de la Ancient City: desde el piso de la ciudad hasta el techo en cúpula
     @Override
     protected int getArenaRadius() {
-        return 32;
+        return 140;
     }
 
-    // Alto y bajo de sobra para que cuente toda la plaza de la ciudad, con escaleras y plataformas
     @Override
     protected int getArenaHeightUp() {
-        return 20;
+        return 45;
     }
 
     @Override
     protected int getArenaHeightDown() {
-        return 10;
+        return 30;
     }
 
     @Override
@@ -189,16 +192,21 @@ public class InfestedWardenBoss extends BaseBoss implements Listener {
         meleeBeforeSpecial = random.nextInt(3) + 1;
     }
 
-    // Cada segundo se enoja con el jugador más cercano (así no se mete bajo tierra) y cada 2.5 segundos
-    // (1.5 con menos de la mitad de vida) elige el siguiente ataque
+    // Cada segundo se enoja con el jugador al que persigue y se olvida del resto (así no se mete bajo tierra) y cada
+    // 2.5 segundos (1.5 con menos de la mitad de vida) elige el siguiente ataque
     @Override
     protected void onTick() {
         if (isHibernating()) return;
         globalTick++;
 
         if (globalTick % 20 == 0) {
-            Player target = nearestPlayer();
-            if (target != null) warden.setAnger(target, 150);
+            Player target = focusTarget();
+            if (target != null) {
+                for (Player p : activePlayers()) {
+                    if (p.equals(target)) warden.setAnger(p, 150);
+                    else warden.clearAnger(p);
+                }
+            }
         }
 
         if (busy) return;
@@ -249,13 +257,45 @@ public class InfestedWardenBoss extends BaseBoss implements Listener {
         return players.isEmpty() ? null : players.get(0);
     }
 
+    // El jugador al que persigue: cada 8 a 14 segundos cambia a otro al azar (si hay más de uno en la arena)
+    private Player focusTarget() {
+        List<Player> players = activePlayers();
+        if (players.isEmpty()) return null;
+        Player current = focus != null ? Bukkit.getPlayer(focus) : null;
+        if (current != null && players.contains(current) && globalTick < focusUntil) return current;
+
+        List<Player> others = new ArrayList<>(players);
+        if (others.size() > 1 && current != null) others.remove(current);
+        Player next = others.get(random.nextInt(others.size()));
+        setFocus(next);
+        return next;
+    }
+
+    private void setFocus(Player player) {
+        focus = player.getUniqueId();
+        focusUntil = globalTick + 160 + random.nextInt(121);
+    }
+
+    // Un jugador distinto del que persigue, para el Paso Sombrío
+    private Player otherTarget() {
+        List<Player> players = activePlayers();
+        if (players.isEmpty()) return null;
+        List<Player> others = new ArrayList<>(players);
+        others.removeIf(p -> p.getUniqueId().equals(focus));
+        if (others.isEmpty()) return players.get(0);
+        return others.get(random.nextInt(others.size()));
+    }
+
     private void decideNextAttack() {
         if (nearestPlayer() == null) return;
 
         if (meleeSinceSpecial < meleeBeforeSpecial) {
             meleeSinceSpecial++;
-            if (random.nextBoolean()) sculkSwipe();
-            else seismicSlam();
+            switch (random.nextInt(3)) {
+                case 0 -> sculkSwipe();
+                case 1 -> seismicSlam();
+                default -> shadowStep();
+            }
         } else {
             meleeSinceSpecial = 0;
             meleeBeforeSpecial = random.nextInt(3) + 1;
@@ -293,7 +333,7 @@ public class InfestedWardenBoss extends BaseBoss implements Listener {
 
     // Zarpazo de Sculk: se lanza hacia el jugador y barre un arco de 120° delante suyo
     private void sculkSwipe() {
-        Player target = nearestPlayer();
+        Player target = focusTarget();
         if (target == null) return;
         busy = true;
 
@@ -317,13 +357,13 @@ public class InfestedWardenBoss extends BaseBoss implements Listener {
                     return;
                 }
                 cancel();
-                if (dist <= 6) swipe(horizontalTo(warden.getLocation(), target.getLocation()));
+                if (dist <= 6) swipe(horizontalTo(warden.getLocation(), target.getLocation()), 30);
                 finish();
             }
         }, 0L, 1L);
     }
 
-    private void swipe(Vector dir) {
+    private void swipe(Vector dir, double damage) {
         World world = warden.getWorld();
         Location origin = warden.getLocation().add(0, 1.4, 0);
         face(dir);
@@ -348,7 +388,7 @@ public class InfestedWardenBoss extends BaseBoss implements Listener {
             if (to.length() > 4.5 || dy > 3) continue;
             if (to.lengthSquared() > 0.01 && Math.toDegrees(dir.angle(to.clone().normalize())) > 65) continue;
 
-            p.damage(14, warden);
+            p.damage(damage, warden);
             p.setVelocity(dir.clone().multiply(1.2).setY(0.4));
             p.addPotionEffect(new PotionEffect(PotionEffectType.DARKNESS, 80, 0));
         }
@@ -356,7 +396,7 @@ public class InfestedWardenBoss extends BaseBoss implements Listener {
 
     // Golpe Sísmico: salta hacia el jugador y al caer golpea todo a 5 bloques y los levanta
     private void seismicSlam() {
-        Player target = nearestPlayer();
+        Player target = focusTarget();
         if (target == null) return;
         busy = true;
 
@@ -410,10 +450,100 @@ public class InfestedWardenBoss extends BaseBoss implements Listener {
             if (away.length() > 5 || Math.abs(away.getY()) > 3) continue;
             away.setY(0);
             Vector knock = away.lengthSquared() < 0.01 ? new Vector(0, 0, 0) : away.normalize().multiply(0.6);
-            p.damage(12, warden);
+            p.damage(26, warden);
             p.setVelocity(knock.setY(0.85));
             p.addPotionEffect(new PotionEffect(PotionEffectType.SLOWNESS, 60, 1));
         }
+    }
+
+    // Paso Sombrío: se teletransporta detrás de otro jugador (no del que venía persiguiendo) y le pega un zarpazo;
+    // desde ahí lo empieza a perseguir a él
+    private void shadowStep() {
+        Player target = otherTarget();
+        if (target == null) return;
+        busy = true;
+
+        Vector back = target.getLocation().getDirection().setY(0);
+        if (back.lengthSquared() < 0.01) back = new Vector(0, 0, 1);
+        Location behind = target.getLocation().subtract(back.normalize().multiply(2.5));
+        behind.setY(target.getLocation().getY());
+        if (!roomFor(behind)) behind = target.getLocation();
+        if (!roomFor(behind)) {
+            busy = false;
+            sculkSwipe();
+            return;
+        }
+
+        Location destination = behind;
+        teleportWithVisual(destination, () -> {
+            if (!alive() || !target.isValid()) {
+                finish();
+                return;
+            }
+            setFocus(target);
+            Vector dir = horizontalTo(warden.getLocation(), target.getLocation());
+            swipe(dir, 28);
+            finish();
+        });
+    }
+
+    // El Warden mide 3.5 bloques: hacen falta 4 bloques libres para que no quede asfixiándose
+    private boolean roomFor(Location feet) {
+        for (int h = 0; h < 4; h++) {
+            Block b = feet.clone().add(0, h, 0).getBlock();
+            if (!b.isPassable() || b.isLiquid()) return false;
+        }
+        return feet.clone().add(0, -1, 0).getBlock().getType().isSolid();
+    }
+
+    // Teleport con aviso: esfera de partículas donde está y donde va a aparecer, y medio segundo después se mueve
+    private void teleportWithVisual(Location to, Runnable after) {
+        World world = warden.getWorld();
+        Location from = warden.getLocation();
+        sphere(from.clone().add(0, 1.6, 0), 2.6);
+        sphere(to.clone().add(0, 1.6, 0), 2.6);
+        world.playSound(from, Sound.ENTITY_WARDEN_SONIC_CHARGE, 2f, 1.4f);
+        world.playSound(to, Sound.BLOCK_SCULK_SHRIEKER_SHRIEK, 1.5f, 1.6f);
+
+        run(new BukkitRunnable() {
+            @Override
+            public void run() {
+                cancel();
+                if (!warden.isValid() || warden.isDead()) {
+                    finish();
+                    return;
+                }
+                to.setYaw(warden.getLocation().getYaw());
+                warden.teleport(to);
+                world.playSound(to, Sound.ENTITY_ENDERMAN_TELEPORT, 2f, 0.6f);
+                world.spawnParticle(Particle.SONIC_BOOM, to.clone().add(0, 1.5, 0), 1, 0, 0, 0, 0);
+                world.spawnParticle(Particle.SCULK_SOUL, to.clone().add(0, 1, 0), 20, 0.8, 1, 0.8, 0.05);
+                if (after != null) after.run();
+            }
+        }, 10L, 1L);
+    }
+
+    // Esfera de polvo de sculk con almas, como la de la Abeja Reina al teletransportarse
+    private void sphere(Location center, double radius) {
+        World world = center.getWorld();
+        for (double phi = 0; phi < Math.PI; phi += Math.PI / 9) {
+            double y = radius * Math.cos(phi);
+            double r = radius * Math.sin(phi);
+            for (double theta = 0; theta < 2 * Math.PI; theta += Math.PI / 9) {
+                Location point = center.clone().add(r * Math.cos(theta), y, r * Math.sin(theta));
+                world.spawnParticle(Particle.DUST, point, 1, 0, 0, 0, 0, SCULK_DUST);
+            }
+        }
+        world.spawnParticle(Particle.SCULK_SOUL, center, 12, radius / 2, radius / 2, radius / 2, 0.02);
+        world.spawnParticle(Particle.SCULK_CHARGE_POP, center, 15, radius / 2, radius / 2, radius / 2, 0.01);
+    }
+
+    // Si se sale de la arena vuelve al punto de spawn con el mismo efecto
+    @Override
+    protected void returnToArena() {
+        if (busy) return;
+        busy = true;
+        teleportWithVisual(spawnLocation.clone(), this::finish);
     }
 
     // ---------------------------------------------------------------- Especiales
@@ -468,7 +598,7 @@ public class InfestedWardenBoss extends BaseBoss implements Listener {
                     for (Player p : activePlayers()) {
                         if (!hit.contains(p) && distanceToBeam(p, origin, dir) <= 1.3) {
                             hit.add(p);
-                            sonicDamage(p, 16);
+                            sonicDamage(p, 8);
                             p.setVelocity(dir.clone().multiply(1.4).setY(0.35));
                         }
                     }
@@ -543,7 +673,7 @@ public class InfestedWardenBoss extends BaseBoss implements Listener {
                     double dist = Math.hypot(loc.getX() - center.getX(), loc.getZ() - center.getZ());
                     if (Math.abs(dist - radius) > 1.0 || Math.abs(loc.getY() - center.getY()) > 2.5) continue;
                     hit.add(p.getUniqueId());
-                    p.damage(10, warden);
+                    p.damage(20, warden);
                     p.setVelocity(p.getVelocity().setY(0.45));
                     p.addPotionEffect(new PotionEffect(PotionEffectType.DARKNESS, 120, 0));
                     p.addPotionEffect(new PotionEffect(PotionEffectType.WEAKNESS, 100, 0));
@@ -669,7 +799,7 @@ public class InfestedWardenBoss extends BaseBoss implements Listener {
                         if (Math.hypot(loc.getX() - c.getX(), loc.getZ() - c.getZ()) > radius) continue;
                         if (Math.abs(loc.getY() - c.getY()) > 3) continue;
                         hit.add(p.getUniqueId());
-                        p.damage(12, warden);
+                        p.damage(24, warden);
                         p.setVelocity(p.getVelocity().setY(1.1));
                         p.addPotionEffect(new PotionEffect(PotionEffectType.DARKNESS, 80, 0));
                     }

@@ -18,9 +18,9 @@ public final class AncientCityLocator {
     public static final int CLEAR_RADIUS = 134;
     public static final int CLEAR_TRANSITION = 18;
 
-    // Las piezas van de Y -52 a -22 (el ancla está en -27). Abajo de MIN_Y queda piso firme y MAX_Y es el
-    // techo de la caverna en los bordes; en el centro sube hasta 16 bloques más
-    public static final int MIN_Y = -53;
+    // Las piezas apoyan en Y -51 y llegan hasta -22 (el ancla está en -27). Hasta MIN_Y queda piso firme y MAX_Y
+    // es el techo de la caverna en los bordes; en el centro sube hasta 16 bloques más
+    public static final int MIN_Y = -52;
     public static final int MAX_Y = -16;
 
     private static final int MIN_DIST_TO_SPAWN = 500;

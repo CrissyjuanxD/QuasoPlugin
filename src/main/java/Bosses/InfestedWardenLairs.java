@@ -6,6 +6,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.World;
 import org.bukkit.block.Block;
@@ -184,34 +185,95 @@ public class InfestedWardenLairs implements Listener {
         return false;
     }
 
-    // Busca desde el centro de la ciudad hacia afuera un lugar en el piso de la ciudad con 5 bloques libres arriba;
-    // si no hay, acepta uno más alto (arriba de alguna construcción)
+    // El boss sale arriba del portal: 9 bloques arriba de la base del marco y 10 hacia atrás, encima del cofre que
+    // hay ahí. Como el centro de la ciudad tiene variantes, si no hay cofre usa el lugar libre más cercano a ese punto
+    // (probando los dos lados del marco); si la ciudad no tiene portal, el piso libre más cercano al centro
     private Location findSpot(World world, Lair lair) {
-        Location spot = findSpot(world, lair, AncientCityLocator.MIN_Y + 1, AncientCityLocator.MIN_Y + 4, 48);
-        return spot != null ? spot : findSpot(world, lair, AncientCityLocator.MIN_Y + 5, AncientCityLocator.MIN_Y + 18, SEARCH_RADIUS);
+        int[] portal = findPortal(world, lair);
+        if (portal != null) {
+            boolean planeX = portal[3] == 1;
+            Location best = null;
+            for (int side : new int[]{-1, 1}) {
+                int tx = portal[0] + (planeX ? side * 10 : 0);
+                int tz = portal[2] + (planeX ? 0 : side * 10);
+                int ty = portal[1] + 9;
+                Location chest = chestSpot(world, tx, ty, tz);
+                if (chest != null) return chest;
+                if (best == null) best = nearestClear(world, tx, ty, tz, 8, 6);
+            }
+            if (best != null) return best;
+        }
+        Location spot = nearestClear(world, lair.x, AncientCityLocator.MIN_Y + 2, lair.z, 48, 3);
+        return spot != null ? spot : nearestClear(world, lair.x, AncientCityLocator.MIN_Y + 12, lair.z, SEARCH_RADIUS, 10);
     }
 
-    private Location findSpot(World world, Lair lair, int minY, int maxY, int radius) {
-        for (int r = 0; r <= radius; r += 2) {
-            int points = r == 0 ? 1 : r * 3;
-            for (int i = 0; i < points; i++) {
-                double a = 2 * Math.PI * i / points;
-                int x = lair.x + (int) Math.round(Math.cos(a) * r);
-                int z = lair.z + (int) Math.round(Math.sin(a) * r);
+    // Centro de la base del marco de deepslate reforzado y en qué plano está (1 = plano X, el marco mira hacia X)
+    private int[] findPortal(World world, Lair lair) {
+        int minX = Integer.MAX_VALUE, maxX = Integer.MIN_VALUE, minZ = Integer.MAX_VALUE, maxZ = Integer.MIN_VALUE;
+        int minY = Integer.MAX_VALUE;
+        for (int x = lair.x - 48; x <= lair.x + 48; x++) {
+            for (int z = lair.z - 48; z <= lair.z + 48; z++) {
                 if (!world.isChunkLoaded(x >> 4, z >> 4)) continue;
-                for (int y = minY; y <= maxY; y++) {
-                    if (clear(world.getBlockAt(x, y, z))) return new Location(world, x + 0.5, y, z + 0.5);
+                for (int y = AncientCityLocator.MIN_Y + 1; y <= AncientCityLocator.MAX_Y; y++) {
+                    if (world.getBlockAt(x, y, z).getType() != Material.REINFORCED_DEEPSLATE) continue;
+                    minX = Math.min(minX, x);
+                    maxX = Math.max(maxX, x);
+                    minZ = Math.min(minZ, z);
+                    maxZ = Math.max(maxZ, z);
+                    minY = Math.min(minY, y);
+                }
+            }
+        }
+        if (minY == Integer.MAX_VALUE) return null;
+        return new int[]{(minX + maxX) / 2, minY, (minZ + maxZ) / 2, maxX - minX <= maxZ - minZ ? 1 : 0};
+    }
+
+    private Location chestSpot(World world, int tx, int ty, int tz) {
+        for (int dx = -6; dx <= 6; dx++) {
+            for (int dz = -6; dz <= 6; dz++) {
+                for (int dy = -5; dy <= 5; dy++) {
+                    Block block = world.getBlockAt(tx + dx, ty + dy, tz + dz);
+                    if (block.getType() != Material.CHEST) continue;
+                    Block above = block.getRelative(0, 1, 0);
+                    if (fits(above, false)) return above.getLocation().add(0.5, 0, 0.5);
                 }
             }
         }
         return null;
     }
 
-    private boolean clear(Block feet) {
-        if (!feet.getRelative(0, -1, 0).getType().isSolid()) return false;
-        for (int h = 0; h < 5; h++) {
-            Block b = feet.getRelative(0, h, 0);
-            if (!b.isPassable() || b.isLiquid()) return false;
+    // El lugar libre más cercano al punto, buscando en anillos y a varias alturas
+    private Location nearestClear(World world, int tx, int ty, int tz, int radius, int height) {
+        for (int r = 0; r <= radius; r++) {
+            int points = r == 0 ? 1 : r * 6;
+            for (int i = 0; i < points; i++) {
+                double a = 2 * Math.PI * i / points;
+                int x = tx + (int) Math.round(Math.cos(a) * r);
+                int z = tz + (int) Math.round(Math.sin(a) * r);
+                if (!world.isChunkLoaded(x >> 4, z >> 4)) continue;
+                for (int d = 0; d <= height; d++) {
+                    for (int y : new int[]{ty - d, ty + d}) {
+                        Block feet = world.getBlockAt(x, y, z);
+                        if (fits(feet, true)) return feet.getLocation().add(0.5, 0, 0.5);
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
+    // El Warden (escala 1.2) mide 3.5 de alto y algo más de un bloque de ancho: necesita 5 bloques libres arriba y las
+    // 8 columnas de alrededor libres, así no aparece asfixiándose
+    private boolean fits(Block feet, boolean needSolidFloor) {
+        if (needSolidFloor && !feet.getRelative(0, -1, 0).getType().isSolid()) return false;
+        for (int dx = -1; dx <= 1; dx++) {
+            for (int dz = -1; dz <= 1; dz++) {
+                int height = dx == 0 && dz == 0 ? 5 : 4;
+                for (int h = 0; h < height; h++) {
+                    Block b = feet.getRelative(dx, h, dz);
+                    if (!b.isPassable() || b.isLiquid()) return false;
+                }
+            }
         }
         return true;
     }

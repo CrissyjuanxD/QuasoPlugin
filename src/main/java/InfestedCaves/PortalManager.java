@@ -30,6 +30,8 @@ public class PortalManager implements Listener {
     // La llegada normal cae al azar entre -3000 y 3000 en X y en Z
     static final int RANDOM_RADIUS = 3000;
     private static final int RANDOM_ATTEMPTS = 12;
+    // La llegada busca suelo desde esta altura para abajo: dentro de la cueva, no en la punta de un pico
+    private static final int ARRIVAL_TOP = 50;
 
     private static final BlockFace[] HORIZONTAL = {BlockFace.NORTH, BlockFace.EAST, BlockFace.SOUTH, BlockFace.WEST};
     private static final Set<Material> BAD_GROUND = EnumSet.of(
@@ -216,7 +218,7 @@ public class PortalManager implements Listener {
     }
 
     // Recorre las columnas del chunk en un orden mezclado (sin los bordes, así no carga los chunks de al lado)
-    // y se queda con la primera superficie segura bajo el cielo que no esté en una Ancient City
+    // y se queda con el primer suelo seguro de la cueva (bajando desde Y 50) que no esté en una Ancient City
     private Location safeInChunk(World world, int chunkX, int chunkZ) {
         int start = ThreadLocalRandom.current().nextInt(196);
         for (int i = 0; i < 196; i++) {
@@ -227,14 +229,14 @@ public class PortalManager implements Listener {
             AncientCityLocator.CityInfo city = AncientCityLocator.findCityNear(world.getSeed(), x, z);
             if (city != null && AncientCityLocator.computeInfluence(city, x, z) > 0) continue;
 
-            Location found = highestSafeBelow(world, x, z, WardenGenerator.TOP_Y - 4);
+            Location found = highestSafeBelow(world, x, z, ARRIVAL_TOP);
             if (found != null) return found;
         }
         return null;
     }
 
-    // Spawn administrativo (/wardencave join <jugador> spawn): la meseta del centro en Y 100, donde está la build
-    // con el portal de salida. Busca de 0 101 0 para abajo y alrededor, así no cae arriba del techo de la build
+    // Spawn administrativo (/wardencave join <jugador> spawn): el piso del cráter del centro, donde está la build
+    // con el portal de salida. Busca desde el piso para abajo y alrededor, así no cae arriba del techo de la build
     public Location findCenterSpawn(World world) {
         for (int r = 0; r <= 60; r += 2) {
             for (int dx = -r; dx <= r; dx += 2) {
@@ -282,7 +284,7 @@ public class PortalManager implements Listener {
         return open >= 2;
     }
 
-    // Si no encontró nada arma un hueco mínimo con piso en la meseta, así nunca aparece adentro de la roca
+    // Si no encontró nada arma un hueco mínimo con piso en el cráter, así nunca aparece adentro de la roca
     private Location buildLanding(World world, int x, int z) {
         int floorY = WardenGenerator.SPAWN_Y;
         world.getBlockAt(x, floorY, z).setType(Material.DEEPSLATE);

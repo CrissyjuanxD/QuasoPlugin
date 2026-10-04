@@ -48,7 +48,7 @@ public class StructureManager {
     }
 
     // Devuelve false si el schematic todavía no cargó, para intentarlo de nuevo la próxima vez
-    // Se pega centrado en el 0 0 y apoyado sobre la meseta del spawn (la build con el portal de salida)
+    // Se pega centrado en el 0 0 y apoyado en el piso del cráter del spawn (la build con el portal de salida)
     public boolean pasteTempleAtSpawn(World world) {
         if (templeSchematic == null) return false;
         BlockVector3 size = templeSchematic.getDimensions();

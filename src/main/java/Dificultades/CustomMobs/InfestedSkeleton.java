@@ -109,7 +109,7 @@ public class InfestedSkeleton extends InfestedMob implements Listener {
             }
         }.runTaskTimer(plugin, 0L, 1L);
 
-        if (Math.random() < 0.3) {
+        if (Math.random() < 0.2) {
             LivingEntity shooter = (LivingEntity) event.getEntity();
             Player nearest = findNearestPlayer(shooter.getLocation(), 35);
             if (nearest != null) {
@@ -126,7 +126,7 @@ public class InfestedSkeleton extends InfestedMob implements Listener {
         if (!isCustomMob(shooter)) return;
         if (!(event.getEntity() instanceof LivingEntity target)) return;
 
-        target.addPotionEffect(new PotionEffect(PotionEffectType.INSTANT_DAMAGE, 1, 1, false, true));
+        target.addPotionEffect(new PotionEffect(PotionEffectType.INSTANT_DAMAGE, 1, 0, false, true));
 
         target.getWorld().spawnParticle(Particle.SONIC_BOOM, target.getLocation().add(0, 1, 0), 3, 0.2, 0.2, 0.2, 0);
         target.getWorld().playSound(target.getLocation(), Sound.ENTITY_WARDEN_SONIC_CHARGE, 1.0f, 1.5f);

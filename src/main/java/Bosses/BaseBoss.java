@@ -91,8 +91,7 @@ public abstract class BaseBoss {
                 }
 
                 if (!areaZone.isInside(entity.getLocation())) {
-                    entity.teleport(spawnLocation);
-                    entity.getWorld().playSound(entity.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 3f, 0.8f);
+                    returnToArena();
                 }
 
                 debugArenaTick();
@@ -300,6 +299,12 @@ public abstract class BaseBoss {
         }
 
         Bukkit.broadcastMessage(msg);
+    }
+
+    // Si se sale de la arena vuelve al punto de spawn; cada boss puede ponerle su efecto
+    protected void returnToArena() {
+        entity.teleport(spawnLocation);
+        entity.getWorld().playSound(entity.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 3f, 0.8f);
     }
 
     // "a la" para la Abeja Reina, "al" para un boss masculino

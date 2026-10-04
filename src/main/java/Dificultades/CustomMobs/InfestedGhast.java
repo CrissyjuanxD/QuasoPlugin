@@ -88,7 +88,7 @@ public class InfestedGhast extends InfestedMob implements Listener {
 
         fireball.getPersistentDataContainer().set(mobKey, PersistentDataType.BYTE, (byte) 1);
         trackedFireballs.add(fireball.getUniqueId());
-        fireball.setYield(6.0f);
+        fireball.setYield(2.5f);
 
         new BukkitRunnable() {
             @Override
@@ -119,7 +119,7 @@ public class InfestedGhast extends InfestedMob implements Listener {
 
         for (Player player : world.getPlayers()) {
             if (player.getLocation().distance(explosionLoc) <= DARKNESS_RADIUS) {
-                player.addPotionEffect(new PotionEffect(PotionEffectType.DARKNESS, 600, 1, false, true));
+                player.addPotionEffect(new PotionEffect(PotionEffectType.DARKNESS, 200, 0, false, true));
                 player.spawnParticle(Particle.SQUID_INK,
                         player.getLocation().add(0, 1, 0), 15, 0.5, 0.8, 0.5, 0.05);
             }

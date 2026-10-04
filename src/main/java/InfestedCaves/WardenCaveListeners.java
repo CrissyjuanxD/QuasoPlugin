@@ -95,8 +95,8 @@ public class WardenCaveListeners implements Listener {
         e.getPlayer().sendMessage("§cEse bloque no se puede colocar en la Warden Cave.");
     }
 
-    // En la dimensión solo spawnean los mobs base de cada bioma (TwoChanges los cambia por su versión infestada)
-    // y lo que spawnee el plugin
+    // En la dimensión solo spawnean los mobs base de cada bioma (TwoChanges los cambia por su versión infestada),
+    // los Warden de los chilladores y lo que spawnee el plugin
     @EventHandler
     public void onMobSpawn(CreatureSpawnEvent e) {
         if (!e.getLocation().getWorld().getName().equals(QuasoPlugin.WORLD_NAME)) return;
@@ -107,6 +107,7 @@ public class WardenCaveListeners implements Listener {
                 type != EntityType.CAVE_SPIDER &&
                 type != EntityType.SKELETON &&
                 type != EntityType.GHAST &&
+                type != EntityType.WARDEN &&
                 type != EntityType.BLOCK_DISPLAY &&
                 type != EntityType.PLAYER) {
             e.setCancelled(true);

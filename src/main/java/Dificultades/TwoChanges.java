@@ -7,6 +7,7 @@ import Dificultades.CustomMobs.InfestedGhast;
 import Dificultades.CustomMobs.InfestedSkeleton;
 import Dificultades.CustomMobs.WardenZombie;
 import InfestedCaves.WardenBiome;
+import InfestedCaves.WardenBiomeMap;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import imp.crissyjuanxd.QuasoPlugin;
 import items.InfestedSoulsItems;
@@ -51,6 +52,7 @@ public class TwoChanges implements Listener, Change {
 
     private static final int BLAST_TIME = 4800;
     private static final double MINING_ZOMBIE_CHANCE = 0.15;
+    private static final int GHAST_REPLACE_CHANCE = 60;
 
     private final JavaPlugin plugin;
     private final Random random = new Random();
@@ -226,9 +228,47 @@ public class TwoChanges implements Listener, Change {
             case CaveSpider spider -> infestedCaveSpider.infest(spider);
             case Ghast ghast -> infestedGhast.infest(ghast);
             case Creeper creeper -> infestedCreeper.infest(creeper);
-            case Zombie zombie when zombie.getType() == EntityType.ZOMBIE -> wardenZombie.infest(zombie);
+            case Zombie zombie when zombie.getType() == EntityType.ZOMBIE -> {
+                wardenZombie.infest(zombie);
+                if (inAbyss(zombie.getLocation()) && random.nextInt(100) < GHAST_REPLACE_CHANCE) {
+                    Bukkit.getScheduler().runTask(plugin, () -> replaceWithGhast(zombie));
+                }
+            }
             default -> { }
         }
+    }
+
+    private boolean inAbyss(Location loc) {
+        return WardenBiomeMap.forSeed(loc.getWorld().getSeed()).biomeAt(loc.getBlockX(), loc.getBlockZ())
+                == WardenBiome.ABISMO_FLOTANTE;
+    }
+
+    // El ghast vanilla casi nunca pasa su chequeo de spawn (1 de cada 20), así que en el Abismo salían pocos. Parte de
+    // los zombies que spawnean ahí se cambian por un Infested Ghast unos bloques más arriba, uno por uno, así la
+    // mobcap sigue contando igual
+    private void replaceWithGhast(Zombie zombie) {
+        if (!zombie.isValid() || zombie.isDead()) return;
+        Location base = zombie.getLocation();
+        for (int up = 6; up <= 18; up += 3) {
+            Location spot = base.clone().add(0, up, 0);
+            if (!openAir(spot)) continue;
+            zombie.remove();
+            Ghast ghast = spot.getWorld().spawn(spot, Ghast.class);
+            infestedGhast.infest(ghast);
+            return;
+        }
+    }
+
+    // Un cubo de 5x5x5 de aire (lo que necesita un ghast)
+    private boolean openAir(Location center) {
+        for (int dx = -2; dx <= 2; dx += 2) {
+            for (int dz = -2; dz <= 2; dz += 2) {
+                for (int dy = -2; dy <= 2; dy += 2) {
+                    if (!center.clone().add(dx, dy, dz).getBlock().isEmpty()) return false;
+                }
+            }
+        }
+        return true;
     }
 
     // Al minar un Mineral Profundo hay 15% de que salga un Warden Zombie al lado

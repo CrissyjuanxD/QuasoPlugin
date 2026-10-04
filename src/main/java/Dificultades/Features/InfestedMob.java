@@ -60,7 +60,7 @@ public abstract class InfestedMob {
         }.runTaskTimer(plugin, 0L, 1L);
     }
 
-    // El rayo avanza hacia donde estaba el jugador y hace 25 de daño al primero que toque
+    // El rayo avanza hacia donde estaba el jugador y hace 18 de daño al primero que toque
     private void fireTravelingBeam(LivingEntity mob, Player target) {
         if (mob.isDead() || !mob.isValid() || target.isDead()) return;
 
@@ -98,7 +98,7 @@ public abstract class InfestedMob {
                     if (livingHit == mob) continue;
                     if (nearby instanceof Player p && p.getGameMode() == GameMode.CREATIVE) continue;
 
-                    livingHit.damage(25, mob);
+                    livingHit.damage(18, mob);
                     livingHit.setVelocity(direction.clone().multiply(0.6).setY(0.35));
 
                     world.playSound(front, Sound.ENTITY_WARDEN_SONIC_BOOM, 1.5f, 1.1f);

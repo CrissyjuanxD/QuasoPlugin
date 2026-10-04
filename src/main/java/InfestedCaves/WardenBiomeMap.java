@@ -24,6 +24,7 @@ public final class WardenBiomeMap {
     private final long seed;
     private final SimplexOctaveGenerator warpX;
     private final SimplexOctaveGenerator warpZ;
+    private final SimplexOctaveGenerator dither;
     // La región donde cae el 0 0 siempre es Caverna Sculk (ahí está la build con el portal de salida)
     private final long spawnCellX;
     private final long spawnCellZ;
@@ -34,6 +35,8 @@ public final class WardenBiomeMap {
         warpX.setScale(WARP_SCALE);
         warpZ = new SimplexOctaveGenerator(new Random(seed ^ 0x7C15A9E3L), 2);
         warpZ.setScale(WARP_SCALE);
+        dither = new SimplexOctaveGenerator(new Random(seed + 14), 2);
+        dither.setScale(1.0 / 9);
 
         long[] cell = nearestCell(warpX.noise(0, 0, 0.5, 0.5, true) * WARP, warpZ.noise(0, 0, 0.5, 0.5, true) * WARP);
         spawnCellX = cell[0];
@@ -108,8 +111,26 @@ public final class WardenBiomeMap {
         return w;
     }
 
+    // El bioma de la columna. En la franja de mezcla entre dos biomas sale uno u otro en manchas (así el cambio de
+    // bloques no es una línea recta) y la mancha se elige por cuadros de 4x4, igual que guarda los biomas el juego:
+    // así los bloques y el bioma con el que spawnean los mobs siempre coinciden
     public WardenBiome biomeAt(int x, int z) {
-        double[] w = weights(x, z);
+        int qx = x & ~3;
+        int qz = z & ~3;
+        double[] w = weights(qx, qz);
+        double sum = 0;
+        for (double weight : w) if (weight >= 0.2) sum += weight;
+        double r = (dither.noise(qx, qz, 0.5, 0.5, true) + 1) / 2 * sum;
+        double total = 0;
+        for (int b = 0; b < 4; b++) {
+            if (w[b] < 0.2) continue;
+            total += w[b];
+            if (r <= total) return WardenBiome.values()[b];
+        }
+        return dominant(w);
+    }
+
+    public static WardenBiome dominant(double[] w) {
         int best = 0;
         for (int i = 1; i < w.length; i++) {
             if (w[i] > w[best]) best = i;

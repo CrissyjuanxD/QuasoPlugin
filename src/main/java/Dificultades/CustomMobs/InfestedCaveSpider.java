@@ -26,13 +26,13 @@ public class InfestedCaveSpider extends InfestedMob implements Listener {
     private final Random random = new Random();
 
     private static final List<SpiderEffect> POSSIBLE_EFFECTS = Arrays.asList(
-            new SpiderEffect("Velocidad",    PotionEffectType.SPEED,         4),
-            new SpiderEffect("Regeneración", PotionEffectType.REGENERATION,  2),
-            new SpiderEffect("Fuerza",       PotionEffectType.STRENGTH,      4),
-            new SpiderEffect("Salto",        PotionEffectType.JUMP_BOOST,    3),
-            new SpiderEffect("Brillo",       PotionEffectType.GLOWING,       1),
-            new SpiderEffect("Caída lenta",  PotionEffectType.SLOW_FALLING,  1),
-            new SpiderEffect("Resistencia",  PotionEffectType.RESISTANCE,    2)
+            new SpiderEffect("Velocidad",    PotionEffectType.SPEED,         1),
+            new SpiderEffect("Regeneración", PotionEffectType.REGENERATION,  0),
+            new SpiderEffect("Fuerza",       PotionEffectType.STRENGTH,      1),
+            new SpiderEffect("Salto",        PotionEffectType.JUMP_BOOST,    1),
+            new SpiderEffect("Brillo",       PotionEffectType.GLOWING,       0),
+            new SpiderEffect("Caída lenta",  PotionEffectType.SLOW_FALLING,  0),
+            new SpiderEffect("Resistencia",  PotionEffectType.RESISTANCE,    0)
     );
 
     public InfestedCaveSpider(JavaPlugin plugin) {
@@ -103,13 +103,13 @@ public class InfestedCaveSpider extends InfestedMob implements Listener {
         spider.getPersistentDataContainer().set(mobKey, PersistentDataType.BYTE, (byte) 1);
     }
 
-    // 30% de lanzar un sonic boom al pegarle a un jugador
+    // 20% de lanzar un sonic boom al pegarle a un jugador
     @EventHandler
     public void onAttack(EntityDamageByEntityEvent event) {
         if (!isCustomMob(event.getDamager())) return;
         if (!(event.getEntity() instanceof Player target)) return;
 
-        if (Math.random() < 0.3) {
+        if (Math.random() < 0.2) {
             launchSonicBoom((LivingEntity) event.getDamager(), target);
         }
     }

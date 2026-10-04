@@ -11,6 +11,7 @@ import EffectListener.ConfusionEffect;
 import EffectListener.CorruptureEffect;
 import EffectListener.CustomEffectManager;
 import EffectListener.EffectPreventionListener;
+import Encantamientos.*;
 import Events.BuildBattle.BuildBattleCommand;
 import Events.BuildBattle.BuildBattleHandler;
 import Events.HotPotato.HotPotatoCommand;
@@ -153,6 +154,7 @@ public class QuasoPlugin extends JavaPlugin implements Listener {
     private PortalManager portalManager;
     private WardenCaveListeners listeners;
     private WardenCaveAmbient wardenAmbient;
+    private PasoIgneo pasoIgneo;
     private StructureManager structureManager;
 
     // Inicia todos los sistemas, el orden importa porque varios dependen de otros
@@ -193,6 +195,7 @@ public class QuasoPlugin extends JavaPlugin implements Listener {
         statueEffectSystem();
         initCasinoSystem();
         initInfestedCavesDimension();
+        initEnchantmentSystem();
 
         getLogger().info("DinoNuggetsSMP habilitado completamente.");
     }
@@ -212,6 +215,10 @@ public class QuasoPlugin extends JavaPlugin implements Listener {
 
         if (config != null) {
             MobCapManager.getInstance(this, config).shutdown();
+        }
+
+        if (pasoIgneo != null) {
+            pasoIgneo.restoreAll();
         }
 
         if (mobSoundManager != null) {
@@ -610,6 +617,7 @@ public class QuasoPlugin extends JavaPlugin implements Listener {
         this.listeners = new WardenCaveListeners(this, portalManager, structureManager);
         getServer().getPluginManager().registerEvents(listeners, this);
         getServer().getPluginManager().registerEvents(portalManager, this);
+        getServer().getPluginManager().registerEvents(new NaturalWardens(this), this);
 
         InfestedWardenLairs wardenLairs = new InfestedWardenLairs(this);
         WardenCaveCommand wardenCommand = new WardenCaveCommand(this, portalManager, wardenLairs);
@@ -620,18 +628,35 @@ public class QuasoPlugin extends JavaPlugin implements Listener {
         getServer().getPluginManager().registerEvents(this.wardenAmbient, this);
         getServer().getPluginManager().registerEvents(new WardenCaveItemGuard(), this);
 
-        if (WardenDatapack.install(this) || !WardenDatapack.biomesLoaded()) {
+        boolean datapackUpdated = WardenDatapack.install(this);
+        if (!WardenDatapack.biomesLoaded()) {
             getLogger().warning("El datapack de los biomas de la Warden Cave se acaba de instalar o no está cargado. "
                     + "Reinicia el server y borra la carpeta del mundo " + WORLD_NAME + " para que se genere con los 4 biomas.");
+        } else if (datapackUpdated) {
+            getLogger().warning("Se actualizó el datapack de QuasoPlugin (biomas y encantamientos). Reinicia el server para que se cargue.");
         }
 
         createInfestedWorld();
+        Bukkit.getOnlinePlayers().forEach(WardenCaveListeners::applyFakeDay);
         Bukkit.getScheduler().runTaskLater(this, () -> {
             structureManager.loadSchematics();
             World world = Bukkit.getWorld(WORLD_NAME);
             if (world != null) listeners.pasteTempleIfNeeded(world);
         }, 20L);
         getLogger().info("WardenCave ha sido habilitado correctamente.");
+    }
+
+    // Los 5 encantamientos del datapack: Paso Ígneo, Purificación y Sigilo (Warden Cave), Anclaje y Retorno del Vacío (End)
+    private void initEnchantmentSystem() {
+        this.pasoIgneo = new PasoIgneo(this);
+        getServer().getPluginManager().registerEvents(pasoIgneo, this);
+        getServer().getPluginManager().registerEvents(new Sigilo(), this);
+        getServer().getPluginManager().registerEvents(new Anclaje(this), this);
+        getServer().getPluginManager().registerEvents(new RetornoDelVacio(this), this);
+        getServer().getPluginManager().registerEvents(new EnchantDrops(this), this);
+        if (!QuasoEnchant.allLoaded()) {
+            getLogger().warning("Los encantamientos del datapack no están cargados todavía: reinicia el server.");
+        }
     }
 
     private void cleanupBossHandlers() {
@@ -666,28 +691,46 @@ public class QuasoPlugin extends JavaPlugin implements Listener {
         }
     }
 
-    // Crea o carga la dimensión WardenCave con su generador. El tiempo queda fijo al mediodía: de noche el juego
-    // oscurece la niebla y no se verían los colores de cada bioma (abajo del techo de bedrock igual no entra luz)
+    // Crea o carga la dimensión WardenCave con su generador. Para el server siempre es medianoche, así a cielo abierto
+    // los mobs spawnean igual que de noche; a los jugadores se les manda el mediodía (WardenCaveListeners)
     public void createInfestedWorld() {
         World world = Bukkit.getWorld(WORLD_NAME);
         if (world == null) {
             WorldCreator creator = new WorldCreator(WORLD_NAME);
             creator.generator(generator);
             world = creator.createWorld();
-            if (world != null) {
-                world.setGameRule(org.bukkit.GameRules.ADVANCE_TIME, false);
-                world.setTime(6000);
-                getLogger().info("Dimensión " + WORLD_NAME + " cargada/creada.");
-            }
+            if (world != null) getLogger().info("Dimensión " + WORLD_NAME + " cargada/creada.");
         }
         if (world == null) return;
 
-        // Mobcap de monstruos por jugador en la dimensión (la vanilla es 70); se cambia en config.yml
+        world.setGameRule(org.bukkit.GameRules.ADVANCE_TIME, false);
+        if (sharedClock()) {
+            getLogger().warning("time.affects-all-worlds está en true en paper-global.yml: la " + WORLD_NAME
+                    + " comparte la hora con el mundo normal y no se puede dejar de noche.");
+        } else {
+            world.setTime(WardenCaveListeners.SERVER_TIME);
+        }
+        world.setGameRule(org.bukkit.GameRules.ADVANCE_WEATHER, false);
+        world.setStorm(false);
+        world.setThundering(false);
+        world.setGameRule(org.bukkit.GameRules.SPAWN_PHANTOMS, false);
+        world.setGameRule(org.bukkit.GameRules.SPAWN_PATROLS, false);
+        world.setGameRule(org.bukkit.GameRules.SPAWN_WANDERING_TRADERS, false);
+
+        // Mobcap de monstruos por jugador en la dimensión (la vanilla es 70); se cambia en config.yml.
+        // El MobCapManager no la toca
         if (!getConfig().isInt("wardencave.limite_mobs")) {
             getConfig().set("wardencave.limite_mobs", 35);
             saveConfig();
         }
         world.setSpawnLimit(SpawnCategory.MONSTER, getConfig().getInt("wardencave.limite_mobs"));
+    }
+
+    // Con time.affects-all-worlds en true todos los mundos usan el mismo reloj
+    private boolean sharedClock() {
+        java.io.File file = new java.io.File("config", "paper-global.yml");
+        return file.isFile() && org.bukkit.configuration.file.YamlConfiguration.loadConfiguration(file)
+                .getBoolean("time.affects-all-worlds");
     }
 
     public static QuasoPlugin getInstance() {

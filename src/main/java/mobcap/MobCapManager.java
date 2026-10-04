@@ -1,5 +1,6 @@
 package mobcap;
 
+import imp.crissyjuanxd.QuasoPlugin;
 import mobcap.config.MobCapConfig;
 import mobcap.optimization.MobCapOptimizer;
 import mobcap.optimization.PerformanceMonitor;
@@ -58,6 +59,7 @@ public class MobCapManager {
         this.enabled = config.isEnabled();
 
         for (World world : Bukkit.getWorlds()) {
+            if (!managed(world)) continue;
             int originalLimit = world.getSpawnLimit(SpawnCategory.MONSTER);
             originalLimits.put(world.getName(), originalLimit);
             currentLimits.put(world.getName(), originalLimit);
@@ -168,6 +170,7 @@ public class MobCapManager {
         }
 
         for (World world : Bukkit.getWorlds()) {
+            if (!managed(world)) continue;
             Integer originalLimit = originalLimits.get(world.getName());
             if (originalLimit != null) {
                 world.setSpawnLimit(SpawnCategory.MONSTER, originalLimit);
@@ -185,6 +188,7 @@ public class MobCapManager {
         int effectiveMobCap = getCurrentEffectiveMobCap();
 
         for (World world : Bukkit.getWorlds()) {
+            if (!managed(world)) continue;
             try {
                 Integer currentLimit = currentLimits.get(world.getName());
                 if (currentLimit == null || !currentLimit.equals(effectiveMobCap)) {
@@ -199,6 +203,11 @@ public class MobCapManager {
                         "Failed to update mob cap for world: " + world.getName(), e);
             }
         }
+    }
+
+    // La Warden Cave tiene su propio límite (wardencave.limite_mobs en config.yml)
+    private static boolean managed(World world) {
+        return !world.getName().equals(QuasoPlugin.WORLD_NAME);
     }
 
     public int getCurrentEffectiveMobCap() {
@@ -219,7 +228,7 @@ public class MobCapManager {
     }
 
     public void handleNewWorld(World world) {
-        if (!isInitialized) return;
+        if (!isInitialized || !managed(world)) return;
 
         int originalLimit = world.getSpawnLimit(SpawnCategory.MONSTER);
         originalLimits.put(world.getName(), originalLimit);

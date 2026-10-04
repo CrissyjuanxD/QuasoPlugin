@@ -23,8 +23,14 @@ public class WardenPopulator extends BlockPopulator {
             Material.BASALT, Material.BLACKSTONE, Material.TUFF, Material.SMOOTH_BASALT, Material.SCULK,
             Material.OBSIDIAN, Material.CRYING_OBSIDIAN);
 
+    private final WardenGenerator generator;
+
+    public WardenPopulator(WardenGenerator generator) {
+        this.generator = generator;
+    }
+
     // Pone los árboles de cada bioma y las ruinas de obsidiana de las Ruinas de Ceniza. No toca el spawn del templo
-    // ni la caverna de las Ancient City (arriba de su techo sí)
+    // ni la caverna de las Ancient City; arriba de su techo de roca sí, como en cualquier otra parte del bioma
     @Override
     public void populate(WorldInfo info, Random random, int chunkX, int chunkZ, LimitedRegion region) {
         long seed = info.getSeed();
@@ -36,10 +42,6 @@ public class WardenPopulator extends BlockPopulator {
         double distToSpawn = Math.sqrt((double) centerX * centerX + (double) centerZ * centerZ);
         if (distToSpawn < WardenGenerator.SPAWN_RADIUS + WardenGenerator.SPAWN_TRANSITION + 20) return;
 
-        AncientCityLocator.CityInfo city = AncientCityLocator.findCityNear(seed, centerX, centerZ);
-        int minY = city != null && AncientCityLocator.computeInfluence(city, centerX, centerZ) > 0
-                ? AncientCityLocator.MAX_Y + 34 : WardenGenerator.MIN_Y + 1;
-
         WardenBiome biome = WardenBiomeMap.forSeed(seed).biomeAt(centerX, centerZ);
         int attempts = biome == WardenBiome.CAVERNA_SCULK ? 3 : 2;
 
@@ -47,7 +49,7 @@ public class WardenPopulator extends BlockPopulator {
             for (int i = 0; i < 6; i++) {
                 int x = baseX + 5 + random.nextInt(6);
                 int z = baseZ + 5 + random.nextInt(6);
-                int y = findSoil(region, ASH_SOIL, x, z, random, minY);
+                int y = findSoil(region, ASH_SOIL, x, z, random, minY(seed, x, z));
                 if (y != Integer.MIN_VALUE && AshRuins.random(region, random, x, y + 1, z)) break;
             }
         }
@@ -55,7 +57,7 @@ public class WardenPopulator extends BlockPopulator {
         for (int i = 0; i < attempts; i++) {
             int x = baseX + 3 + random.nextInt(10);
             int z = baseZ + 3 + random.nextInt(10);
-            int y = findSoil(region, soilFor(biome), x, z, random, minY);
+            int y = findSoil(region, soilFor(biome), x, z, random, minY(seed, x, z));
             if (y == Integer.MIN_VALUE) continue;
 
             switch (biome) {
@@ -65,6 +67,10 @@ public class WardenPopulator extends BlockPopulator {
                 case RUINAS_DE_CENIZA -> WardenTrees.ash(region, random, x, y + 1, z);
             }
         }
+    }
+
+    private int minY(long seed, int x, int z) {
+        return Math.max(WardenGenerator.MIN_Y + 1, generator.aboveCityCavern(seed, x, z));
     }
 
     private Set<Material> soilFor(WardenBiome biome) {

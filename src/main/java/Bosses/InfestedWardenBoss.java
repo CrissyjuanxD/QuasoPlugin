@@ -64,8 +64,9 @@ public class InfestedWardenBoss extends BaseBoss implements Listener {
     public static final String BOSS_ID = "infested_warden_boss";
     public static final Map<UUID, InfestedWardenBoss> ACTIVE_BOSSES = new HashMap<>();
 
-    private static final double MAX_HEALTH = 600;
-    private static final int MAX_MINIONS = 6;
+    private static final double MAX_HEALTH = 450;
+    private static final double ATTACK_DAMAGE = 14;
+    private static final int MAX_MINIONS = 4;
     private static final String TITLE = ChatColor.of("#29DFEB") + "" + ChatColor.BOLD + "Infested Warden";
 
     private static final Particle.DustOptions SCULK_DUST = new Particle.DustOptions(Color.fromRGB(0x0BB5B5), 1.6f);
@@ -95,6 +96,7 @@ public class InfestedWardenBoss extends BaseBoss implements Listener {
         super(plugin, warden);
         this.warden = warden;
         this.minionFactory = new WardenZombie(plugin);
+        updateStats();
         this.arenaX = new NamespacedKey(plugin, "arena_x");
         this.arenaY = new NamespacedKey(plugin, "arena_y");
         this.arenaZ = new NamespacedKey(plugin, "arena_z");
@@ -127,7 +129,7 @@ public class InfestedWardenBoss extends BaseBoss implements Listener {
             w.setPersistent(true);
             setAttribute(w.getAttribute(Attribute.MAX_HEALTH), MAX_HEALTH);
             w.setHealth(MAX_HEALTH);
-            setAttribute(w.getAttribute(Attribute.ATTACK_DAMAGE), 18);
+            setAttribute(w.getAttribute(Attribute.ATTACK_DAMAGE), ATTACK_DAMAGE);
             setAttribute(w.getAttribute(Attribute.KNOCKBACK_RESISTANCE), 1);
             setAttribute(w.getAttribute(Attribute.FOLLOW_RANGE), 40);
             setAttribute(w.getAttribute(Attribute.SCALE), 1.2);
@@ -140,6 +142,16 @@ public class InfestedWardenBoss extends BaseBoss implements Listener {
         world.spawnParticle(Particle.SCULK_SOUL, location.clone().add(0, 1, 0), 40, 1.2, 1.5, 1.2, 0.05);
         world.spawnParticle(Particle.BLOCK, location, 60, 1.5, 0.3, 1.5, 0, SCULK_BLOCK);
         return new InfestedWardenBoss(plugin, warden);
+    }
+
+    // Un boss que quedó de una versión anterior toma los stats de ahora, con el mismo porcentaje de vida
+    private void updateStats() {
+        AttributeInstance maxHealth = warden.getAttribute(Attribute.MAX_HEALTH);
+        if (maxHealth == null || maxHealth.getBaseValue() == MAX_HEALTH) return;
+        double ratio = warden.getHealth() / maxHealth.getBaseValue();
+        maxHealth.setBaseValue(MAX_HEALTH);
+        warden.setHealth(Math.max(1, Math.min(MAX_HEALTH, MAX_HEALTH * ratio)));
+        setAttribute(warden.getAttribute(Attribute.ATTACK_DAMAGE), ATTACK_DAMAGE);
     }
 
     private static void setAttribute(AttributeInstance attribute, double value) {
@@ -193,7 +205,7 @@ public class InfestedWardenBoss extends BaseBoss implements Listener {
     }
 
     // Cada segundo se enoja con el jugador al que persigue y se olvida del resto (así no se mete bajo tierra) y cada
-    // 2.5 segundos (1.5 con menos de la mitad de vida) elige el siguiente ataque
+    // 3 segundos (2 con menos de la mitad de vida) elige el siguiente ataque
     @Override
     protected void onTick() {
         if (isHibernating()) return;
@@ -210,7 +222,7 @@ public class InfestedWardenBoss extends BaseBoss implements Listener {
         }
 
         if (busy) return;
-        int delay = enraged() ? 30 : 50;
+        int delay = enraged() ? 40 : 60;
         if (globalTick % delay == 0) decideNextAttack();
     }
 
@@ -357,7 +369,7 @@ public class InfestedWardenBoss extends BaseBoss implements Listener {
                     return;
                 }
                 cancel();
-                if (dist <= 6) swipe(horizontalTo(warden.getLocation(), target.getLocation()), 30);
+                if (dist <= 6) swipe(horizontalTo(warden.getLocation(), target.getLocation()), 22);
                 finish();
             }
         }, 0L, 1L);
@@ -390,7 +402,7 @@ public class InfestedWardenBoss extends BaseBoss implements Listener {
 
             p.damage(damage, warden);
             p.setVelocity(dir.clone().multiply(1.2).setY(0.4));
-            p.addPotionEffect(new PotionEffect(PotionEffectType.DARKNESS, 80, 0));
+            p.addPotionEffect(new PotionEffect(PotionEffectType.DARKNESS, 40, 0));
         }
     }
 
@@ -450,7 +462,7 @@ public class InfestedWardenBoss extends BaseBoss implements Listener {
             if (away.length() > 5 || Math.abs(away.getY()) > 3) continue;
             away.setY(0);
             Vector knock = away.lengthSquared() < 0.01 ? new Vector(0, 0, 0) : away.normalize().multiply(0.6);
-            p.damage(26, warden);
+            p.damage(20, warden);
             p.setVelocity(knock.setY(0.85));
             p.addPotionEffect(new PotionEffect(PotionEffectType.SLOWNESS, 60, 1));
         }
@@ -482,7 +494,7 @@ public class InfestedWardenBoss extends BaseBoss implements Listener {
             }
             setFocus(target);
             Vector dir = horizontalTo(warden.getLocation(), target.getLocation());
-            swipe(dir, 28);
+            swipe(dir, 20);
             finish();
         });
     }
@@ -548,7 +560,7 @@ public class InfestedWardenBoss extends BaseBoss implements Listener {
 
     // ---------------------------------------------------------------- Especiales
 
-    // Rugido Sónico: marca una línea hacia cada uno de los 3 jugadores más cercanos y 1.5 segundos después dispara
+    // Rugido Sónico: marca una línea hacia cada uno de los 3 jugadores más cercanos y 1.75 segundos después dispara
     // por esa línea. La dirección queda fija al marcarla, así que moviéndose de costado se esquiva
     private void sonicBarrage() {
         List<Player> players = activePlayers();
@@ -585,7 +597,7 @@ public class InfestedWardenBoss extends BaseBoss implements Listener {
                     }
                     world.spawnParticle(Particle.SCULK_CHARGE_POP, origin, 6, 0.4, 0.4, 0.4, 0.02);
                 }
-                if (t < 30) return;
+                if (t < 35) return;
 
                 cancel();
                 warden.playEffect(EntityEffect.WARDEN_SONIC_ATTACK);
@@ -598,7 +610,7 @@ public class InfestedWardenBoss extends BaseBoss implements Listener {
                     for (Player p : activePlayers()) {
                         if (!hit.contains(p) && distanceToBeam(p, origin, dir) <= 1.3) {
                             hit.add(p);
-                            sonicDamage(p, 8);
+                            sonicDamage(p, 6);
                             p.setVelocity(dir.clone().multiply(1.4).setY(0.35));
                         }
                     }
@@ -673,10 +685,10 @@ public class InfestedWardenBoss extends BaseBoss implements Listener {
                     double dist = Math.hypot(loc.getX() - center.getX(), loc.getZ() - center.getZ());
                     if (Math.abs(dist - radius) > 1.0 || Math.abs(loc.getY() - center.getY()) > 2.5) continue;
                     hit.add(p.getUniqueId());
-                    p.damage(20, warden);
+                    p.damage(15, warden);
                     p.setVelocity(p.getVelocity().setY(0.45));
-                    p.addPotionEffect(new PotionEffect(PotionEffectType.DARKNESS, 120, 0));
-                    p.addPotionEffect(new PotionEffect(PotionEffectType.WEAKNESS, 100, 0));
+                    p.addPotionEffect(new PotionEffect(PotionEffectType.DARKNESS, 60, 0));
+                    p.addPotionEffect(new PotionEffect(PotionEffectType.WEAKNESS, 60, 0));
                 }
 
                 if (radius >= 18) {
@@ -687,7 +699,7 @@ public class InfestedWardenBoss extends BaseBoss implements Listener {
         }, 0L, 1L);
     }
 
-    // Llamado de la Infestación: de la tierra salen 2 Warden Zombies (3 con menos de la mitad de vida), hasta 6 vivos
+    // Llamado de la Infestación: de la tierra salen 2 Warden Zombies (3 con menos de la mitad de vida), hasta 4 vivos
     private void summonInfestation() {
         minions.removeIf(id -> {
             Entity e = Bukkit.getEntity(id);
@@ -741,7 +753,7 @@ public class InfestedWardenBoss extends BaseBoss implements Listener {
         }, 0L, 1L);
     }
 
-    // Erupción de Sculk: marca un círculo debajo de cada jugador y otros al azar; 1.75 segundos después explotan
+    // Erupción de Sculk: marca un círculo debajo de cada jugador y otros al azar; 2 segundos después explotan
     // y levantan a los que siguen adentro. El boss se sigue moviendo mientras tanto
     private void sculkEruption() {
         List<Player> players = activePlayers();
@@ -772,8 +784,8 @@ public class InfestedWardenBoss extends BaseBoss implements Listener {
                     return;
                 }
                 t++;
-                if (t < 35) {
-                    if (t % (t > 25 ? 1 : 3) != 0) return;
+                if (t < 40) {
+                    if (t % (t > 30 ? 1 : 3) != 0) return;
                     for (Location c : circles) {
                         for (int i = 0; i < 16; i++) {
                             double a = 2 * Math.PI * i / 16;
@@ -799,9 +811,9 @@ public class InfestedWardenBoss extends BaseBoss implements Listener {
                         if (Math.hypot(loc.getX() - c.getX(), loc.getZ() - c.getZ()) > radius) continue;
                         if (Math.abs(loc.getY() - c.getY()) > 3) continue;
                         hit.add(p.getUniqueId());
-                        p.damage(24, warden);
+                        p.damage(18, warden);
                         p.setVelocity(p.getVelocity().setY(1.1));
-                        p.addPotionEffect(new PotionEffect(PotionEffectType.DARKNESS, 80, 0));
+                        p.addPotionEffect(new PotionEffect(PotionEffectType.DARKNESS, 40, 0));
                     }
                 }
                 world.playSound(warden.getLocation(), Sound.BLOCK_SCULK_SHRIEKER_SHRIEK, 2f, 1.2f);
@@ -844,7 +856,7 @@ public class InfestedWardenBoss extends BaseBoss implements Listener {
         }
         // El sonic boom normal del warden pega menos, el fuerte es el del Rugido Sónico
         if (event.getDamager().equals(warden) && event.getCause() == EntityDamageEvent.DamageCause.SONIC_BOOM && !customBoom) {
-            event.setDamage(6);
+            event.setDamage(4);
         }
     }
 

@@ -80,7 +80,7 @@ public class WardenGenerator extends ChunkGenerator {
 
     @Override
     public List<BlockPopulator> getDefaultPopulators(World world) {
-        return List.of(new WardenPopulator());
+        return List.of(new WardenPopulator(this));
     }
 
     // Las Ancient City son las vanilla: solo pueden empezar en los chunks que calcula AncientCityLocator,
@@ -138,7 +138,7 @@ public class WardenGenerator extends ChunkGenerator {
                     if (y == MIN_Y) rock = !c.voidFloor;
                     else if (y >= TOP_Y - 1) rock = false;
                     else {
-                        double base = solidity(n, c, grids, city, x, y, z, baseX + x, baseZ + z);
+                        double base = solidity(c, grids, city, x, y, z);
                         double ridge = ridgeTerm(c, y);
                         boolean supported = solid[i - 1];
                         // Arriba de Y 60 las crestas solo agregan roca encima de roca (nunca un techo colgando)
@@ -217,6 +217,7 @@ public class WardenGenerator extends ChunkGenerator {
         double spawnInfluence;
         double cityInfluence;
         double cityRoof;
+        double cityTop;
         boolean voidFloor;
         boolean floats;
         final double[] floor = new double[4];
@@ -237,7 +238,10 @@ public class WardenGenerator extends ChunkGenerator {
         double dist = Math.sqrt((double) x * x + (double) z * z);
         c.spawnInfluence = influence(dist, SPAWN_RADIUS, SPAWN_TRANSITION);
         c.cityInfluence = city != null ? AncientCityLocator.computeInfluence(city, x, z) : 0.0;
-        if (c.cityInfluence > 0) c.cityRoof = cityRoof(n, city, x, z);
+        if (c.cityInfluence > 0) {
+            c.cityRoof = cityRoof(n, city, x, z);
+            c.cityTop = c.cityRoof + 13 + n.crustVariation.noise(x * 1.7, z * 1.7, 0.5, 0.5, true) * 3;
+        }
         c.voidFloor = c.w[ABYSS] > 0.6 && c.spawnInfluence <= 0 && c.cityInfluence <= 0;
         // Las islas del Abismo flotan a propósito, no se borran
         c.floats = c.w[ABYSS] > 0.25 || c.spawnInfluence > 0;
@@ -266,20 +270,18 @@ public class WardenGenerator extends ChunkGenerator {
     }
 
     // Solidez del bloque mezclando los biomas de la columna: mayor que 0 es roca. lx y lz son la posición dentro
-    // del chunk (para la grilla del ruido) y wx y wz la del mundo
-    private double solidity(Noises n, Column c, double[][] grids, AncientCityLocator.CityInfo city,
-                            int lx, int y, int lz, int wx, int wz) {
+    // del chunk (para la grilla del ruido)
+    private double solidity(Column c, double[][] grids, AncientCityLocator.CityInfo city, int lx, int y, int lz) {
         double s = 0;
         for (int b = 0; b < 4; b++) {
             if (c.w[b] <= 0.001) continue;
             s += c.w[b] * biomeSolidity(b, c, interpolate(grids[b], lx, y, lz), y);
         }
 
-
         // El centro es un cráter abierto con piso firme en SPAWN_Y, donde va la build con el portal de salida
         if (c.spawnInfluence > 0) s += ((SPAWN_Y - y) * 0.25 - s) * c.spawnInfluence;
 
-        if (c.cityInfluence > 0) s = cityCarve(n, city, c, wx, y, wz, s);
+        if (c.cityInfluence > 0) s = cityCarve(city, c, y, s);
         return s;
     }
 
@@ -303,9 +305,12 @@ public class WardenGenerator extends ChunkGenerator {
 
     // Las crestas: bajo el filo la roca es maciza desde el piso (los cimientos de la montaña) y arriba cada columna
     // llega hasta su propia altura según qué tan cerca está del filo, así quedan laderas y cumbres afiladas en vez de
-    // mesetas. Lejos de las crestas, arriba de Y 60 saca roca para que quede abierto. En el cráter y en las ciudades no
+    // mesetas. Lejos de las crestas, arriba de Y 60 saca roca para que quede abierto. En el cráter no hay, y sobre
+    // una Ancient City siguen igual que en el resto del bioma pero sin meterse en su caverna
     private static double ridgeTerm(Column c, int y) {
-        if (c.spawnInfluence > 0.5 || c.cityInfluence > 0.5) return 0;
+        if (c.spawnInfluence > 0.5) return 0;
+        double fade = c.cityInfluence > 0 && y <= c.cityTop ? 1 - c.cityInfluence : 1;
+        if (fade <= 0) return 0;
         double foundation = smooth(0, 0.35, c.crest);
         double rise = y > 60 ? Math.min(1, (y - 60) / 25.0) : 0;
         double t = 0;
@@ -314,7 +319,7 @@ public class WardenGenerator extends ChunkGenerator {
             double profile = 1.6 * Math.min(1, (c.peak[b] - y) / 15.0);
             t += c.w[b] * (foundation * profile + (1 - foundation) * rise * profile);
         }
-        return t;
+        return t * fade;
     }
 
     // Abajo la cueva es una esponja de cavernas grandes, mitad roca y mitad aire, hasta Y 50; de ahí para arriba la
@@ -334,14 +339,12 @@ public class WardenGenerator extends ChunkGenerator {
 
     // Caverna de la Ancient City: piso firme abajo de las piezas, cúpula irregular (alta en el centro y bajando hacia
     // los bordes) y arriba una capa de roca de 10 a 16 bloques pegada a las paredes, así la ciudad queda bajo tierra
-    // como en el deep dark y no quedan pedazos de terreno flotando sobre ella
-    private double cityCarve(Noises n, AncientCityLocator.CityInfo city, Column c, int x, int y, int z, double s) {
+    // como en el deep dark y no quedan pedazos de terreno flotando sobre ella. Arriba de esa capa sigue el bioma
+    private double cityCarve(AncientCityLocator.CityInfo city, Column c, int y, double s) {
         double influence = c.cityInfluence;
         if (y <= city.minY()) return s + (1.2 - s) * influence;
-        double roof = c.cityRoof;
-        if (y <= roof) return s + (-1.2 - s) * influence;
-        double shell = 13 + n.crustVariation.noise(x * 1.7, z * 1.7, 0.5, 0.5, true) * 3;
-        if (y <= roof + shell) return s + (1.2 - s) * influence;
+        if (y <= c.cityRoof) return s + (-1.2 - s) * influence;
+        if (y <= c.cityTop) return s + (1.2 - s) * influence;
         return s;
     }
 
@@ -353,6 +356,14 @@ public class WardenGenerator extends ChunkGenerator {
     // Dentro de la caverna de una Ancient City (desde el piso hasta el techo en cúpula)
     private static boolean inCityCavern(Column c, AncientCityLocator.CityInfo city, int y) {
         return city != null && c.cityInfluence > 0.3 && y > city.minY() - 2 && y <= c.cityRoof + 2;
+    }
+
+    // Primera altura afuera de la caverna de una Ancient City en esa columna (MIN_Y si no hay ciudad): el populator
+    // pone árboles y ruinas de ahí para arriba, igual que en el resto del bioma
+    int aboveCityCavern(long seed, int x, int z) {
+        AncientCityLocator.CityInfo city = AncientCityLocator.findCityNear(seed, x, z);
+        if (city == null || AncientCityLocator.computeInfluence(city, x, z) <= 0.3) return MIN_Y;
+        return (int) Math.ceil(cityRoof(noises(seed), city, x, z)) + 3;
     }
 
     // Ruido 3D en la grilla del chunk: 5x5 puntos cada 4 bloques y uno cada 8 de alto
@@ -470,8 +481,8 @@ public class WardenGenerator extends ChunkGenerator {
         };
     }
 
-    // Recorre la columna y le pone a cada suelo y techo los bloques y la decoración de su bioma. En la caverna de una
-    // Ancient City todos los biomas llevan la decoración del deep dark: sculk, chilladores y sensores
+    // Recorre la columna y le pone a cada suelo y techo los bloques y la decoración de su bioma, también en la caverna
+    // de una Ancient City (ahí con un poco más de sculk, que sale de la ciudad)
     private void surfaces(ChunkData chunk, Noises n, Random r, Column c, AncientCityLocator.CityInfo city,
                           int x, int z, int wx, int wz, int top) {
         boolean decorate = c.spawnInfluence < 0.5;
@@ -485,19 +496,18 @@ public class WardenGenerator extends ChunkGenerator {
             boolean ceiling = below == Material.AIR;
             if (!floor && !wet && !ceiling) continue;
 
-            if (inCityCavern(c, city, y)) {
-                deepDarkSurface(chunk, n, r, x, y, z, wx, wz, floor, ceiling);
-                continue;
-            }
-
+            boolean cavern = inCityCavern(c, city, y);
             boolean patch = c.biome != WardenBiome.CAVERNA_SCULK
-                    && n.patches.noise(wx, y * 2, wz, 0.5, 0.5, true) > 0.45;
+                    && n.patches.noise(wx, y * 2, wz, 0.5, 0.5, true) > (cavern ? 0.2 : 0.45);
 
             switch (c.biome) {
-                case CAVERNA_SCULK -> sculkSurface(chunk, n, r, decorate, x, y, z, wx, wz, floor, ceiling);
+                case CAVERNA_SCULK -> {
+                    if (cavern) deepDarkSurface(chunk, n, r, x, y, z, wx, wz, floor, ceiling);
+                    else sculkSurface(chunk, n, r, decorate, x, y, z, wx, wz, floor, ceiling);
+                }
                 case PANTANO_PROFUNDO -> swampSurface(chunk, r, decorate, patch, x, y, z, floor, wet, ceiling);
                 case ABISMO_FLOTANTE -> abyssSurface(chunk, r, decorate, patch, x, y, z, floor, ceiling);
-                case RUINAS_DE_CENIZA -> ashSurface(chunk, r, decorate, patch, x, y, z, floor, wet, ceiling);
+                case RUINAS_DE_CENIZA -> ashSurface(chunk, r, decorate, patch, !cavern, x, y, z, floor, wet, ceiling);
             }
         }
     }
@@ -537,8 +547,8 @@ public class WardenGenerator extends ChunkGenerator {
         }
     }
 
-    // La caverna de una Ancient City como el deep dark: casi todo sculk, con chilladores, sensores y catalizadores
-    // en el piso y venas en el techo. Lo que caiga donde va una pieza de la ciudad lo tapa la ciudad
+    // La caverna de una Ancient City de la Caverna Sculk es como el deep dark: casi todo sculk, con chilladores,
+    // sensores y catalizadores en el piso y venas en el techo. Lo que caiga donde va una pieza lo tapa la ciudad
     private void deepDarkSurface(ChunkData chunk, Noises n, Random r, int x, int y, int z, int wx, int wz,
                                  boolean floor, boolean ceiling) {
         double patch = n.patches.noise(wx, y * 2, wz, 0.5, 0.5, true);
@@ -546,9 +556,9 @@ public class WardenGenerator extends ChunkGenerator {
             if (patch > -0.6) {
                 chunk.setBlock(x, y, z, Material.SCULK);
                 int roll = r.nextInt(1000);
-                if (roll < 2) sculkDecoration(chunk, x, y + 1, z, true);
-                else if (roll < 7) sculkDecoration(chunk, x, y + 1, z, false);
-                else if (roll < 10) chunk.setBlock(x, y, z, Material.SCULK_CATALYST);
+                if (roll < 1) sculkDecoration(chunk, x, y + 1, z, true);
+                else if (roll < 6) sculkDecoration(chunk, x, y + 1, z, false);
+                else if (roll < 9) chunk.setBlock(x, y, z, Material.SCULK_CATALYST);
             } else if (r.nextInt(2) == 0) {
                 facing(chunk, Material.SCULK_VEIN, x, y + 1, z, BlockFace.DOWN);
             }
@@ -559,9 +569,11 @@ public class WardenGenerator extends ChunkGenerator {
         }
     }
 
-    // Venas de sculk y liquen en las paredes de la Caverna Sculk y de la caverna de las Ancient City
+    // Venas de sculk y liquen en las paredes de la Caverna Sculk y de la caverna de las Ancient City (en los otros
+    // biomas solo unas pocas venas alrededor de la ciudad)
     private void sculkWalls(ChunkData chunk, Random r, Column c, AncientCityLocator.CityInfo city, int x, int z, int top) {
         boolean sculkBiome = c.biome == WardenBiome.CAVERNA_SCULK;
+        int veins = sculkBiome ? 7 : 2;
         for (int y = MIN_Y + 2; y < top; y++) {
             if (chunk.getType(x, y, z) != Material.AIR) continue;
             if (!sculkBiome && !inCityCavern(c, city, y)) continue;
@@ -570,8 +582,8 @@ public class WardenGenerator extends ChunkGenerator {
                 int nz = z + face.getModZ();
                 if (nx < 0 || nx > 15 || nz < 0 || nz > 15 || !BODY.contains(chunk.getType(nx, y, nz))) continue;
                 int roll = r.nextInt(100);
-                if (roll < 7) facing(chunk, Material.SCULK_VEIN, x, y, z, face);
-                else if (roll < 9) facing(chunk, Material.GLOW_LICHEN, x, y, z, face);
+                if (roll < veins) facing(chunk, Material.SCULK_VEIN, x, y, z, face);
+                else if (roll < veins + 2) facing(chunk, Material.GLOW_LICHEN, x, y, z, face);
                 break;
             }
         }
@@ -623,8 +635,9 @@ public class WardenGenerator extends ChunkGenerator {
     }
 
     // Ruinas de Ceniza: basalto y blackstone con obsidiana; alrededor de la lava, magma y obsidiana como si la lava
-    // se hubiera enfriado, y de vez en cuando obsidiana llorosa goteando del techo
-    private void ashSurface(ChunkData chunk, Random r, boolean decorate, boolean patch, int x, int y, int z,
+    // se hubiera enfriado (no en la caverna de una ciudad, que está más abajo que la lava pero no tiene), y de vez
+    // en cuando obsidiana llorosa goteando del techo
+    private void ashSurface(ChunkData chunk, Random r, boolean decorate, boolean patch, boolean shore, int x, int y, int z,
                             boolean floor, boolean wet, boolean ceiling) {
         if (wet) {
             int roll = r.nextInt(100);
@@ -634,7 +647,7 @@ public class WardenGenerator extends ChunkGenerator {
             if (patch) {
                 chunk.setBlock(x, y, z, Material.SCULK);
                 if (decorate && roll < 3) sculkDecoration(chunk, x, y + 1, z, r.nextBoolean());
-            } else if (y <= LAVA_LEVEL + 2) {
+            } else if (shore && y <= LAVA_LEVEL + 2) {
                 chunk.setBlock(x, y, z, roll < 450 ? Material.MAGMA_BLOCK : roll < 750 ? Material.OBSIDIAN : Material.BLACKSTONE);
             } else if (roll < 15) {
                 chunk.setBlock(x, y, z, Material.CRYING_OBSIDIAN);

@@ -9,15 +9,20 @@ import org.bukkit.Tag;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.CreatureSpawnEvent;
+import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.event.world.ChunkLoadEvent;
+import org.bukkit.event.world.ClockTimeSkipEvent;
+import org.bukkit.event.world.TimeSkipEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.potion.PotionEffect;
@@ -26,6 +31,11 @@ import org.bukkit.potion.PotionEffectType;
 import java.util.Random;
 
 public class WardenCaveListeners implements Listener {
+
+    // Día falso: para el server la dimensión está a medianoche (los mobs spawnean como de noche y no se queman)
+    // y al jugador se le muestra el mediodía, con el cielo y la niebla de cada bioma
+    public static final long SERVER_TIME = 18000;
+    public static final long PLAYER_TIME = 6000;
 
     private final QuasoPlugin plugin;
     private final PortalManager portalManager;
@@ -47,6 +57,33 @@ public class WardenCaveListeners implements Listener {
             e.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.RESISTANCE, 200, 255));
             e.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.SLOW_FALLING, 200, 1));
         }
+    }
+
+    @EventHandler
+    public void onJoin(PlayerJoinEvent e) {
+        applyFakeDay(e.getPlayer());
+    }
+
+    @EventHandler
+    public void onWorldChange(PlayerChangedWorldEvent e) {
+        applyFakeDay(e.getPlayer());
+    }
+
+    // Adentro de la dimensión ve el mediodía quieto; al salir vuelve a la hora normal de su mundo
+    public static void applyFakeDay(Player player) {
+        if (player.getWorld().getName().equals(QuasoPlugin.WORLD_NAME)) {
+            player.setPlayerTime(PLAYER_TIME, false);
+        } else if (!player.isPlayerTimeRelative() && player.getPlayerTimeOffset() == PLAYER_TIME) {
+            player.resetPlayerTime();
+        }
+    }
+
+    // Con /time no se le cambia la hora a la dimensión, si no deja de ser de noche para los spawns
+    @EventHandler(ignoreCancelled = true)
+    public void onTimeSkip(TimeSkipEvent e) {
+        if (e.getSkipReason() != ClockTimeSkipEvent.SkipReason.COMMAND) return;
+        if (!e.getWorld().getName().equals(QuasoPlugin.WORLD_NAME)) return;
+        e.setCancelled(true);
     }
 
     // Pega el templo cuando carga el chunk 0,0

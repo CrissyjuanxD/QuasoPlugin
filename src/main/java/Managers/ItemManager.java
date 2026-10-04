@@ -2,6 +2,7 @@ package Managers;
 
 import Armors.WardenArmor;
 import Dificultades.OneChanges;
+import Encantamientos.QuasoEnchant;
 import Habilidades.HabilidadesBook;
 import imp.crissyjuanxd.QuasoPlugin;
 import items.*;
@@ -86,6 +87,7 @@ public class ItemManager {
         for (String item : items) {
             registeredItems.add(item);
         }
+        registeredItems.addAll(QuasoEnchant.commandNames());
     }
 
     public ItemStack getItem(String itemName, int cantidad, Player target) {
@@ -190,7 +192,9 @@ public class ItemManager {
             case "fragmentos_ambar": item = FishingItems.createFragmentosAmbar(); break;
             case "fosiles_pequenos": item = FishingItems.createFosilesP(); break;
             case "lingote_platino": item = FishingItems.createLingotePlatino(); break;
-            default: return null;
+            default:
+                item = QuasoEnchant.fromCommand(itemName.toLowerCase());
+                if (item == null) return null;
         }
 
         if (item != null) {

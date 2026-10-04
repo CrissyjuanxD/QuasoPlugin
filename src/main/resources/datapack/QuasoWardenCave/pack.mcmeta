@@ -1,6 +1,6 @@
 {
   "pack": {
-    "description": "Biomas de la Warden Cave (QuasoPlugin)",
+    "description": "Biomas de la Warden Cave y encantamientos (QuasoPlugin)",
     "pack_format": 107,
     "min_format": [107, 0],
     "max_format": [107, 99]

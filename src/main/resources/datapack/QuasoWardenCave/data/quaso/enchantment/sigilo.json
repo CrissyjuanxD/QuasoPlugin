@@ -1,0 +1,19 @@
+{
+  "anvil_cost": 4,
+  "description": {
+    "text": "Sigilo",
+    "color": "#3FD0D4"
+  },
+  "max_cost": {
+    "base": 65,
+    "per_level_above_first": 25
+  },
+  "max_level": 2,
+  "min_cost": {
+    "base": 25,
+    "per_level_above_first": 25
+  },
+  "slots": ["legs"],
+  "supported_items": "#minecraft:enchantable/leg_armor",
+  "weight": 1
+}

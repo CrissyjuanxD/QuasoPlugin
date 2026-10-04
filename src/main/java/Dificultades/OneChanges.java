@@ -257,7 +257,7 @@ public class OneChanges implements Listener, Change {
     }
 
     // Si cae al vacío del End con tótem en la mano lo mata para que salte el tótem y lo levita hacia arriba
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void onPlayerVoidDamage(EntityDamageEvent event) {
         if (!isApplied) return;
         if (!(event.getEntity() instanceof Player player)) return;

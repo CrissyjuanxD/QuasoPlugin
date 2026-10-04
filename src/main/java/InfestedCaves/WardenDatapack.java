@@ -18,12 +18,17 @@ public final class WardenDatapack {
             "data/quaso/worldgen/biome/pantano_profundo.json",
             "data/quaso/worldgen/biome/abismo_flotante.json",
             "data/quaso/worldgen/biome/ruinas_de_ceniza.json",
-            "data/minecraft/tags/worldgen/biome/has_structure/ancient_city.json"
+            "data/minecraft/tags/worldgen/biome/has_structure/ancient_city.json",
+            "data/quaso/enchantment/paso_igneo.json",
+            "data/quaso/enchantment/purificacion.json",
+            "data/quaso/enchantment/sigilo.json",
+            "data/quaso/enchantment/anclaje.json",
+            "data/quaso/enchantment/retorno_del_vacio.json"
     };
 
     private WardenDatapack() {}
 
-    // Copia el datapack (los biomas y la lista de biomas donde sale la Ancient City) a world/datapacks.
+    // Copia el datapack (los biomas, la lista de biomas donde sale la Ancient City y los encantamientos) a world/datapacks.
     // Devuelve true si lo instaló o lo actualizó, y en ese caso hay que reiniciar porque se carga al prender el server
     public static boolean install(JavaPlugin plugin) {
         Path target = Bukkit.getServer().getLevelDirectory().resolve("datapacks").resolve(NAME);
@@ -41,7 +46,7 @@ public final class WardenDatapack {
                 Files.write(out, data);
                 changed = true;
             } catch (IOException e) {
-                plugin.getLogger().severe("No se pudo instalar el datapack de la Warden Cave: " + e.getMessage());
+                plugin.getLogger().severe("No se pudo instalar el datapack de QuasoPlugin: " + e.getMessage());
                 return false;
             }
         }

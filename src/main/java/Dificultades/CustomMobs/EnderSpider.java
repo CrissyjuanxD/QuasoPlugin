@@ -1,6 +1,7 @@
 package Dificultades.CustomMobs;
 
 import Dificultades.Features.EnderMobs;
+import Encantamientos.Anclaje;
 import org.bukkit.*;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.block.Block;
@@ -185,7 +186,13 @@ public class EnderSpider extends EnderMobs implements Listener {
         Location originalLoc = player.getLocation();
         World world = player.getWorld();
 
-        Location targetLoc = findSafePlayerLocation(originalLoc, 15);
+        // Con Anclaje en las botas puede que no lo mueva
+        boolean anchored = Anclaje.resistsTeleport(player);
+        Location targetLoc = anchored ? null : findSafePlayerLocation(originalLoc, 15);
+        if (anchored) {
+            world.playSound(originalLoc, Sound.BLOCK_ANVIL_LAND, 0.8f, 0.6f);
+            world.spawnParticle(Particle.REVERSE_PORTAL, originalLoc.clone().add(0, 1, 0), 30, 0.4, 0.8, 0.4, 0.05);
+        }
 
         if (targetLoc != null) {
             world.playSound(originalLoc, Sound.ENTITY_ENDERMAN_TELEPORT, 2.0f, 1.0f);

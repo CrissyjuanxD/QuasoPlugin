@@ -1,0 +1,19 @@
+{
+  "anvil_cost": 8,
+  "description": {
+    "text": "Retorno del Vacío",
+    "color": "#B57EDC"
+  },
+  "max_cost": {
+    "base": 75,
+    "per_level_above_first": 25
+  },
+  "max_level": 1,
+  "min_cost": {
+    "base": 25,
+    "per_level_above_first": 25
+  },
+  "slots": ["chest"],
+  "supported_items": "#minecraft:enchantable/chest_armor",
+  "weight": 1
+}

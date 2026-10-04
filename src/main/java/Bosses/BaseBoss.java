@@ -50,6 +50,12 @@ public abstract class BaseBoss {
         if (initialized) return;
         initialized = true;
 
+        // Si el chunk se descargó mientras hibernaba, el mob quedó guardado mudo, quieto e invulnerable: se le saca
+        // (sin esto no sonaba al pegarle); si no hay nadie en la arena vuelve a hibernar en el primer tick
+        entity.setSilent(false);
+        entity.setAI(true);
+        entity.setInvulnerable(false);
+
         setupBars();
         setupArena();
         detectInitialPlayers();

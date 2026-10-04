@@ -1,5 +1,6 @@
 package Managers;
 
+import Bosses.InfestedWardenBoss;
 import Bosses.QueenBeeHandler;
 import Dificultades.CustomMobs.*;
 import imp.crissyjuanxd.QuasoPlugin;
@@ -86,7 +87,7 @@ public class MobManager {
                 "guardianblaze", "guardiancorruptedskeleton", "corruptedinfernalspider",
                 "infestedbee", "estatuarecompensa", "corruptedbee", "infestedcreeper",
                 "infestedghast", "infestedskeleton", "infestedcavespider", "wardenzombie", "enderblaze",
-                "endercreeper", "enderspider",
+                "endercreeper", "enderspider", "infestedwarden",
         };
         for (String mob : mobs) {
             registeredMobs.add(mob);
@@ -115,6 +116,8 @@ public class MobManager {
             case "enderblaze": enderBlaze.spawnEnderBlaze(location); return true;
             case "endercreeper": enderCreeper.spawnEnderCreeper(location); return true;
             case "enderspider": enderSpider.spawnEnderSpider(location); return true;
+            // Uno de prueba: no queda atado a ninguna Ancient City, así que no reaparece
+            case "infestedwarden": InfestedWardenBoss.spawn(plugin, location, "comando"); return true;
             default: return false;
         }
     }

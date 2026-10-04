@@ -618,6 +618,8 @@ public class QuasoPlugin extends JavaPlugin implements Listener {
         getServer().getPluginManager().registerEvents(listeners, this);
         getServer().getPluginManager().registerEvents(portalManager, this);
         getServer().getPluginManager().registerEvents(new NaturalWardens(this), this);
+        getServer().getPluginManager().registerEvents(new WardenFruits(this), this);
+        getServer().getPluginManager().registerEvents(new DarknessShield(), this);
 
         InfestedWardenLairs wardenLairs = new InfestedWardenLairs(this);
         WardenCaveCommand wardenCommand = new WardenCaveCommand(this, portalManager, wardenLairs);
@@ -646,11 +648,11 @@ public class QuasoPlugin extends JavaPlugin implements Listener {
         getLogger().info("WardenCave ha sido habilitado correctamente.");
     }
 
-    // Los 5 encantamientos del datapack: Paso Ígneo, Purificación y Sigilo (Warden Cave), Anclaje y Retorno del Vacío (End)
+    // Los 5 encantamientos del datapack: Paso Ígneo, Purificación y Visión Abisal (Warden Cave), Anclaje y Retorno del Vacío (End)
     private void initEnchantmentSystem() {
         this.pasoIgneo = new PasoIgneo(this);
         getServer().getPluginManager().registerEvents(pasoIgneo, this);
-        getServer().getPluginManager().registerEvents(new Sigilo(), this);
+        new VisionAbisal(this);
         getServer().getPluginManager().registerEvents(new Anclaje(this), this);
         getServer().getPluginManager().registerEvents(new RetornoDelVacio(this), this);
         getServer().getPluginManager().registerEvents(new EnchantDrops(this), this);

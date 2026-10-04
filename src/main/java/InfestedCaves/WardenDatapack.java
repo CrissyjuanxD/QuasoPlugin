@@ -21,9 +21,14 @@ public final class WardenDatapack {
             "data/minecraft/tags/worldgen/biome/has_structure/ancient_city.json",
             "data/quaso/enchantment/paso_igneo.json",
             "data/quaso/enchantment/purificacion.json",
-            "data/quaso/enchantment/sigilo.json",
+            "data/quaso/enchantment/vision_abisal.json",
             "data/quaso/enchantment/anclaje.json",
             "data/quaso/enchantment/retorno_del_vacio.json"
+    };
+
+    // Archivos de versiones anteriores que se borran al instalar (Sigilo se cambió por Visión Abisal)
+    private static final String[] REMOVED = {
+            "data/quaso/enchantment/sigilo.json"
     };
 
     private WardenDatapack() {}
@@ -33,6 +38,13 @@ public final class WardenDatapack {
     public static boolean install(JavaPlugin plugin) {
         Path target = Bukkit.getServer().getLevelDirectory().resolve("datapacks").resolve(NAME);
         boolean changed = false;
+        for (String file : REMOVED) {
+            try {
+                if (Files.deleteIfExists(target.resolve(file))) changed = true;
+            } catch (IOException e) {
+                plugin.getLogger().warning("No se pudo borrar " + file + " del datapack: " + e.getMessage());
+            }
+        }
         for (String file : FILES) {
             try (InputStream in = plugin.getResource("datapack/" + NAME + "/" + file)) {
                 if (in == null) {

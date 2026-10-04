@@ -214,4 +214,38 @@ public class WardenCaveItems {
         }
         return item;
     }
+
+    // Frutas de los árboles de la Warden Cave (las suelta WardenFruits): Baya Sculk de los froglights verdes,
+    // Fruta Abisal de los perlados y Baya Luminosa de las enredaderas del Pantano
+    public static ItemStack createSculkBerry(int amount) {
+        return fruit(Material.SWEET_BERRIES, amount, "baya_sculk", "#3ad4d4", "Baya Sculk",
+                "Visión nocturna por 3 minutos.", "Crece en los árboles de la Caverna Sculk.");
+    }
+
+    public static ItemStack createAbyssFruit(int amount) {
+        return fruit(Material.BEETROOT, amount, "fruta_abisal", "#b46be0", "Fruta Abisal",
+                "Te quita la Oscuridad y no te la", "vuelven a poner por 1 minuto y medio.");
+    }
+
+    public static ItemStack createGlowBerry(int amount) {
+        return fruit(Material.GLOW_BERRIES, amount, "baya_luminosa", "#5fd16a", "Baya Luminosa",
+                "Regeneración II por 5 segundos.", "Cuelga de los árboles del Pantano Profundo.");
+    }
+
+    public static boolean isFruit(ItemStack item) {
+        String id = idOf(item);
+        return "baya_sculk".equals(id) || "fruta_abisal".equals(id) || "baya_luminosa".equals(id);
+    }
+
+    private static ItemStack fruit(Material type, int amount, String id, String color, String name, String... lines) {
+        ItemStack item = new ItemStack(type, Math.max(1, amount));
+        ItemMeta meta = item.getItemMeta();
+        meta.setDisplayName(ChatColor.of(color) + name);
+        mark(meta, id);
+        List<String> lore = new ArrayList<>();
+        for (String line : lines) lore.add(ChatColor.GRAY + line);
+        meta.setLore(lore);
+        item.setItemMeta(meta);
+        return item;
+    }
 }

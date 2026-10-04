@@ -3,6 +3,7 @@ package InfestedCaves;
 import org.bukkit.Axis;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Tag;
 import org.bukkit.TreeType;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.BlockData;
@@ -69,10 +70,17 @@ public final class WardenTrees {
             }
         }
 
+        // Las hojas no sostienen enredaderas (se rompían y dejaban glow berries tiradas): cuelgan de un bloque de
+        // musgo metido en la copa, y solo donde hay copa encima
         for (int dx = -3; dx <= 3; dx++) {
             for (int dz = -3; dz <= 3; dz++) {
                 if (dx * dx + dz * dz > 9 || r.nextInt(4) != 0) continue;
-                hangVines(region, r, x + dx, top - 2, z + dz, 1 + r.nextInt(4));
+                int vx = x + dx;
+                int vz = z + dz;
+                if (!region.isInRegion(vx, top - 1, vz) || !Tag.LEAVES.isTagged(region.getType(vx, top - 1, vz))) continue;
+                if (!canPlace(region, vx, top - 2, vz)) continue;
+                region.setType(vx, top - 1, vz, Material.MOSS_BLOCK);
+                hangVines(region, r, vx, top - 2, vz, 1 + r.nextInt(4));
             }
         }
     }

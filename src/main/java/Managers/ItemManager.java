@@ -76,6 +76,7 @@ public class ItemManager {
                 "mineral_crudo_cian", "mineral_crudo_verde", "mineral_crudo_morado", "mineral_crudo_gris",
                 "fragmento_profundo_cian", "fragmento_profundo_verde", "fragmento_profundo_morado",
                 "fragmento_profundo_gris", "lingote_profundo", "corazon_warden_boss",
+                "baya_sculk", "fruta_abisal", "baya_luminosa",
                 "mejora_casco_warden", "mejora_peto_warden", "mejora_pantalon_warden", "mejora_bota_warden",
 
                 "casco_warden", "peto_warden", "pantalon_warden", "bota_warden",
@@ -174,6 +175,9 @@ public class ItemManager {
             case "fragmento_profundo_gris": item = WardenCaveItems.createFragment(WardenCaveItems.Variant.GRIS); break;
             case "lingote_profundo": item = WardenCaveItems.createDeepIngot(); break;
             case "corazon_warden_boss": item = WardenCaveItems.createWardenBossHeart(); break;
+            case "baya_sculk": item = WardenCaveItems.createSculkBerry(1); break;
+            case "fruta_abisal": item = WardenCaveItems.createAbyssFruit(1); break;
+            case "baya_luminosa": item = WardenCaveItems.createGlowBerry(1); break;
             case "mejora_casco_warden": item = wardenUpgrades.createHelmetWardenUpgrade(); break;
             case "mejora_peto_warden": item = wardenUpgrades.createChestplateWardenUpgrade(); break;
             case "mejora_pantalon_warden": item = wardenUpgrades.createLeggingsWardenUpgrade(); break;

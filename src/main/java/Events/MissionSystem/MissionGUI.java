@@ -66,11 +66,23 @@ public class MissionGUI implements Listener {
         return slots.stream().mapToInt(Integer::intValue).toArray();
     }
 
-    // Las páginas salen de la misión con el número más alto (119 misiones = 4 páginas)
+    // Las páginas salen de cuántas misiones hay en el menú (140 misiones = 5 páginas)
     private int maxPages() {
-        int highest = 1;
-        for (int number : missionHandler.getMissions().keySet()) highest = Math.max(highest, number);
-        return (highest + MISSION_SLOTS.length - 1) / MISSION_SLOTS.length;
+        return Math.max(1, (menuOrder().size() + MISSION_SLOTS.length - 1) / MISSION_SLOTS.length);
+    }
+
+    // Cada misión normal seguida de sus extras (#1, sus extras, #2, sus extras...); una extra sin su misión va al final
+    private List<Integer> menuOrder() {
+        List<Integer> order = new ArrayList<>();
+        for (Mission mission : missionHandler.getMissions().values()) {
+            if (mission.getParentMission() != 0) continue;
+            order.add(mission.getMissionNumber());
+            order.addAll(missionHandler.getExtras(mission.getMissionNumber()));
+        }
+        for (int number : missionHandler.getMissions().keySet()) {
+            if (!order.contains(number)) order.add(number);
+        }
+        return order;
     }
 
     // El item de Misiones abre el menú (los viejos con custom model data 9999 también sirven)
@@ -102,12 +114,12 @@ public class MissionGUI implements Listener {
         gui.setItem(PREV_SLOT, createArrow("§e⬅ Anterior Página", page, pages));
         gui.setItem(NEXT_SLOT, createArrow("§eSiguiente Página ➔", page, pages));
 
-        int first = (page - 1) * MISSION_SLOTS.length + 1;
-        for (int i = 0; i < MISSION_SLOTS.length; i++) {
-            int missionNum = first + i;
+        List<Integer> order = menuOrder();
+        int first = (page - 1) * MISSION_SLOTS.length;
+        for (int i = 0; i < MISSION_SLOTS.length && first + i < order.size(); i++) {
+            int missionNum = order.get(first + i);
             Mission mission = missionHandler.getMissions().get(missionNum);
-            MissionData data = mission != null ? missionHandler.getData(player, missionNum) : null;
-            gui.setItem(MISSION_SLOTS[i], createMissionItem(mission, player, data, missionNum));
+            gui.setItem(MISSION_SLOTS[i], createMissionItem(mission, player, missionHandler.getData(player, missionNum), missionNum));
         }
 
         player.openInventory(gui);
@@ -140,9 +152,9 @@ public class MissionGUI implements Listener {
         ItemMeta meta = item.getItemMeta();
         List<String> lore = new ArrayList<>();
 
-        if (mission == null || !data.isActive()) {
-            meta.setDisplayName(ChatColor.of("#A0A0A0") + "#" + missionNum + " ???");
-            lore.add(ChatColor.of("#D3D3D3") + (mission == null ? "Misión no implementada" : "Misión no descubierta"));
+        if (!data.isActive()) {
+            meta.setDisplayName(ChatColor.of("#A0A0A0") + missionHandler.tag(missionNum) + " ???");
+            lore.add(ChatColor.of("#D3D3D3") + "Misión no descubierta");
             ItemModels.apply(meta, "mision_bloqueada");
         } else {
             boolean completed = data.isCompleted();

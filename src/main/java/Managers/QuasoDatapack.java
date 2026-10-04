@@ -1,5 +1,7 @@
-package InfestedCaves;
+package Managers;
 
+import EndBiomes.EndBiome;
+import InfestedCaves.WardenBiome;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -7,12 +9,20 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Stream;
 
-public final class WardenDatapack {
+// El datapack del plugin: los biomas de la Warden Cave y del End, la lista de biomas donde sale la Ancient City y
+// los encantamientos. Es uno solo para todo el plugin
+public final class QuasoDatapack {
 
-    private static final String NAME = "QuasoWardenCave";
-    private static final String[] FILES = {
+    private static final String NAME = "QuasoPlugin";
+    // Datapacks de versiones anteriores que se borran (antes los biomas iban en uno aparte)
+    private static final String[] OLD_PACKS = {"QuasoWardenCave"};
+    private static final String[] BASE_FILES = {
             "pack.mcmeta",
             "data/quaso/worldgen/biome/caverna_sculk.json",
             "data/quaso/worldgen/biome/pantano_profundo.json",
@@ -26,26 +36,32 @@ public final class WardenDatapack {
             "data/quaso/enchantment/retorno_del_vacio.json"
     };
 
-    // Archivos de versiones anteriores que se borran al instalar (Sigilo se cambió por Visión Abisal)
-    private static final String[] REMOVED = {
-            "data/quaso/enchantment/sigilo.json"
-    };
+    private QuasoDatapack() {}
 
-    private WardenDatapack() {}
+    private static List<String> files() {
+        List<String> files = new ArrayList<>(Arrays.asList(BASE_FILES));
+        for (EndBiome biome : EndBiome.values()) files.add("data/quaso/worldgen/biome/" + biome.key().getKey() + ".json");
+        return files;
+    }
 
-    // Copia el datapack (los biomas, la lista de biomas donde sale la Ancient City y los encantamientos) a world/datapacks.
-    // Devuelve true si lo instaló o lo actualizó, y en ese caso hay que reiniciar porque se carga al prender el server
+    // Copia el datapack a world/datapacks. Devuelve true si lo instaló o lo actualizó, y en ese caso hay que
+    // reiniciar porque se carga al prender el server
     public static boolean install(JavaPlugin plugin) {
-        Path target = Bukkit.getServer().getLevelDirectory().resolve("datapacks").resolve(NAME);
+        Path datapacks = Bukkit.getServer().getLevelDirectory().resolve("datapacks");
         boolean changed = false;
-        for (String file : REMOVED) {
-            try {
-                if (Files.deleteIfExists(target.resolve(file))) changed = true;
+        for (String old : OLD_PACKS) {
+            Path dir = datapacks.resolve(old);
+            if (!Files.isDirectory(dir)) continue;
+            try (Stream<Path> paths = Files.walk(dir)) {
+                for (Path path : paths.sorted(Comparator.reverseOrder()).toList()) Files.delete(path);
+                changed = true;
             } catch (IOException e) {
-                plugin.getLogger().warning("No se pudo borrar " + file + " del datapack: " + e.getMessage());
+                plugin.getLogger().warning("No se pudo borrar el datapack viejo " + old + ": " + e.getMessage());
             }
         }
-        for (String file : FILES) {
+
+        Path target = datapacks.resolve(NAME);
+        for (String file : files()) {
             try (InputStream in = plugin.getResource("datapack/" + NAME + "/" + file)) {
                 if (in == null) {
                     plugin.getLogger().warning("Falta en el jar: datapack/" + NAME + "/" + file);
@@ -68,6 +84,9 @@ public final class WardenDatapack {
     public static boolean biomesLoaded() {
         for (WardenBiome biome : WardenBiome.values()) {
             if (!biome.isLoaded()) return false;
+        }
+        for (EndBiome biome : EndBiome.values()) {
+            if (biome.get() == null) return false;
         }
         return true;
     }

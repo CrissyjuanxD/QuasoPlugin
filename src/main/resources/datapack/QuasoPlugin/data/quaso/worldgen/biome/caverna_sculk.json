@@ -3,7 +3,8 @@
   "temperature": 0.5,
   "downfall": 0.0,
   "effects": {
-    "water_color": "#2a8c8c"
+    "water_color": "#2a8c8c",
+    "foliage_color": "#1f8f8a"
   },
   "attributes": {
     "minecraft:visual/sky_color": "#1f7a86",

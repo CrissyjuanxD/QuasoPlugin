@@ -22,7 +22,7 @@ public class Mission100 extends BaseMission {
         return of(item(Material.ENCHANTED_GOLDEN_APPLE, 20), custom("dinofichas", 60));
     }
 
-    // Las extras (101 a 119) no cuentan; el rol lo da MissionHandler al completarla
+    // Las extras (de la 101 en adelante) no cuentan; el rol lo da MissionHandler al completarla
     @Override
     protected int value(Player player, MissionData data, MissionObjective objective) {
         int completed = 0;

@@ -1,17 +1,13 @@
 package InfestedCaves;
 
 import org.bukkit.Axis;
-import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Tag;
-import org.bukkit.TreeType;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.BlockData;
-import org.bukkit.block.data.MultipleFacing;
 import org.bukkit.block.data.Orientable;
 import org.bukkit.block.data.type.AmethystCluster;
 import org.bukkit.block.data.type.CaveVinesPlant;
-import org.bukkit.block.data.type.Fence;
 import org.bukkit.block.data.type.HangingMoss;
 import org.bukkit.block.data.type.Leaves;
 import org.bukkit.generator.LimitedRegion;
@@ -24,27 +20,53 @@ public final class WardenTrees {
 
     private WardenTrees() {}
 
-    // Caverna Sculk: el árbol de siempre, un chorus convertido en vallas de warped con froglights en las puntas
-    static void sculk(LimitedRegion region, Random random, int x, int y, int z) {
-        BlockData soil = region.getBlockData(x, y - 1, z);
-        region.setType(x, y - 1, z, Material.END_STONE);
-        region.generateTree(new Location(null, x, y, z), random, TreeType.CHORUS_PLANT, state -> {
-            if (!region.isInRegion(state.getX(), state.getY(), state.getZ())) return false;
-            if (!region.getType(state.getX(), state.getY(), state.getZ()).isAir()) return false;
+    // Caverna Sculk: tronco de roble oscuro con raíces, copa de hojas que el bioma tiñe de verde azulado con manchas
+    // de sculk, y froglights verdes colgando debajo como frutas (se rompen en Bayas Sculk)
+    static void sculk(LimitedRegion region, Random r, int x, int y, int z) {
+        int height = 6 + r.nextInt(4);
+        if (!hasSpace(region, x, y, z, height + 3)) return;
 
-            if (state.getType() == Material.CHORUS_PLANT) {
-                MultipleFacing plant = (MultipleFacing) state.getBlockData();
-                Fence fence = (Fence) Material.WARPED_FENCE.createBlockData();
-                for (BlockFace face : HORIZONTAL) {
-                    fence.setFace(face, plant.hasFace(face));
+        for (int i = 0; i < height; i++) set(region, x, y + i, z, log(Material.DARK_OAK_LOG, Axis.Y));
+        for (BlockFace face : HORIZONTAL) {
+            if (r.nextInt(3) == 0) continue;
+            set(region, x + face.getModX(), y, z + face.getModZ(), Material.DARK_OAK_WOOD.createBlockData());
+            if (r.nextInt(3) == 0) set(region, x + face.getModX(), y + 1, z + face.getModZ(), Material.DARK_OAK_WOOD.createBlockData());
+        }
+
+        int top = y + height;
+        int branches = 2 + r.nextInt(2);
+        for (int b = 0; b < branches; b++) {
+            BlockFace dir = HORIZONTAL[r.nextInt(HORIZONTAL.length)];
+            Axis axis = dir.getModX() != 0 ? Axis.X : Axis.Z;
+            int by = top - 2 - r.nextInt(2);
+            for (int s = 1; s <= 2; s++) set(region, x + dir.getModX() * s, by + (s == 2 ? 1 : 0), z + dir.getModZ() * s, log(Material.DARK_OAK_LOG, axis));
+        }
+
+        int radius = 3 + r.nextInt(2);
+        for (int dx = -radius; dx <= radius; dx++) {
+            for (int dz = -radius; dz <= radius; dz++) {
+                for (int dy = -2; dy <= 2; dy++) {
+                    double shape = (dx * dx + dz * dz) / (double) (radius * radius) + (dy * dy) / 5.0;
+                    if (shape > 1.0 || (shape > 0.7 && r.nextInt(4) == 0)) continue;
+                    BlockData block = r.nextInt(100) < 14 ? Material.SCULK.createBlockData() : leaves(Material.DARK_OAK_LEAVES);
+                    set(region, x + dx, top + dy, z + dz, block);
                 }
-                state.setBlockData(fence);
-            } else if (state.getType() == Material.CHORUS_FLOWER) {
-                state.setType(Material.VERDANT_FROGLIGHT);
             }
-            return true;
-        });
-        region.setBlockData(x, y - 1, z, soil);
+        }
+
+        // Frutas: froglights colgando de la parte de abajo de la copa
+        int fruits = 2 + r.nextInt(3);
+        for (int i = 0, tries = 0; i < fruits && tries < 20; tries++) {
+            int fx = x + r.nextInt(radius * 2 + 1) - radius;
+            int fz = z + r.nextInt(radius * 2 + 1) - radius;
+            for (int fy = top - 3; fy <= top; fy++) {
+                if (!canPlace(region, fx, fy, fz)) continue;
+                if (!region.isInRegion(fx, fy + 1, fz) || region.getType(fx, fy + 1, fz).isAir()) continue;
+                set(region, fx, fy, fz, Material.VERDANT_FROGLIGHT.createBlockData());
+                i++;
+                break;
+            }
+        }
     }
 
     // Pantano Profundo: sauce de manglar con raíces, copa de azalea y enredaderas con bayas colgando
@@ -160,9 +182,13 @@ public final class WardenTrees {
     }
 
     private static Orientable basalt(Axis axis) {
-        Orientable basalt = (Orientable) Material.BASALT.createBlockData();
-        basalt.setAxis(axis);
-        return basalt;
+        return log(Material.BASALT, axis);
+    }
+
+    private static Orientable log(Material type, Axis axis) {
+        Orientable log = (Orientable) type.createBlockData();
+        log.setAxis(axis);
+        return log;
     }
 
     private static void hangVines(LimitedRegion region, Random r, int x, int y, int z, int max) {

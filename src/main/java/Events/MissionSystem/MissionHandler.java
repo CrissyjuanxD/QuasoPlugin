@@ -57,7 +57,11 @@ public class MissionHandler implements Listener {
             Mission101::new, Mission102::new, Mission103::new, Mission104::new, Mission105::new,
             Mission106::new, Mission107::new, Mission108::new, Mission109::new, Mission110::new,
             Mission111::new, Mission112::new, Mission113::new, Mission114::new, Mission115::new,
-            Mission116::new, Mission117::new, Mission118::new, Mission119::new
+            Mission116::new, Mission117::new, Mission118::new, Mission119::new, Mission120::new,
+            Mission121::new, Mission122::new, Mission123::new, Mission124::new, Mission125::new,
+            Mission126::new, Mission127::new, Mission128::new, Mission129::new, Mission130::new,
+            Mission131::new, Mission132::new, Mission133::new, Mission134::new, Mission135::new,
+            Mission136::new, Mission137::new, Mission138::new, Mission139::new, Mission140::new
     );
 
     private final JavaPlugin plugin;
@@ -254,10 +258,16 @@ public class MissionHandler implements Listener {
         autoSaveAll();
     }
 
-    // "#52 Bajo presión", como se ve en el menú y en los anuncios
+    // "#52 Bajo presión" o "Extra #2 Lancero", como se ve en el menú y en los anuncios
     public String displayName(int missionNumber) {
         Mission mission = missions.get(missionNumber);
-        return "#" + missionNumber + " " + (mission != null ? mission.getName() : "Misión Desconocida");
+        return tag(missionNumber) + " " + (mission != null ? mission.getName() : "Misión Desconocida");
+    }
+
+    // Las extras se muestran con el número de la misión con la que salen
+    public String tag(int missionNumber) {
+        Mission mission = missions.get(missionNumber);
+        return mission != null && mission.getParentMission() > 0 ? "Extra #" + mission.getParentMission() : "#" + missionNumber;
     }
 
     private String plainName(int missionNumber) {
@@ -521,7 +531,7 @@ public class MissionHandler implements Listener {
         ItemStack token = new ItemStack(Material.POPPED_CHORUS_FRUIT);
         ItemMeta meta = token.getItemMeta();
 
-        meta.setDisplayName(ChatColor.GOLD + "Ficha de Misión #" + missionNumber);
+        meta.setDisplayName(ChatColor.GOLD + "Ficha de Misión " + tag(missionNumber));
         meta.getPersistentDataContainer().set(TOKEN_KEY, PersistentDataType.INTEGER, missionNumber);
         ItemModels.apply(meta, "ficha_mision");
         meta.addEnchant(Enchantment.UNBREAKING, 1, true);

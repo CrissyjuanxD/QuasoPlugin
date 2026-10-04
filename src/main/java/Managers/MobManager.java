@@ -1,6 +1,8 @@
 package Managers;
 
 import Bosses.InfestedWardenBoss;
+import EndBiomes.BlackShulker;
+import EndBiomes.EnderInsect;
 import Bosses.QueenBeeHandler;
 import Dificultades.CustomMobs.*;
 import imp.crissyjuanxd.QuasoPlugin;
@@ -87,7 +89,7 @@ public class MobManager {
                 "guardianblaze", "guardiancorruptedskeleton", "corruptedinfernalspider",
                 "infestedbee", "estatuarecompensa", "corruptedbee", "infestedcreeper",
                 "infestedghast", "infestedskeleton", "infestedcavespider", "wardenzombie", "enderblaze",
-                "endercreeper", "enderspider", "infestedwarden",
+                "endercreeper", "enderspider", "infestedwarden", "enderinsect", "shulkernegro",
         };
         for (String mob : mobs) {
             registeredMobs.add(mob);
@@ -118,6 +120,8 @@ public class MobManager {
             case "enderspider": enderSpider.spawnEnderSpider(location); return true;
             // Uno de prueba: no queda atado a ninguna Ancient City, así que no reaparece
             case "infestedwarden": InfestedWardenBoss.spawn(plugin, location, "comando"); return true;
+            case "enderinsect": EnderInsect.spawn(plugin, location); return true;
+            case "shulkernegro": BlackShulker.spawn(plugin, location); return true;
             default: return false;
         }
     }

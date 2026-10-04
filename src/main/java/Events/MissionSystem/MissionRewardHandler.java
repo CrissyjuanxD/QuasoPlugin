@@ -249,7 +249,7 @@ public class MissionRewardHandler implements Listener {
 
         ItemStack rewardChest = new ItemStack(Material.CHEST);
         ItemMeta chestMeta = rewardChest.getItemMeta();
-        chestMeta.setDisplayName(ChatColor.of("#FFD700") + "Recompensa de Misión #" + missionNumber);
+        chestMeta.setDisplayName(ChatColor.of("#FFD700") + "Recompensa de Misión " + missionHandler.tag(missionNumber));
 
         if (chestMeta instanceof BlockStateMeta) {
             BlockStateMeta blockStateMeta = (BlockStateMeta) chestMeta;
@@ -271,6 +271,6 @@ public class MissionRewardHandler implements Listener {
         }
 
         player.playSound(player.getLocation(), Sound.BLOCK_CHEST_OPEN, SoundCategory.VOICE, 1.0f, 1.0f);
-        player.sendMessage(ChatColor.of("#98FB98") + "¡Has reclamado la recompensa de la Misión #" + missionNumber + "!");
+        player.sendMessage(ChatColor.of("#98FB98") + "¡Has reclamado la recompensa de la Misión " + missionHandler.tag(missionNumber) + "!");
     }
 }

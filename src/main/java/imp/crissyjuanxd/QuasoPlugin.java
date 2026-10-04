@@ -11,6 +11,10 @@ import EffectListener.ConfusionEffect;
 import EffectListener.CorruptureEffect;
 import EffectListener.CustomEffectManager;
 import EffectListener.EffectPreventionListener;
+import EndBiomes.BlackShulker;
+import EndBiomes.EndDrops;
+import EndBiomes.EndPopulator;
+import EndBiomes.EnderInsect;
 import Encantamientos.*;
 import Events.BuildBattle.BuildBattleCommand;
 import Events.BuildBattle.BuildBattleHandler;
@@ -20,6 +24,7 @@ import Events.ItemParty.ItemPartyCommand;
 import Events.Skybattle.LavaClashCommand;
 import InfestedCaves.*;
 import Managers.ItemManager;
+import Managers.QuasoDatapack;
 import Managers.MobManager;
 import ShopSystem.*;
 import StatueManager.*;
@@ -196,6 +201,7 @@ public class QuasoPlugin extends JavaPlugin implements Listener {
         initCasinoSystem();
         initInfestedCavesDimension();
         initEnchantmentSystem();
+        initEndSystem();
 
         getLogger().info("DinoNuggetsSMP habilitado completamente.");
     }
@@ -630,10 +636,10 @@ public class QuasoPlugin extends JavaPlugin implements Listener {
         getServer().getPluginManager().registerEvents(this.wardenAmbient, this);
         getServer().getPluginManager().registerEvents(new WardenCaveItemGuard(), this);
 
-        boolean datapackUpdated = WardenDatapack.install(this);
-        if (!WardenDatapack.biomesLoaded()) {
-            getLogger().warning("El datapack de los biomas de la Warden Cave se acaba de instalar o no está cargado. "
-                    + "Reinicia el server y borra la carpeta del mundo " + WORLD_NAME + " para que se genere con los 4 biomas.");
+        boolean datapackUpdated = QuasoDatapack.install(this);
+        if (!QuasoDatapack.biomesLoaded()) {
+            getLogger().warning("El datapack de QuasoPlugin (biomas de la Warden Cave y del End) se acaba de instalar o no está cargado. "
+                    + "Reinicia el server; si la carpeta del mundo " + WORLD_NAME + " ya existía sin los biomas, bórrala para que se genere bien.");
         } else if (datapackUpdated) {
             getLogger().warning("Se actualizó el datapack de QuasoPlugin (biomas y encantamientos). Reinicia el server para que se cargue.");
         }
@@ -659,6 +665,19 @@ public class QuasoPlugin extends JavaPlugin implements Listener {
         if (!QuasoEnchant.allLoaded()) {
             getLogger().warning("Los encantamientos del datapack no están cargados todavía: reinicia el server.");
         }
+    }
+
+    // Los biomas nuevos del End (Bosque Prismático y Páramo Marchito) se ponen con un populator en las islas de afuera
+    // que se generen desde ahora; los chunks que ya existían no cambian
+    private void initEndSystem() {
+        BlackShulker blackShulker = new BlackShulker(this);
+        for (World world : Bukkit.getWorlds()) {
+            if (world.getEnvironment() == World.Environment.THE_END) world.getPopulators().add(new EndPopulator(blackShulker));
+        }
+        getServer().getPluginManager().registerEvents(blackShulker, this);
+        getServer().getPluginManager().registerEvents(new EnderInsect(this), this);
+        getServer().getPluginManager().registerEvents(new EndDrops(this), this);
+        EndItems.registerRecipes(this);
     }
 
     private void cleanupBossHandlers() {

@@ -1,0 +1,53 @@
+{
+  "has_precipitation": false,
+  "temperature": 0.5,
+  "downfall": 0.0,
+  "effects": {
+    "water_color": "#8a6cf0",
+    "grass_color": "#a48cf0",
+    "foliage_color": "#ff7fc8",
+    "dry_foliage_color": "#c79ae8"
+  },
+  "attributes": {
+    "minecraft:visual/sky_color": "#6a2c8c",
+    "minecraft:visual/fog_color": "#c0609a",
+    "minecraft:visual/fog_start_distance": 24.0,
+    "minecraft:visual/fog_end_distance": 180.0,
+    "minecraft:visual/sky_fog_end_distance": 140.0,
+    "minecraft:visual/sky_light_color": "#ffa070",
+    "minecraft:visual/ambient_particles": [
+      {
+        "particle": {
+          "type": "minecraft:firefly"
+        },
+        "probability": 0.004
+      }
+    ]
+  },
+  "carvers": [],
+  "features": [],
+  "spawn_costs": {},
+  "spawners": {
+    "ambient": [],
+    "axolotls": [],
+    "creature": [],
+    "misc": [],
+    "monster": [
+      {
+        "type": "minecraft:enderman",
+        "weight": 10,
+        "minCount": 4,
+        "maxCount": 4
+      },
+      {
+        "type": "minecraft:endermite",
+        "weight": 5,
+        "minCount": 1,
+        "maxCount": 2
+      }
+    ],
+    "underground_water_creature": [],
+    "water_ambient": [],
+    "water_creature": []
+  }
+}

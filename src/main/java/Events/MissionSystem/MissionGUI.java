@@ -6,7 +6,6 @@ import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Sound;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -106,11 +105,6 @@ public class MissionGUI implements Listener {
         Inventory gui = Bukkit.createInventory(menu, 54, TITLE);
         menu.inventory = gui;
 
-        ItemStack panel = createPanel();
-        for (int slot = 0; slot < PANEL_SLOTS; slot++) {
-            gui.setItem(slot, panel);
-        }
-
         gui.setItem(PREV_SLOT, createArrow("§e⬅ Anterior Página", page, pages));
         gui.setItem(NEXT_SLOT, createArrow("§eSiguiente Página ➔", page, pages));
 
@@ -125,22 +119,12 @@ public class MissionGUI implements Listener {
         player.openInventory(gui);
     }
 
-    private ItemStack createPanel() {
-        ItemStack panel = new ItemStack(Material.BLACK_STAINED_GLASS_PANE);
-        ItemMeta meta = panel.getItemMeta();
-        meta.setDisplayName(" ");
-        meta.setHideTooltip(true);
-        ItemModels.apply(meta, "gui_panel");
-        panel.setItemMeta(meta);
-        return panel;
-    }
-
     private ItemStack createArrow(String name, int page, int pages) {
         ItemStack item = new ItemStack(Material.SPECTRAL_ARROW);
         ItemMeta meta = item.getItemMeta();
         meta.setDisplayName(name);
         meta.setLore(List.of(ChatColor.of("#D3D3D3") + "Página " + page + " de " + pages));
-        meta.addEnchant(Enchantment.UNBREAKING, 1, true);
+        meta.setEnchantmentGlintOverride(true);
         meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
         item.setItemMeta(meta);
         return item;

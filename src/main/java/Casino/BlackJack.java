@@ -391,6 +391,7 @@ public class BlackJack implements Listener {
                 ItemMeta meta = hidden.getItemMeta();
                 meta.setDisplayName(ChatColor.GRAY + "Carta Oculta");
                 meta.setCustomModelData(6000);
+                items.ItemModels.apply(meta, "carta_oculta");
                 hidden.setItemMeta(meta);
                 inv.setItem(dealerCardSlots.get(i), hidden);
             } else {
@@ -420,6 +421,7 @@ public class BlackJack implements Listener {
         String key = card.rank + card.suit;
         if (cardModelData.containsKey(key)) {
             meta.setCustomModelData(cardModelData.get(key));
+            items.ItemModels.apply(meta, "carta_" + cardModelData.get(key));
         }
 
         meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);

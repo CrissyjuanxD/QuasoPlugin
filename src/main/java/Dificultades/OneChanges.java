@@ -1,5 +1,6 @@
 package Dificultades;
 
+import items.ItemModels;
 import Bosses.QueenBeeHandler;
 import Dificultades.CustomMobs.*;
 import Dificultades.Features.AltarActivateEvent;
@@ -159,6 +160,7 @@ public class OneChanges implements Listener, Change {
         meta.addEnchant(Enchantment.UNBREAKING, 1, true);
         meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
 
+        ItemModels.apply(meta, "corrupted_steak");
         item.setItemMeta(meta);
         return item;
     }
@@ -185,6 +187,7 @@ public class OneChanges implements Listener, Change {
         meta.addEnchant(Enchantment.UNBREAKING, 1, true);
         meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
 
+        ItemModels.apply(meta, "tarta_calabaza_mejorada");
         item.setItemMeta(meta);
         return item;
     }

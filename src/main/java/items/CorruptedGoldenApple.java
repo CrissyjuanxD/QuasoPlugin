@@ -15,6 +15,7 @@ import java.util.List;
 
 public class CorruptedGoldenApple {
 
+
     public static ItemStack createCorruptedGoldenApple() {
         ItemStack item = new ItemStack(Material.GOLDEN_APPLE);
         ItemMeta meta = item.getItemMeta();
@@ -29,20 +30,35 @@ public class CorruptedGoldenApple {
         lore.add(ChatColor.GRAY + "> " + ChatColor.of("#ffff66") + "Absorción 5" + ChatColor.GRAY + " (" + ChatColor.of("#0099cc") + "2 min" + ChatColor.GRAY + ")");
         lore.add(ChatColor.GRAY + "> " + ChatColor.of("#cc99cc") + "Regeneración 3" + ChatColor.GRAY + " (" + ChatColor.of("#0099cc") + "1 min" + ChatColor.GRAY + ")");
         lore.add(ChatColor.GRAY + "> " + ChatColor.of("#cc3300") + "Saturación 1" + ChatColor.GRAY + " (" + ChatColor.of("#0099cc") + "1 min" + ChatColor.GRAY + ")");
-        lore.add(ChatColor.GRAY + "> " + ChatColor.of("#8c8c8c") + "Resistencia 3" + ChatColor.GRAY + " (" + ChatColor.of("#0099cc") + "2 min" + ChatColor.GRAY + ")");
-        lore.add(ChatColor.GRAY + "> " + ChatColor.of("#66ccff") + "Velocidad 3" + ChatColor.GRAY + " (" + ChatColor.of("#0099cc") + "2 min" + ChatColor.GRAY + ")");
         lore.add("");
 
         meta.setLore(lore);
         meta.setCustomModelData(15);
         meta.addEnchant(Enchantment.UNBREAKING, 1, true);
         meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+        ItemModels.apply(meta, "corrupted_golden_apple");
+        item.setItemMeta(meta);
+
+        return item;
+    }
+
+    public static ItemStack createApilateGoldBlock() {
+        ItemStack item = new ItemStack(Material.GOLD_BLOCK);
+        ItemMeta meta = item.getItemMeta();
+
+        meta.setDisplayName(ChatColor.WHITE + "" + ChatColor.BOLD + "Bloque de Oro Apilado");
+
+        meta.setCustomModelData(10);
+        meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+        meta.addEnchant(Enchantment.KNOCKBACK, 1, true);
+        ItemModels.apply(meta, "bloque_oro_apilado");
         item.setItemMeta(meta);
 
         return item;
     }
 
     public static void applyEffects(Player player) {
+        // Absorción V (2 minutos)
         player.addPotionEffect(new PotionEffect(
                 PotionEffectType.ABSORPTION,
                 2400,
@@ -63,22 +79,6 @@ public class CorruptedGoldenApple {
                 PotionEffectType.SATURATION,
                 1000,
                 0,
-                false,
-                false
-        ));
-
-        player.addPotionEffect(new PotionEffect(
-                PotionEffectType.RESISTANCE,
-                2400,
-                2,
-                false,
-                false
-        ));
-
-        player.addPotionEffect(new PotionEffect(
-                PotionEffectType.SPEED,
-                2400,
-                2,
                 false,
                 false
         ));

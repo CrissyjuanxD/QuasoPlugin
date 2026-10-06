@@ -42,6 +42,7 @@ public class WardenUpgrades {
 
             meta.getPersistentDataContainer().set(WARDEN_UPGRADE_KEY, PersistentDataType.STRING, "helmet");
 
+            ItemModels.apply(meta, "mejora_casco_warden");
             essence.setItemMeta(meta);
         }
         return essence;
@@ -68,6 +69,7 @@ public class WardenUpgrades {
 
             meta.getPersistentDataContainer().set(WARDEN_UPGRADE_KEY, PersistentDataType.STRING, "chestplate");
 
+            ItemModels.apply(meta, "mejora_peto_warden");
             essence.setItemMeta(meta);
         }
         return essence;
@@ -94,6 +96,7 @@ public class WardenUpgrades {
 
             meta.getPersistentDataContainer().set(WARDEN_UPGRADE_KEY, PersistentDataType.STRING, "leggings");
 
+            ItemModels.apply(meta, "mejora_pantalon_warden");
             essence.setItemMeta(meta);
         }
         return essence;
@@ -120,6 +123,7 @@ public class WardenUpgrades {
 
             meta.getPersistentDataContainer().set(WARDEN_UPGRADE_KEY, PersistentDataType.STRING, "boots");
 
+            ItemModels.apply(meta, "mejora_bota_warden");
             essence.setItemMeta(meta);
         }
         return essence;

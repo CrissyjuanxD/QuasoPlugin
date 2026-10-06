@@ -127,6 +127,7 @@ public class AchievementGUI implements Listener {
         meta.setLore(lore);
 
         meta.setCustomModelData(isCompleted ? 3000 : 3001);
+        items.ItemModels.apply(meta, isCompleted ? "logro_completado" : "logro_pendiente");
 
         item.setItemMeta(meta);
         return item;
@@ -137,6 +138,7 @@ public class AchievementGUI implements Listener {
         ItemMeta meta = border.getItemMeta();
         meta.setDisplayName(" ");
         meta.setCustomModelData(3002);
+        items.ItemModels.apply(meta, "logro_borde");
         border.setItemMeta(meta);
         return border;
     }

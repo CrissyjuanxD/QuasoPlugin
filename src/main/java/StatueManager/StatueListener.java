@@ -1,33 +1,44 @@
 package StatueManager;
 
-import org.bukkit.ChatColor;
-import org.bukkit.GameMode;
-import org.bukkit.Location;
-import org.bukkit.Sound;
-import org.bukkit.entity.ArmorStand;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Player;
+import net.md_5.bungee.api.ChatColor;
+import org.bukkit.*;
+import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.player.PlayerArmorStandManipulateEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.world.ChunkLoadEvent;
+import org.bukkit.event.world.ChunkUnloadEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.persistence.PersistentDataType;
+import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.util.Transformation;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 public class StatueListener implements Listener {
 
     private final StatueManager manager;
     private final StatueGUI gui;
+    private final StatueSchematic schematic;
+    private final JavaPlugin plugin;
 
-    public StatueListener(StatueManager manager, StatueGUI gui) {
+    private final Map<UUID, Long> pickaxeCooldowns = new HashMap<>();
+
+    public StatueListener(JavaPlugin plugin, StatueManager manager, StatueGUI gui, StatueSchematic schema) {
+        this.plugin = plugin;
         this.manager = manager;
         this.gui = gui;
+        this.schematic = schema;
     }
 
-    // Shift + click derecho abre la configuración y click derecho en un bloque pone la estatua
     @EventHandler
     public void onInteract(PlayerInteractEvent e) {
         if (e.getHand() != EquipmentSlot.HAND) return;
@@ -45,7 +56,6 @@ public class StatueListener implements Listener {
         }
     }
 
-    // Pasa la configuración del item al armor stand
     private void spawnStatue(Player p, ItemStack item, Location loc) {
         ItemMeta meta = item.getItemMeta();
         StatueData itemData = new StatueData(meta);
@@ -54,9 +64,9 @@ public class StatueListener implements Listener {
         stand.setGravity(false);
         stand.setBasePlate(false);
         stand.setArms(true);
-        stand.setCustomName(ChatColor.translateAlternateColorCodes('&', "&6&lStatue Effect"));
         stand.setCustomNameVisible(false);
 
+        // Configurar Datos
         StatueData standData = new StatueData(stand);
         standData.setRadiusX(itemData.getRadiusX());
         standData.setRadiusY(itemData.getRadiusY());
@@ -66,17 +76,24 @@ public class StatueListener implements Listener {
         standData.setVisible(itemData.isVisible());
         standData.setInvulnerable(itemData.isInvulnerable());
 
+        // Conservamos el modo AntiGrief o Efecto
         if (itemData.isAntiGrief()) {
             standData.setAntiGrief(true);
         } else {
             standData.setEffect(itemData.getEffectType(), itemData.getEffectAmplifier());
         }
 
+        // Aplicar propiedades visuales inmediatas
         stand.setVisible(itemData.isVisible());
 
-        stand.getPersistentDataContainer().set(org.bukkit.NamespacedKey.fromString("viciont:statue_id"), org.bukkit.persistence.PersistentDataType.STRING, "true");
+        // Marca obligatoria para identificarla
+        stand.getPersistentDataContainer().set(
+                NamespacedKey.fromString("viciont:statue_id"),
+                PersistentDataType.STRING,
+                "true"
+        );
 
-        manager.registerStatue(stand);
+        manager.registerStatue(stand); // registra, aplica nombre y partículas
 
         if (p.getGameMode() != GameMode.CREATIVE) {
             item.setAmount(item.getAmount() - 1);
@@ -84,7 +101,21 @@ public class StatueListener implements Listener {
         p.playSound(loc, Sound.ENTITY_ARMOR_STAND_PLACE, 1f, 1f);
     }
 
-    // Cada golpe con pico le baja 1 de vida; las indestructibles solo las quita un admin en creativo con shift
+    // ──────────────────────────────────────────────────────────────────────────
+    //  BLOQUEAR EQUIPAR ITEMS / ARMOR EN ARMOR STANDS DEL PLUGIN
+    // ──────────────────────────────────────────────────────────────────────────
+
+    @EventHandler
+    public void onArmorStandManipulate(PlayerArmorStandManipulateEvent e) {
+        if (StatueData.isStatue(e.getRightClicked())) {
+            e.setCancelled(true);
+        }
+    }
+
+    // ──────────────────────────────────────────────────────────────────────────
+    //  DAÑO Y DESTRUCCIÓN
+    // ──────────────────────────────────────────────────────────────────────────
+
     @EventHandler
     public void onDamage(EntityDamageByEntityEvent e) {
         if (!(e.getEntity() instanceof ArmorStand)) return;
@@ -99,11 +130,9 @@ public class StatueListener implements Listener {
         StatueData data = new StatueData(stand);
 
         if (data.isInvulnerable()) {
-            if (p.getGameMode() == GameMode.CREATIVE && p.isSneaking() && p.hasPermission("viciont.admin")) {
+            if (p.getGameMode() == GameMode.CREATIVE && p.isSneaking()) {
                 p.sendMessage(ChatColor.RED + "Estatua indestructible eliminada por Admin.");
                 removeStatue(stand, p);
-            } else {
-                p.sendMessage(ChatColor.RED + "Esta estatua es indestructible.");
             }
             return;
         }
@@ -113,28 +142,116 @@ public class StatueListener implements Listener {
             return;
         }
 
+        if (p.getGameMode() != GameMode.CREATIVE) {
+            long now = System.currentTimeMillis();
+            long last = pickaxeCooldowns.getOrDefault(p.getUniqueId(), 0L);
+            long cooldownMs = 1000L;
+
+            if (now - last < cooldownMs) {
+                return;
+            }
+            pickaxeCooldowns.put(p.getUniqueId(), now);
+            p.setCooldown(hand.getType(), 20);
+        }
+
         int currentHp = data.getHpCurrent() - 1;
 
-        p.playSound(stand.getLocation(), Sound.BLOCK_ANVIL_PLACE, 1f, 0.5f);
-        p.playSound(stand.getLocation(), Sound.BLOCK_NETHERITE_BLOCK_BREAK, 1f, 1f);
+        stand.getWorld().playSound(stand.getLocation(), Sound.ITEM_MACE_SMASH_GROUND, SoundCategory.BLOCKS, 1.0F, 2.0F);
+
+        Location hitLoc = stand.getLocation().add(0, 1, 0);
+        stand.getWorld().spawnParticle(Particle.BLOCK, hitLoc, 25, 0.3, 0.4, 0.3, 0.1, Material.STONE.createBlockData());
+        stand.getWorld().spawnParticle(Particle.BLOCK, hitLoc, 25, 0.3, 0.4, 0.3, 0.1, Material.BLACKSTONE.createBlockData());
 
         if (currentHp <= 0) {
             removeStatue(stand, p);
         } else {
             data.setHpCurrent(currentHp);
-            p.sendMessage(ChatColor.GRAY + "Vida Estatua: " + currentHp + "/" + data.getHpMax());
+            spawnDamageDisplay(stand.getLocation(), currentHp, data.getHpMax());
         }
     }
 
+    // ──────────────────────────────────────────────────────────────────────────
+    //  ANIMACIÓN DE DAÑO (TextDisplay Flotante)
+    // ──────────────────────────────────────────────────────────────────────────
+
+    private void spawnDamageDisplay(Location statueLoc, int currentHp, int maxHp) {
+        Location spawnLoc = statueLoc.clone().add(0, 2.3, 0);
+
+        TextDisplay display = (TextDisplay) spawnLoc.getWorld().spawnEntity(spawnLoc, EntityType.TEXT_DISPLAY);
+
+        display.setBillboard(Display.Billboard.CENTER);
+        display.setAlignment(TextDisplay.TextAlignment.CENTER);
+        display.setBackgroundColor(Color.fromARGB(0, 0, 0, 0));
+        display.setShadowed(true);
+        display.setViewRange(24.0f / 64.0f);
+
+        String col1 = ChatColor.of("#67B3E0") + "" + ChatColor.BOLD;
+        String col2 = ChatColor.of("#DBECF2") + "" + ChatColor.BOLD;
+        String col3 = ChatColor.of("#43A0DE") + "" + ChatColor.BOLD;
+
+        String formatText = "§f\uDB80\uDC67 " + col1 + currentHp + col2 + "/" + col3 + maxHp;
+        display.setText(formatText);
+
+        new BukkitRunnable() {
+            int ticks = 0;
+            final int maxTicks = 40;
+
+            @Override
+            public void run() {
+                if (display.isDead() || !display.isValid()) {
+                    cancel();
+                    return;
+                }
+
+                ticks++;
+
+                if (ticks > maxTicks) {
+                    display.remove();
+                    cancel();
+                    return;
+                }
+
+                Transformation transform = display.getTransformation();
+                transform.getTranslation().add(0f, 0.02f, 0f);
+
+                display.setInterpolationDelay(0);
+                display.setInterpolationDuration(2);
+                display.setTransformation(transform);
+
+                int fadeStart = maxTicks - 20;
+                if (ticks > fadeStart) {
+                    int ticksLeft = maxTicks - ticks;
+                    float progress = Math.max(0, ticksLeft / 20.0f);
+                    byte textOpacity = (byte) (255 * progress);
+                    display.setTextOpacity(textOpacity);
+                }
+            }
+        }.runTaskTimer(plugin, 0L, 1L);
+    }
+
     private void removeStatue(ArmorStand stand, Player p) {
-        p.playSound(stand.getLocation(), Sound.BLOCK_BEACON_DEACTIVATE, 1f, 1f);
+        Location loc = stand.getLocation().add(0, 1, 0);
+
+        stand.getWorld().spawnParticle(
+                Particle.BLOCK,
+                loc,
+                80,
+                0.3, 0.4, 0.3,
+                0.15,
+                Material.SMOOTH_STONE.createBlockData()
+        );
+
+        stand.getWorld().playSound(loc, Sound.BLOCK_DEEPSLATE_BREAK, 1f, 0.8f);
+        stand.getWorld().playSound(loc, Sound.ITEM_SHIELD_BREAK, 1.0F, 0.75F);
+        stand.getWorld().playSound(loc, Sound.ITEM_TRIDENT_THUNDER, 1.0F, 0.75F);
+
+        schematic.onStatueRemoved(stand.getUniqueId());
         manager.unregisterStatue(stand);
         stand.remove();
     }
 
-    // Al cargar o descargar el chunk se registra o se saca la estatua del loop de efectos
     @EventHandler
-    public void onChunkLoad(org.bukkit.event.world.ChunkLoadEvent e) {
+    public void onChunkLoad(ChunkLoadEvent e) {
         for (Entity ent : e.getChunk().getEntities()) {
             if (ent instanceof ArmorStand && StatueData.isStatue((ArmorStand) ent)) {
                 manager.registerStatue((ArmorStand) ent);
@@ -143,7 +260,7 @@ public class StatueListener implements Listener {
     }
 
     @EventHandler
-    public void onChunkUnload(org.bukkit.event.world.ChunkUnloadEvent e) {
+    public void onChunkUnload(ChunkUnloadEvent e) {
         for (Entity ent : e.getChunk().getEntities()) {
             if (ent instanceof ArmorStand && StatueData.isStatue((ArmorStand) ent)) {
                 manager.unregisterStatue((ArmorStand) ent);

@@ -7,6 +7,9 @@ import Bosses.InfestedWardenLairs;
 import Casino.CasinoCommands;
 import Casino.CasinoManager;
 import Commands.*;
+import EffectListener.ImmunityEffect;
+import EffectListener.KeepInventoryEffect;
+import EffectListener.TotemEffectRestorer;
 import EffectListener.ConfusionEffect;
 import EffectListener.CorruptureEffect;
 import EffectListener.CustomEffectManager;
@@ -153,6 +156,8 @@ public class QuasoPlugin extends JavaPlugin implements Listener {
 
     private StatueManager statueManager;
     private StatueGUI statueGUI;
+    private StatueDebugManager statueDebugManager;
+    private StatueSchematic statueSchematic;
 
     public static final String WORLD_NAME = "wardencave";
     private WardenGenerator generator;
@@ -243,6 +248,10 @@ public class QuasoPlugin extends JavaPlugin implements Listener {
             gravesManager.saveData();
         }
 
+        if (effectManager != null) effectManager.cleanupAllEffects();
+        if (statueDebugManager != null) statueDebugManager.cleanup();
+        if (statueSchematic != null) statueSchematic.cleanup();
+
         cleanupBossHandlers();
 
         Handlers.ToastHandler.cleanupToasts();
@@ -303,6 +312,9 @@ public class QuasoPlugin extends JavaPlugin implements Listener {
         lifeCampfire = new LifeCampfire(this);
         happyGhastEnchant = new HappyGhastEnchant(this);
         itemsEventos = new ItemsEventos(this);
+        Bukkit.getPluginManager().registerEvents(new KeepInventoryLiquido(this), this);
+        Bukkit.getPluginManager().registerEvents(new EstatuaProtectora(this), this);
+        Bukkit.getPluginManager().registerEvents(new AmuletoUltimaEsperanza(this), this);
         amuletInvisibility = new AmuletInvisibility(this);
         explosiveBow = new ExplosiveBow(this);
         WardenArmor wardenArmor = new WardenArmor(this);
@@ -433,12 +445,19 @@ public class QuasoPlugin extends JavaPlugin implements Listener {
 
         ConfusionEffect confusionEffect = new ConfusionEffect(this);
         CorruptureEffect corruptureEffect = new CorruptureEffect(this);
+        ImmunityEffect immunityEffect = new ImmunityEffect(this);
+        KeepInventoryEffect keepInventoryEffect = new KeepInventoryEffect(this);
 
         effectManager.registerEffect(confusionEffect);
         effectManager.registerEffect(corruptureEffect);
+        effectManager.registerEffect(immunityEffect);
+        effectManager.registerEffect(keepInventoryEffect);
 
         getServer().getPluginManager().registerEvents(effectManager, this);
         getServer().getPluginManager().registerEvents(corruptureEffect, this);
+        getServer().getPluginManager().registerEvents(immunityEffect, this);
+        getServer().getPluginManager().registerEvents(keepInventoryEffect, this);
+        getServer().getPluginManager().registerEvents(new TotemEffectRestorer(this), this);
 
         this.effectPreventionListener = new EffectPreventionListener();
         getServer().getPluginManager().registerEvents(effectPreventionListener, this);
@@ -601,13 +620,17 @@ public class QuasoPlugin extends JavaPlugin implements Listener {
 
     private void statueEffectSystem() {
         this.statueManager = new StatueManager(this);
-        this.statueGUI = new StatueGUI(this);
-
-        getCommand("givestatue").setExecutor(new StatueCommand());
-
-        getServer().getPluginManager().registerEvents(new StatueListener(statueManager, statueGUI), this);
+        this.statueDebugManager = new StatueDebugManager(this, statueManager);
+        this.statueSchematic = new StatueSchematic(this, statueManager);
+        this.statueGUI = new StatueGUI(this, statueManager);
+        StatueCommand statueCommand = new StatueCommand(statueDebugManager);
+        Objects.requireNonNull(getCommand("givestatue")).setExecutor(statueCommand);
+        Objects.requireNonNull(getCommand("givestatue")).setTabCompleter(statueCommand);
+        getServer().getPluginManager().registerEvents(
+                new StatueListener(this, statueManager, statueGUI, statueSchematic), this);
         getServer().getPluginManager().registerEvents(statueGUI, this);
-
+        getServer().getPluginManager().registerEvents(statueSchematic, this);
+        statueSchematic.scanAllWorlds();
         statueManager.loadStatues();
     }
 
@@ -777,6 +800,10 @@ public class QuasoPlugin extends JavaPlugin implements Listener {
     public SuccessNotification getSuccessNotifier() {
         return successNotif;
     }
+
+    public StatueManager getStatueManager() { return statueManager; }
+
+    public StatueSchematic getStatueSchematic() { return statueSchematic; }
 
     public ItemManager getItemManager() { return itemManager; }
 

@@ -70,6 +70,7 @@ public class excavatorItem implements Listener {
             PersistentDataContainer data = meta.getPersistentDataContainer();
             data.set(excavatorKey, PersistentDataType.BYTE, (byte) 1);
 
+            ItemModels.apply(meta, "excavator_pickaxe");
             pickaxe.setItemMeta(meta);
         }
         return pickaxe;

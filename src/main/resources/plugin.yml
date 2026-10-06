@@ -185,7 +185,8 @@ commands:
     permission-message: No tienes permiso para usar este comando.
   givestatue:
     description: Comando para configurar las Estatuas de efectos.
-    usage: /givestatue
+    aliases: [statue]
+    usage: /givestatue [give|clone|debug]
     permission: viciont_hardcore3.command.givestatue
     permission-message: No tienes permiso para usar este comando.
   givespawner:
@@ -269,5 +270,5 @@ commands:
     permission: viciont_hardcore3.command.tumbas
     permission-message: No tienes permiso para usar este comando.
 
-depend: [EliteMobs]
+depend: [EliteMobs, ViciontMediaPlugin]
 softdepend: [FastAsyncWorldEdit, BloodMoon]

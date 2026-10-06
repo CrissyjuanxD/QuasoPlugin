@@ -28,6 +28,13 @@ public class ItemsPartyRecolect {
         ItemMeta meta = is.getItemMeta();
         meta.setDisplayName(name);
         meta.getPersistentDataContainer().set(KEY, PersistentDataType.BYTE, (byte) kind);
+        ItemModels.apply(meta, switch (kind) {
+            case 1 -> "caramelo";
+            case 2 -> "piruleta";
+            case 3 -> "algodon_azucar";
+            case 4 -> "soda";
+            default -> throw new IllegalArgumentException("Tipo de ItemParty: " + kind);
+        });
         is.setItemMeta(meta);
         return is;
     }

@@ -1,5 +1,6 @@
 package Armors;
 
+import items.ItemModels;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -60,6 +61,7 @@ public class WardenArmor implements Listener {
         meta.setCustomModelData(800);
         meta.setRarity(ItemRarity.EPIC);
         meta.getPersistentDataContainer().set(wardenArmorKey, PersistentDataType.BYTE, (byte) 1);
+        ItemModels.apply(meta, "casco_warden");
         item.setItemMeta(meta);
 
         return item;
@@ -98,6 +100,7 @@ public class WardenArmor implements Listener {
         meta.setCustomModelData(801);
         meta.setRarity(ItemRarity.EPIC);
         meta.getPersistentDataContainer().set(wardenArmorKey, PersistentDataType.BYTE, (byte) 1);
+        ItemModels.apply(meta, "peto_warden");
         item.setItemMeta(meta);
 
         return item;
@@ -136,6 +139,7 @@ public class WardenArmor implements Listener {
         meta.setCustomModelData(802);
         meta.setRarity(ItemRarity.EPIC);
         meta.getPersistentDataContainer().set(wardenArmorKey, PersistentDataType.BYTE, (byte) 1);
+        ItemModels.apply(meta, "pantalon_warden");
         item.setItemMeta(meta);
 
         return item;
@@ -174,6 +178,7 @@ public class WardenArmor implements Listener {
         meta.setCustomModelData(803);
         meta.setRarity(ItemRarity.EPIC);
         meta.getPersistentDataContainer().set(wardenArmorKey, PersistentDataType.BYTE, (byte) 1);
+        ItemModels.apply(meta, "bota_warden");
         item.setItemMeta(meta);
 
         return item;

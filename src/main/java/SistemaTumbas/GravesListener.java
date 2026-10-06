@@ -24,6 +24,9 @@ public class GravesListener implements Listener {
     public void onDeath(PlayerDeathEvent event) {
         Player player = event.getEntity();
 
+        // KeepInventoryEffect se ejecuta después (HIGHEST); no duplicar sus objetos en una tumba.
+        if (player.hasPotionEffect(org.bukkit.potion.PotionEffectType.LUCK)) return;
+
         if (!event.getKeepInventory() && !event.getDrops().isEmpty()) {
             List<ItemStack> dropsToSave = new ArrayList<>(event.getDrops());
             event.getDrops().clear();

@@ -30,6 +30,7 @@ public class ItemSerializer {
     }
 
     public static ItemStack[] deserialize(String data) {
+        if (data == null || data.isEmpty()) return new ItemStack[0];
         try {
             ByteArrayInputStream inputStream = new ByteArrayInputStream(Base64Coder.decodeLines(data));
             BukkitObjectInputStream dataInput = new BukkitObjectInputStream(inputStream);

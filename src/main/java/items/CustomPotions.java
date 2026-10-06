@@ -17,7 +17,7 @@ import java.util.Locale;
 public class CustomPotions {
 
     public static ItemStack getResistanceIIPotion() {
-        return createPotion(
+        return createPotion("potion_resistance_2",
                 Material.POTION,
                 "§9§lPoción de Resistencia II",
                 PotionEffectType.RESISTANCE,
@@ -28,7 +28,7 @@ public class CustomPotions {
     }
 
     public static ItemStack getSplashResistanceIIIPotion() {
-        return createPotion(
+        return createPotion("splash_resistance_3",
                 Material.SPLASH_POTION,
                 "§9§lPoción de Resistencia III",
                 PotionEffectType.RESISTANCE,
@@ -39,7 +39,7 @@ public class CustomPotions {
     }
 
     public static ItemStack getSlowFallingPotion() {
-        return createPotion(
+        return createPotion("potion_slow_falling",
                 Material.POTION,
                 "§7§lPoción de Caída Lenta",
                 PotionEffectType.SLOW_FALLING,
@@ -50,7 +50,7 @@ public class CustomPotions {
     }
 
     public static ItemStack getSplashRegenerationIIIPotion() {
-        return createPotion(
+        return createPotion("splash_regeneration_3",
                 Material.SPLASH_POTION,
                 "§d§lPoción de Regeneración III",
                 PotionEffectType.REGENERATION,
@@ -61,7 +61,7 @@ public class CustomPotions {
     }
 
     public static ItemStack getHasteIIIPotion() {
-        return createPotion(
+        return createPotion("potion_haste_3",
                 Material.POTION,
                 "§e§lPoción de Prisa Minera III",
                 PotionEffectType.HASTE,
@@ -72,7 +72,7 @@ public class CustomPotions {
     }
 
     public static ItemStack getHasteIIPotion() {
-        return createPotion(
+        return createPotion("potion_haste_2",
                 Material.POTION,
                 "§e§lPoción de Prisa Minera II",
                 PotionEffectType.HASTE,
@@ -83,7 +83,7 @@ public class CustomPotions {
     }
 
     public static ItemStack getSplashAbsorptionXPotion() {
-        return createPotion(
+        return createPotion("splash_absorption_10",
                 Material.SPLASH_POTION,
                 "§6§lPoción de Absorción X",
                 PotionEffectType.ABSORPTION,
@@ -106,6 +106,7 @@ public class CustomPotions {
 
             meta.setCustomModelData(8001);
 
+            ItemModels.apply(meta, "frasco_de_velocidad");
             honey.setItemMeta(meta);
         }
 
@@ -113,7 +114,7 @@ public class CustomPotions {
     }
 
     public static ItemStack getTequila() {
-        return createDrink("§6§lCaballito de Tequila", Color.fromRGB(220, 180, 50),
+        return createDrink("bar_tequila", "§6§lCaballito de Tequila", Color.fromRGB(220, 180, 50),
                 new PotionEffect(PotionEffectType.NAUSEA, 200, 1),
                 new PotionEffect(PotionEffectType.SATURATION, 200, 2),
                 new PotionEffect(PotionEffectType.MINING_FATIGUE, 240, 1)
@@ -121,14 +122,14 @@ public class CustomPotions {
     }
 
     public static ItemStack getMargarita() {
-        return createDrink("§a§lMargarita de Limón", Color.fromRGB(150, 255, 100),
+        return createDrink("bar_margarita", "§a§lMargarita de Limón", Color.fromRGB(150, 255, 100),
                 new PotionEffect(PotionEffectType.NAUSEA, 240, 1),
                 new PotionEffect(PotionEffectType.NIGHT_VISION, 300, 1)
         );
     }
 
     public static ItemStack getMezcal() {
-        return createDrink("§8§lTrago de Mezcal", Color.fromRGB(200, 200, 200),
+        return createDrink("bar_mezcal", "§8§lTrago de Mezcal", Color.fromRGB(200, 200, 200),
                 new PotionEffect(PotionEffectType.DARKNESS, 200, 1),
                 new PotionEffect(PotionEffectType.SLOWNESS, 300, 2),
                 new PotionEffect(PotionEffectType.SATURATION, 240, 1)
@@ -136,7 +137,7 @@ public class CustomPotions {
     }
 
     public static ItemStack getPulque() {
-        return createDrink("§f§lJarrito de Pulque", Color.fromRGB(255, 245, 230),
+        return createDrink("bar_pulque", "§f§lJarrito de Pulque", Color.fromRGB(255, 245, 230),
                 new PotionEffect(PotionEffectType.DARKNESS, 300, 1),
                 new PotionEffect(PotionEffectType.SATURATION, 300, 2),
                 new PotionEffect(PotionEffectType.NAUSEA, 240, 2)
@@ -144,7 +145,7 @@ public class CustomPotions {
     }
 
     public static ItemStack getBeer() {
-        return createDrink("§c§lJarra de Cerveza", Color.fromRGB(102, 51, 0),
+        return createDrink("bar_cerveza", "§c§lJarra de Cerveza", Color.fromRGB(102, 51, 0),
                 new PotionEffect(PotionEffectType.SATURATION, 200, 2),
                 new PotionEffect(PotionEffectType.MINING_FATIGUE, 300, 1),
                 new PotionEffect(PotionEffectType.SLOWNESS, 200, 1)
@@ -152,21 +153,21 @@ public class CustomPotions {
     }
 
     public static ItemStack getRum() {
-        return createDrink("§4§lRon Añejo", Color.fromRGB(139, 69, 19),
+        return createDrink("bar_ron", "§4§lRon Añejo", Color.fromRGB(139, 69, 19),
                 new PotionEffect(PotionEffectType.NAUSEA, 300, 2),
                 new PotionEffect(PotionEffectType.DARKNESS, 240, 1)
         );
     }
 
     public static ItemStack getVodka() {
-        return createDrink("§b§lVaso de Vodka", Color.fromRGB(220, 240, 255),
+        return createDrink("bar_vodka", "§b§lVaso de Vodka", Color.fromRGB(220, 240, 255),
                 new PotionEffect(PotionEffectType.SLOWNESS, 200, 2),
                 new PotionEffect(PotionEffectType.NAUSEA, 240, 1)
         );
     }
 
     public static ItemStack getWhisky() {
-        return createDrink("§e§lVaso de Whisky", Color.fromRGB(205, 133, 63),
+        return createDrink("bar_whisky", "§e§lVaso de Whisky", Color.fromRGB(205, 133, 63),
                 new PotionEffect(PotionEffectType.SLOWNESS, 240, 2),
                 new PotionEffect(PotionEffectType.MINING_FATIGUE, 240, 2),
                 new PotionEffect(PotionEffectType.NIGHT_VISION, 200, 1)
@@ -174,7 +175,7 @@ public class CustomPotions {
     }
 
     public static ItemStack getSake() {
-        return createDrink("§f§lVasito de Sake", Color.fromRGB(245, 255, 255),
+        return createDrink("bar_sake", "§f§lVasito de Sake", Color.fromRGB(245, 255, 255),
                 new PotionEffect(PotionEffectType.SATURATION, 200, 2),
                 new PotionEffect(PotionEffectType.NAUSEA, 300, 1),
                 new PotionEffect(PotionEffectType.DARKNESS, 200, 1)
@@ -182,7 +183,7 @@ public class CustomPotions {
     }
 
     public static ItemStack getGin() {
-        return createDrink("§3§lCopa de Ginebra", Color.fromRGB(190, 255, 240),
+        return createDrink("bar_ginebra", "§3§lCopa de Ginebra", Color.fromRGB(190, 255, 240),
                 new PotionEffect(PotionEffectType.NIGHT_VISION, 300, 1),
                 new PotionEffect(PotionEffectType.SLOWNESS, 300, 1),
                 new PotionEffect(PotionEffectType.MINING_FATIGUE, 200, 2)
@@ -190,7 +191,7 @@ public class CustomPotions {
     }
 
     public static ItemStack getAzulito() {
-        return createDrink("§b§lAzulito", Color.fromRGB(0, 200, 255),
+        return createDrink("bar_azulito", "§b§lAzulito", Color.fromRGB(0, 200, 255),
                 new PotionEffect(PotionEffectType.NIGHT_VISION, 300, 1),
                 new PotionEffect(PotionEffectType.SATURATION, 240, 2),
                 new PotionEffect(PotionEffectType.NAUSEA, 200, 1)
@@ -198,14 +199,14 @@ public class CustomPotions {
     }
 
     public static ItemStack getMichelada() {
-        return createDrink("§4§lVaso de Michelada", Color.fromRGB(150, 30, 0),
+        return createDrink("bar_michelada", "§4§lVaso de Michelada", Color.fromRGB(150, 30, 0),
                 new PotionEffect(PotionEffectType.MINING_FATIGUE, 300, 1),
                 new PotionEffect(PotionEffectType.SLOWNESS, 200, 1),
                 new PotionEffect(PotionEffectType.SATURATION, 240, 1)
         );
     }
 
-    private static ItemStack createPotion(Material material, String name, PotionEffectType effectType, int duration, int amplifier, Color color) {
+    private static ItemStack createPotion(String modelKey, Material material, String name, PotionEffectType effectType, int duration, int amplifier, Color color) {
         ItemStack potion = new ItemStack(material);
         PotionMeta meta = (PotionMeta) potion.getItemMeta();
 
@@ -213,12 +214,13 @@ public class CustomPotions {
             meta.setDisplayName(name);
             meta.addCustomEffect(new PotionEffect(effectType, duration, amplifier), true);
             meta.setColor(color);
+            ItemModels.apply(meta, modelKey);
             potion.setItemMeta(meta);
         }
         return potion;
     }
 
-    private static ItemStack createDrink(String name, Color color, PotionEffect... effects) {
+    private static ItemStack createDrink(String modelKey, String name, Color color, PotionEffect... effects) {
         ItemStack potion = new ItemStack(Material.POTION);
         PotionMeta meta = (PotionMeta) potion.getItemMeta();
 
@@ -267,6 +269,7 @@ public class CustomPotions {
                 meta.addItemFlags(ItemFlag.valueOf("HIDE_ADDITIONAL_TOOLTIP"));
             } catch (Exception ignored) {}
 
+            ItemModels.apply(meta, modelKey);
             potion.setItemMeta(meta);
         }
         return potion;

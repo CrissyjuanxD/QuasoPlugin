@@ -41,6 +41,8 @@ public class EconomyItems {
         meta.setRarity(ItemRarity.EPIC);
         meta.addEnchant(Enchantment.UNBREAKING, 1, true);
         meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+
+        ItemModels.apply(meta, "dinocoins");
         item.setItemMeta(meta);
         return item;
     }
@@ -62,6 +64,8 @@ public class EconomyItems {
         meta.setRarity(ItemRarity.EPIC);
         meta.addEnchant(Enchantment.UNBREAKING, 1, true);
         meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+
+        ItemModels.apply(meta, "dinofichas");
         item.setItemMeta(meta);
         return item;
     }
@@ -83,6 +87,8 @@ public class EconomyItems {
         meta.setRarity(ItemRarity.EPIC);
         meta.addEnchant(Enchantment.UNBREAKING, 1, true);
         meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+
+        ItemModels.apply(meta, "blood_fragment");
         item.setItemMeta(meta);
         return item;
     }
@@ -93,7 +99,7 @@ public class EconomyItems {
 
         meta.setDisplayName(ChatColor.GREEN + "" + ChatColor.BOLD + "Mochila Nivel 1");
         meta.setCustomModelData(2020);
-        meta.setItemModel(NamespacedKey.minecraft("lime_bundle"));
+
 
         List<String> lore = new ArrayList<>();
         lore.add(" ");
@@ -106,6 +112,8 @@ public class EconomyItems {
         meta.addEnchant(Enchantment.UNBREAKING, 1, true);
         meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
         makeUnstackable(meta);
+
+        ItemModels.apply(meta, "mochila_nivel_1");
         item.setItemMeta(meta);
         return item;
     }
@@ -116,7 +124,7 @@ public class EconomyItems {
 
         meta.setDisplayName(ChatColor.BLUE + "" + ChatColor.BOLD + "Mochila Nivel 2");
         meta.setCustomModelData(2021);
-        meta.setItemModel(NamespacedKey.minecraft("blue_bundle"));
+
 
         List<String> lore = new ArrayList<>();
         lore.add(" ");
@@ -129,6 +137,8 @@ public class EconomyItems {
         meta.addEnchant(Enchantment.UNBREAKING, 1, true);
         meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
         makeUnstackable(meta);
+
+        ItemModels.apply(meta, "mochila_nivel_2");
         item.setItemMeta(meta);
         return item;
     }
@@ -139,7 +149,7 @@ public class EconomyItems {
 
         meta.setDisplayName(ChatColor.GOLD + "" + ChatColor.BOLD + "Mochila Nivel 3");
         meta.setCustomModelData(2022);
-        meta.setItemModel(NamespacedKey.minecraft("orange_bundle"));
+
 
         List<String> lore = new ArrayList<>();
         lore.add(" ");
@@ -152,6 +162,8 @@ public class EconomyItems {
         meta.addEnchant(Enchantment.UNBREAKING, 1, true);
         meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
         makeUnstackable(meta);
+
+        ItemModels.apply(meta, "mochila_nivel_3");
         item.setItemMeta(meta);
         return item;
     }
@@ -162,7 +174,7 @@ public class EconomyItems {
 
         meta.setDisplayName(ChatColor.RED + "" + ChatColor.BOLD + "Mochila Nivel 4");
         meta.setCustomModelData(2023);
-        meta.setItemModel(NamespacedKey.minecraft("red_bundle"));
+
 
         List<String> lore = new ArrayList<>();
         lore.add(" ");
@@ -175,6 +187,8 @@ public class EconomyItems {
         meta.addEnchant(Enchantment.UNBREAKING, 1, true);
         meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
         makeUnstackable(meta);
+
+        ItemModels.apply(meta, "mochila_nivel_4");
         item.setItemMeta(meta);
         return item;
     }
@@ -185,7 +199,7 @@ public class EconomyItems {
 
         meta.setDisplayName(ChatColor.DARK_PURPLE + "" + ChatColor.BOLD + "Mochila Nivel 5");
         meta.setCustomModelData(2024);
-        meta.setItemModel(NamespacedKey.minecraft("purple_bundle"));
+
 
         List<String> lore = new ArrayList<>();
         lore.add(" ");
@@ -198,6 +212,8 @@ public class EconomyItems {
         meta.addEnchant(Enchantment.UNBREAKING, 1, true);
         meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
         makeUnstackable(meta);
+
+        ItemModels.apply(meta, "mochila_nivel_5");
         item.setItemMeta(meta);
         return item;
     }
@@ -223,6 +239,8 @@ public class EconomyItems {
         meta.setRarity(ItemRarity.EPIC);
         meta.addEnchant(Enchantment.UNBREAKING, 1, true);
         meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+
+        ItemModels.apply(meta, "enderbag");
         item.setItemMeta(meta);
         return item;
     }
@@ -247,6 +265,8 @@ public class EconomyItems {
         meta.setRarity(ItemRarity.EPIC);
         meta.addEnchant(Enchantment.UNBREAKING, 1, true);
         meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+
+        ItemModels.apply(meta, "gancho");
         item.setItemMeta(meta);
         return item;
     }
@@ -272,6 +292,8 @@ public class EconomyItems {
         meta.setRarity(ItemRarity.EPIC);
         meta.addEnchant(Enchantment.UNBREAKING, 1, true);
         meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+
+        ItemModels.apply(meta, "panic_apple");
         item.setItemMeta(meta);
         return item;
     }
@@ -296,6 +318,8 @@ public class EconomyItems {
         meta.setRarity(ItemRarity.EPIC);
         meta.addEnchant(Enchantment.UNBREAKING, 1, true);
         meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+
+        ItemModels.apply(meta, "artefacto_nivel_1");
         item.setItemMeta(meta);
         return item;
     }
@@ -319,6 +343,8 @@ public class EconomyItems {
         meta.setRarity(ItemRarity.EPIC);
         meta.addEnchant(Enchantment.UNBREAKING, 1, true);
         meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+
+        ItemModels.apply(meta, "artefacto_nivel_2");
         item.setItemMeta(meta);
         return item;
     }

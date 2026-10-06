@@ -76,6 +76,7 @@ public class LifeCampfire implements Listener {
             PersistentDataContainer data = meta.getPersistentDataContainer();
             data.set(campfireKey, PersistentDataType.BYTE, (byte) 1);
 
+            ItemModels.apply(meta, "life_campfire");
             item.setItemMeta(meta);
         }
         return item;
@@ -105,6 +106,7 @@ public class LifeCampfire implements Listener {
             PersistentDataContainer data = meta.getPersistentDataContainer();
             data.set(fuelKey, PersistentDataType.BYTE, (byte) 1);
 
+            ItemModels.apply(meta, "fuel_campfire");
             item.setItemMeta(meta);
         }
         return item;

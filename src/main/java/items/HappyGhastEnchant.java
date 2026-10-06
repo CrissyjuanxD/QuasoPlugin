@@ -55,6 +55,7 @@ public class HappyGhastEnchant implements Listener {
 
             meta.setLore(lore);
             meta.getPersistentDataContainer().set(enchantKey, PersistentDataType.INTEGER, Math.min(level, 2));
+            ItemModels.apply(meta, "happy_ghast_enchant");
             book.setItemMeta(meta);
         }
         return book;

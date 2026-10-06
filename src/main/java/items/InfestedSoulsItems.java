@@ -40,6 +40,7 @@ public class InfestedSoulsItems {
             NamespacedKey key = new NamespacedKey(plugin, "invulnerable_item");
             meta.getPersistentDataContainer().set(key, PersistentDataType.BYTE, (byte) 1);
 
+            ItemModels.apply(meta, "alma_infested_skeleton");
             essence.setItemMeta(meta);
         }
         return essence;
@@ -65,6 +66,7 @@ public class InfestedSoulsItems {
             NamespacedKey key = new NamespacedKey(plugin, "invulnerable_item");
             meta.getPersistentDataContainer().set(key, PersistentDataType.BYTE, (byte) 1);
 
+            ItemModels.apply(meta, "alma_infested_ghast");
             essence.setItemMeta(meta);
         }
         return essence;
@@ -90,6 +92,7 @@ public class InfestedSoulsItems {
             NamespacedKey key = new NamespacedKey(plugin, "invulnerable_item");
             meta.getPersistentDataContainer().set(key, PersistentDataType.BYTE, (byte) 1);
 
+            ItemModels.apply(meta, "alma_infested_creeper");
             essence.setItemMeta(meta);
         }
         return essence;
@@ -115,6 +118,7 @@ public class InfestedSoulsItems {
             NamespacedKey key = new NamespacedKey(plugin, "invulnerable_item");
             meta.getPersistentDataContainer().set(key, PersistentDataType.BYTE, (byte) 1);
 
+            ItemModels.apply(meta, "alma_infested_cave_spider");
             essence.setItemMeta(meta);
         }
         return essence;

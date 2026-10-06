@@ -1,7 +1,5 @@
 package EffectListener;
 
-import org.bukkit.GameMode;
-import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -23,14 +21,8 @@ public class CorruptureEffect implements CustomEffect, Listener {
         this.plugin = plugin;
     }
 
-    // Solo se activa con Suerte nivel 100 (amplifier 99), que es la que da el plugin
     @Override
     public void applyEffect(Player player, int durationSeconds, int amplifier) {
-        if (amplifier < 99) {
-            removeEffect(player);
-            return;
-        }
-
         removeEffect(player);
 
         BukkitRunnable task = new BukkitRunnable() {
@@ -66,7 +58,7 @@ public class CorruptureEffect implements CustomEffect, Listener {
 
     @Override
     public PotionEffectType getTriggerEffectType() {
-        return PotionEffectType.LUCK;
+        return PotionEffectType.WEAVING;
     }
 
     @Override
@@ -74,18 +66,22 @@ public class CorruptureEffect implements CustomEffect, Listener {
         return playersWithEffect.contains(player.getUniqueId());
     }
 
-    // Con la corrupción no se pueden romper ni poner bloques, salvo spawners
+    @Override
+    public void cleanup() {
+        for (BukkitRunnable task : activeEffects.values()) {
+            task.cancel();
+        }
+        activeEffects.clear();
+        playersWithEffect.clear();
+    }
+
     @EventHandler
     public void onBlockBreak(BlockBreakEvent event) {
         Player player = event.getPlayer();
-        if (playersWithEffect.contains(player.getUniqueId())) {
 
-            if (player.getGameMode() == GameMode.CREATIVE) {
-                return;
-            }
+        if (playersWithEffect.contains(player.getUniqueId()) && player.getGameMode() != org.bukkit.GameMode.CREATIVE) {
 
-            Material blockType = event.getBlock().getType();
-            if (blockType == Material.SPAWNER || blockType == Material.TRIAL_SPAWNER) {
+            if (event.getBlock().getType().name().contains("SPAWNER")) {
                 return;
             }
 
@@ -97,17 +93,7 @@ public class CorruptureEffect implements CustomEffect, Listener {
     @EventHandler
     public void onBlockPlace(BlockPlaceEvent event) {
         Player player = event.getPlayer();
-        if (playersWithEffect.contains(player.getUniqueId())) {
-
-            if (player.getGameMode() == GameMode.CREATIVE) {
-                return;
-            }
-
-            Material blockType = event.getBlock().getType();
-            if (blockType == Material.SPAWNER || blockType == Material.TRIAL_SPAWNER) {
-                return;
-            }
-
+        if (playersWithEffect.contains(player.getUniqueId()) && player.getGameMode() != org.bukkit.GameMode.CREATIVE) {
             event.setCancelled(true);
             playCorruptionSounds(player);
         }

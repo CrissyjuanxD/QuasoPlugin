@@ -14,15 +14,22 @@ public class CustomEffectManager implements Listener {
     private final Map<PotionEffectType, CustomEffect> registeredEffects = new HashMap<>();
     private final Set<UUID> playersWithEffects = new HashSet<>();
 
+    // Registrar un efecto custom
     public void registerEffect(CustomEffect effect) {
         registeredEffects.put(effect.getTriggerEffectType(), effect);
     }
 
+    // Desregistrar un efecto
     public void unregisterEffect(PotionEffectType effectType) {
         registeredEffects.remove(effectType);
     }
 
-    // Activa o quita el efecto custom cuando al jugador le ponen o le quitan la poción que lo dispara
+    // Obtener un efecto registrado
+    public CustomEffect getEffect(PotionEffectType effectType) {
+        return registeredEffects.get(effectType);
+    }
+
+    // Listener para cuando un jugador obtiene un efecto de poción
     @EventHandler
     public void onPlayerPotionEffect(org.bukkit.event.entity.EntityPotionEffectEvent event) {
         if (!(event.getEntity() instanceof Player)) return;
@@ -38,10 +45,7 @@ public class CustomEffectManager implements Listener {
                     PotionEffect newEffect = event.getNewEffect();
                     if (newEffect != null) {
                         int duration = newEffect.getDuration() / 20;
-                        int amplifier = newEffect.getAmplifier();
-
-                        customEffect.applyEffect(player, duration, amplifier);
-
+                        customEffect.applyEffect(player, duration, newEffect.getAmplifier());
                         playersWithEffects.add(player.getUniqueId());
                     }
                     break;
@@ -51,7 +55,9 @@ public class CustomEffectManager implements Listener {
                     customEffect.removeEffect(player);
                     playersWithEffects.remove(player.getUniqueId());
                     break;
-                default: break;
+
+                default:
+                    break;
             }
         }
     }
@@ -59,42 +65,59 @@ public class CustomEffectManager implements Listener {
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event) {
         Player player = event.getPlayer();
+        // Remover todos los efectos custom del jugador que se va
         for (CustomEffect effect : registeredEffects.values()) {
             effect.removeEffect(player);
         }
         playersWithEffects.remove(player.getUniqueId());
     }
 
-    // Al entrar vuelve a activar los efectos custom si todavía tiene la poción
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
+        // Si el jugador se reconecta y tenía efectos de poción activos,
+        // reaplicar los efectos custom correspondientes
         Player player = event.getPlayer();
+
         for (PotionEffectType effectType : registeredEffects.keySet()) {
             if (player.hasPotionEffect(effectType)) {
                 PotionEffect potionEffect = player.getPotionEffect(effectType);
                 if (potionEffect != null) {
                     CustomEffect customEffect = registeredEffects.get(effectType);
                     int duration = potionEffect.getDuration() / 20;
-                    int amplifier = potionEffect.getAmplifier();
-
-                    customEffect.applyEffect(player, duration, amplifier);
+                    customEffect.applyEffect(player, duration, potionEffect.getAmplifier());
                     playersWithEffects.add(player.getUniqueId());
                 }
             }
         }
     }
 
+    // Aplicar efecto manualmente (útil para comandos)
     public void applyEffectManually(Player player, PotionEffectType effectType, int duration) {
+        applyEffectManually(player, effectType, duration, 0);
+    }
+
+    // Aplicar efecto manualmente con nivel específico (útil para comandos)
+    public void applyEffectManually(Player player, PotionEffectType effectType, int duration, int amplifier) {
         CustomEffect customEffect = registeredEffects.get(effectType);
         if (customEffect != null) {
-            customEffect.applyEffect(player, duration, 99);
+            customEffect.applyEffect(player, duration, amplifier);
         }
     }
 
+    // Remover efecto manualmente
     public void removeEffectManually(Player player, PotionEffectType effectType) {
         CustomEffect customEffect = registeredEffects.get(effectType);
         if (customEffect != null) {
             customEffect.removeEffect(player);
         }
+    }
+
+    // Limpiar todos los efectos (al desactivar el plugin)
+    public void cleanupAllEffects() {
+        for (CustomEffect effect : registeredEffects.values()) {
+            effect.cleanup();
+        }
+        registeredEffects.clear();
+        playersWithEffects.clear();
     }
 }

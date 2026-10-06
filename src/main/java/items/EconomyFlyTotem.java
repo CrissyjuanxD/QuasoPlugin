@@ -54,6 +54,7 @@ public class EconomyFlyTotem implements Listener {
             PersistentDataContainer data = meta.getPersistentDataContainer();
             data.set(flyTotemKey, PersistentDataType.BYTE, (byte) 1);
 
+            ItemModels.apply(meta, "flytotem");
             totem.setItemMeta(meta);
         }
         return totem;

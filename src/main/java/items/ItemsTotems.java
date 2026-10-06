@@ -38,6 +38,7 @@ public class ItemsTotems {
             meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
             meta.addEnchant(Enchantment.KNOCKBACK, 2, true);
 
+            ItemModels.apply(meta, "special_totem");
             totem.setItemMeta(meta);
         }
 
@@ -63,6 +64,7 @@ public class ItemsTotems {
             meta.setCustomModelData(100);
             meta.setRarity(ItemRarity.EPIC);
 
+            ItemModels.apply(meta, "cristal_hielo");
             item.setItemMeta(meta);
         }
 

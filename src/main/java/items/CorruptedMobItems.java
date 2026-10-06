@@ -17,10 +17,27 @@ public class CorruptedMobItems {
             meta.setCustomModelData(5);
             meta.setRarity(ItemRarity.EPIC);
 
+            ItemModels.apply(meta, "corrupted_meat");
             meat.setItemMeta(meta);
         }
 
         return meat;
     }
 
+    public static ItemStack createCorruptedSpiderEye() {
+        ItemStack spiderEye = new ItemStack(Material.SPIDER_EYE);
+        ItemMeta meta = spiderEye.getItemMeta();
+
+        if (meta != null) {
+            meta.setDisplayName(ChatColor.of("#8B008B") + "" + ChatColor.BOLD + "Ojo de Araña Corrupto");
+            meta.setCustomModelData(5);
+            meta.setRarity(ItemRarity.EPIC);
+
+            ItemModels.apply(meta, "corrupted_spider_eye");
+            spiderEye.setItemMeta(meta);
+        }
+
+        return spiderEye;
+
+    }
 }

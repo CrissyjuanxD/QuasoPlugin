@@ -15,7 +15,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.mozilla.javascript.JavaAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,9 +47,11 @@ public class DoubleLifeTotem implements Listener {
 
             meta.setCustomModelData(2);
 
+
             PersistentDataContainer data = meta.getPersistentDataContainer();
             data.set(usesKey, PersistentDataType.INTEGER, 2);
 
+            ItemModels.apply(meta, "doubletotem_2");
             totem.setItemMeta(meta);
         }
         return totem;
@@ -133,6 +134,7 @@ public class DoubleLifeTotem implements Listener {
         if (meta != null) {
             meta.setCustomModelData(1);
 
+
             meta.addEnchant(Enchantment.UNBREAKING, 1, true);
 
             List<String> lore = new ArrayList<>();
@@ -144,6 +146,7 @@ public class DoubleLifeTotem implements Listener {
             lore.add(ChatColor.GRAY + ChatColor.BOLD.toString() + "indicado.");
             meta.setLore(lore);
 
+            ItemModels.apply(meta, "doubletotem_1");
             totem.setItemMeta(meta);
         }
     }

@@ -54,6 +54,7 @@ public class EconomyIceTotem implements Listener {
             PersistentDataContainer data = meta.getPersistentDataContainer();
             data.set(iceTotemKey, PersistentDataType.BYTE, (byte) 1);
 
+            ItemModels.apply(meta, "icetotem");
             totem.setItemMeta(meta);
         }
         return totem;

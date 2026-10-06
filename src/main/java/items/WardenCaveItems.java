@@ -24,30 +24,26 @@ public class WardenCaveItems {
 
     // Cada bioma de la Warden Cave tiene su mineral y su fragmento, y cada uno va en la mejora de una pieza
     public enum Variant {
-        CIAN("Cian", "cian", "#3ad4d4", "de la Caverna Sculk", "Casco", "prismarine_shard", "prismarine_crystals", 705, 709),
-        VERDE("Verde", "verde", "#5fd16a", "del Pantano Profundo", "Botas", "emerald", "turtle_scute", 706, 710),
-        MORADO("Morado", "morado", "#b46be0", "del Abismo Flotante", "Peto", "amethyst_shard", "chorus_fruit", 707, 711),
-        GRIS("Gris", "gris", "#a7a7b0", "de las Ruinas de Ceniza", "Pantalón", "flint", "iron_nugget", 708, 712);
+        CIAN("Cian", "cian", "#3ad4d4", "de la Caverna Sculk", "Casco", 705, 709),
+        VERDE("Verde", "verde", "#5fd16a", "del Pantano Profundo", "Botas", 706, 710),
+        MORADO("Morado", "morado", "#b46be0", "del Abismo Flotante", "Peto", 707, 711),
+        GRIS("Gris", "gris", "#a7a7b0", "de las Ruinas de Ceniza", "Pantalón", 708, 712);
 
         private final String displayName;
         private final String id;
         private final String color;
         private final String biome;
         private final String piece;
-        private final String rawModel;
-        private final String fragmentModel;
         private final int rawModelData;
         private final int fragmentModelData;
 
         Variant(String displayName, String id, String color, String biome, String piece,
-                String rawModel, String fragmentModel, int rawModelData, int fragmentModelData) {
+                int rawModelData, int fragmentModelData) {
             this.displayName = displayName;
             this.id = id;
             this.color = color;
             this.biome = biome;
             this.piece = piece;
-            this.rawModel = rawModel;
-            this.fragmentModel = fragmentModel;
             this.rawModelData = rawModelData;
             this.fragmentModelData = fragmentModelData;
         }
@@ -68,6 +64,7 @@ public class WardenCaveItems {
     // Marca el item con su id para reconocerlo aunque cambien el nombre o el lore
     private static void mark(ItemMeta meta, String id) {
         meta.getPersistentDataContainer().set(ITEM_KEY, PersistentDataType.STRING, id);
+        ItemModels.apply(meta, id);
     }
 
     public static boolean isWardenCaveItem(ItemStack item) {
@@ -88,7 +85,6 @@ public class WardenCaveItems {
         if (meta != null) {
             meta.setDisplayName(ChatColor.of(variant.color) + "" + ChatColor.BOLD + "Mineral Crudo " + variant.displayName);
             meta.setCustomModelData(variant.rawModelData);
-            meta.setItemModel(NamespacedKey.minecraft(variant.rawModel));
             mark(meta, variant.rawId());
 
             List<String> lore = new ArrayList<>();
@@ -113,7 +109,6 @@ public class WardenCaveItems {
         if (meta != null) {
             meta.setDisplayName(ChatColor.of(variant.color) + "" + ChatColor.BOLD + "Fragmento Profundo " + variant.displayName);
             meta.setCustomModelData(variant.fragmentModelData);
-            meta.setItemModel(NamespacedKey.minecraft(variant.fragmentModel));
             mark(meta, variant.fragmentId());
 
             List<String> lore = new ArrayList<>();

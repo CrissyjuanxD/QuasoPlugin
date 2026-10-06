@@ -75,6 +75,8 @@ public class AmuletBloodM implements Listener {
             updateLore(meta, MAX_USOS);
 
             meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+
+            ItemModels.apply(meta, "amulet_bloodmoon");
             item.setItemMeta(meta);
         }
         return item;

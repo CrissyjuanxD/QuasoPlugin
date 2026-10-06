@@ -27,6 +27,9 @@ public class ItemManager {
     private final IceBowItem iceBowItem;
     private final HappyGhastEnchant happyGhastEnchant;
     private final ItemsEventos itemsEventos;
+    private final KeepInventoryLiquido keepInventoryLiquido;
+    private final EstatuaProtectora estatuaProtectora;
+    private final AmuletoUltimaEsperanza amuletoUltimaEsperanza;
     private final AmuletInvisibility amuletInvisibility;
     private final ExplosiveBow explosiveBow;
     private final InfestedSoulsItems infestedSoulsItems;
@@ -47,6 +50,9 @@ public class ItemManager {
         this.iceBowItem = new IceBowItem(plugin);
         this.happyGhastEnchant = new HappyGhastEnchant(plugin);
         this.itemsEventos = new ItemsEventos(plugin);
+        this.keepInventoryLiquido = new KeepInventoryLiquido(plugin);
+        this.estatuaProtectora = new EstatuaProtectora(plugin);
+        this.amuletoUltimaEsperanza = new AmuletoUltimaEsperanza(plugin);
         this.amuletInvisibility = new AmuletInvisibility(plugin);
         this.explosiveBow = new ExplosiveBow(plugin);
         this.infestedSoulsItems = new InfestedSoulsItems(plugin);
@@ -69,7 +75,9 @@ public class ItemManager {
                 "life_campfire", "fuel_campfire", "special_totem", "cristal_hielo", "arco_hielo",
                 "happy_ghast_enchant", "happy_ghast_enchant_2", "perla_infinita", "retorno_warden", "tarta_calabaza_mejorada", "bar_tequila", "bar_margarita",
                 "bar_mezcal", "bar_pulque", "bar_cerveza", "bar_ron", "bar_vodka", "bar_whisky",
-                "bar_sake", "bar_ginebra", "bar_azulito", "bar_michelada", "manzana_vida", "pluma_levitacion",
+                "bar_sake", "bar_ginebra", "bar_azulito", "bar_michelada", "manzana_vida", "pluma_levitacion", "pluma_levitacion_mejorada",
+                "keep_inventory_liquido", "estatua_protectora", "amuleto_ultima_esperanza",
+                "corrupted_spider_eye", "bloque_oro_apilado", "arco_hielo_jugador",
 
                 "amuleto_invisiblidad", "arco_nivel1", "arco_nivel2", "arco_nivel3", "alma_infested_skeleton",
                 "alma_infested_ghast", "alma_infested_creeper", "alma_infested_cave_spider", "energia_warden",
@@ -156,6 +164,13 @@ public class ItemManager {
             case "bar_michelada": item = CustomPotions.getMichelada(); break;
             case "manzana_vida": item = itemsEventos.createManzanaVida(); break;
             case "pluma_levitacion": item = itemsEventos.createPlumaLevitacion(); break;
+            case "pluma_levitacion_mejorada": item = itemsEventos.createPlumaLevitacionMejorada(); break;
+            case "keep_inventory_liquido": item = keepInventoryLiquido.createKeepInventoryLiquido(); break;
+            case "estatua_protectora": item = estatuaProtectora.createEstatuaProtectora(); break;
+            case "amuleto_ultima_esperanza": item = amuletoUltimaEsperanza.createAmuleto(); break;
+            case "corrupted_spider_eye": item = CorruptedMobItems.createCorruptedSpiderEye(); break;
+            case "bloque_oro_apilado": item = CorruptedGoldenApple.createApilateGoldBlock(); break;
+            case "arco_hielo_jugador": item = iceBowItem.createPlayerIceBow(); break;
 
             case "amuleto_invisiblidad": item = amuletInvisibility.createAmulet(); break;
             case "arco_nivel1": item = explosiveBow.createExplosiveBowLevel1(); break;

@@ -2,16 +2,12 @@ package StatueManager;
 
 import org.bukkit.ChatColor;
 import org.bukkit.NamespacedKey;
-import org.bukkit.Registry;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.potion.PotionEffectType;
-
-import java.util.Locale;
-import java.util.Map;
 
 public class StatueData {
 
@@ -27,23 +23,11 @@ public class StatueData {
     private static final NamespacedKey KEY_VISIBLE = new NamespacedKey("viciont", "statue_visible");
     private static final NamespacedKey KEY_INVULNERABLE = new NamespacedKey("viciont", "statue_invulnerable");
 
+    // Nueva Key para el Anti-Grief
     private static final NamespacedKey KEY_ANTI_GRIEF = new NamespacedKey("viciont", "statue_anti_grief");
-
-    private static final Map<String, String> NOMBRES_VIEJOS = Map.of(
-            "slow", "slowness",
-            "fast_digging", "haste",
-            "slow_digging", "mining_fatigue",
-            "increase_damage", "strength",
-            "heal", "instant_health",
-            "harm", "instant_damage",
-            "jump", "jump_boost",
-            "confusion", "nausea",
-            "damage_resistance", "resistance"
-    );
 
     private PersistentDataContainer container;
 
-    // Todo se guarda en el PDC, así que sirve igual para el item y para la estatua ya puesta
     public StatueData(ArmorStand stand) {
         this.container = stand.getPersistentDataContainer();
     }
@@ -67,11 +51,13 @@ public class StatueData {
         setRadiusY(3.0);
         setHpMax(10);
         setHpCurrent(10);
-        setGlowColor(ChatColor.WHITE);
-        setEffect(PotionEffectType.SPEED, 0);
+        setGlowColor(ChatColor.WHITE); // Default
+        setEffect(PotionEffectType.SPEED, 0); // Esto automáticamente desactiva el AntiGrief
         setVisible(true);
         setInvulnerable(false);
     }
+
+    // --- GETTERS Y SETTERS ---
 
     public void setRadiusX(double val) { container.set(KEY_RAD_X, PersistentDataType.DOUBLE, val); }
     public double getRadiusX() { return container.getOrDefault(KEY_RAD_X, PersistentDataType.DOUBLE, 5.0); }
@@ -97,12 +83,12 @@ public class StatueData {
         catch (Exception e) { return ChatColor.WHITE; }
     }
 
-    // Poner un efecto saca el modo anti-grief (no pueden estar los dos)
+    // Al asignar un efecto de poción, se desactiva el AntiGrief por seguridad.
     public void setEffect(PotionEffectType type, int amp) {
         if (type != null) {
-            container.set(KEY_EFF_TYPE, PersistentDataType.STRING, type.getKey().toString());
+            container.set(KEY_EFF_TYPE, PersistentDataType.STRING, type.getName());
             container.set(KEY_EFF_AMP, PersistentDataType.INTEGER, amp);
-            setAntiGrief(false);
+            setAntiGrief(false); // Excluyente
         } else {
             container.set(KEY_EFF_TYPE, PersistentDataType.STRING, "NONE");
             container.set(KEY_EFF_AMP, PersistentDataType.INTEGER, 0);
@@ -112,19 +98,7 @@ public class StatueData {
     public PotionEffectType getEffectType() {
         String name = container.getOrDefault(KEY_EFF_TYPE, PersistentDataType.STRING, "NONE");
         if (name.equals("NONE")) return null;
-        return buscarEfecto(name);
-    }
-
-    // Busca el efecto por su key y traduce los nombres viejos que tenían las estatuas guardadas antes (INCREASE_DAMAGE, JUMP...)
-    public static PotionEffectType buscarEfecto(String nombre) {
-        String clave = nombre.toLowerCase(Locale.ROOT);
-        clave = NOMBRES_VIEJOS.getOrDefault(clave, clave);
-        NamespacedKey key = NamespacedKey.fromString(clave);
-        return key == null ? null : Registry.MOB_EFFECT.get(key);
-    }
-
-    public static String nombreEfecto(PotionEffectType type) {
-        return type.getKey().getKey().toUpperCase(Locale.ROOT);
+        return PotionEffectType.getByName(name);
     }
 
     public void setEffectAmplifier(int amp) { container.set(KEY_EFF_AMP, PersistentDataType.INTEGER, amp); }
@@ -136,10 +110,11 @@ public class StatueData {
     public void setInvulnerable(boolean val) { container.set(KEY_INVULNERABLE, PersistentDataType.BYTE, val ? (byte)1 : (byte)0); }
     public boolean isInvulnerable() { return container.getOrDefault(KEY_INVULNERABLE, PersistentDataType.BYTE, (byte)0) == 1; }
 
-    // El anti-grief no da efectos, así que al activarlo se borra el efecto
+    // --- NUEVO: Anti Grief ---
     public void setAntiGrief(boolean val) {
         container.set(KEY_ANTI_GRIEF, PersistentDataType.BYTE, val ? (byte)1 : (byte)0);
         if (val) {
+            // Si activamos Anti-Grief, borramos el efecto de poción automáticamente
             container.set(KEY_EFF_TYPE, PersistentDataType.STRING, "NONE");
             container.set(KEY_EFF_AMP, PersistentDataType.INTEGER, 0);
         }

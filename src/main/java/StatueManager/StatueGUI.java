@@ -3,6 +3,8 @@ package StatueManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.World;
+import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -19,37 +21,43 @@ import java.util.*;
 public class StatueGUI implements Listener {
 
     private final JavaPlugin plugin;
+    private final StatueManager statueManager;
+
     private final Map<UUID, ItemStack> editors = new HashMap<>();
     private final Map<UUID, String> chatInputMode = new HashMap<>();
 
-    public StatueGUI(JavaPlugin plugin) {
+    public StatueGUI(JavaPlugin plugin, StatueManager statueManager) {
         this.plugin = plugin;
+        this.statueManager = statueManager;
     }
 
-    // Guarda qué item se está editando y muestra sus valores actuales
     public void openConfigGUI(Player player, ItemStack item) {
         editors.put(player.getUniqueId(), item);
         Inventory inv = Bukkit.createInventory(null, 36, ChatColor.DARK_AQUA + "Configurar Estatua");
 
         StatueData data = new StatueData(item.getItemMeta());
 
+        // Fila 1
         inv.setItem(10, createIcon(Material.BEACON, "Radio (Ancho)", "" + data.getRadiusX()));
         inv.setItem(11, createIcon(Material.IRON_BARS, "Radio (Alto)", "" + data.getRadiusY()));
 
         String colorName = (data.getGlowColor() == null) ? "DESACTIVADO" : data.getGlowColor().name();
         inv.setItem(12, createIcon(Material.GLOW_INK_SAC, "Color Glowing", colorName));
 
+        // Fila 2 (Tipo de Estatua: Efecto vs AntiGrief)
         if (data.isAntiGrief()) {
             inv.setItem(19, createIcon(Material.SHIELD, "Modo: ANTI-GRIEF", "Protege bloques de explosiones y mobs"));
             inv.setItem(20, createIcon(Material.BARRIER, "Nivel Efecto", "N/A (Modo Anti-Grief activo)"));
         } else {
-            String effectName = data.getEffectType() != null ? StatueData.nombreEfecto(data.getEffectType()) : "NINGUNO";
+            String effectName = data.getEffectType() != null ? data.getEffectType().getName() : "NINGUNO";
             inv.setItem(19, createIcon(Material.POTION, "Modo: EFECTO DE POCIÓN", effectName + " (Click para cambiar / escribir)"));
             inv.setItem(20, createIcon(Material.BREWING_STAND, "Nivel Efecto", "Nivel: " + (data.getEffectAmplifier() + 1)));
         }
 
+        // Botón para alternar entre AntiGrief y Poción
         inv.setItem(28, createIcon(Material.COMMAND_BLOCK, "Cambiar Tipo de Estatua", "Click para alternar (Poción <-> AntiGrief)"));
 
+        // Fila 2 (Propiedades)
         inv.setItem(15, createIcon(Material.ANVIL, "Vida (Golpes)", "" + data.getHpMax()));
 
         inv.setItem(23, createIcon(data.isVisible() ? Material.ENDER_EYE : Material.ENDER_PEARL,
@@ -58,6 +66,7 @@ public class StatueGUI implements Listener {
         inv.setItem(24, createIcon(data.isInvulnerable() ? Material.BEDROCK : Material.GLASS,
                 "Invulnerabilidad", data.isInvulnerable() ? "§aINDESTRUCTIBLE" : "§cVULNERABLE"));
 
+        // Guardar
         inv.setItem(31, createIcon(Material.NETHER_STAR, "GUARDAR Y SALIR", "Click para aplicar cambios"));
 
         player.openInventory(inv);
@@ -72,7 +81,6 @@ public class StatueGUI implements Listener {
         return item;
     }
 
-    // Los números se piden por chat; el color, el efecto, la visibilidad y la invulnerabilidad se cambian con click
     @EventHandler
     public void onInventoryClick(InventoryClickEvent e) {
         if (!e.getView().getTitle().equals(ChatColor.DARK_AQUA + "Configurar Estatua")) return;
@@ -90,25 +98,26 @@ public class StatueGUI implements Listener {
         boolean save = false;
 
         switch (e.getSlot()) {
-            case 10:
+            case 10: // Radio X
                 p.closeInventory();
                 p.sendMessage(ChatColor.GREEN + "Escribe el radio X en el chat:");
                 chatInputMode.put(p.getUniqueId(), "RAD_X");
                 break;
-            case 11:
+            case 11: // Radio Y
                 p.closeInventory();
                 p.sendMessage(ChatColor.GREEN + "Escribe el radio Y en el chat:");
                 chatInputMode.put(p.getUniqueId(), "RAD_Y");
                 break;
-            case 12:
-                ChatColor[] colors = {ChatColor.RED, ChatColor.BLUE, ChatColor.GREEN, ChatColor.YELLOW, ChatColor.WHITE, ChatColor.GOLD, ChatColor.LIGHT_PURPLE, ChatColor.AQUA};
+            case 12: // Color Cycle + OFF
+                ChatColor[] colors = {ChatColor.RED, ChatColor.BLUE, ChatColor.GREEN, ChatColor.YELLOW,
+                        ChatColor.WHITE, ChatColor.GOLD, ChatColor.LIGHT_PURPLE, ChatColor.AQUA};
                 ChatColor current = data.getGlowColor();
 
                 if (current == null) {
                     data.setGlowColor(colors[0]);
                 } else {
                     int idx = -1;
-                    for(int i=0; i<colors.length; i++) if(colors[i] == current) idx = i;
+                    for (int i = 0; i < colors.length; i++) if (colors[i] == current) idx = i;
 
                     if (idx == colors.length - 1) {
                         data.setGlowColor(null);
@@ -118,13 +127,14 @@ public class StatueGUI implements Listener {
                 }
                 save = true;
                 break;
-            case 19:
+            case 19: // Efecto Cycle + CHAT (Solo si no es Anti-Grief)
                 if (data.isAntiGrief()) {
                     p.sendMessage(ChatColor.RED + "Desactiva el modo Anti-Grief para añadir efectos.");
                     break;
                 }
 
-                PotionEffectType[] types = {PotionEffectType.SPEED, PotionEffectType.STRENGTH, PotionEffectType.REGENERATION, PotionEffectType.RESISTANCE, PotionEffectType.FIRE_RESISTANCE};
+                PotionEffectType[] types = {PotionEffectType.SPEED, PotionEffectType.STRENGTH,
+                        PotionEffectType.REGENERATION, PotionEffectType.RESISTANCE, PotionEffectType.FIRE_RESISTANCE};
 
                 if (e.getClick().isRightClick()) {
                     p.closeInventory();
@@ -134,21 +144,23 @@ public class StatueGUI implements Listener {
                     PotionEffectType curEff = data.getEffectType();
                     int idy = 0;
                     if (curEff != null) {
-                        for(int i=0; i<types.length; i++) if(types[i].equals(curEff)) idy = i;
+                        for (int i = 0; i < types.length; i++) if (types[i].equals(curEff)) idy = i;
                     }
                     PotionEffectType nextEff = types[(idy + 1) % types.length];
                     data.setEffect(nextEff, data.getEffectAmplifier());
                     save = true;
+                    // Reiniciar partículas en estatuas vivas que usen este item
+                    refreshLiveStatues(handItem);
                 }
                 break;
-            case 20:
+            case 20: // Amplifier (Solo si no es AntiGrief)
                 if (data.isAntiGrief()) break;
 
                 p.closeInventory();
                 p.sendMessage(ChatColor.GREEN + "Escribe el NIVEL del efecto (1, 2, 3...):");
                 chatInputMode.put(p.getUniqueId(), "EFF_AMP");
                 break;
-            case 28:
+            case 28: // Alternar Modo
                 if (data.isAntiGrief()) {
                     data.setAntiGrief(false);
                     data.setEffect(PotionEffectType.SPEED, 0);
@@ -157,20 +169,20 @@ public class StatueGUI implements Listener {
                 }
                 save = true;
                 break;
-            case 15:
+            case 15: // Vida
                 p.closeInventory();
                 p.sendMessage(ChatColor.GREEN + "Escribe la vida máxima:");
                 chatInputMode.put(p.getUniqueId(), "HP");
                 break;
-            case 23:
+            case 23: // Visibilidad Toggle
                 data.setVisible(!data.isVisible());
                 save = true;
                 break;
-            case 24:
+            case 24: // Invulnerabilidad Toggle
                 data.setInvulnerable(!data.isInvulnerable());
                 save = true;
                 break;
-            case 31:
+            case 31: // GUARDAR
                 p.closeInventory();
                 p.sendMessage(ChatColor.GREEN + "Configuración guardada.");
                 updateLore(handItem);
@@ -184,7 +196,6 @@ public class StatueGUI implements Listener {
         }
     }
 
-    // Lee el valor escrito en el chat y vuelve a abrir el menú
     @EventHandler
     public void onChat(AsyncPlayerChatEvent e) {
         Player p = e.getPlayer();
@@ -211,12 +222,14 @@ public class StatueGUI implements Listener {
                 if (mode.equals("EFF_AMP")) {
                     int lvl = Integer.parseInt(msg);
                     data.setEffectAmplifier(Math.max(0, lvl - 1));
+                    refreshLiveStatues(item);
                 }
                 if (mode.equals("EFF_NAME")) {
-                    PotionEffectType type = StatueData.buscarEfecto(msg.trim());
+                    PotionEffectType type = PotionEffectType.getByName(msg.toUpperCase());
                     if (type != null) {
                         data.setEffect(type, data.getEffectAmplifier());
-                        p.sendMessage(ChatColor.GREEN + "Efecto establecido: " + StatueData.nombreEfecto(type));
+                        p.sendMessage(ChatColor.GREEN + "Efecto establecido: " + type.getName());
+                        refreshLiveStatues(item);
                     } else {
                         p.sendMessage(ChatColor.RED + "Efecto no encontrado. Usa nombres en inglés (ej: BLINDNESS, LUCK).");
                     }
@@ -229,7 +242,28 @@ public class StatueGUI implements Listener {
         });
     }
 
-    // Al guardar pone en el lore un resumen de la configuración
+    /**
+     * Recorre todos los ArmorStands activos en el mundo y reinicia sus partículas
+     * y nombre si fueron desplegados desde este item (mismo UUID de item no aplica;
+     * simplemente refrescamos todas las estatuas registradas para que actualicen
+     * su estado de partículas al siguiente ciclo).
+     *
+     * En la práctica la GUI solo edita el item en mano — la estatua ya colocada
+     * no recibe estos cambios en tiempo real (el jugador debe recolocarla), pero
+     * si la estatua YA ESTÁ COLOCADA y el manager la tiene registrada, la refrescamos.
+     */
+    private void refreshLiveStatues(ItemStack sourceItem) {
+        for (World world : Bukkit.getWorlds()) {
+            for (org.bukkit.entity.Entity ent : world.getEntities()) {
+                if (ent instanceof ArmorStand && StatueData.isStatue((ArmorStand) ent)) {
+                    ArmorStand stand = (ArmorStand) ent;
+                    statueManager.updateStatueName(stand);
+                    statueManager.startParticleTask(stand); // reinicia partículas
+                }
+            }
+        }
+    }
+
     private void updateLore(ItemStack item) {
         ItemMeta meta = item.getItemMeta();
         StatueData data = new StatueData(meta);
@@ -240,7 +274,9 @@ public class StatueGUI implements Listener {
         if (data.isAntiGrief()) {
             lore.add(ChatColor.GRAY + "Modo: " + ChatColor.AQUA + "ANTI-GRIEF ZONA");
         } else {
-            String eff = data.getEffectType() != null ? StatueData.nombreEfecto(data.getEffectType()) + " " + (data.getEffectAmplifier()+1) : "N/A";
+            String eff = data.getEffectType() != null
+                    ? data.getEffectType().getName() + " " + (data.getEffectAmplifier() + 1)
+                    : "N/A";
             lore.add(ChatColor.GRAY + "Modo: " + ChatColor.AQUA + eff);
         }
 

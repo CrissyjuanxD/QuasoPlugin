@@ -65,6 +65,8 @@ public class AmuletInvisibility implements Listener {
             PersistentDataContainer data = meta.getPersistentDataContainer();
             data.set(amuletKey, PersistentDataType.BYTE, (byte) 1);
 
+
+            ItemModels.apply(meta, "amuleto_invisibilidad");
             item.setItemMeta(meta);
         }
         return item;

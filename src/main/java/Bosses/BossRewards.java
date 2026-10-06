@@ -32,7 +32,7 @@ public class BossRewards implements Listener {
     }
 
     private static final Map<String, Reward> REWARDS = Map.of(
-            "abeja_reina", new Reward("la Abeja Reina", new int[]{15, 10, 5}, 2),
+            "abeja_reina", new Reward("la Abeja Floral", new int[]{15, 10, 5}, 2),
             "ultra_warden", new Reward("el Ultra Warden", new int[]{20, 5}, 1),
             "ender_dragon", new Reward("el Ender Dragon", new int[]{15, 5}, 1),
             "rey_ender", new Reward("el Rey Ender", new int[]{25, 5}, 1),

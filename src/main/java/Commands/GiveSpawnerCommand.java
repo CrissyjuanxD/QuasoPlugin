@@ -151,7 +151,7 @@ public class GiveSpawnerCommand implements CommandExecutor, TabCompleter {
                     break;
                 case "queenbee":
                     displayName = ChatColor.GOLD + "" + ChatColor.BOLD + "Spawner de Queen Bee";
-                    description = "Genera la poderosa Abeja Reina";
+                    description = "Genera la poderosa Abeja Floral";
                     customModelData = 1005;
                     break;
                 case "hellishbee":

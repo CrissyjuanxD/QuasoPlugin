@@ -80,7 +80,7 @@ public class OneChanges implements Listener, Change {
 
     @Override
     public String description() {
-        return "Día 1: mobs corruptos y del End, raids modificadas, BloodMoon, altar de la Abeja Reina y la carne corrupta";
+        return "Día 1: mobs corruptos y del End, raids modificadas, BloodMoon, altar de la Abeja Floral y la carne corrupta";
     }
 
     @Override
@@ -329,7 +329,7 @@ public class OneChanges implements Listener, Change {
         }
     }
 
-    // El altar de la Abeja Reina necesita Bad Omen y queda con 3 horas de cooldown
+    // El altar de la Abeja Floral necesita Bad Omen y queda con 3 horas de cooldown
     @EventHandler
     public void onAltarActivate(AltarActivateEvent event) {
         if (!isApplied) return;
@@ -341,7 +341,7 @@ public class OneChanges implements Listener, Change {
             if (player.getPotionEffect(PotionEffectType.BAD_OMEN) != null) {
 
                 if (isQueenBeeSpawned(loc)) {
-                    player.sendMessage(net.md_5.bungee.api.ChatColor.RED + "۞ Ya hay una Reina viva cerca.");
+                    player.sendMessage(net.md_5.bungee.api.ChatColor.RED + "۞ Ya hay una Abeja Floral viva cerca.");
                     return;
                 }
 
@@ -357,7 +357,8 @@ public class OneChanges implements Listener, Change {
 
     private boolean isQueenBeeSpawned(Location altarLocation) {
         for (Entity entity : Objects.requireNonNull(altarLocation.getWorld()).getNearbyEntities(altarLocation, 50, 50, 50)) {
-            if (entity instanceof Bee bee && "Abeja Reina".equals(bee.getCustomName())) {
+            if (entity instanceof Bee bee && bee.getPersistentDataContainer().has(
+                    new NamespacedKey(plugin, "is_queen_bee"), org.bukkit.persistence.PersistentDataType.BYTE)) {
                 return true;
             }
         }

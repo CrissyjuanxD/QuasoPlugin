@@ -15,8 +15,8 @@ public class Mission12 extends BaseMission {
 
     public Mission12(JavaPlugin plugin, MissionHandler handler) {
         super(plugin, handler, 12, "Cazador de Abejas", MissionDifficulty.DIFICIL, 18,
-                "Mata a la Abeja Reina. Usa /bosstp para ir a su dungeon e interactúa con el panal del altar.");
-        flag("reina", "Abeja Reina derrotada");
+                "Mata a la Abeja Floral. Usa /bosstp para ir a su dungeon e interactúa con el panal del altar.");
+        flag("reina", "Abeja Floral derrotada");
     }
 
     @Override

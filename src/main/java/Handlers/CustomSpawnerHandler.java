@@ -740,7 +740,7 @@ public class CustomSpawnerHandler implements Listener {
             case "iceologer": return "Iceologer";
             case "corruptedzombie": return "Corrupted Zombie";
             case "corruptedspider": return "Corrupted Spider";
-            case "queenbee": return "Abeja Reina";
+            case "queenbee": return "Abeja Floral";
             case "hellishbee": return "Abeja Infernal";
             case "infestedbee": return "Infested Bee";
             case "guardianblaze": return "Guardian Blaze";

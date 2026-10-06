@@ -196,7 +196,8 @@ public final class MissionUtils implements Listener {
         String custom = entity.getPersistentDataContainer().get(key("boss_id"), PersistentDataType.STRING);
         if (custom != null) return custom;
         if (entity.getPersistentDataContainer().has(key("is_queen_bee"), PersistentDataType.BYTE)) return "abeja_reina";
-        if (entity.getCustomName() != null && entity.getCustomName().contains("Abeja Reina")) return "abeja_reina";
+        if (entity.getCustomName() != null && (entity.getCustomName().contains("Abeja Reina")
+                || "Abeja Floral".equals(net.md_5.bungee.api.ChatColor.stripColor(entity.getCustomName())))) return "abeja_reina";
         return switch (entity.getType()) {
             case ENDER_DRAGON -> "ender_dragon";
             case WITHER -> "wither";

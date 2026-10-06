@@ -16,7 +16,7 @@ public class Mission98 extends BaseMission {
     private static final Map<String, String> BOSSES = new LinkedHashMap<>();
 
     static {
-        BOSSES.put("abeja_reina", "Abeja Reina");
+        BOSSES.put("abeja_reina", "Abeja Floral");
         BOSSES.put("ultra_warden", "Ultra Warden");
         BOSSES.put("ender_dragon", "Ender Dragon");
         BOSSES.put("rey_ender", "Rey Ender");
@@ -24,7 +24,7 @@ public class Mission98 extends BaseMission {
 
     public Mission98(JavaPlugin plugin, MissionHandler handler) {
         super(plugin, handler, 98, "Ultimátum", MissionDifficulty.MUY_DIFICIL, 25,
-                "Mata a la Abeja Reina, al Ultra Warden, al Ender Dragon y al Rey Ender en un mismo día.");
+                "Mata a la Abeja Floral, al Ultra Warden, al Ender Dragon y al Rey Ender en un mismo día.");
         BOSSES.forEach(this::flag);
     }
 

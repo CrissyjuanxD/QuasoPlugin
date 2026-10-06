@@ -35,7 +35,7 @@ public class BossChunkListener implements Listener {
         }
     }
 
-    // Si se carga una Abeja Reina guardada en el mundo le vuelve a crear su handler
+    // Si se carga una Abeja Floral guardada en el mundo le vuelve a crear su handler
     private void checkAndRestoreBoss(Entity entity) {
         if (!(entity instanceof Bee bee)) return;
 
@@ -58,7 +58,7 @@ public class BossChunkListener implements Listener {
             if (bee.isValid() && !bee.isDead()) {
                 if (!QueenBeeHandler.ACTIVE_BOSSES.containsKey(bee.getUniqueId())) {
                     new QueenBeeHandler(plugin, bee);
-                    plugin.getLogger().info("Abeja Reina reactivada y IA forzada en: " + bee.getLocation());
+                    plugin.getLogger().info("Abeja Floral reactivada y IA forzada en: " + bee.getLocation());
                 }
             }
         }, 1L);

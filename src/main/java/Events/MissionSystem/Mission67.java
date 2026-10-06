@@ -14,8 +14,8 @@ public class Mission67 extends BaseMission {
 
     public Mission67(JavaPlugin plugin, MissionHandler handler) {
         super(plugin, handler, 67, "Reina otra vez", MissionDifficulty.DIFICIL, 18,
-                "Mata a la Abeja Reina 5 veces.");
-        counter("reinas", "Abejas Reina", 5);
+                "Mata a la Abeja Floral 5 veces.");
+        counter("reinas", "Abejas Florales", 5);
     }
 
     @Override

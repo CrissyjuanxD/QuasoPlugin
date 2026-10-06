@@ -1,7 +1,7 @@
 package imp.crissyjuanxd;
 
 import Armors.WardenArmor;
-import BloodMoon.BloodMoon;
+import imp.crissyjuanxd.bloodmoon.BloodMoon;
 import Bosses.BossChunkListener;
 import Bosses.BossRewards;
 import Bosses.InfestedWardenLairs;

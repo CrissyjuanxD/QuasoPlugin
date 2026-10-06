@@ -1,4 +1,4 @@
-package BloodMoon;
+package imp.crissyjuanxd.bloodmoon;
 
 import org.bukkit.World;
 import org.bukkit.configuration.file.YamlConfiguration;

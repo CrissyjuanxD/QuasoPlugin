@@ -1,6 +1,6 @@
 # BloodMoon dentro de Quaso 26.2
 
-El paquete `BloodMoon` y su clase principal `BloodMoon` integran la lógica de
+El paquete `imp.crissyjuanxd.bloodmoon` y su clase principal `BloodMoon` integran la lógica de
 BloodMoon 0.8.1 de SpectralMemories, recuperada del JAR que había en `libs`.
 Conserva el ciclo por mundo, noches permanentes, avisos, barra nocturna, clima,
 sonidos, efectos de combate, bloqueo de camas, experiencia y botín configurable,
@@ -85,3 +85,22 @@ Para comprobarlo allí: `/bloodmoon start`, generar una horda sin amuleto, activ
 el amuleto con diamantes y repetir la horda; después `/bloodmoon stop`. Verificar
 las misiones, los fragmentos del Día 1 y los mensajes. Probar también reiniciar
 con la noche activa y generar hordas en zonas estrechas.
+
+## Compilación en Windows e IntelliJ
+
+Las clases usan `imp.crissyjuanxd.bloodmoon` y los recursos siguen en `bloodmoon`.
+La antigua separación `BloodMoon` / `bloodmoon` no funcionaba al compilar en
+Windows: el sistema fusionaba las carpetas y el JAR podía guardar las clases
+como `bloodmoon/BloodMoon.class`, aunque Java buscara `BloodMoon/BloodMoon.class`.
+
+Después de actualizar esta corrección, ejecutar `mvn clean verify` con Java 25 y
+usar el JAR de `target`. Si se utiliza el artefacto de IntelliJ, ejecutar antes
+**Build → Rebuild Project** y reconstruir el artefacto para descartar las clases
+antiguas. Se puede mantener el nombre `QuasoPlugin-26.2.jar` en el servidor;
+el nombre del archivo no cambia la carga de clases. Reemplazar el JAR anterior
+y reiniciar el servidor.
+
+La prueba `PluginArtifactTest` comprueba que las carpetas compiladas no colisionen
+por mayúsculas y carga la clase nativa desde un JAR construido simulando las
+rutas de Windows. Esta prueba reprodujo el `ClassNotFoundException` original
+antes de corregir el paquete.

@@ -26,7 +26,7 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
-import BloodMoon.BloodMoonActuator;
+import imp.crissyjuanxd.bloodmoon.BloodMoonActuator;
 
 import java.util.*;
 

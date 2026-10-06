@@ -30,9 +30,9 @@ import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
-import BloodMoon.BloodMoon;
-import BloodMoon.BloodMoonHordeEvent;
-import BloodMoon.LocaleReader;
+import imp.crissyjuanxd.bloodmoon.BloodMoon;
+import imp.crissyjuanxd.bloodmoon.BloodMoonHordeEvent;
+import imp.crissyjuanxd.bloodmoon.LocaleReader;
 
 import java.util.ArrayList;
 import java.util.HashMap;

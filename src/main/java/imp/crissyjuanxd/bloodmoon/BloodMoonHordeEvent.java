@@ -1,4 +1,4 @@
-package BloodMoon;
+package imp.crissyjuanxd.bloodmoon;
 
 import org.bukkit.Location;
 import org.bukkit.entity.Player;

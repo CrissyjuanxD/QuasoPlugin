@@ -27,7 +27,8 @@ class ItemModelsTest {
         assertEquals("minecraft:statue_pr", config.getString("modelos.estatua_protectora"));
         assertEquals("minecraft:amuleto_esperanza", config.getString("modelos.amuleto_ultima_esperanza"));
         assertNotEquals(config.getString("modelos.doubletotem_1"), config.getString("modelos.doubletotem_2"));
-        assertNotEquals(config.getString("modelos.mineral_crudo_cian"), config.getString("modelos.mineral_crudo_verde"));
+        assertFalse(config.contains("modelos.mineral_crudo_cian"));
+        assertFalse(config.contains("modelos.mineral_crudo_verde"));
         assertFalse(config.contains("modelos.gui_panel"));
         verify(plugin).saveConfig();
 
@@ -51,6 +52,28 @@ class ItemModelsTest {
             config.set("modelos.enderbag", "Modelo INVALIDO");
             ItemModels.apply(meta, "enderbag");
             verify(meta).setItemModel(NamespacedKey.minecraft("ender_bag"));
+        }
+    }
+
+    @Test
+    void removesGeneratedModelsWithoutTexturesAndKeepsCustomOnes() {
+        QuasoPlugin plugin = mock(QuasoPlugin.class);
+        YamlConfiguration config = new YamlConfiguration();
+        config.set("modelos.amulet_bloodmoon", "minecraft:amulet_bloodmoon");
+        config.set("modelos.monedero", "quaso:monedero_con_textura");
+        when(plugin.getConfig()).thenReturn(config);
+        ItemModels.load(plugin);
+        assertTrue(config.getBoolean("modelos.vanilla_fallback_migrado"));
+        assertFalse(config.contains("modelos.amulet_bloodmoon"));
+        assertFalse(config.contains("modelos.carta_5000"));
+        assertEquals("quaso:monedero_con_textura", config.getString("modelos.monedero"));
+        ItemMeta meta = mock(ItemMeta.class);
+        try (MockedStatic<QuasoPlugin> current = mockStatic(QuasoPlugin.class)) {
+            current.when(QuasoPlugin::getInstance).thenReturn(plugin);
+            ItemModels.apply(meta, "amulet_bloodmoon");
+            verify(meta).setItemModel(isNull());
+            ItemModels.apply(meta, "monedero");
+            verify(meta).setItemModel(new NamespacedKey("quaso", "monedero_con_textura"));
         }
     }
 }

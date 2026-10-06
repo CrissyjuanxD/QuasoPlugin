@@ -115,7 +115,7 @@ public class EconomyItems {
         meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
         makeUnstackable(meta);
 
-        ItemModels.apply(meta, "mochila_nivel_1");
+        meta.setItemModel(NamespacedKey.minecraft("lime_bundle"));
         item.setItemMeta(meta);
         return item;
     }
@@ -140,7 +140,7 @@ public class EconomyItems {
         meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
         makeUnstackable(meta);
 
-        ItemModels.apply(meta, "mochila_nivel_2");
+        meta.setItemModel(NamespacedKey.minecraft("blue_bundle"));
         item.setItemMeta(meta);
         return item;
     }
@@ -165,7 +165,7 @@ public class EconomyItems {
         meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
         makeUnstackable(meta);
 
-        ItemModels.apply(meta, "mochila_nivel_3");
+        meta.setItemModel(NamespacedKey.minecraft("orange_bundle"));
         item.setItemMeta(meta);
         return item;
     }
@@ -190,7 +190,7 @@ public class EconomyItems {
         meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
         makeUnstackable(meta);
 
-        ItemModels.apply(meta, "mochila_nivel_4");
+        meta.setItemModel(NamespacedKey.minecraft("red_bundle"));
         item.setItemMeta(meta);
         return item;
     }
@@ -215,7 +215,7 @@ public class EconomyItems {
         meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
         makeUnstackable(meta);
 
-        ItemModels.apply(meta, "mochila_nivel_5");
+        meta.setItemModel(NamespacedKey.minecraft("purple_bundle"));
         item.setItemMeta(meta);
         return item;
     }
@@ -268,7 +268,7 @@ public class EconomyItems {
         meta.addEnchant(Enchantment.UNBREAKING, 1, true);
         meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
 
-        ItemModels.apply(meta, "enderbag");
+        meta.setItemModel(NamespacedKey.minecraft("ender_bag"));
         item.setItemMeta(meta);
         return item;
     }
@@ -294,7 +294,7 @@ public class EconomyItems {
         meta.addEnchant(Enchantment.UNBREAKING, 1, true);
         meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
 
-        ItemModels.apply(meta, "gancho");
+        meta.setItemModel(NamespacedKey.minecraft("gancho"));
         item.setItemMeta(meta);
         return item;
     }
@@ -347,7 +347,7 @@ public class EconomyItems {
         meta.addEnchant(Enchantment.UNBREAKING, 1, true);
         meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
 
-        ItemModels.apply(meta, "artefacto_nivel_1");
+        meta.setItemModel(NamespacedKey.minecraft("rep_hierro"));
         item.setItemMeta(meta);
         return item;
     }
@@ -372,7 +372,7 @@ public class EconomyItems {
         meta.addEnchant(Enchantment.UNBREAKING, 1, true);
         meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
 
-        ItemModels.apply(meta, "artefacto_nivel_2");
+        meta.setItemModel(NamespacedKey.minecraft("rep_oro"));
         item.setItemMeta(meta);
         return item;
     }

@@ -128,7 +128,7 @@ public class AmuletoUltimaEsperanza implements Listener {
             data.set(amuletoKey, PersistentDataType.BYTE, (byte) 1);
 
 
-            ItemModels.apply(meta, "amuleto_ultima_esperanza");
+            meta.setItemModel(NamespacedKey.minecraft("amuleto_esperanza"));
             item.setItemMeta(meta);
         }
         return item;
@@ -365,7 +365,7 @@ public class AmuletoUltimaEsperanza implements Listener {
         ItemStack totem = new ItemStack(Material.TOTEM_OF_UNDYING);
         ItemMeta meta = totem.getItemMeta();
         if (meta != null) {
-            ItemModels.apply(meta, "amuleto_ultima_esperanza");
+            meta.setItemModel(NamespacedKey.minecraft("amuleto_esperanza"));
             totem.setItemMeta(meta);
         }
 

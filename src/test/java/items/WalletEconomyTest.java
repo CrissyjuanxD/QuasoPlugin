@@ -134,7 +134,7 @@ class WalletEconomyTest {
     }
 
     @Test
-    void currenciesExplainWalletStorageAndWalletHasItsOwnItemModel() {
+    void currenciesExplainWalletStorageAndUntexturedWalletKeepsItsVanillaIcon() {
         QuasoPlugin currentPlugin = mock(QuasoPlugin.class);
         when(currentPlugin.getConfig()).thenReturn(new YamlConfiguration());
         try (MockedStatic<RegistryAccess> registry = mockStatic(RegistryAccess.class);
@@ -155,7 +155,7 @@ class WalletEconomyTest {
                 verify(currency.getItemMeta()).setLore(lore.capture());
                 assertTrue(lore.getValue().stream().anyMatch(line -> line.contains("Solo se puede almacenar en un monedero.")));
             }
-            verify(wallet.getItemMeta()).setItemModel(NamespacedKey.minecraft("monedero"));
+            verify(wallet.getItemMeta()).setItemModel(isNull());
             assertEquals(3, stacks.constructed().size());
         }
     }

@@ -51,7 +51,7 @@ public class DoubleLifeTotem implements Listener {
             PersistentDataContainer data = meta.getPersistentDataContainer();
             data.set(usesKey, PersistentDataType.INTEGER, 2);
 
-            ItemModels.apply(meta, "doubletotem_2");
+            meta.setItemModel(NamespacedKey.minecraft("totem_doble2"));
             totem.setItemMeta(meta);
         }
         return totem;
@@ -146,7 +146,7 @@ public class DoubleLifeTotem implements Listener {
             lore.add(ChatColor.GRAY + ChatColor.BOLD.toString() + "indicado.");
             meta.setLore(lore);
 
-            ItemModels.apply(meta, "doubletotem_1");
+            meta.setItemModel(NamespacedKey.minecraft("totem_doble1"));
             totem.setItemMeta(meta);
         }
     }

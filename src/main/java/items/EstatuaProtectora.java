@@ -115,7 +115,7 @@ public class EstatuaProtectora implements Listener {
             data.set(itemKey, PersistentDataType.BYTE, (byte) 1);
 
 
-            ItemModels.apply(meta, "estatua_protectora");
+            meta.setItemModel(NamespacedKey.minecraft("statue_pr"));
             item.setItemMeta(meta);
         }
         return item;

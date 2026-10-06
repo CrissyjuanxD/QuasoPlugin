@@ -8,13 +8,23 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Set;
 
 // En la 26.2 el custom model data ya no cambia la textura: cada item usa un item model.
 // Los nombres van en config.yml (modelos.<clave>) para poner los del resource pack sin recompilar;
-// Los ítems custom usan IDs únicos; el resource pack debe definir assets/<namespace>/items/<id>.json.
+// Los IDs sin archivo en el resource pack se ven morados: hasta que exista un
+// modelo, el ítem usa el aspecto vanilla de su material.
 // Se conserva CustomModelData en los ítems antiguos que todavía lo usan como identificador.
 public final class ItemModels {
     private static final Map<String, String> DEFAULTS = new LinkedHashMap<>();
+    private static final String FALLBACK_MIGRATED = "modelos.vanilla_fallback_migrado";
+    private static final Set<String> EXISTING_MODELS = Set.of(
+            "mision_completada", "mision_pendiente", "mision_bloqueada", "ficha_mision",
+            "libro_misiones", "retorno_warden", "amuleto_inmortalidad", "amuleto_ultima_esperanza",
+            "keep_inventory_liquido", "estatua_protectora", "doubletotem_1", "doubletotem_2",
+            "manzana_vida", "pluma_levitacion", "pluma_levitacion_mejorada", "mochila_nivel_1",
+            "mochila_nivel_2", "mochila_nivel_3", "mochila_nivel_4", "mochila_nivel_5",
+            "enderbag", "gancho", "artefacto_nivel_1", "artefacto_nivel_2");
 
     static {
         DEFAULTS.put("mision_completada", "minecraft:lime_banner");
@@ -160,7 +170,22 @@ public final class ItemModels {
     public static void load(JavaPlugin plugin) {
         FileConfiguration config = plugin.getConfig();
         boolean changed = false;
+        if (!config.getBoolean(FALLBACK_MIGRATED, false)) {
+            // El JAR anterior añadió automáticamente modelos que aún no existen.
+            // Solo quita esos valores exactos; conserva los IDs personalizados.
+            for (Map.Entry<String, String> entry : DEFAULTS.entrySet()) {
+                if (EXISTING_MODELS.contains(entry.getKey())) continue;
+                String path = "modelos." + entry.getKey();
+                if (entry.getValue().equals(config.getString(path))) {
+                    config.set(path, null);
+                    changed = true;
+                }
+            }
+            config.set(FALLBACK_MIGRATED, true);
+            changed = true;
+        }
         for (Map.Entry<String, String> entry : DEFAULTS.entrySet()) {
+            if (!EXISTING_MODELS.contains(entry.getKey())) continue;
             String path = "modelos." + entry.getKey();
             if (!config.isString(path)) {
                 config.set(path, entry.getValue());
@@ -171,12 +196,16 @@ public final class ItemModels {
     }
 
     public static void apply(ItemMeta meta, String key) {
-        String value = QuasoPlugin.getInstance().getConfig().getString("modelos." + key, DEFAULTS.get(key));
+        FileConfiguration config = QuasoPlugin.getInstance().getConfig();
+        String value = config.getString("modelos." + key);
+        if (value == null && EXISTING_MODELS.contains(key)) value = DEFAULTS.get(key);
+        if (!config.getBoolean(FALLBACK_MIGRATED, false) && !EXISTING_MODELS.contains(key)
+                && value != null && value.equals(DEFAULTS.get(key))) value = null;
         NamespacedKey model = value != null ? NamespacedKey.fromString(value) : null;
-        if (model == null) {
+        if (value != null && model == null) {
             QuasoPlugin.getInstance().getLogger().warning("El item model '" + value + "' de modelos." + key + " no es válido.");
-            model = NamespacedKey.fromString(DEFAULTS.get(key));
+            model = EXISTING_MODELS.contains(key) ? NamespacedKey.fromString(DEFAULTS.get(key)) : null;
         }
-        if (model != null) meta.setItemModel(model);
+        meta.setItemModel(model);
     }
 }

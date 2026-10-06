@@ -56,7 +56,7 @@ public class AmuletInmortal implements Listener {
             data.set(amuletKey, PersistentDataType.BYTE, (byte) 1);
 
 
-            ItemModels.apply(meta, "amuleto_inmortalidad");
+            meta.setItemModel(NamespacedKey.minecraft("immunity"));
             item.setItemMeta(meta);
         }
         return item;

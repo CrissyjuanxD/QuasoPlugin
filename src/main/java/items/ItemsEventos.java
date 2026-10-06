@@ -96,7 +96,7 @@ public class ItemsEventos implements Listener {
             PersistentDataContainer data = meta.getPersistentDataContainer();
             data.set(manzanaKey, PersistentDataType.BYTE, (byte) 1);
 
-            ItemModels.apply(meta, "manzana_vida");
+            meta.setItemModel(NamespacedKey.minecraft("manzana_vida"));
             item.setItemMeta(meta);
         }
         return item;
@@ -123,7 +123,7 @@ public class ItemsEventos implements Listener {
             PersistentDataContainer data = meta.getPersistentDataContainer();
             data.set(plumaKey, PersistentDataType.BYTE, (byte) 1);
 
-            ItemModels.apply(meta, "pluma_levitacion");
+            meta.setItemModel(NamespacedKey.minecraft("pluma_levi"));
             item.setItemMeta(meta);
         }
         return item;
@@ -156,7 +156,7 @@ public class ItemsEventos implements Listener {
             PersistentDataContainer data = meta.getPersistentDataContainer();
             data.set(plumaMejoradaKey, PersistentDataType.BYTE, (byte) 1);
 
-            ItemModels.apply(meta, "pluma_levitacion_mejorada");
+            meta.setItemModel(NamespacedKey.minecraft("pluma_levi_mejorada"));
             item.setItemMeta(meta);
         }
         return item;

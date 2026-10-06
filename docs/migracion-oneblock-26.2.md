@@ -31,16 +31,25 @@ flechas en sus posiciones y sigue bloqueando clics y arrastres de objetos.
 
 ## Item models y resource pack
 
-`ItemModels.load` añade las entradas que falten bajo `modelos` en el `config.yml`
-del servidor, sin sustituir los valores configurados. Cada fábrica de ítems
-asigna el modelo; también se aplica a drops, recetas, libros, armaduras,
-estatuas y objetos de eventos. Los modelos del casino y de logros se incluyen.
+Los ítems que ya tenían modelo en OneBlock llaman directamente a
+`meta.setItemModel(NamespacedKey.minecraft("nombre"))`, con el mismo nombre que
+usa ese plugin. Los demás ítems muestran su material vanilla mientras no tengan
+una textura. `ItemModels.load` retira de `config.yml` solo los identificadores
+inventados que la versión anterior escribió automáticamente; conserva valores
+personalizados, que se pueden usar cuando se añada una textura nueva.
+Los nombres de OneBlock ahora están fijados directamente en esas clases, como
+en el código de origen; sus antiguas entradas `modelos` ya no cambian el nombre.
 
 El resource pack debe definir los IDs configurados. Por ejemplo,
 `minecraft:keep_inv_liquido` corresponde a
-`assets/minecraft/items/keep_inv_liquido.json`. Un namespace propio como
-`quaso:keep_inv_liquido` se puede asignar en `modelos.keep_inventory_liquido`.
+`assets/minecraft/items/keep_inv_liquido.json`. Para un ítem de Quaso que aún
+no tenga textura, se puede asignar, por ejemplo, `quaso:monedero` en
+`modelos.monedero` cuando el pack incluya ese archivo.
 El repositorio no contiene las texturas ni los modelos del resource pack.
+`NamespacedKey.fromString("minecraft:immunity")` y
+`NamespacedKey.minecraft("immunity")` dan la misma clave. La clave indica qué
+archivo debe cargar el cliente; si ese archivo falta en su pack, Minecraft
+mostrará la textura morada incluso usando el prefijo `minecraft:`.
 
 Se conservan los IDs ya utilizados en OneBlock:
 
@@ -56,12 +65,14 @@ Se conservan los IDs ya utilizados en OneBlock:
 | `enderbag` | `minecraft:ender_bag` |
 | `gancho` | `minecraft:gancho` |
 | `artefacto_nivel_1` / `artefacto_nivel_2` | `minecraft:rep_hierro` / `minecraft:rep_oro` |
+| `manzana_vida` | `minecraft:manzana_vida` |
+| `mochila_nivel_1` a `mochila_nivel_5` | `minecraft:lime_bundle`, `blue_bundle`, `orange_bundle`, `red_bundle`, `purple_bundle` |
 
-Las cartas del blackjack usan `minecraft:carta_5000` hasta `minecraft:carta_5051`.
-Los IDs de todos los modelos se encuentran en `items/ItemModels.java` y aparecen
-en el config del servidor al iniciar el plugin. CustomModelData se conserva
-donde el código lo utiliza para reconocer ítems antiguos; el aspecto lo define
-`item_model`.
+Las cartas del blackjack y otros modelos todavía sin textura usan su aspecto
+vanilla. Los ítems ya guardados mantienen su componente hasta que se creen de
+nuevo; este cambio afecta a los nuevos ítems que genera el plugin.
+CustomModelData se conserva donde el código lo utiliza para reconocer ítems
+antiguos; el aspecto lo define `item_model`.
 
 ## Validación
 

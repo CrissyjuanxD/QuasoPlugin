@@ -69,7 +69,7 @@ public class KeepInventoryLiquido implements Listener {
             data.set(liquidoKey, PersistentDataType.BYTE, (byte) 1);
 
 
-            ItemModels.apply(meta, "keep_inventory_liquido");
+            meta.setItemModel(NamespacedKey.minecraft("keep_inv_liquido"));
             item.setItemMeta(meta);
         }
 

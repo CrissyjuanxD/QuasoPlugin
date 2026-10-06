@@ -29,7 +29,6 @@ public class EffectPreventionListener implements Listener {
         BLOCKED_EFFECTS.add(PotionEffectType.WEAVING);
         BLOCKED_EFFECTS.add(PotionEffectType.LUCK);
         BLOCKED_EFFECTS.add(PotionEffectType.WIND_CHARGED);
-        BLOCKED_EFFECTS.add(PotionEffectType.UNLUCK);
     }
 
     // Revisa los efectos custom y los del tipo base de la poción

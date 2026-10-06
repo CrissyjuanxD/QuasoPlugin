@@ -43,7 +43,7 @@ import java.util.UUID;
  * AMULETO DE LA ÚLTIMA ESPERANZA.
  *
  * Te saca de donde estés y te manda a tu último spawn, pero el viaje se paga:
- * llegas con Debilidad II, Veneno II, Ceguera II y Confusión II.
+ * llegas con Debilidad II, Veneno II y Ceguera II.
  *
  * Al usarlo se forma una esfera de partículas alrededor del jugador durante
  * 2.5 segundos; al completarse, teletransporta (misma logica que el Life Totem),
@@ -68,7 +68,6 @@ public class AmuletoUltimaEsperanza implements Listener {
     private static final int DUR_DEBILIDAD = 20 * 30;
     private static final int DUR_VENENO = 20 * 30;
     private static final int DUR_CEGUERA = 20 * 30;
-    private static final int DUR_CONFUSION = 20 * 30;
 
     /** Azules pastel, blancos y dorados. */
     private static final Color[] COLORES = {
@@ -117,7 +116,6 @@ public class AmuletoUltimaEsperanza implements Listener {
             lore.add(ChatColor.GRAY + "> " + ChatColor.of("#B9C7E0") + "Debilidad II");
             lore.add(ChatColor.GRAY + "> " + ChatColor.of("#A9D9A0") + "Veneno II");
             lore.add(ChatColor.GRAY + "> " + ChatColor.of("#8F8F8F") + "Ceguera II");
-            lore.add(ChatColor.GRAY + "> " + ChatColor.of("#C9A0D9") + "Confusión II");
             lore.add("");
             lore.add(ChatColor.of("#8A8A8A") + "El ritual tarda 2.5 segundos.");
 
@@ -387,8 +385,6 @@ public class AmuletoUltimaEsperanza implements Listener {
         player.addPotionEffect(new PotionEffect(PotionEffectType.POISON, DUR_VENENO, 1, false, true, true));
         player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, DUR_CEGUERA, 1, false, true, true));
 
-        // Confusión = efecto custom del plugin, montado sobre UNLUCK.
-        player.addPotionEffect(new PotionEffect(PotionEffectType.UNLUCK, DUR_CONFUSION, 1, false, false, true));
 
         player.sendMessage(ChatColor.of("#A8DFFF") + "" + ChatColor.BOLD + "۞ "
                 + ChatColor.of("#CDE8FF") + "El amuleto te ha devuelto a tu último spawn"

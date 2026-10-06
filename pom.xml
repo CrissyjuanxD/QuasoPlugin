@@ -45,14 +45,6 @@
             <version>5.20.0</version>
             <scope>test</scope>
         </dependency>
-        <!-- API del shader de confusión; instalar ViciontMediaPlugin en el servidor. -->
-        <dependency>
-            <groupId>com.viciontmedia</groupId>
-            <artifactId>ViciontMediaPlugin</artifactId>
-            <version>1.2.0</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/libs/ViciontMediaPlugin.jar</systemPath>
-        </dependency>
         <!-- Paper ya trae Adventure, Gson, Guava, SnakeYAML y bungeecord-chat -->
         <dependency>
             <groupId>io.papermc.paper</groupId>

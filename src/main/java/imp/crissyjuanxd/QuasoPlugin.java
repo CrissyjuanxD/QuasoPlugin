@@ -10,7 +10,6 @@ import Commands.*;
 import EffectListener.ImmunityEffect;
 import EffectListener.KeepInventoryEffect;
 import EffectListener.TotemEffectRestorer;
-import EffectListener.ConfusionEffect;
 import EffectListener.CorruptureEffect;
 import EffectListener.CustomEffectManager;
 import EffectListener.EffectPreventionListener;
@@ -443,12 +442,10 @@ public class QuasoPlugin extends JavaPlugin implements Listener {
 
         this.effectManager = new CustomEffectManager();
 
-        ConfusionEffect confusionEffect = new ConfusionEffect(this);
         CorruptureEffect corruptureEffect = new CorruptureEffect(this);
         ImmunityEffect immunityEffect = new ImmunityEffect(this);
         KeepInventoryEffect keepInventoryEffect = new KeepInventoryEffect(this);
 
-        effectManager.registerEffect(confusionEffect);
         effectManager.registerEffect(corruptureEffect);
         effectManager.registerEffect(immunityEffect);
         effectManager.registerEffect(keepInventoryEffect);
@@ -814,5 +811,4 @@ public class QuasoPlugin extends JavaPlugin implements Listener {
     public StructureManager getStructureManager() { return structureManager; }
 
 }
-
 

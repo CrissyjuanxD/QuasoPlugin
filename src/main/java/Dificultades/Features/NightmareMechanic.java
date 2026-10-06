@@ -167,7 +167,6 @@ public class NightmareMechanic implements Listener {
         if (player != null) {
             player.removePotionEffect(PotionEffectType.DARKNESS);
             player.removePotionEffect(PotionEffectType.WEAVING);
-            player.removePotionEffect(PotionEffectType.UNLUCK);
             player.removePotionEffect(PotionEffectType.WIND_CHARGED);
 
             player.sendMessage(ChatColor.RED + "۞ La pesadilla ha terminado... " +
@@ -233,14 +232,13 @@ public class NightmareMechanic implements Listener {
         }
     }
 
-    // Oscuridad y weaving siempre, mala suerte desde el nivel 2 y wind charged en el nivel 3
+    // Oscuridad y weaving siempre, wind charged en el nivel 3
     private void applyNightmareEffects(Player player, int level) {
         int amplifierWind = 1;
         int durationTicks = MAX_DURATION_SECONDS * 20;
 
         player.removePotionEffect(PotionEffectType.DARKNESS);
         player.removePotionEffect(PotionEffectType.WEAVING);
-        player.removePotionEffect(PotionEffectType.UNLUCK);
         player.removePotionEffect(PotionEffectType.WIND_CHARGED);
 
         player.addPotionEffect(new PotionEffect(
@@ -260,17 +258,6 @@ public class NightmareMechanic implements Listener {
                 true,
                 true
         ));
-
-        if (level >= 2) {
-            player.addPotionEffect(new PotionEffect(
-                    PotionEffectType.UNLUCK,
-                    durationTicks,
-                    0,
-                    false,
-                    true,
-                    true
-            ));
-        }
 
         if (level >= 3) {
             player.addPotionEffect(new PotionEffect(

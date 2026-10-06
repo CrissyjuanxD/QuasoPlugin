@@ -22,8 +22,7 @@ public class TotemEffectRestorer implements Listener {
     private static final Set<PotionEffectType> CUSTOM_EFFECTS = Set.of(
             PotionEffectType.WEAVING,      // Corrupture
             PotionEffectType.LUCK,         // Corrupción
-            PotionEffectType.WIND_CHARGED, // Eco Muerto
-            PotionEffectType.UNLUCK        // Confusión
+            PotionEffectType.WIND_CHARGED  // Eco Muerto
     );
 
     public TotemEffectRestorer(Plugin plugin) {

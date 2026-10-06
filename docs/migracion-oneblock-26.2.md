@@ -5,9 +5,7 @@ La migración toma como referencia OneBlockPlugin `fe27648` (master).
 ## Probar en el servidor
 
 Usar Java 25 y Paper 26.2. Quaso conserva sus integraciones con EliteMobs,
-FastAsyncWorldEdit y BloodMoon. Instalar también `libs/ViciontMediaPlugin.jar`
-como plugin del servidor: el efecto de confusión usa su API de shaders,
-igual que OneBlock. El shader requiere el mod ViciontMedia en el cliente.
+FastAsyncWorldEdit y BloodMoon.
 
 Los nuevos ítems se pueden obtener con `/giveqp <ítem> [cantidad] [jugador]`:
 
@@ -20,8 +18,8 @@ Los nuevos ítems se pueden obtener con `/giveqp <ítem> [cantidad] [jugador]`:
 - `corrupted_spider_eye`, `bloque_oro_apilado`, `arco_hielo_jugador`.
 
 El amuleto de inmortalidad ahora aplica inmunidad total durante 30 segundos.
-Los efectos custom se restauran después del uso de tótems. La confusión usa el
-shader de OneBlock y la corrupción permite romper spawners.
+Los efectos custom se restauran después del uso de tótems. La corrupción permite
+romper spawners.
 
 `/givestatue` sigue entregando una estatua. También admite `give`, `clone` y
 `debug`; `/statue` es un alias. Las estatuas incorporan partículas, Anti-Grief,
@@ -68,4 +66,4 @@ donde el código lo utiliza para reconocer ítems antiguos; el aspecto lo define
 
 `mvn clean verify` con Java 25 compila y ejecuta las pruebas de los modelos y
 de la protección de la GUI de misiones. La prueba dentro de Minecraft debe
-confirmar shaders, interacciones, tumbas, estatuas y la apariencia con el pack.
+confirmar interacciones, tumbas, estatuas y la apariencia con el pack.

@@ -270,5 +270,5 @@ commands:
     permission: viciont_hardcore3.command.tumbas
     permission-message: No tienes permiso para usar este comando.
 
-depend: [EliteMobs, ViciontMediaPlugin]
+depend: [EliteMobs]
 softdepend: [FastAsyncWorldEdit, BloodMoon]

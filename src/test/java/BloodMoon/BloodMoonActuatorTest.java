@@ -255,11 +255,11 @@ class BloodMoonActuatorTest {
             assertFalse(actuator.StartBloodMoon());
         }
     }
-    @Test void fixedDawnDoesNotEndTheEventOrResetItsDurationWhenReloaded() {
+    @Test void fixedNightDoesNotEndTheEventOrResetItsDurationWhenReloaded() {
         try (var singleton = mockStatic(BloodMoon.class)) {
             singleton.when(BloodMoon::GetInstance).thenReturn(manager);
             assertTrue(actuator.StartBloodMoon());
-            verify(world).setFullTime(23000L);
+            verify(world).setFullTime(19000L);
             verify(manager).setDayClockPaused(world, true);
             when(world.getTime()).thenReturn(23000L);
             when(world.getGameTime()).thenReturn(2000L);

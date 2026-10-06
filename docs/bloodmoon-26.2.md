@@ -32,9 +32,10 @@ Estos valores se pueden cambiar por mundo. Los jugadores en creativo o
 espectador no se seleccionan como objetivos. Se conserva el formato de
 recompensas ponderadas y comandos `;s`, `;p`, `;f` del sistema original.
 
-La BloodMoon comienza de noche y fija el cielo en el amanecer de 23000 ticks.
+La BloodMoon comienza de noche y fija el cielo en 19000 ticks.
 Su contador independiente conserva la duración restante de la noche y devuelve
-el movimiento del tiempo al terminar. `PermanentBloodMoon` la activa cada noche.
+el movimiento del tiempo al terminar, desde el amanecer de 23000 ticks.
+`PermanentBloodMoon` la activa cada noche.
 El cielo y la niebla carmesí ligera tienen transiciones de 10 segundos. El rojo
 se mezcla al 80 % y la intensidad visual de la tormenta se reduce al 60 % para
 que el filtro gris no oculte el rojo ni vuelva invisible la luna, conservando

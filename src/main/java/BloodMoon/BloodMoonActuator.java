@@ -103,7 +103,7 @@ public final class BloodMoonActuator implements Listener {
         startedAtGameTime = world.getGameTime();
         remainingAtStart = Math.min(remaining, BloodMoonCycle.NIGHT_END - BloodMoonCycle.NIGHT_START);
         controlsDayClock = manager.setDayClockPaused(world, true);
-        if (controlsDayClock) world.setFullTime(activeDay * 24000 + BloodMoonCycle.NIGHT_END);
+        if (controlsDayClock) world.setFullTime(activeDay * 24000 + BloodMoonCycle.FROZEN_TIME);
         originalSpawnLimit = world.getSpawnLimit(SpawnCategory.MONSTER);
         controlsWeather = config().GetThunderingConfig();
         runCommands(config().GetPreBloodMoonCommands());
@@ -126,6 +126,8 @@ public final class BloodMoonActuator implements Listener {
         if (!active) return;
         active = false;
         if (controlsDayClock) {
+            // Termina al amanecer; evita volver a iniciar esa misma noche en modo permanente.
+            if (notify) world.setTime(BloodMoonCycle.NIGHT_END);
             manager.setDayClockPaused(world, false);
             controlsDayClock = false;
         }

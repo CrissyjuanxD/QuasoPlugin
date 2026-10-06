@@ -1,11 +1,12 @@
 # Cielo y tormenta de BloodMoon en 26.2
 
 La BloodMoon se activa al llegar la noche (13000 ticks). Al empezar coloca el
-mundo en el amanecer de 23000 ticks y pausa únicamente `minecraft:overworld`:
-el cielo conserva esa luz durante todo el evento. Un contador independiente
+mundo en la noche de 19000 ticks y pausa únicamente `minecraft:overworld`:
+el cielo conserva esa hora durante todo el evento. Un contador independiente
 basado en ticks del servidor mantiene la duración restante de la noche (10000
 ticks, unos 8 minutos y 20 segundos, si empieza a las 13000). Al agotarse,
-termina el evento y reanuda el reloj del día desde ese amanecer. Los fades usan
+termina el evento, lleva el mundo al amanecer de 23000 ticks y reanuda el reloj.
+Los fades usan
 su propio reloj; no se desactiva `advance_time`, que también los congelaría.
 
 `/bloodmoon start` inicia una noche completa; `/bloodmoon stop` la termina.
@@ -79,7 +80,7 @@ Después de actualizar el JAR, reinicia otra vez si Quaso avisa de que ha copiad
 una nueva versión del datapack: sus registros se leen al arrancar Minecraft.
 `/bloodmoon reload` recarga la configuración y los mensajes, pero no sustituye
 ese reinicio. Los mundos excluidos conservan su reloj en 0; una BloodMoon
-persistida se reanuda en el mismo día, también en su amanecer fijo, con los
+persistida se reanuda en el mismo día, también en su hora fija, con los
 ticks pendientes guardados en `estado.yml`.
 
 Las flechas de los mensajes son `►` en gris. Las respuestas privadas a comandos

@@ -19,7 +19,7 @@ final class BloodMoonDayClock {
         var paper = settings == null ? null : settings.getPaperConfig();
         if (paper != null && paper.getBoolean("time.affects-all-worlds", false)) {
             if (paused && !sharedClockNoticeShown) {
-                plugin.getLogger().warning("El amanecer fijo de BloodMoon requiere time.affects-all-worlds: false en Paper.");
+                plugin.getLogger().warning("La hora fija de BloodMoon requiere time.affects-all-worlds: false en Paper.");
                 sharedClockNoticeShown = true;
             }
             return false;

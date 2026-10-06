@@ -4,6 +4,7 @@ package BloodMoon;
 public final class BloodMoonCycle {
     public static final int NIGHT_START = 13000;
     public static final int NIGHT_END = 23000;
+    public static final int FROZEN_TIME = 19000;
     private long nextNight;
     private long warnedDay = Long.MIN_VALUE;
     private long lastDay;

@@ -2,6 +2,7 @@ package Casino;
 
 import Events.MissionSystem.MissionTriggerEvent;
 import items.EconomyItems;
+import items.EconomyItemsFunctions;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.*;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -136,7 +137,9 @@ public class BlackJack implements Listener {
     }
 
     private void openBlackJack(Player player, Location tableLoc) {
-        Inventory inv = Bukkit.createInventory(null, 54, title);
+        CasinoInventoryHolder holder = new CasinoInventoryHolder(tokenSlot);
+        Inventory inv = Bukkit.createInventory(holder, 54, title);
+        holder.setInventory(inv);
         setupGUI(inv, player);
         player.openInventory(inv);
         player.setMetadata("blackjack_loc", new org.bukkit.metadata.FixedMetadataValue(plugin, tableLoc));
@@ -223,9 +226,8 @@ public class BlackJack implements Listener {
         if (isPlaying.getOrDefault(id, false)) return;
 
         ItemStack bet = inv.getItem(tokenSlot);
-        ItemStack token = EconomyItems.createVithiumToken();
 
-        if (bet == null || !bet.isSimilar(token)) {
+        if (bet == null || !EconomyItemsFunctions.isDinoFicha(bet)) {
             player.sendMessage(ChatColor.of("#FFB3BA") + "۞ ¡Coloca DinoFichas para apostar!");
             return;
         }
@@ -489,7 +491,7 @@ public class BlackJack implements Listener {
             }
             ItemStack cursor = e.getCursor();
             if (cursor != null && cursor.getType() != Material.AIR) {
-                if (cursor.isSimilar(EconomyItems.createVithiumToken())) {
+                if (EconomyItemsFunctions.isDinoFicha(cursor)) {
                     e.setCancelled(false);
                 } else {
                     p.sendMessage(ChatColor.of("#FFB3BA") + "۞ Solo se aceptan DinoFichas.");

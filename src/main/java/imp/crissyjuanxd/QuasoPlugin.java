@@ -32,6 +32,8 @@ import ShopSystem.*;
 import StatueManager.*;
 import SistemaTumbas.*;
 import items.MochilaCommand;
+import Gui.dinocoins.DinoCoinsManager;
+import Gui.dinocoins.DinoCoinsCommand;
 import Dificultades.CustomMobs.*;
 import Dificultades.Features.*;
 import Events.AchievementParty.AchievementCommands;
@@ -113,6 +115,7 @@ public class QuasoPlugin extends JavaPlugin implements Listener {
     private DoubleLifeTotem doubleLifeTotemHandler;
     private NormalTotemHandler normalTotemHandler;
     private EconomyItemsFunctions economyItemsFunctions;
+    private DinoCoinsManager dinoCoinsManager;
     private EconomyIceTotem economyIceTotem;
     private EconomyFlyTotem economyFlyTotem;
     private excavatorItem ExcavatorItem;
@@ -216,6 +219,9 @@ public class QuasoPlugin extends JavaPlugin implements Listener {
         Bukkit.getConsoleSender().sendMessage(
                 ChatColor.translateAlternateColorCodes('&',
                         Prefix + "&aha sido deshabilitado!, &eVersion: " + Version));
+
+        if (economyItemsFunctions != null) economyItemsFunctions.shutdown();
+        if (dinoCoinsManager != null) dinoCoinsManager.shutdown();
 
         if (nightmareMechanic != null) {
             nightmareMechanic.onDisableNightmare();
@@ -338,6 +344,10 @@ public class QuasoPlugin extends JavaPlugin implements Listener {
 
         getCommand("mochilas").setExecutor(new MochilaCommand(economyItemsFunctions));
         getCommand("delmochilas").setExecutor(new MochilaCommand(economyItemsFunctions));
+        dinoCoinsManager = new DinoCoinsManager(this, databaseManager, economyItemsFunctions);
+        DinoCoinsCommand coinsCommand = new DinoCoinsCommand(dinoCoinsManager);
+        getCommand("dinocoins").setExecutor(coinsCommand);
+        getCommand("dinocoins").setTabCompleter(coinsCommand);
     }
 
     private void initMissionSystem() {
@@ -811,4 +821,3 @@ public class QuasoPlugin extends JavaPlugin implements Listener {
     public StructureManager getStructureManager() { return structureManager; }
 
 }
-

@@ -157,6 +157,11 @@ commands:
     usage: /mochilas <jugador>
     permission: viciont_hardcore3.command.mochilas
     permission-message: No tienes permiso para usar este comando.
+  dinocoins:
+    description: Consulta y administra las DinoCoins físicas en monederos.
+    usage: /dinocoins <add|remove|get> <jugador> [cantidad]
+    permission: dinocoins.admin
+    permission-message: No tienes permiso para usar este comando.
   delmochilas:
     description: Elimina las mochilas de un jugador
     usage: /delmochilas <jugador>

@@ -123,6 +123,7 @@ public class MochilaCommand implements CommandExecutor {
         inv.setItem(2, EconomyItems.createRedMochila());
         inv.setItem(3, EconomyItems.createBlueMochila());
         inv.setItem(4, EconomyItems.createPurpleMochila());
+        inv.setItem(5, EconomyItems.createMonedero());
         admin.openInventory(inv);
     }
 

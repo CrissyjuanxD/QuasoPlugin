@@ -66,7 +66,7 @@ public class ItemManager {
     private void cargarNombresDeItems() {
         String[] items = {
                 "doubletotem", "corrupted_steak", "corrupted_golden_apple", "libro_habilidades",
-                "dinocoins", "dinofichas", "blood_fragment", "mochila_nivel_1", "mochila_nivel_2",
+                "dinocoins", "dinofichas", "monedero", "blood_fragment", "mochila_nivel_1", "mochila_nivel_2",
                 "mochila_nivel_3", "mochila_nivel_4", "mochila_nivel_5", "enderbag", "gancho",
                 "panic_apple", "artefacto_nivel_1", "artefacto_nivel_2", "misiones", "icetotem",
                 "flytotem", "excavator_pickaxe", "potion_resistance_2", "splash_resistance_3",
@@ -114,6 +114,7 @@ public class ItemManager {
             case "corrupted_golden_apple": item = CorruptedGoldenApple.createCorruptedGoldenApple(); break;
             case "libro_habilidades": item = HabilidadesBook.createHabilidadesBook(); break;
             case "dinocoins": item = EconomyItems.createVithiumCoin(); break;
+            case "monedero": item = EconomyItems.createMonedero(); break;
             case "dinofichas": item = EconomyItems.createVithiumToken(); break;
             case "blood_fragment": item = EconomyItems.createBloodFragment(); break;
             case "mochila_nivel_1": item = EconomyItems.createNormalMochila(); break;

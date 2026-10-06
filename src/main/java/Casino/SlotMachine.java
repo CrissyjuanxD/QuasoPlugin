@@ -158,7 +158,9 @@ public class SlotMachine implements Listener {
     }
 
     private void openSlotMachine(Player player, Location machineLoc) {
-        Inventory inv = Bukkit.createInventory(null, 54, title);
+        CasinoInventoryHolder holder = new CasinoInventoryHolder(tokenSlot);
+        Inventory inv = Bukkit.createInventory(holder, 54, title);
+        holder.setInventory(inv);
         setupGUI(inv, player, machineLoc);
         player.openInventory(inv);
         player.setMetadata("slot_machine_location", new org.bukkit.metadata.FixedMetadataValue(plugin, machineLoc));
@@ -304,7 +306,7 @@ public class SlotMachine implements Listener {
             }
             ItemStack cursor = e.getCursor();
             if (cursor != null && cursor.getType() != Material.AIR) {
-                if (!cursor.isSimilar(EconomyItems.createVithiumToken())) {
+                if (!EconomyItemsFunctions.isDinoFicha(cursor)) {
                     e.setCancelled(true);
                     p.sendMessage(ChatColor.of("#FFB3BA") + "۞ Solo puedes colocar DinoFichas aquí.");
                     return;
@@ -327,7 +329,7 @@ public class SlotMachine implements Listener {
         if (isSpinning.getOrDefault(p.getUniqueId(), false)) return;
 
         ItemStack bet = inv.getItem(tokenSlot);
-        if (bet == null || !bet.isSimilar(EconomyItems.createVithiumToken())) {
+        if (bet == null || !EconomyItemsFunctions.isDinoFicha(bet)) {
             p.sendMessage(ChatColor.of("#FFB3BA") + "۞ ¡Coloca una DinoFicha primero!");
             p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 1.0f, 0.8f);
             return;

@@ -70,14 +70,23 @@ public class ItemsCommands implements CommandExecutor, TabCompleter {
             }
         }
 
-        ItemStack item = itemManager.getItem(itemName, cantidad, target);
+        ItemStack item = itemManager.getItem(itemName, itemName.equals("monedero") ? 1 : cantidad, target);
 
         if (item == null) {
             sender.sendMessage("§cEse item no existe: " + itemName);
             return true;
         }
 
-        target.getInventory().addItem(item);
+        final Player recipient = target;
+        if (itemName.equals("monedero")) {
+            for (int i = 0; i < cantidad; i++) {
+                ItemStack wallet = i == 0 ? item : itemManager.getItem(itemName, 1, target);
+                target.getInventory().addItem(wallet).values().forEach(leftover ->
+                        recipient.getWorld().dropItem(recipient.getLocation(), leftover));
+            }
+        } else {
+            target.getInventory().addItem(item);
+        }
         sender.sendMessage("§aHas dado " + cantidad + "x " + itemName + " a " + target.getName() + ".");
 
         return true;

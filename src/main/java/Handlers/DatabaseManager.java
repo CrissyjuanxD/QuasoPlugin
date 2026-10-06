@@ -68,6 +68,15 @@ public class DatabaseManager {
                     "first_join DATETIME DEFAULT CURRENT_TIMESTAMP, " +
                     "team_name VARCHAR(20) DEFAULT 'ZMiembro');");
 
+            // Viciont: el saldo se deriva del contenido físico de los monederos.
+            for (String column : List.of("dinocoins", "dinofichas")) {
+                try {
+                    stmt.executeUpdate("ALTER TABLE players ADD COLUMN " + column + " INT DEFAULT 0");
+                } catch (SQLException error) {
+                    if (error.getErrorCode() != 1060) throw error; // MySQL: columna ya existente.
+                }
+            }
+
             stmt.executeUpdate("CREATE TABLE IF NOT EXISTS global_missions (" +
                     "mission_id INT PRIMARY KEY, " +
                     "is_active BOOLEAN DEFAULT 1, " +
@@ -402,4 +411,33 @@ public class DatabaseManager {
         connectWithRetry(3);
         plugin.getLogger().info("¡Configuración de base de datos recargada!");
     }
+
+    public int getDinoCoins(UUID uuid) { return getCurrencyBalance(uuid, "dinocoins"); }
+    public int getDinoFichas(UUID uuid) { return getCurrencyBalance(uuid, "dinofichas"); }
+
+    private int getCurrencyBalance(UUID uuid, String column) {
+        String sql = "SELECT " + column + " FROM players WHERE uuid = ?";
+        try (Connection conn = getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, uuid.toString());
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) return rs.getInt(column);
+            }
+        } catch (SQLException error) {
+            plugin.getLogger().severe("Error obteniendo " + column + ": " + error.getMessage());
+        }
+        return 0;
+    }
+
+    public void setCurrencyBalances(UUID uuid, int coins, int tokens) {
+        String sql = "UPDATE players SET dinocoins = ?, dinofichas = ? WHERE uuid = ?";
+        try (Connection conn = getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, coins);
+            stmt.setInt(2, tokens);
+            stmt.setString(3, uuid.toString());
+            stmt.executeUpdate();
+        } catch (SQLException error) {
+            plugin.getLogger().severe("Error registrando monedas: " + error.getMessage());
+        }
+    }
+
 }

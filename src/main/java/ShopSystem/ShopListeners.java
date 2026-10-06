@@ -168,6 +168,7 @@ public class ShopListeners implements Listener {
         if (model == 2022) return EconomyItems.createRedMochila();
         if (model == 2023) return EconomyItems.createBlueMochila();
         if (model == 2024) return EconomyItems.createPurpleMochila();
+        if (model == 2025) return EconomyItems.createMonedero();
         return EconomyItems.createNormalMochila();
     }
 

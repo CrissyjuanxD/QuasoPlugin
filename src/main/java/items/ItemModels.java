@@ -82,6 +82,7 @@ public final class ItemModels {
         DEFAULTS.put("cristal_celestita", "minecraft:cristal_celestita");
         DEFAULTS.put("cristal_hielo", "minecraft:cristal_hielo");
         DEFAULTS.put("dinocoins", "minecraft:dinocoins");
+        DEFAULTS.put("monedero", "minecraft:monedero");
         DEFAULTS.put("dinofichas", "minecraft:dinofichas");
         DEFAULTS.put("doubletotem_1", "minecraft:totem_doble1");
         DEFAULTS.put("doubletotem_2", "minecraft:totem_doble2");

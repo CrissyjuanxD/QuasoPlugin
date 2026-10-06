@@ -37,6 +37,7 @@ public class EconomyItems {
         lore.add(" ");
         lore.add(ChatColor.GRAY + "> Cambiala por DinoFichas en el spawn.");
 
+        lore.add(ChatColor.GRAY + "Solo se puede almacenar en un monedero.");
         meta.setLore(lore);
         meta.setRarity(ItemRarity.EPIC);
         meta.addEnchant(Enchantment.UNBREAKING, 1, true);
@@ -60,6 +61,7 @@ public class EconomyItems {
         lore.add(ChatColor.GRAY + "el " + ChatColor.YELLOW + "casino" + ChatColor.GRAY + ".");
         lore.add(" ");
 
+        lore.add(ChatColor.GRAY + "Solo se puede almacenar en un monedero.");
         meta.setLore(lore);
         meta.setRarity(ItemRarity.EPIC);
         meta.addEnchant(Enchantment.UNBREAKING, 1, true);
@@ -218,6 +220,32 @@ public class EconomyItems {
         return item;
     }
 
+
+    public static ItemStack createMonedero() {
+        ItemStack item = new ItemStack(Material.ECHO_SHARD);
+        ItemMeta meta = item.getItemMeta();
+
+        meta.setDisplayName(ChatColor.of("#FFD1DC") + "" + ChatColor.BOLD + "Monedero");
+        meta.setCustomModelData(2025);
+
+        List<String> lore = new ArrayList<>();
+        lore.add(" ");
+        lore.add(ChatColor.GRAY + "Uso:");
+        lore.add(ChatColor.GRAY + "> " + ChatColor.WHITE + "Click derecho");
+        lore.add(" ");
+        lore.add(ChatColor.of("#E6B3FF") + "18 slots para DinoCoins y DinoFichas.");
+        lore.add(" ");
+
+        meta.setLore(lore);
+        meta.setRarity(ItemRarity.EPIC);
+        meta.setEnchantmentGlintOverride(true);
+        meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+        meta.setMaxStackSize(1);
+        makeUnstackable(meta);
+        ItemModels.apply(meta, "monedero");
+        item.setItemMeta(meta);
+        return item;
+    }
 
     public static ItemStack createEnderBag() {
         ItemStack item = new ItemStack(Material.ENDERMITE_SPAWN_EGG);

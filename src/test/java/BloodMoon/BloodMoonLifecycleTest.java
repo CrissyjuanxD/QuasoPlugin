@@ -90,17 +90,33 @@ class BloodMoonLifecycleTest {
         assertTrue(manager.isActive(world));
         assertEquals(nextNight, manager.getActuator(world).getCycle().nextNight());
     }
-    @Test void enteringDaylightAfterRestartDoesNotResumeThePreviousNight() {
+    @Test void restartAtTheFrozenDawnRestoresOnlyTheRemainingDuration() {
         manager = new BloodMoon(plugin);
         manager.enable();
         manager.getActuator(world).StartBloodMoon();
+        when(world.getGameTime()).thenReturn(2000L);
         manager.shutdown();
         when(world.getTime()).thenReturn(23000L);
         when(world.getFullTime()).thenReturn(23000L);
         manager = new BloodMoon(plugin);
         manager.enable();
-        assertFalse(manager.isActive(world));
+        assertTrue(manager.isActive(world));
+        assertEquals(7000, manager.getActuator(world).getRemainingTicks());
         assertEquals(5, manager.getActuator(world).getCycle().nextNight());
+        when(world.getGameTime()).thenReturn(9000L);
+        manager.getActuator(world).checkNight();
+        assertFalse(manager.isActive(world));
+    }
+    @Test void aSavedEventDoesNotRestartOnADifferentDay() {
+        manager = new BloodMoon(plugin);
+        manager.enable();
+        manager.getActuator(world).StartBloodMoon();
+        manager.shutdown();
+        when(world.getTime()).thenReturn(1000L);
+        when(world.getFullTime()).thenReturn(25000L);
+        manager = new BloodMoon(plugin);
+        manager.enable();
+        assertFalse(manager.isActive(world));
     }
     @Test void disablingWeatherDuringReloadStillClearsTheWeatherOwnedByBloodMoon() throws Exception {
         when(world.hasStorm()).thenReturn(true);

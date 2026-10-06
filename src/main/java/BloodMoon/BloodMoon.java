@@ -33,6 +33,7 @@ public final class BloodMoon implements Listener {
     private final YamlConfiguration cache;
     private final LocaleReader locales;
     private final BloodMoonSky sky;
+    private final BloodMoonDayClock dayClock;
     private BukkitTask clock;
     private boolean shuttingDown;
 
@@ -43,6 +44,7 @@ public final class BloodMoon implements Listener {
         cache = YamlConfiguration.loadConfiguration(cacheFile);
         locales = new LocaleReader(plugin);
         sky = new BloodMoonSky(plugin);
+        dayClock = new BloodMoonDayClock(plugin);
     }
 
     public void enable() {
@@ -72,6 +74,7 @@ public final class BloodMoon implements Listener {
     public List<World> getWorlds() { return worlds.values().stream().map(BloodMoonActuator::getWorld).toList(); }
     public boolean isShuttingDown() { return shuttingDown; }
     public boolean isSkyActive(World world) { return sky.isActive(world); }
+    boolean setDayClockPaused(World world, boolean paused) { return dayClock.setPaused(world, paused); }
     public boolean syncSky(World world, boolean active) {
         if (shuttingDown) { sky.clearWorld(world); return false; }
         ConfigReader config = getConfigReader(world);
@@ -85,15 +88,20 @@ public final class BloodMoon implements Listener {
         configs.put(world.getUID(), config);
         // Incluye mundos excluidos: un reloj guardado no debe dejarles el cielo rojo al reiniciar.
         sky.clearWorld(world);
+        String path = world.getUID().toString();
+        if (cache.getBoolean(path + ".day-clock-paused")) dayClock.setPaused(world, false);
         if (config.GetIsBlacklistedConfig()) return;
         importLegacyCache(world);
-        String path = world.getUID().toString();
         long day = world.getFullTime() / 24000;
         BloodMoonCycle cycle = new BloodMoonCycle(day, config.GetIntervalConfig(), cache.getLong(path + ".next-night", -1));
         BloodMoonActuator actuator = new BloodMoonActuator(this, world, cycle);
         worlds.put(world.getUID(), actuator);
         Bukkit.getPluginManager().registerEvents(actuator, plugin);
-        if (BloodMoonCycle.isNight(world.getTime()) && (config.GetPermanentBloodMoonConfig()
+        if (cache.getBoolean(path + ".active") && cache.contains(path + ".remaining-ticks")
+                && cache.getLong(path + ".active-day", -1) == day
+                && (world.getTime() == BloodMoonCycle.NIGHT_END || BloodMoonCycle.isNight(world.getTime()))) {
+            actuator.resume(cache.getLong(path + ".remaining-ticks"), day);
+        } else if (BloodMoonCycle.isNight(world.getTime()) && (config.GetPermanentBloodMoonConfig()
                 || (cache.getBoolean(path + ".active") && cache.getLong(path + ".active-day", -1) == day))) {
             actuator.StartBloodMoon();
         }
@@ -127,6 +135,8 @@ public final class BloodMoon implements Listener {
         cache.set(path + ".next-night", actuator.getCycle().nextNight());
         cache.set(path + ".active", actuator.isInProgress());
         cache.set(path + ".active-day", actuator.getActiveDay());
+        cache.set(path + ".remaining-ticks", actuator.getRemainingTicks());
+        cache.set(path + ".day-clock-paused", actuator.controlsDayClock());
         try { cache.save(cacheFile); }
         catch (IOException ex) { plugin.getLogger().warning("No se pudo guardar el calendario de BloodMoon: " + ex.getMessage()); }
     }

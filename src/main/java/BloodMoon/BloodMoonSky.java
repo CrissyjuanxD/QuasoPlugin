@@ -18,8 +18,8 @@ import java.util.UUID;
 public final class BloodMoonSky {
     private static final String CLOCK = "quaso:bloodmoon";
     private final JavaPlugin plugin;
-    // La timeline sube de 0 a 600 y baja de 600 a 1200; no toca el reloj del día.
-    public static final int FADE_TICKS = 600;
+    // La timeline sube de 0 a 200 y baja de 200 a 400; no toca el reloj del día.
+    public static final int FADE_TICKS = 200;
     private final Map<UUID, Transition> states = new HashMap<>();
 
     private static final class Transition {

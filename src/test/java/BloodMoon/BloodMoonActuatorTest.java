@@ -50,6 +50,7 @@ class BloodMoonActuatorTest {
         when(manager.getPlugin()).thenReturn(plugin);
         world = mock(World.class);
         when(manager.getConfigReader(world)).thenReturn(config);
+        when(manager.setDayClockPaused(world, true)).thenReturn(true);
         when(world.getName()).thenReturn("world");
         when(world.getUID()).thenReturn(UUID.randomUUID());
         when(world.getTime()).thenReturn(14000L);
@@ -220,6 +221,7 @@ class BloodMoonActuatorTest {
             List<Runnable> oldCallbacks = List.copyOf(callbacks);
             when(world.getTime()).thenReturn(23000L);
             when(world.getFullTime()).thenReturn(23000L);
+            when(world.getGameTime()).thenReturn(9000L);
             clearInvocations(world);
             actuator.checkNight();
             for (Runnable callback : oldCallbacks) callback.run();
@@ -241,15 +243,57 @@ class BloodMoonActuatorTest {
             when(world.getTime()).thenReturn(13000L);
             actuator.checkNight();
             assertTrue(actuator.isInProgress());
-            when(world.getTime()).thenReturn(22999L);
+            when(world.getTime()).thenReturn(23000L);
+            when(world.getGameTime()).thenReturn(9999L);
             actuator.checkNight();
             assertTrue(actuator.isInProgress());
-            when(world.getTime()).thenReturn(23000L);
+            when(world.getGameTime()).thenReturn(10000L);
             actuator.checkNight();
             assertFalse(actuator.isInProgress());
             actuator.checkNight();
             assertFalse(actuator.isInProgress());
             assertFalse(actuator.StartBloodMoon());
+        }
+    }
+    @Test void fixedDawnDoesNotEndTheEventOrResetItsDurationWhenReloaded() {
+        try (var singleton = mockStatic(BloodMoon.class)) {
+            singleton.when(BloodMoon::GetInstance).thenReturn(manager);
+            assertTrue(actuator.StartBloodMoon());
+            verify(world).setFullTime(23000L);
+            verify(manager).setDayClockPaused(world, true);
+            when(world.getTime()).thenReturn(23000L);
+            when(world.getGameTime()).thenReturn(2000L);
+            actuator.checkNight();
+            assertTrue(actuator.isInProgress());
+            assertEquals(7000, actuator.getRemainingTicks());
+            actuator.reload();
+            assertTrue(actuator.isInProgress());
+            assertEquals(7000, actuator.getRemainingTicks());
+            clearInvocations(manager);
+            when(world.getGameTime()).thenReturn(9000L);
+            actuator.checkNight();
+            assertFalse(actuator.isInProgress());
+            verify(manager).setDayClockPaused(world, false);
+        }
+    }
+    @Test void shuttingDownReleasesTheDayClockAndCancelsTheEvent() {
+        try (var singleton = mockStatic(BloodMoon.class)) {
+            singleton.when(BloodMoon::GetInstance).thenReturn(manager);
+            actuator.StartBloodMoon();
+            actuator.shutdown();
+            verify(manager).setDayClockPaused(world, false);
+            assertFalse(actuator.isInProgress());
+            assertFalse(actuator.StartBloodMoon());
+        }
+    }
+    @Test void anUnavailableOrSharedDayClockIsNotMovedOrResumed() {
+        when(manager.setDayClockPaused(world, true)).thenReturn(false);
+        try (var singleton = mockStatic(BloodMoon.class)) {
+            singleton.when(BloodMoon::GetInstance).thenReturn(manager);
+            actuator.StartBloodMoon();
+            actuator.StopBloodMoon();
+            verify(world, never()).setFullTime(anyLong());
+            verify(manager, never()).setDayClockPaused(world, false);
         }
     }
     @Test void bloodMoonWithoutWeatherControlPreservesNaturalRain() {

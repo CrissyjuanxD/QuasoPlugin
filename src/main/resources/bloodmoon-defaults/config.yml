@@ -19,7 +19,7 @@ PlaySoundUponBloodMoonEnd: true
 PlayPeriodicSoundsDuringBloodMoon: true
 DarkenSky: true
 # Cielo y niebla rojos con el datapack (26.2). Requiere reiniciar tras instalar/actualizar el pack.
-# Transiciones de 30 segundos y niebla carmesí; compatible con ThunderDuringBloodMoon.
+# Transiciones de 10 segundos y niebla carmesí; compatible con ThunderDuringBloodMoon.
 BloodMoonSkyEnabled: true
 PlaySoundUponHit: true
 PlayerHitParticleEffect: true

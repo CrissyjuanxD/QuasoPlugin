@@ -46,6 +46,9 @@ public final class BloodMoonActuator implements Listener {
     private long generation;
     private int originalSpawnLimit;
     private boolean controlsWeather;
+    private boolean controlsDayClock;
+    private long startedAtGameTime;
+    private long remainingAtStart;
 
     public enum HordeResult { SPAWNED, BLOCKED, NO_SAFE_LOCATION, DISABLED }
     private record PlannedSpawn(EntityType type, Location location, SafeSpawnFinder.Size size) {}
@@ -61,18 +64,21 @@ public final class BloodMoonActuator implements Listener {
     public BloodMoonCycle getCycle() { return cycle; }
     public long getActiveDay() { return activeDay; }
     public boolean isInProgress() { return active; }
+    public boolean controlsDayClock() { return controlsDayClock; }
+    public long getRemainingTicks() {
+        return active ? Math.max(0, remainingAtStart - Math.max(0, world.getGameTime() - startedAtGameTime)) : 0;
+    }
     private ConfigReader config() { return manager.getConfigReader(world); }
 
     public void checkNight() {
         if (closed) return;
+        if (active) {
+            if (getRemainingTicks() == 0) finish(true);
+            return;
+        }
         ConfigReader reader = config();
         long day = world.getFullTime() / 24000, time = world.getTime();
         cycle.observe(day, reader.GetIntervalConfig());
-        if (active && (!BloodMoonCycle.isNight(time) || day != activeDay)) {
-            finish(true);
-            return;
-        }
-        if (active) return;
         if (cycle.shouldWarn(day, time)) {
             long nights = reader.GetPermanentBloodMoonConfig() ? 0 : cycle.nextNight() - day;
             if (nights <= 0) LocaleReader.MessageAllLocale("BloodMoonTonight", null, null, world);
@@ -84,10 +90,20 @@ public final class BloodMoonActuator implements Listener {
 
     public boolean StartBloodMoon() {
         if (active || closed || !BloodMoonCycle.isNight(world.getTime())) return false;
+        long day = world.getFullTime() / 24000;
+        cycle.started(day, config().GetIntervalConfig());
+        return resume(BloodMoonCycle.NIGHT_END - world.getTime(), day);
+    }
+
+    boolean resume(long remaining, long day) {
+        if (active || closed || remaining <= 0) return false;
         active = true;
         generation++;
-        activeDay = world.getFullTime() / 24000;
-        cycle.started(activeDay, config().GetIntervalConfig());
+        activeDay = day;
+        startedAtGameTime = world.getGameTime();
+        remainingAtStart = Math.min(remaining, BloodMoonCycle.NIGHT_END - BloodMoonCycle.NIGHT_START);
+        controlsDayClock = manager.setDayClockPaused(world, true);
+        if (controlsDayClock) world.setFullTime(activeDay * 24000 + BloodMoonCycle.NIGHT_END);
         originalSpawnLimit = world.getSpawnLimit(SpawnCategory.MONSTER);
         controlsWeather = config().GetThunderingConfig();
         runCommands(config().GetPreBloodMoonCommands());
@@ -109,6 +125,10 @@ public final class BloodMoonActuator implements Listener {
     private void finish(boolean notify) {
         if (!active) return;
         active = false;
+        if (controlsDayClock) {
+            manager.setDayClockPaused(world, false);
+            controlsDayClock = false;
+        }
         manager.syncSky(world, false);
         generation++;
         for (BukkitTask task : tasks) task.cancel();
@@ -139,8 +159,10 @@ public final class BloodMoonActuator implements Listener {
 
     public void reload() {
         if (active) {
+            long remaining = getRemainingTicks();
+            long day = activeDay;
             finish(false);
-            if (BloodMoonCycle.isNight(world.getTime())) StartBloodMoon();
+            resume(remaining, day);
         } else if (config().GetPermanentBloodMoonConfig()) StartBloodMoon();
         manager.remember(this);
     }
@@ -163,7 +185,7 @@ public final class BloodMoonActuator implements Listener {
     }
 
     private void updateNightBar() {
-        if (nightBar != null) nightBar.setProgress(Math.clamp((world.getTime() - BloodMoonCycle.NIGHT_START)
+        if (nightBar != null) nightBar.setProgress(Math.clamp(1 - getRemainingTicks()
                 / (double) (BloodMoonCycle.NIGHT_END - BloodMoonCycle.NIGHT_START), 0, 1));
     }
     private void ambient() {

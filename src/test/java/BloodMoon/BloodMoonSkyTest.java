@@ -88,16 +88,16 @@ class BloodMoonSkyTest {
     @Test void fadesRunOnTheDedicatedClockAndStopAtTheirEndpointsWithoutChangingTheDay() {
         assertTrue(sky.syncWorld(world, true));
         assertTrue(sky.isActive(world));
-        assertEquals(600L, delays.getFirst());
+        assertEquals(200L, delays.getFirst());
         verify(server).dispatchCommand(sender, "minecraft:execute in minecraft:world run minecraft:time of quaso:bloodmoon resume");
-        when(world.getGameTime()).thenReturn(600L);
+        when(world.getGameTime()).thenReturn(200L);
         callbacks.getFirst().run();
         assertTrue(sky.syncWorld(world, false));
         assertFalse(sky.isActive(world));
-        assertEquals(600L, delays.getLast());
-        when(world.getGameTime()).thenReturn(1200L);
+        assertEquals(200L, delays.getLast());
+        when(world.getGameTime()).thenReturn(400L);
         callbacks.getLast().run();
-        verify(server, times(2)).dispatchCommand(sender, "minecraft:execute in minecraft:world run minecraft:time of quaso:bloodmoon set 600");
+        verify(server, times(2)).dispatchCommand(sender, "minecraft:execute in minecraft:world run minecraft:time of quaso:bloodmoon set 200");
         verify(server, times(2)).dispatchCommand(sender, "minecraft:execute in minecraft:world run minecraft:time of quaso:bloodmoon set 0");
         verify(world, never()).setTime(anyLong());
         verify(world, never()).setFullTime(anyLong());
@@ -106,17 +106,17 @@ class BloodMoonSkyTest {
     @Test void interruptingAFadeAndReloadingContinueFromTheCurrentIntensityAndCancelOldTasks() {
         sky.syncWorld(world, true);
         Runnable obsolete = callbacks.getFirst();
-        when(world.getGameTime()).thenReturn(200L);
+        when(world.getGameTime()).thenReturn(80L);
         sky.refreshAvailability();
         sky.syncWorld(world, false);
         verify(tasks.getFirst()).cancel();
-        assertEquals(200L, delays.getLast());
-        verify(server).dispatchCommand(sender, "minecraft:execute in minecraft:world run minecraft:time of quaso:bloodmoon set 1000");
-        when(world.getGameTime()).thenReturn(250L);
+        assertEquals(80L, delays.getLast());
+        verify(server).dispatchCommand(sender, "minecraft:execute in minecraft:world run minecraft:time of quaso:bloodmoon set 320");
+        when(world.getGameTime()).thenReturn(100L);
         sky.syncWorld(world, true);
         verify(tasks.get(1)).cancel();
-        assertEquals(450L, delays.getLast());
-        verify(server).dispatchCommand(sender, "minecraft:execute in minecraft:world run minecraft:time of quaso:bloodmoon set 150");
+        assertEquals(140L, delays.getLast());
+        verify(server).dispatchCommand(sender, "minecraft:execute in minecraft:world run minecraft:time of quaso:bloodmoon set 60");
         clearInvocations(server);
         obsolete.run();
         verify(server, never()).dispatchCommand(any(), anyString());

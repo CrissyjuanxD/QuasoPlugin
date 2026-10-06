@@ -35,7 +35,10 @@ recompensas ponderadas y comandos `;s`, `;p`, `;f` del sistema original.
 La BloodMoon comienza de noche y fija el cielo en el amanecer de 23000 ticks.
 Su contador independiente conserva la duración restante de la noche y devuelve
 el movimiento del tiempo al terminar. `PermanentBloodMoon` la activa cada noche.
-El cielo y la niebla carmesí ligera tienen transiciones de 10 segundos; ver [cielo y tormenta](bloodmoon-cielo-26.2.md).
+El cielo y la niebla carmesí ligera tienen transiciones de 10 segundos. El rojo
+se mezcla al 80 % y la intensidad visual de la tormenta se reduce al 60 % para
+que el filtro gris no oculte el rojo ni vuelva invisible la luna, conservando
+la tormenta real; ver [cielo y tormenta](bloodmoon-cielo-26.2.md).
 
 Cuando BloodMoon controla el clima (`ThunderDuringBloodMoon: true`), al terminar
 desactiva lluvia y truenos y mantiene el cielo despejado durante 12.000 ticks.
@@ -129,12 +132,14 @@ También comprueba los mensajes del primer arranque, archivos incompletos,
 recargas y disponibilidad de los valores predeterminados si falla el guardado.
 Comprueba la migración de la paleta sin sobrescribir mensajes personalizados,
 el despejado al amanecer/final, las recargas del clima y una noche reanudada.
-También ejecuta las pruebas existentes de Quaso. La suite completa tiene 117
+También ejecuta las pruebas existentes de Quaso. La suite completa tiene 125
 pruebas correctas. El servidor interno Paper 26.2-129 con MySQL completó dos
 arranques y comprobó el clima, los atributos reales de cielo/niebla, la vuelta
 al estado normal, el aislamiento entre mundos y la restauración después de
 reiniciar. Comprueba también el amanecer fijo, su contador independiente,
-los fades de 10 segundos y que el reloj diurno se reanude al terminar. Los diálogos reales de homes también se serializaron correctamente.
+los fades de 10 segundos y que el reloj diurno se reanude al terminar. Verifica
+los paquetes reales de lluvia/truenos, su paso por una conexión local de Paper
+y su restauración sin modificar el clima del mundo. Los diálogos reales de homes también se serializaron correctamente.
 El comportamiento con jugadores, su terreno, resource pack y otras integraciones
 requiere probarse en el cliente.
 

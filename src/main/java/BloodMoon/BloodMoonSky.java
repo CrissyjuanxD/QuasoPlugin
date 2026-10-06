@@ -145,6 +145,11 @@ public final class BloodMoonSky {
         return state != null && state.active;
     }
 
+    float strength(World world) {
+        Transition state = states.get(world.getUID());
+        return state == null ? 0 : state.strength() / (float) FADE_TICKS;
+    }
+
     /** Al cargar, descargar o apagar, no puede quedar un fade ni un reloj rojo huérfano. */
     public void clearWorld(World world) {
         if (world == null) return;

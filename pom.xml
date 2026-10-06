@@ -33,6 +33,13 @@
     </repositories>
 
     <dependencies>
+        <!-- Paper proporciona Netty; solo se usa para ajustar los paquetes visuales del clima. -->
+        <dependency>
+            <groupId>io.netty</groupId>
+            <artifactId>netty-transport</artifactId>
+            <version>4.2.15.Final</version>
+            <scope>provided</scope>
+        </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>

@@ -42,6 +42,7 @@ class BloodMoonLifecycleTest {
         when(plugin.getResource(anyString())).thenAnswer(call -> getClass().getClassLoader().getResourceAsStream(call.getArgument(0)));
         Server server = mock(Server.class);
         when(plugin.getServer()).thenReturn(server);
+        when(server.getPluginManager()).thenReturn(mock(PluginManager.class));
         BukkitScheduler scheduler = mock(BukkitScheduler.class);
         when(server.getScheduler()).thenReturn(scheduler);
         when(scheduler.runTaskTimer(any(Plugin.class), any(Runnable.class), anyLong(), anyLong())).thenAnswer(call -> mock(BukkitTask.class));

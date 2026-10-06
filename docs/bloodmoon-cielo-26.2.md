@@ -31,21 +31,40 @@ Recargar o invertir una transición mantiene su intensidad actual y cancela la
 tarea anterior. Descargar un mundo o apagar el plugin restablece inmediatamente
 su reloj para que no quede un efecto huérfano.
 
-La capa aplica cielo `#ff1008`, niebla `#ff180c`, nubes `#e82010` y factor visual de
-luz 0.30. La niebla empieza a 96 bloques y se extiende hasta 768, con el final de
-niebla del cielo a 512 y de nubes a 1024. Así conserva un horizonte rojizo suave
-sin la cortina cercana que tapaba el cielo. Al acabar, cada atributo
-recupera el valor del mundo y sus biomas, en vez de fijar un color diurno propio.
-La capa visual no modifica biomas, chunks ni bloques. El reloj diurno sí queda
-en el amanecer elegido durante el evento. La bossbar omite su oscurecimiento adicional cuando funciona este efecto.
+La capa mezcla al 80 % cielo `#ff1008`, niebla `#ff180c`, nubes `#e82010` y
+factor visual de luz 0.30. Toma como referencia la intensidad que tenía el fade
+anterior unos dos segundos después de detener el evento. Con los valores
+normales del mundo, la niebla empieza a 76,8 bloques y se extiende hasta 819,2;
+el final de niebla del cielo queda a 512 y el de nubes a 1228,8. Al acabar, cada
+atributo recupera el valor del mundo y sus biomas. La capa visual no modifica
+biomas, chunks ni bloques. La bossbar omite su oscurecimiento adicional.
 
-**Límite de vanilla:** la tormenta modifica los atributos después de las
-timelines: desatura el cielo un 94 % y oscurece la niebla. El datapack refuerza
-el rojo con niebla carmesí, que conserva su saturación; no elimina ese filtro
-del cielo. Por eso el resultado con tormenta es un rojo oscuro, y no se puede
-prometer un cielo rojo luminoso como el de un shader solo con estos atributos.
-La textura de la luna tampoco cambia sin un resource pack. La apariencia final
-y los shaders instalados deben comprobarse con un cliente 26.2.
+## Lluvia, brillo y luna
+
+Minecraft aplica el filtro de tormenta después de las timelines: a intensidad
+máxima desatura el cielo un 94 %. Además, `SkyRenderer` usa `1 - rainLevel` como
+brillo del sol y la luna, por lo que lluvia a 1 hace desaparecer la luna aunque
+se aleje toda la niebla. Al detener BloodMoon, el filtro se retiraba junto con
+la lluvia; por eso el cielo se veía más rojo y luminoso durante el fade.
+
+Quaso conserva la tormenta real y ajusta únicamente sus paquetes visuales para
+los jugadores del mundo afectado. Con el efecto completo, los niveles visuales
+de lluvia y truenos se multiplican por 0,60: sigue lloviendo, el filtro gris es
+menor y la luna deja de tener brillo cero (pasa a 0,40 por ese factor). Los rayos,
+las reglas del clima y el comportamiento de los mobs conservan el clima real.
+El brillo final también depende de la fase lunar, la posición y el cliente.
+
+La intensidad del ajuste acompaña los fades de 10 segundos. Se refresca al
+entrar, reaparecer y cambiar de mundo; se retira al acabar o apagar el plugin.
+No modifica otros paquetes ni sobrescribe el clima personal de otros plugins.
+No reenvía paquetes repetidos durante la fase estable. El puente de paquetes
+está aislado para Paper 26.2 y usa el Netty que ya proporciona el servidor; no
+requiere instalar otro plugin. Si no está disponible, avisa una vez y conserva
+el clima normal.
+
+El datapack por sí solo no evita la desaparición de la luna con lluvia visual
+al máximo. La textura de la luna tampoco cambia sin un resource pack. La
+apariencia final y los shaders instalados deben comprobarse con un cliente 26.2.
 
 ## Instalación
 

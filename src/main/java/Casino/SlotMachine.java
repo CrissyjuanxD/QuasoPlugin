@@ -172,7 +172,7 @@ public class SlotMachine implements Listener {
         ItemMeta cm = close.getItemMeta();
         cm.setDisplayName(ChatColor.of("#FF6B6B") + "" + ChatColor.BOLD + "Cerrar");
         cm.setCustomModelData(1000);
-        items.ItemModels.apply(cm, "casino_cerrar");
+        cm.setItemModel(NamespacedKey.minecraft("casino_cerrar"));
         close.setItemMeta(cm);
         inv.setItem(closeButton, close);
 
@@ -186,7 +186,7 @@ public class SlotMachine implements Listener {
                 ""
         ));
         sm.setCustomModelData(1000);
-        items.ItemModels.apply(sm, "casino_girar");
+        sm.setItemModel(NamespacedKey.minecraft("casino_girar"));
         spin.setItemMeta(sm);
         inv.setItem(spinButton, spin);
 
@@ -194,7 +194,7 @@ public class SlotMachine implements Listener {
         ItemMeta leftMeta = leftLine.getItemMeta();
         leftMeta.setDisplayName(ChatColor.GOLD + "" + ChatColor.BOLD + "»» " + ChatColor.RED + "Línea de Premio" + ChatColor.GOLD + " »»");
         leftMeta.setCustomModelData(1000);
-        items.ItemModels.apply(leftMeta, "casino_linea_izquierda");
+        leftMeta.setItemModel(NamespacedKey.minecraft("casino_linea_izquierda"));
         leftLine.setItemMeta(leftMeta);
 
         inv.setItem(27, leftLine);
@@ -205,7 +205,7 @@ public class SlotMachine implements Listener {
         ItemMeta rightMeta = rightLine.getItemMeta();
         rightMeta.setDisplayName(ChatColor.GOLD + "" + ChatColor.BOLD + "«« " + ChatColor.RED + "Línea de Premio" + ChatColor.GOLD + " ««");
         rightMeta.setCustomModelData(1000);
-        items.ItemModels.apply(rightMeta, "casino_linea_derecha");
+        rightMeta.setItemModel(NamespacedKey.minecraft("casino_linea_derecha"));
         rightLine.setItemMeta(rightMeta);
 
         inv.setItem(33, rightLine);
@@ -216,7 +216,7 @@ public class SlotMachine implements Listener {
         ItemMeta gm = glass.getItemMeta();
         gm.setDisplayName(" ");
         gm.setCustomModelData(1000);
-        items.ItemModels.apply(gm, "casino_fondo");
+        gm.setItemModel(NamespacedKey.minecraft("casino_fondo"));
         glass.setItemMeta(gm);
 
         for (int i = 0; i < 54; i++) {

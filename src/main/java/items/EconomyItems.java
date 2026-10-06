@@ -43,7 +43,7 @@ public class EconomyItems {
         meta.addEnchant(Enchantment.UNBREAKING, 1, true);
         meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
 
-        ItemModels.apply(meta, "dinocoins");
+        meta.setItemModel(NamespacedKey.minecraft("dinocoins"));
         item.setItemMeta(meta);
         return item;
     }
@@ -67,7 +67,7 @@ public class EconomyItems {
         meta.addEnchant(Enchantment.UNBREAKING, 1, true);
         meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
 
-        ItemModels.apply(meta, "dinofichas");
+        meta.setItemModel(NamespacedKey.minecraft("dinofichas"));
         item.setItemMeta(meta);
         return item;
     }
@@ -90,7 +90,7 @@ public class EconomyItems {
         meta.addEnchant(Enchantment.UNBREAKING, 1, true);
         meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
 
-        ItemModels.apply(meta, "blood_fragment");
+        meta.setItemModel(NamespacedKey.minecraft("blood_fragment"));
         item.setItemMeta(meta);
         return item;
     }
@@ -242,7 +242,7 @@ public class EconomyItems {
         meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
         meta.setMaxStackSize(1);
         makeUnstackable(meta);
-        ItemModels.apply(meta, "monedero");
+        meta.setItemModel(NamespacedKey.minecraft("monedero"));
         item.setItemMeta(meta);
         return item;
     }
@@ -321,7 +321,7 @@ public class EconomyItems {
         meta.addEnchant(Enchantment.UNBREAKING, 1, true);
         meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
 
-        ItemModels.apply(meta, "panic_apple");
+        meta.setItemModel(NamespacedKey.minecraft("panic_apple"));
         item.setItemMeta(meta);
         return item;
     }

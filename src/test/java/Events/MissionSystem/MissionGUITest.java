@@ -1,6 +1,5 @@
 package Events.MissionSystem;
 
-import items.ItemModels;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
@@ -55,7 +54,6 @@ class MissionGUITest {
         Inventory inventory = mock(Inventory.class);
 
         try (MockedStatic<Bukkit> bukkit = mockStatic(Bukkit.class);
-             MockedStatic<ItemModels> models = mockStatic(ItemModels.class);
              MockedConstruction<ItemStack> stacks = mockConstruction(ItemStack.class,
                      (stack, context) -> when(stack.getItemMeta()).thenReturn(mock(ItemMeta.class)))) {
             bukkit.when(() -> Bukkit.createInventory(any(InventoryHolder.class), eq(54), anyString())).thenReturn(inventory);

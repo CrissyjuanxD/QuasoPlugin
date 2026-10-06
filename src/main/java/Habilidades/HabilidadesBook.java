@@ -1,7 +1,7 @@
 package Habilidades;
 
-import items.ItemModels;
 import net.md_5.bungee.api.ChatColor;
+import org.bukkit.NamespacedKey;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
@@ -36,7 +36,7 @@ public class HabilidadesBook {
         meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
         meta.setCustomModelData(9999);
 
-        ItemModels.apply(meta, "libro_habilidades");
+        meta.setItemModel(NamespacedKey.minecraft("libro_habilidades"));
         book.setItemMeta(meta);
         return book;
     }

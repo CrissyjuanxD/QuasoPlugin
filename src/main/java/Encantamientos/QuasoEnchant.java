@@ -70,7 +70,7 @@ public enum QuasoEnchant {
         List<String> lore = new ArrayList<>();
         for (String line : description) lore.add(ChatColor.of(color) + line);
         meta.setLore(lore);
-        items.ItemModels.apply(meta, "libro_" + key.getKey());
+        meta.setItemModel(NamespacedKey.minecraft("libro_" + key.getKey()));
         book.setItemMeta(meta);
         return book;
     }

@@ -1,6 +1,7 @@
 package items;
 
 import net.md_5.bungee.api.ChatColor;
+import org.bukkit.NamespacedKey;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemRarity;
 import org.bukkit.inventory.ItemStack;
@@ -17,7 +18,7 @@ public class CorruptedMobItems {
             meta.setCustomModelData(5);
             meta.setRarity(ItemRarity.EPIC);
 
-            ItemModels.apply(meta, "corrupted_meat");
+            meta.setItemModel(NamespacedKey.minecraft("corrupted_meat"));
             meat.setItemMeta(meta);
         }
 
@@ -33,7 +34,7 @@ public class CorruptedMobItems {
             meta.setCustomModelData(5);
             meta.setRarity(ItemRarity.EPIC);
 
-            ItemModels.apply(meta, "corrupted_spider_eye");
+            meta.setItemModel(NamespacedKey.minecraft("corrupted_spider_eye"));
             spiderEye.setItemMeta(meta);
         }
 

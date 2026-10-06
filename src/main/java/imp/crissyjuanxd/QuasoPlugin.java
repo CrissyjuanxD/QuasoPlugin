@@ -184,7 +184,6 @@ public class QuasoPlugin extends JavaPlugin implements Listener {
         logStartup();
         registerBaseListeners();
         saveDefaultConfig();
-        ItemModels.load(this);
         bloodMoon = new BloodMoon(this);
 
         this.databaseManager = new DatabaseManager(this);

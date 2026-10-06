@@ -1,6 +1,7 @@
 package Events.AchievementParty;
 
 import net.md_5.bungee.api.ChatColor;
+import org.bukkit.NamespacedKey;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -127,7 +128,7 @@ public class AchievementGUI implements Listener {
         meta.setLore(lore);
 
         meta.setCustomModelData(isCompleted ? 3000 : 3001);
-        items.ItemModels.apply(meta, isCompleted ? "logro_completado" : "logro_pendiente");
+        meta.setItemModel(NamespacedKey.minecraft(isCompleted ? "logro_completado" : "logro_pendiente"));
 
         item.setItemMeta(meta);
         return item;
@@ -138,7 +139,7 @@ public class AchievementGUI implements Listener {
         ItemMeta meta = border.getItemMeta();
         meta.setDisplayName(" ");
         meta.setCustomModelData(3002);
-        items.ItemModels.apply(meta, "logro_borde");
+        meta.setItemModel(NamespacedKey.minecraft("logro_borde"));
         border.setItemMeta(meta);
         return border;
     }

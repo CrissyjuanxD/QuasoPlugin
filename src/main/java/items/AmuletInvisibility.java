@@ -66,7 +66,7 @@ public class AmuletInvisibility implements Listener {
             data.set(amuletKey, PersistentDataType.BYTE, (byte) 1);
 
 
-            ItemModels.apply(meta, "amuleto_invisibilidad");
+            meta.setItemModel(NamespacedKey.minecraft("amuleto_invisibilidad"));
             item.setItemMeta(meta);
         }
         return item;

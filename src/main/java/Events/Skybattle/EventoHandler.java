@@ -474,7 +474,7 @@ public class EventoHandler implements Listener {
             ItemMeta meta = ticket.getItemMeta();
             meta.setDisplayName("§e§lQuaso Ticket");
             meta.setCustomModelData(1);
-            items.ItemModels.apply(meta, "quaso_ticket");
+            meta.setItemModel(NamespacedKey.minecraft("quaso_ticket"));
             ticket.setItemMeta(meta);
             jugador.getInventory().addItem(ticket);
 

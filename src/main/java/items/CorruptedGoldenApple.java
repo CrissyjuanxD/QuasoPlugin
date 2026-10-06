@@ -1,6 +1,7 @@
 package items;
 
 import net.md_5.bungee.api.ChatColor;
+import org.bukkit.NamespacedKey;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
@@ -36,7 +37,7 @@ public class CorruptedGoldenApple {
         meta.setCustomModelData(15);
         meta.addEnchant(Enchantment.UNBREAKING, 1, true);
         meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
-        ItemModels.apply(meta, "corrupted_golden_apple");
+        meta.setItemModel(NamespacedKey.minecraft("corrupted_golden_apple"));
         item.setItemMeta(meta);
 
         return item;
@@ -51,7 +52,7 @@ public class CorruptedGoldenApple {
         meta.setCustomModelData(10);
         meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
         meta.addEnchant(Enchantment.KNOCKBACK, 1, true);
-        ItemModels.apply(meta, "bloque_oro_apilado");
+        meta.setItemModel(NamespacedKey.minecraft("bloque_oro_apilado"));
         item.setItemMeta(meta);
 
         return item;

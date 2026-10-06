@@ -51,7 +51,7 @@ public class ExplosiveBow implements Listener {
 
             meta.setLore(lore);
             meta.getPersistentDataContainer().set(explosiveBowLevelKey, PersistentDataType.INTEGER, 1);
-            ItemModels.apply(meta, "arco_nivel1");
+            meta.setItemModel(NamespacedKey.minecraft("arco_nivel1"));
             bow.setItemMeta(meta);
         }
         return bow;
@@ -78,7 +78,7 @@ public class ExplosiveBow implements Listener {
 
             meta.setLore(lore);
             meta.getPersistentDataContainer().set(explosiveBowLevelKey, PersistentDataType.INTEGER, 2);
-            ItemModels.apply(meta, "arco_nivel2");
+            meta.setItemModel(NamespacedKey.minecraft("arco_nivel2"));
             bow.setItemMeta(meta);
         }
         return bow;
@@ -105,7 +105,7 @@ public class ExplosiveBow implements Listener {
 
             meta.setLore(lore);
             meta.getPersistentDataContainer().set(explosiveBowLevelKey, PersistentDataType.INTEGER, 3);
-            ItemModels.apply(meta, "arco_nivel3");
+            meta.setItemModel(NamespacedKey.minecraft("arco_nivel3"));
             bow.setItemMeta(meta);
         }
         return bow;

@@ -341,7 +341,7 @@ public class GiveSpawnerCommand implements CommandExecutor, TabCompleter {
 
         meta.setLore(lore);
         meta.setCustomModelData(customModelData);
-        items.ItemModels.apply(meta, "spawner_custom");
+        meta.setItemModel(NamespacedKey.minecraft("spawner_custom"));
         meta.getPersistentDataContainer().set(spawnerKey, PersistentDataType.STRING, mobType);
 
         spawner.setItemMeta(meta);

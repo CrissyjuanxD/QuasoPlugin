@@ -42,7 +42,7 @@ public class WardenReturnItem implements Listener {
         ));
         meta.setRarity(ItemRarity.EPIC);
         meta.getPersistentDataContainer().set(KEY, PersistentDataType.BYTE, (byte) 1);
-        ItemModels.apply(meta, "retorno_warden");
+        meta.setItemModel(NamespacedKey.minecraft("recovery_compass"));
         item.setItemMeta(meta);
         return item;
     }

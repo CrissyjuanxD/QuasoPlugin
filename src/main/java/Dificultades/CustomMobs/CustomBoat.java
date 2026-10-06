@@ -75,7 +75,7 @@ public class CustomBoat implements Listener {
 
         meta.setDisplayName(ChatColor.GOLD + "Nave de " + owner.getName());
         meta.setCustomModelData(340);
-        items.ItemModels.apply(meta, "barco_custom");
+        meta.setItemModel(NamespacedKey.minecraft("barco_custom"));
         boatItem.setItemMeta(meta);
 
         return boatItem;
@@ -87,7 +87,7 @@ public class CustomBoat implements Listener {
 
         meta.setDisplayName(ChatColor.GREEN + "Combustible");
         meta.setCustomModelData(350);
-        items.ItemModels.apply(meta, "combustible_barco");
+        meta.setItemModel(NamespacedKey.minecraft("combustible_barco"));
         fuelItem.setItemMeta(meta);
 
         return fuelItem;

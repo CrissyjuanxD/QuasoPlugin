@@ -1,6 +1,5 @@
 package StatueManager;
 
-import items.ItemModels;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -78,7 +77,7 @@ public class StatueCommand implements CommandExecutor, TabCompleter {
         StatueData data = new StatueData(meta);
         data.setDefaults();
 
-        ItemModels.apply(meta, "statue_effect");
+        meta.setItemModel(NamespacedKey.minecraft("statue_effect"));
         item.setItemMeta(meta);
         p.getInventory().addItem(item);
         p.sendMessage(ChatColor.GREEN + "Has recibido la Estatua de Efectos.");
@@ -143,7 +142,7 @@ public class StatueCommand implements CommandExecutor, TabCompleter {
         lore.add(ChatColor.GRAY + "Click Der en suelo para colocar.");
 
         meta.setLore(lore);
-        ItemModels.apply(meta, "statue_effect");
+        meta.setItemModel(NamespacedKey.minecraft("statue_effect"));
         item.setItemMeta(meta);
 
         p.getInventory().addItem(item);

@@ -58,7 +58,7 @@ public class InfinitePearl implements Listener {
         meta.addEnchant(Enchantment.UNBREAKING, 1, true);
         meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
         meta.getPersistentDataContainer().set(KEY, PersistentDataType.BYTE, (byte) 1);
-        ItemModels.apply(meta, "perla_infinita");
+        meta.setItemModel(NamespacedKey.minecraft("perla_infinita"));
         item.setItemMeta(meta);
         return item;
     }

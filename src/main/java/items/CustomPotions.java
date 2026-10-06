@@ -1,5 +1,6 @@
 package items;
 
+import org.bukkit.NamespacedKey;
 import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemFlag;
@@ -106,7 +107,7 @@ public class CustomPotions {
 
             meta.setCustomModelData(8001);
 
-            ItemModels.apply(meta, "frasco_de_velocidad");
+            meta.setItemModel(NamespacedKey.minecraft("frasco_de_velocidad"));
             honey.setItemMeta(meta);
         }
 
@@ -214,7 +215,7 @@ public class CustomPotions {
             meta.setDisplayName(name);
             meta.addCustomEffect(new PotionEffect(effectType, duration, amplifier), true);
             meta.setColor(color);
-            ItemModels.apply(meta, modelKey);
+            meta.setItemModel(NamespacedKey.minecraft(modelKey));
             potion.setItemMeta(meta);
         }
         return potion;
@@ -269,7 +270,7 @@ public class CustomPotions {
                 meta.addItemFlags(ItemFlag.valueOf("HIDE_ADDITIONAL_TOOLTIP"));
             } catch (Exception ignored) {}
 
-            ItemModels.apply(meta, modelKey);
+            meta.setItemModel(NamespacedKey.minecraft(modelKey));
             potion.setItemMeta(meta);
         }
         return potion;

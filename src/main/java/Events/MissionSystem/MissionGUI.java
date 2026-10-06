@@ -1,8 +1,8 @@
 package Events.MissionSystem;
 
-import items.ItemModels;
 import items.Misionesitem;
 import net.md_5.bungee.api.ChatColor;
+import org.bukkit.NamespacedKey;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -139,11 +139,11 @@ public class MissionGUI implements Listener {
         if (!data.isActive()) {
             meta.setDisplayName(ChatColor.of("#A0A0A0") + missionHandler.tag(missionNum) + " ???");
             lore.add(ChatColor.of("#D3D3D3") + "Misión no descubierta");
-            ItemModels.apply(meta, "mision_bloqueada");
+            meta.setItemModel(NamespacedKey.minecraft("map"));
         } else {
             boolean completed = data.isCompleted();
             meta.setDisplayName(ChatColor.of(completed ? "#90EE90" : "#FFB6C1") + missionHandler.displayName(missionNum));
-            ItemModels.apply(meta, completed ? "mision_completada" : "mision_pendiente");
+            meta.setItemModel(NamespacedKey.minecraft(completed ? "lime_banner" : "guster_banner_pattern"));
 
             for (String line : mission.getDescription().split("\n")) {
                 lore.add(ChatColor.of("#D3D3D3") + line);

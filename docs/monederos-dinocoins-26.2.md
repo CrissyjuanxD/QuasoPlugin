@@ -9,9 +9,8 @@ Migración desde `CrissyjuanxD/Viciont-Hardcore-3`, commit
   `EconomyItemsFunctions` reutilizan las mochilas y `player_backpacks`.
 - El monedero conserva el identificador 2025 y tiene **18 slots**. En Quaso se
   registra con `item_level = 6`, para distinguirlo de las mochilas incluso
-  después de renombrarlo. Tiene UUID y no se apila. Usa el aspecto vanilla de
-  su material mientras no exista la textura; `modelos.monedero` permite
-  configurar el item model cuando se añada al resource pack.
+  después de renombrarlo. Tiene UUID y no se apila. Usa directamente el item
+  model `minecraft:monedero`, como las demás fábricas de ítems.
 - El saldo físico se cuenta una vez por UUID, consultando los monederos
   registrados del usuario, inventario, ender chest, contenido abierto y caché.
   Como en Viciont, los monederos registrados también cuentan cuando están
@@ -57,5 +56,4 @@ monedero, abrirlo, guardar ambas monedas, consultar el saldo, renombrarlo,
 cerrarlo, reconectar y comprobar el contenido y el registro. Probar también
 una apuesta con una DinoFicha antigua y otra recién creada. El usuario de
 MySQL configurado necesita permiso para añadir las dos columnas. El resource
-pack debe incluir cualquier modelo personalizado que se configure en
-`modelos.monedero`.
+pack debe incluir `assets/minecraft/items/monedero.json`.

@@ -1,6 +1,5 @@
 package items.IceBow;
 
-import items.ItemModels;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -59,7 +58,7 @@ public class IceBowItem {
             // Marcar como arco de hielo usando PersistentDataContainer
             meta.getPersistentDataContainer().set(iceBowKey, PersistentDataType.BYTE, (byte) 1);
 
-            ItemModels.apply(meta, "arco_hielo");
+            meta.setItemModel(NamespacedKey.minecraft("arco_hielo"));
             bow.setItemMeta(meta);
         }
 

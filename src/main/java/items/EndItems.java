@@ -54,7 +54,7 @@ public final class EndItems {
         for (String line : lines) lore.add(ChatColor.GRAY + line);
         meta.setLore(lore);
         meta.setRarity(rarity);
-        ItemModels.apply(meta, id);
+        meta.setItemModel(NamespacedKey.minecraft(id));
         item.setItemMeta(meta);
         return item;
     }

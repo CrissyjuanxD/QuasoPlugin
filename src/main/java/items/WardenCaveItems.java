@@ -64,7 +64,7 @@ public class WardenCaveItems {
     // Marca el item con su id para reconocerlo aunque cambien el nombre o el lore
     private static void mark(ItemMeta meta, String id) {
         meta.getPersistentDataContainer().set(ITEM_KEY, PersistentDataType.STRING, id);
-        ItemModels.apply(meta, id);
+        meta.setItemModel(NamespacedKey.minecraft(id));
     }
 
     public static boolean isWardenCaveItem(ItemStack item) {

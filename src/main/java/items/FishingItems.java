@@ -1,6 +1,7 @@
 package items;
 
 import net.md_5.bungee.api.ChatColor;
+import org.bukkit.NamespacedKey;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
@@ -38,7 +39,7 @@ public class FishingItems {
             lore.add("");
             lore.add(ChatColor.GRAY + "" + ChatColor.ITALIC + "Loot de pesca · Común");
             meta.setLore(lore);
-            ItemModels.apply(meta, "chatarra");
+            meta.setItemModel(NamespacedKey.minecraft("chatarra"));
             item.setItemMeta(meta);
         }
         return item;
@@ -60,7 +61,7 @@ public class FishingItems {
             lore.add("");
             lore.add(ChatColor.GRAY + "" + ChatColor.ITALIC + "Loot de pesca · Común");
             meta.setLore(lore);
-            ItemModels.apply(meta, "manzana_podrida");
+            meta.setItemModel(NamespacedKey.minecraft("manzana_podrida"));
             item.setItemMeta(meta);
         }
         return item;
@@ -84,7 +85,7 @@ public class FishingItems {
             lore.add("");
             lore.add(ChatColor.GRAY + "" + ChatColor.ITALIC + "Loot de pesca · Poco común");
             meta.setLore(lore);
-            ItemModels.apply(meta, "zanahoria_encantada");
+            meta.setItemModel(NamespacedKey.minecraft("zanahoria_encantada"));
             item.setItemMeta(meta);
         }
         return item;
@@ -109,7 +110,7 @@ public class FishingItems {
             lore.add("");
             lore.add(ChatColor.GRAY + "" + ChatColor.ITALIC + "Loot de pesca · Poco común");
             meta.setLore(lore);
-            ItemModels.apply(meta, "pepitas_hierro_oxidadas");
+            meta.setItemModel(NamespacedKey.minecraft("pepitas_hierro_oxidadas"));
             item.setItemMeta(meta);
         }
         return item;
@@ -133,7 +134,7 @@ public class FishingItems {
             lore.add("");
             lore.add(ChatColor.GRAY + "" + ChatColor.ITALIC + "Loot de pesca · Raro");
             meta.setLore(lore);
-            ItemModels.apply(meta, "pepitas_diamante");
+            meta.setItemModel(NamespacedKey.minecraft("pepitas_diamante"));
             item.setItemMeta(meta);
         }
         return item;
@@ -158,7 +159,7 @@ public class FishingItems {
             lore.add("");
             lore.add(ChatColor.GRAY + "" + ChatColor.ITALIC + "Loot de pesca · Raro");
             meta.setLore(lore);
-            ItemModels.apply(meta, "fragmentos_ambar");
+            meta.setItemModel(NamespacedKey.minecraft("fragmentos_ambar"));
             item.setItemMeta(meta);
         }
         return item;
@@ -183,7 +184,7 @@ public class FishingItems {
             lore.add("");
             lore.add(ChatColor.GRAY + "" + ChatColor.ITALIC + "Loot de pesca · Épico");
             meta.setLore(lore);
-            ItemModels.apply(meta, "fosiles_pequenos");
+            meta.setItemModel(NamespacedKey.minecraft("fosiles_pequenos"));
             item.setItemMeta(meta);
         }
         return item;
@@ -208,7 +209,7 @@ public class FishingItems {
             lore.add("");
             lore.add(ChatColor.GRAY + "" + ChatColor.ITALIC + "Loot de pesca · Épico");
             meta.setLore(lore);
-            ItemModels.apply(meta, "lingote_platino");
+            meta.setItemModel(NamespacedKey.minecraft("lingote_platino"));
             item.setItemMeta(meta);
         }
         return item;

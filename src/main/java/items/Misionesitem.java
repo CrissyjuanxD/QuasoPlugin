@@ -36,7 +36,7 @@ public class Misionesitem {
         meta.addEnchant(Enchantment.UNBREAKING, 1, true);
         meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
         meta.getPersistentDataContainer().set(KEY, PersistentDataType.BYTE, (byte) 1);
-        ItemModels.apply(meta, "libro_misiones");
+        meta.setItemModel(NamespacedKey.minecraft("map"));
 
         book.setItemMeta(meta);
         return book;

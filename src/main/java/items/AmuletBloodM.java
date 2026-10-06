@@ -81,7 +81,7 @@ public class AmuletBloodM implements Listener {
 
             meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
 
-            ItemModels.apply(meta, "amulet_bloodmoon");
+            meta.setItemModel(NamespacedKey.minecraft("amulet_bloodmoon"));
             item.setItemMeta(meta);
         }
         return item;

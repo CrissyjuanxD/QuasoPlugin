@@ -1,6 +1,7 @@
 package items;
 
 import net.md_5.bungee.api.ChatColor;
+import org.bukkit.NamespacedKey;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
@@ -38,7 +39,7 @@ public class ItemsTotems {
             meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
             meta.addEnchant(Enchantment.KNOCKBACK, 2, true);
 
-            ItemModels.apply(meta, "special_totem");
+            meta.setItemModel(NamespacedKey.minecraft("special_totem"));
             totem.setItemMeta(meta);
         }
 
@@ -64,7 +65,7 @@ public class ItemsTotems {
             meta.setCustomModelData(100);
             meta.setRarity(ItemRarity.EPIC);
 
-            ItemModels.apply(meta, "cristal_hielo");
+            meta.setItemModel(NamespacedKey.minecraft("cristal_hielo"));
             item.setItemMeta(meta);
         }
 

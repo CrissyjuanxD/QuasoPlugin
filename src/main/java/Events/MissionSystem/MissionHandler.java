@@ -3,7 +3,6 @@ package Events.MissionSystem;
 import Handlers.DatabaseManager;
 import Handlers.Teams.TeamType;
 import TitleListener.MisionAnimation;
-import items.ItemModels;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -533,7 +532,7 @@ public class MissionHandler implements Listener {
 
         meta.setDisplayName(ChatColor.GOLD + "Ficha de Misión " + tag(missionNumber));
         meta.getPersistentDataContainer().set(TOKEN_KEY, PersistentDataType.INTEGER, missionNumber);
-        ItemModels.apply(meta, "ficha_mision");
+        meta.setItemModel(NamespacedKey.minecraft("popped_chorus_fruit"));
         meta.addEnchant(Enchantment.UNBREAKING, 1, true);
         meta.addItemFlags(org.bukkit.inventory.ItemFlag.HIDE_ENCHANTS);
 

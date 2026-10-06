@@ -85,6 +85,10 @@ public class QuasoPlugin extends JavaPlugin implements Listener {
 
     private DatabaseManager databaseManager;
     private TeamsHandler teamsHandler;
+    private AutoAnnouncer autoAnnouncer;
+    private MantenimientoHandler mantenimientoHandler;
+    private MainScoreboard mainScoreboard;
+    private Homes homesCmd;
 
     private TiempoCommand tiempoCommand;
     private RuletaAnimation ruletaAnimation;
@@ -219,6 +223,10 @@ public class QuasoPlugin extends JavaPlugin implements Listener {
         Bukkit.getConsoleSender().sendMessage(
                 ChatColor.translateAlternateColorCodes('&',
                         Prefix + "&aha sido deshabilitado!, &eVersion: " + Version));
+
+        if (autoAnnouncer != null) autoAnnouncer.shutdown();
+        if (mainScoreboard != null) mainScoreboard.shutdown();
+        if (homesCmd != null) homesCmd.shutdown();
 
         if (economyItemsFunctions != null) economyItemsFunctions.shutdown();
         if (dinoCoinsManager != null) dinoCoinsManager.shutdown();
@@ -400,7 +408,7 @@ public class QuasoPlugin extends JavaPlugin implements Listener {
 
         Bukkit.getPluginManager().registerEvents(customSpawnerHandler, this);
 
-        Homes homesCmd = new Homes(this);
+        homesCmd = new Homes(this);
         getCommand("sethome").setExecutor(homesCmd);
         getCommand("home").setExecutor(homesCmd);
         getCommand("delhome").setExecutor(homesCmd);
@@ -417,6 +425,12 @@ public class QuasoPlugin extends JavaPlugin implements Listener {
     }
 
     private void initAsyncAndUtilitySystems() {
+        mainScoreboard = new MainScoreboard(this, missionHandler, dinoCoinsManager);
+        autoAnnouncer = new AutoAnnouncer(this);
+        getCommand("autoanuncio").setExecutor(autoAnnouncer);
+        mantenimientoHandler = new MantenimientoHandler(this);
+        getCommand("mantenimiento").setExecutor(mantenimientoHandler);
+        getCommand("mantenimiento").setTabCompleter(mantenimientoHandler);
         new VHList(this);
         getServer().getPluginManager().registerEvents(new AnvilOverEnchantHandler(this), this);
     }
@@ -817,6 +831,8 @@ public class QuasoPlugin extends JavaPlugin implements Listener {
     public HabilidadesManager getHabilidadesManager() { return habilidadesManager; }
 
     public PortalManager getPortalManager() { return portalManager; }
+
+    public MantenimientoHandler getMantenimientoHandler() { return mantenimientoHandler; }
 
     public StructureManager getStructureManager() { return structureManager; }
 

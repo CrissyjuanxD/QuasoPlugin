@@ -25,6 +25,7 @@ public class DinoCoinsManager implements Listener {
     private final DatabaseManager dbManager;
     private final EconomyItemsFunctions functions;
     private final NamespacedKey backpackKey;
+    private final Map<UUID, Integer> cachedDinoCoins = new ConcurrentHashMap<>();
     private final Map<UUID, Long> balanceVersions = new ConcurrentHashMap<>();
 
     public DinoCoinsManager(JavaPlugin plugin, DatabaseManager dbManager, EconomyItemsFunctions functions) {
@@ -81,10 +82,15 @@ public class DinoCoinsManager implements Listener {
             int[] totals = calculateTotals(playerId, carriedWallets, snapshot);
             synchronized (balanceVersions) {
                 if (balanceVersions.get(playerId) == version) {
+                    cachedDinoCoins.put(playerId, totals[0]);
                     dbManager.setCurrencyBalances(playerId, totals[0], totals[1]);
                 }
             }
         });
+    }
+
+    public int getCachedDinoCoins(UUID playerId) {
+        return cachedDinoCoins.getOrDefault(playerId, 0);
     }
 
     public void shutdown() {

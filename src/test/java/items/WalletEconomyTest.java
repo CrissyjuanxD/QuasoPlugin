@@ -6,11 +6,7 @@ import Handlers.DatabaseManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
-import org.bukkit.Registry;
-import org.bukkit.enchantments.Enchantment;
-import org.bukkit.Sound;
 import io.papermc.paper.registry.RegistryAccess;
-import io.papermc.paper.registry.RegistryKey;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.inventory.*;
@@ -44,23 +40,7 @@ class WalletEconomyTest {
     private static RegistryAccess testRegistryAccess;
     @BeforeAll
     static void initializePaperInventoryTypes() {
-        // Paper inicializa MenuType mediante su registro incluso en pruebas sin servidor.
-        RegistryAccess access = mock(RegistryAccess.class, call -> {
-            if (!call.getMethod().getName().equals("getRegistry")) return null;
-            Object kind = call.getArgument(0);
-            return mock(Registry.class, lookup -> {
-                if (!lookup.getMethod().getName().startsWith("get")) return null;
-                if (kind == RegistryKey.MENU) return mock(MenuType.Typed.class);
-                if (kind == RegistryKey.SOUND_EVENT || kind == Sound.class) return mock(Sound.class);
-                if (kind == RegistryKey.ENCHANTMENT || kind == Enchantment.class) return mock(Enchantment.class);
-                return null;
-            });
-        });
-        testRegistryAccess = access;
-        try (MockedStatic<RegistryAccess> registry = mockStatic(RegistryAccess.class)) {
-            registry.when(RegistryAccess::registryAccess).thenReturn(access);
-            InventoryType.values();
-        }
+        testRegistryAccess = support.PaperTestRegistry.initialize();
     }
 
     private JavaPlugin plugin;

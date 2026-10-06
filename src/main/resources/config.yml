@@ -4,3 +4,17 @@ Database1:
   database: "database_name" # El nombre que te dio el panel
   username: "database_username"   # El usuario que te dio el panel
   password: "my_password"
+
+# Glifos de la fuente del resource pack: reemplaza estos unicodes por los tuyos.
+main-scoreboard:
+  titulo: "\uE900"
+  iconos:
+    usuario: "\uE901"
+    rango: "\uE902"
+    misiones: "\uE903"
+    dinocoins: "\uE904"
+    trabajo: "\uE905"
+    ip: "\uE906"
+
+mantenimiento:
+  activo: false

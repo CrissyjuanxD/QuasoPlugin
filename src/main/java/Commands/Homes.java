@@ -16,8 +16,12 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.event.player.PlayerTeleportEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.util.StringUtil;
@@ -32,7 +36,15 @@ public class Homes implements CommandExecutor, TabCompleter, Listener {
     private File homesFile;
     private FileConfiguration homesConfig;
 
-    private final Map<UUID, BukkitTask> teleportingPlayers = new HashMap<>();
+    private final Map<UUID, PendingTeleport> teleportingPlayers = new HashMap<>();
+
+    private static final class PendingTeleport {
+        private final Location origin;
+        private BukkitTask task;
+
+        private PendingTeleport(Location origin) { this.origin = origin.clone(); }
+        private void cancel() { if (task != null) task.cancel(); }
+    }
 
     public Homes(QuasoPlugin plugin) {
         this.plugin = plugin;
@@ -134,21 +146,37 @@ public class Homes implements CommandExecutor, TabCompleter, Listener {
 
             Location homeLoc = new Location(world, x, y, z, player.getLocation().getYaw(), player.getLocation().getPitch());
 
-            if (teleportingPlayers.containsKey(player.getUniqueId())) {
-                teleportingPlayers.get(player.getUniqueId()).cancel();
+            PendingTeleport previous = teleportingPlayers.remove(player.getUniqueId());
+            if (previous != null) previous.cancel();
+
+            if (player.isOp()) {
+                teleportHome(player, homeLoc, homeName);
+                return true;
             }
+
+            PendingTeleport pending = new PendingTeleport(player.getLocation());
+            teleportingPlayers.put(player.getUniqueId(), pending);
 
             player.sendMessage(ChatColor.of("#F4D990") + "Teletransportándote a " + ChatColor.of("#C9DC8A") + homeName + ChatColor.of("#F4D990") + " en 5 segundos. ¡No te muevas y no recibas daño!");
             player.playSound(player.getLocation(), Sound.BLOCK_AMETHYST_BLOCK_CHIME, 2.0f, 0.6f);
 
-            BukkitTask tpTask = new BukkitRunnable() {
+            pending.task = new BukkitRunnable() {
                 int count = 5;
 
                 @Override
                 public void run() {
+                    // Un callback antiguo no puede ejecutar un TP ya cancelado o reemplazado.
+                    if (teleportingPlayers.get(player.getUniqueId()) != pending) {
+                        pending.cancel();
+                        return;
+                    }
                     if (!player.isOnline()) {
                         teleportingPlayers.remove(player.getUniqueId());
-                        this.cancel();
+                        pending.cancel();
+                        return;
+                    }
+                    if (hasMoved(pending.origin, player.getLocation())) {
+                        cancelTeleport(player, "¡Teletransporte cancelado por moverte!");
                         return;
                     }
 
@@ -158,17 +186,13 @@ public class Homes implements CommandExecutor, TabCompleter, Listener {
                         player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 0.5f, 1f);
                         count--;
                     } else {
-                        player.teleport(homeLoc);
-                        player.playSound(player.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 1.0f, 1.0f);
-                        player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent("§a§l¡Teletransportado a " + homeName + "!"));
-
                         teleportingPlayers.remove(player.getUniqueId());
-                        this.cancel();
+                        pending.cancel();
+                        teleportHome(player, homeLoc, homeName);
                     }
                 }
             }.runTaskTimer(plugin, 0L, 20L);
 
-            teleportingPlayers.put(player.getUniqueId(), tpTask);
             return true;
         }
 
@@ -190,20 +214,56 @@ public class Homes implements CommandExecutor, TabCompleter, Listener {
     }
 
     // Si le pegan mientras espera el tp se cancela
-    @EventHandler
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onPlayerDamage(EntityDamageEvent event) {
-        if (event.getEntity() instanceof Player) {
-            Player player = (Player) event.getEntity();
-
-            if (teleportingPlayers.containsKey(player.getUniqueId())) {
-                teleportingPlayers.get(player.getUniqueId()).cancel();
-                teleportingPlayers.remove(player.getUniqueId());
-
-                player.sendMessage(ChatColor.RED + "¡Teletransporte cancelado por recibir daño!");
-                player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent("§c§l¡Teletransporte Cancelado!"));
-                player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_NO, 1f, 1f);
-            }
+        if (!event.isCancelled() && event.getFinalDamage() > 0 && event.getEntity() instanceof Player player) {
+            cancelTeleport(player, "¡Teletransporte cancelado por recibir daño!");
         }
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    public void onPlayerMove(PlayerMoveEvent event) {
+        if (event.isCancelled()) return;
+        PendingTeleport pending = teleportingPlayers.get(event.getPlayer().getUniqueId());
+        if (pending != null && hasMoved(pending.origin, event.getTo())) {
+            cancelTeleport(event.getPlayer(), "¡Teletransporte cancelado por moverte!");
+        }
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    public void onPlayerTeleport(PlayerTeleportEvent event) {
+        onPlayerMove(event);
+    }
+
+    @EventHandler
+    public void onPlayerQuit(PlayerQuitEvent event) {
+        PendingTeleport pending = teleportingPlayers.remove(event.getPlayer().getUniqueId());
+        if (pending != null) pending.cancel();
+    }
+
+    private boolean hasMoved(Location from, Location to) {
+        return to == null || !Objects.equals(from.getWorld(), to.getWorld())
+                || from.getX() != to.getX() || from.getY() != to.getY() || from.getZ() != to.getZ();
+    }
+
+    private void cancelTeleport(Player player, String message) {
+        PendingTeleport pending = teleportingPlayers.remove(player.getUniqueId());
+        if (pending == null) return;
+        pending.cancel();
+        player.sendMessage(ChatColor.RED + message);
+        player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent("§c§l¡Teletransporte Cancelado!"));
+        player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_NO, 1f, 1f);
+    }
+
+    private void teleportHome(Player player, Location location, String homeName) {
+        player.teleport(location);
+        player.playSound(player.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 1.0f, 1.0f);
+        player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent("§a§l¡Teletransportado a " + homeName + "!"));
+    }
+
+    public void shutdown() {
+        teleportingPlayers.values().forEach(PendingTeleport::cancel);
+        teleportingPlayers.clear();
     }
 
     // Si el jugador tenía el formato viejo (un solo home) lo pasa a 'base'

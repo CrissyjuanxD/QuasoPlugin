@@ -1,6 +1,7 @@
 package Commands;
 
 import Handlers.DatabaseManager;
+import imp.crissyjuanxd.QuasoPlugin;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -26,6 +27,9 @@ public class QuasoReloadCommand implements CommandExecutor {
         }
 
         plugin.reloadConfig();
+        if (plugin instanceof QuasoPlugin quaso && quaso.getMantenimientoHandler() != null) {
+            quaso.getMantenimientoHandler().reload();
+        }
         databaseManager.reload();
 
         sender.sendMessage(ChatColor.GREEN + "§l[QuasoPlugin] §aConfiguración y Base de Datos recargadas correctamente.");

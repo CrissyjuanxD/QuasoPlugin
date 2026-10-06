@@ -619,4 +619,20 @@ public class MissionHandler implements Listener {
     public void completeMission(Player player, int missionId) {
         completeMission(player.getName(), missionId);
     }
+
+    public int getTotalMissionCount() { return missions.size(); }
+
+    public int getCompletedMissionCount(Player player) {
+        Map<Integer, MissionData> data = playerCache.get(player.getUniqueId());
+        if (data == null) return 0;
+
+        int completed = 0;
+        for (Integer missionId : missions.keySet()) {
+            MissionData missionData = data.get(missionId);
+            if (missionData != null && missionData.isCompleted()) {
+                completed++;
+            }
+        }
+        return completed;
+    }
 }

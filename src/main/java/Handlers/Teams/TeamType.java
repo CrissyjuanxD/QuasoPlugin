@@ -76,6 +76,23 @@ public enum TeamType {
         this.priority = priority;
     }
 
+    public String getDisplayName() {
+        return switch (this) {
+            case ADMIN -> "Prieto";
+            case MOD -> "DinoNalgon";
+            case T_HELPER -> "Helper";
+            case T_SURVIVOR -> "Survivor";
+            case X_LEYENDA -> "DinoLeyenda";
+            case Y_MIEMBRO -> "DinoNugget+";
+            case Z_MIEMBRO -> "DinoNugget";
+            case LAVACLASH -> "LavaClash";
+            case ITEMPARTY -> "ItemParty";
+            case HOTPOTATO -> "HotPotato";
+            case BUILDBATTLE -> "BuildBattle";
+            case Z_FANTASMA -> "Fantasma";
+        };
+    }
+
     public String getId() { return id; }
     public ChatColor getBungeeColor() { return ChatColor.of(hexColor); }
     public String getChatPrefix() { return chatPrefix; }

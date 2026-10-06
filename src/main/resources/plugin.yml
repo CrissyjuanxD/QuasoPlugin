@@ -274,6 +274,16 @@ commands:
     usage: /tumbas <list|remove|place|reload>
     permission: viciont_hardcore3.command.tumbas
     permission-message: No tienes permiso para usar este comando.
+  autoanuncio:
+    description: Inicia una ráfaga de tips en el chat cada 30 segundos.
+    usage: /autoanuncio
+    permission: viciont_hardcore3.command.autoanuncio
+    permission-message: No tienes permiso para usar este comando.
+  mantenimiento:
+    description: Enciende o apaga el modo mantenimiento.
+    usage: /mantenimiento <on|off>
+    permission: viciont_hardcore3.mantenimiento
+    permission-message: No tienes permiso para usar este comando.
 
 depend: [EliteMobs]
 softdepend: [FastAsyncWorldEdit, BloodMoon]

@@ -1,4 +1,4 @@
-package imp.crissyjuanxd.bloodmoon;
+package BloodMoon;
 
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;

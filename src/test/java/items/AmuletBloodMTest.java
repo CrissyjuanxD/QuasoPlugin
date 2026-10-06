@@ -1,7 +1,7 @@
 package items;
 
-import imp.crissyjuanxd.bloodmoon.BloodMoon;
-import imp.crissyjuanxd.bloodmoon.BloodMoonHordeEvent;
+import BloodMoon.BloodMoon;
+import BloodMoon.BloodMoonHordeEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;

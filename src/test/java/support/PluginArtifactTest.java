@@ -1,6 +1,6 @@
 package support;
 
-import imp.crissyjuanxd.bloodmoon.BloodMoon;
+import BloodMoon.BloodMoon;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 

@@ -1,4 +1,4 @@
-package imp.crissyjuanxd.bloodmoon;
+package BloodMoon;
 
 import org.bukkit.World;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -33,8 +33,8 @@ public final class ConfigReader {
 
     public void RefreshConfigs() {
         config = YamlConfiguration.loadConfiguration(file);
-        try (var stream = plugin.getResource("bloodmoon/config.yml")) {
-            if (stream == null) throw new IOException("Falta bloodmoon/config.yml");
+        try (var stream = plugin.getResource("bloodmoon-defaults/config.yml")) {
+            if (stream == null) throw new IOException("Falta bloodmoon-defaults/config.yml");
             config.setDefaults(YamlConfiguration.loadConfiguration(new InputStreamReader(stream, StandardCharsets.UTF_8)));
             config.options().copyDefaults(true);
             // Estos ajustes del plugin externo no tienen efecto dentro de Quaso.

@@ -1,4 +1,4 @@
-package imp.crissyjuanxd.bloodmoon;
+package BloodMoon;
 
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.ChatMessageType;
@@ -33,7 +33,7 @@ public final class LocaleReader {
 
     public void RefreshLocales() {
         locales = YamlConfiguration.loadConfiguration(file);
-        try (var stream = plugin.getResource("bloodmoon/mensajes.yml")) {
+        try (var stream = plugin.getResource("bloodmoon-defaults/mensajes.yml")) {
             if (stream == null) throw new IOException("Faltan los mensajes de BloodMoon");
             locales.setDefaults(YamlConfiguration.loadConfiguration(new InputStreamReader(stream, StandardCharsets.UTF_8)));
             locales.options().copyDefaults(true);
@@ -44,7 +44,8 @@ public final class LocaleReader {
     }
 
     public String GetLocaleString(String id) {
-        String value = locales.getString(id, "&#EF9292No se encontró el mensaje: " + id);
+        String value = locales.getString(id);
+        if (value == null) value = "&#EF9292No se encontró el mensaje: " + id;
         if (value.equals("%void%")) return "";
         return color(value.replace("$n", "\n"));
     }

@@ -24,7 +24,7 @@ import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.java.JavaPlugin;
-import imp.crissyjuanxd.bloodmoon.BloodMoonActuator;
+import BloodMoon.BloodMoonActuator;
 
 import java.util.HashMap;
 import java.util.HashSet;

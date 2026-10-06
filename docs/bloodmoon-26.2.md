@@ -1,6 +1,6 @@
 # BloodMoon dentro de Quaso 26.2
 
-El paquete `imp.crissyjuanxd.bloodmoon` y su clase principal `BloodMoon` integran la lógica de
+El paquete `BloodMoon` y su clase principal `BloodMoon` integran la lógica de
 BloodMoon 0.8.1 de SpectralMemories, recuperada del JAR que había en `libs`.
 Conserva el ciclo por mundo, noches permanentes, avisos, barra nocturna, clima,
 sonidos, efectos de combate, bloqueo de camas, experiencia y botín configurable,
@@ -18,6 +18,8 @@ que se carguen posteriormente también se registran.
 
 La configuración nativa queda en `plugins/QuasoPlugin/bloodmoon/<mundo>/config.yml`;
 los mensajes en `bloodmoon/mensajes.yml` y el calendario en `bloodmoon/estado.yml`.
+Los valores predeterminados se leen desde `bloodmoon-defaults` dentro del JAR;
+esa carpeta interna no cambia la ubicación de la configuración del servidor.
 Se mantienen las claves originales. Los ajustes de pérdida de inventario y
 experiencia, y los del jefe, se descartan al importar/recargar. No se añade
 confusión. Las misiones de BloodMoon y el drop existente de fragmentos del Día 1
@@ -72,11 +74,27 @@ comienzan con `۞`, el mismo símbolo de las misiones. El aviso de inicio dice:
 > Los monstruos son más fuertes y las hordas acechan durante la noche.
 > Derrota monstruos para conseguir más experiencia, botín y fragmentos de BloodMoon.
 
+## Mensajes que no aparecen
+
+Se ha corregido la lectura de los valores predeterminados: los mensajes están
+disponibles desde el primer arranque y las claves nuevas o ausentes se completan
+al recargar, conservando las personalizaciones y `%void%` para silenciar un aviso.
+Antes, el archivo se guardaba correctamente, pero los valores añadidos no se
+utilizaban hasta volver a leerlo.
+
+En la versión anterior, ejecutar `/bloodmoon reload` después del primer arranque
+permite leer los mensajes que ya se han guardado. Para aplicar la corrección
+definitiva, reemplazar el JAR y reiniciar el servidor. No hay que borrar ni crear
+manualmente `plugins/QuasoPlugin/bloodmoon/mensajes.yml`. Si se personaliza ese
+archivo, `/bloodmoon reload` aplica los cambios.
+
 ## Validación
 
 `mvn clean verify` con Java 25 comprueba calendario y reinicios, importación de
 configuración, mobs reforzados, cancelación completa de hordas, spawns junto a
 paredes/techos y fuera de límites, argumentos de comandos y consumo del amuleto.
+También comprueba los mensajes del primer arranque, archivos incompletos,
+recargas y disponibilidad de los valores predeterminados si falla el guardado.
 También ejecuta las pruebas existentes de Quaso. Las pruebas usan colaboradores
 Bukkit simulados; falta confirmar el comportamiento real en el servidor Paper
 con su configuración, terreno, resource pack y otros plugins.
@@ -88,7 +106,8 @@ con la noche activa y generar hordas en zonas estrechas.
 
 ## Compilación en Windows e IntelliJ
 
-Las clases usan `imp.crissyjuanxd.bloodmoon` y los recursos siguen en `bloodmoon`.
+Las clases están en el paquete `BloodMoon`, al mismo nivel que los demás paquetes,
+y los recursos predeterminados del JAR están en `bloodmoon-defaults`.
 La antigua separación `BloodMoon` / `bloodmoon` no funcionaba al compilar en
 Windows: el sistema fusionaba las carpetas y el JAR podía guardar las clases
 como `bloodmoon/BloodMoon.class`, aunque Java buscara `BloodMoon/BloodMoon.class`.
@@ -103,4 +122,4 @@ y reiniciar el servidor.
 La prueba `PluginArtifactTest` comprueba que las carpetas compiladas no colisionen
 por mayúsculas y carga la clase nativa desde un JAR construido simulando las
 rutas de Windows. Esta prueba reprodujo el `ClassNotFoundException` original
-antes de corregir el paquete.
+antes de separar las rutas de clases y recursos.

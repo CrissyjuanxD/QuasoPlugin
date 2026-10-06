@@ -1,4 +1,4 @@
-package imp.crissyjuanxd.bloodmoon;
+package BloodMoon;
 
 import org.bukkit.Location;
 import org.bukkit.Material;

@@ -1,4 +1,4 @@
-package imp.crissyjuanxd.bloodmoon;
+package BloodMoon;
 
 /** Calendario persistente basado en días del mundo, independiente de tareas de Bukkit. */
 public final class BloodMoonCycle {

@@ -1,5 +1,7 @@
 package Events.MissionSystem;
 
+import items.ItemModels;
+import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
@@ -14,8 +16,10 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockedConstruction;
 import org.mockito.MockedStatic;
+import org.mockito.ArgumentCaptor;
 
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -23,6 +27,52 @@ import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
 class MissionGUITest {
+    @Test
+    void extraMissionsKeepTheirParentAndOrderButHideTheReleaseExplanationInTheirLore() {
+        JavaPlugin plugin = mock(JavaPlugin.class);
+        Server server = mock(Server.class);
+        when(plugin.getServer()).thenReturn(server);
+        when(server.getPluginManager()).thenReturn(mock(PluginManager.class));
+        MissionHandler handler = mock(MissionHandler.class);
+        Mission parent = mock(Mission.class);
+        when(parent.getMissionNumber()).thenReturn(6);
+        when(parent.getDescription()).thenReturn("Misión principal.");
+        Mission extra = mock(Mission.class);
+        when(extra.getMissionNumber()).thenReturn(36);
+        when(extra.getParentMission()).thenReturn(6);
+        when(extra.getDescription()).thenReturn("Misión adicional.");
+        LinkedHashMap<Integer, Mission> missions = new LinkedHashMap<>();
+        missions.put(6, parent);
+        missions.put(36, extra);
+        when(handler.getMissions()).thenReturn(missions);
+        when(handler.getExtras(6)).thenReturn(List.of(36));
+        when(handler.displayName(6)).thenReturn("#6 Principal");
+        when(handler.displayName(36)).thenReturn("Extra #6 Adicional");
+        MissionData data = new MissionData();
+        data.setActive(true);
+        Player player = mock(Player.class);
+        when(handler.getData(eq(player), anyInt())).thenReturn(data);
+        Inventory inventory = mock(Inventory.class);
+
+        try (MockedStatic<Bukkit> bukkit = mockStatic(Bukkit.class);
+             MockedStatic<ItemModels> models = mockStatic(ItemModels.class);
+             MockedConstruction<ItemStack> stacks = mockConstruction(ItemStack.class,
+                     (stack, context) -> when(stack.getItemMeta()).thenReturn(mock(ItemMeta.class)))) {
+            bukkit.when(() -> Bukkit.createInventory(any(InventoryHolder.class), eq(54), anyString())).thenReturn(inventory);
+            new MissionGUI(plugin, handler).openMissionGUI(player);
+
+            assertEquals(4, stacks.constructed().size());
+            ItemStack extraItem = stacks.constructed().getLast();
+            @SuppressWarnings("unchecked") ArgumentCaptor<List<String>> lore = ArgumentCaptor.forClass(List.class);
+            verify(extraItem.getItemMeta()).setLore(lore.capture());
+            List<String> plainLore = lore.getValue().stream().map(ChatColor::stripColor).toList();
+            assertTrue(plainLore.contains("Misión extra"));
+            assertTrue(plainLore.stream().noneMatch(line -> line.contains("sale con")));
+            verify(inventory).setItem(19, extraItem);
+            assertEquals(6, extra.getParentMission());
+        }
+    }
+
     @Test
     void keepsHeaderEmptyAndBlocksClickAndDragTransfers() {
         JavaPlugin plugin = mock(JavaPlugin.class);

@@ -261,8 +261,8 @@ commands:
     description: Establecer tu casa
     usage: /sethome
   home:
-    description: Ir a tu casa
-    usage: /home
+    description: Teletransportarte a una casa o ver tus diez homes
+    usage: /home <nombre|list>
   delhome:
     description: Elimina tu casa
     usage: /delhome
@@ -291,7 +291,7 @@ commands:
     permission-message: No tienes permiso para usar este comando.
 
 depend: [EliteMobs]
-softdepend: [FastAsyncWorldEdit, WorldGuard]
+softdepend: [FastAsyncWorldEdit, WorldGuard, ViaVersion]
 
 permissions:
   bloodmoon.bloodmoon:

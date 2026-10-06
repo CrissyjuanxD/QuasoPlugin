@@ -1,9 +1,11 @@
 package BloodMoon;
 
+import Handlers.ActionBarHandler;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Server;
 import org.bukkit.World;
 import org.bukkit.WorldBorder;
 import org.bukkit.block.Block;
@@ -29,6 +31,7 @@ import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
 class BloodMoonActuatorTest {
+    private JavaPlugin plugin;
     private BloodMoon manager;
     private ConfigReader config;
     private BloodMoonActuator actuator;
@@ -42,7 +45,7 @@ class BloodMoonActuatorTest {
     @BeforeEach void setup() {
         manager = mock(BloodMoon.class);
         config = mock(ConfigReader.class);
-        JavaPlugin plugin = mock(JavaPlugin.class);
+        plugin = mock(JavaPlugin.class);
         when(plugin.namespace()).thenReturn("quasoplugin");
         when(manager.getPlugin()).thenReturn(plugin);
         world = mock(World.class);
@@ -69,6 +72,7 @@ class BloodMoonActuatorTest {
         when(prototype.getHeight()).thenReturn(1.95);
         when(world.createEntity(any(Location.class), eq(Zombie.class))).thenReturn(prototype);
         player = mock(Player.class);
+        when(player.getUniqueId()).thenReturn(UUID.randomUUID());
         when(player.getWorld()).thenReturn(world);
         when(player.getLocation()).thenAnswer(call -> new Location(world, 0.5, 64, 0.5));
         when(player.getName()).thenReturn("Crosszy");
@@ -96,7 +100,15 @@ class BloodMoonActuatorTest {
         when(scheduler.runTaskLater(any(Plugin.class), any(Runnable.class), anyLong())).thenAnswer(call -> capture(call.getArgument(1)));
         when(scheduler.runTaskTimer(any(Plugin.class), any(Runnable.class), anyLong(), anyLong())).thenAnswer(call -> capture(call.getArgument(1)));
         events = mock(PluginManager.class);
+        Server server = mock(Server.class);
+        when(plugin.getServer()).thenReturn(server);
+        when(server.getPluginManager()).thenReturn(events);
+        // La cola de mensajes vive más que un ciclo de BloodMoon; sus tareas no pertenecen al actuador.
+        BukkitScheduler messages = mock(BukkitScheduler.class);
+        when(messages.runTaskTimer(eq(plugin), any(Runnable.class), anyLong(), anyLong()))
+                .thenReturn(mock(BukkitTask.class));
         bukkit = mockStatic(Bukkit.class);
+        bukkit.when(Bukkit::getScheduler).thenReturn(messages);
         bukkit.when(Bukkit::getPluginManager).thenReturn(events);
         bukkit.when(() -> Bukkit.createBossBar(anyString(), any(), any(), any(org.bukkit.boss.BarFlag[].class))).thenReturn(mock(BossBar.class));
         actuator = new BloodMoonActuator(manager, world, new BloodMoonCycle(0, 5, -1));
@@ -107,7 +119,7 @@ class BloodMoonActuatorTest {
         tasks.add(task);
         return task;
     }
-    @AfterEach void cleanup() { bukkit.close(); }
+    @AfterEach void cleanup() { ActionBarHandler.shutdown(plugin); bukkit.close(); }
     @Test void aCancelledHordeCreatesNoEntitiesOrLightning() {
         doAnswer(call -> { ((BloodMoonHordeEvent) call.getArgument(0)).setCancelled(true); return null; }).when(events).callEvent(any(Event.class));
         assertEquals(BloodMoonActuator.HordeResult.BLOCKED, actuator.SpawnHorde(player));
@@ -149,6 +161,87 @@ class BloodMoonActuatorTest {
             verify(events, never()).callEvent(any());
             verify(world, never()).setStorm(anyBoolean());
             verify(world, never()).spawnEntity(any(), any(), any(org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason.class));
+        }
+    }
+    @Test void endingBloodMoonClearsRainEvenWhenItWasAlreadyRainingBeforeItStarted() {
+        when(config.GetThunderingConfig()).thenReturn(true);
+        when(world.hasStorm()).thenReturn(true);
+        when(world.isThundering()).thenReturn(true);
+        when(world.getWeatherDuration()).thenReturn(5000);
+        when(world.getThunderDuration()).thenReturn(6000);
+        try (var singleton = mockStatic(BloodMoon.class)) {
+            singleton.when(BloodMoon::GetInstance).thenReturn(manager);
+            actuator.StartBloodMoon();
+            clearInvocations(world);
+            actuator.StopBloodMoon();
+            verify(world).setStorm(false);
+            verify(world).setThundering(false);
+            verify(world).setClearWeatherDuration(12000);
+            verify(world, never()).setStorm(true);
+            verify(world, never()).setThundering(true);
+        }
+    }
+    @Test void redSkyKeepsClearWeatherAndAvoidsTheBossbarDarkeningFlags() {
+        when(config.GetThunderingConfig()).thenReturn(true);
+        when(config.GetDarkenSkyConfig()).thenReturn(true);
+        when(manager.syncSky(world, true)).thenReturn(true);
+        when(manager.isSkyActive(world)).thenReturn(true);
+        try (var singleton = mockStatic(BloodMoon.class)) {
+            singleton.when(BloodMoon::GetInstance).thenReturn(manager);
+            assertTrue(actuator.StartBloodMoon());
+            verify(manager).syncSky(world, true);
+            verify(world).setStorm(false);
+            verify(world).setThundering(false);
+            verify(world, never()).setStorm(true);
+            verify(world, never()).setThundering(true);
+            bukkit.verify(() -> Bukkit.createBossBar(anyString(), any(), any(), eq(new org.bukkit.boss.BarFlag[0])));
+        }
+    }
+    @Test void redSkyRestoresClearWeatherAtTheEndEvenWhenNormalStormsAreDisabled() {
+        when(config.GetThunderingConfig()).thenReturn(false);
+        when(manager.syncSky(world, true)).thenReturn(true);
+        when(manager.isSkyActive(world)).thenReturn(true);
+        try (var singleton = mockStatic(BloodMoon.class)) {
+            singleton.when(BloodMoon::GetInstance).thenReturn(manager);
+            actuator.StartBloodMoon();
+            clearInvocations(world);
+            actuator.StopBloodMoon();
+            verify(manager).syncSky(world, false);
+            verify(world).setStorm(false);
+            verify(world).setThundering(false);
+            verify(world).setClearWeatherDuration(12000);
+        }
+    }
+    @Test void dawnClearsBloodMoonWeatherAndCancelledAmbientTasksCannotRestoreIt() {
+        when(config.GetThunderingConfig()).thenReturn(true);
+        try (var singleton = mockStatic(BloodMoon.class)) {
+            singleton.when(BloodMoon::GetInstance).thenReturn(manager);
+            actuator.StartBloodMoon();
+            List<Runnable> oldCallbacks = List.copyOf(callbacks);
+            when(world.getTime()).thenReturn(0L);
+            when(world.getFullTime()).thenReturn(24000L);
+            clearInvocations(world);
+            actuator.checkNight();
+            for (Runnable callback : oldCallbacks) callback.run();
+            assertFalse(actuator.isInProgress());
+            verify(world).setStorm(false);
+            verify(world).setThundering(false);
+            verify(world).setClearWeatherDuration(12000);
+            verify(world, never()).setStorm(true);
+            verify(world, never()).setThundering(true);
+        }
+    }
+    @Test void bloodMoonWithoutWeatherControlPreservesNaturalRain() {
+        when(world.hasStorm()).thenReturn(true);
+        when(world.isThundering()).thenReturn(true);
+        try (var singleton = mockStatic(BloodMoon.class)) {
+            singleton.when(BloodMoon::GetInstance).thenReturn(manager);
+            actuator.StartBloodMoon();
+            clearInvocations(world);
+            actuator.StopBloodMoon();
+            verify(world, never()).setStorm(anyBoolean());
+            verify(world, never()).setThundering(anyBoolean());
+            verify(world, never()).setClearWeatherDuration(anyInt());
         }
     }
     @Test void regularBloodMoonMobsKeepTheirDamageAndResistanceMultipliers() {

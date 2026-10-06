@@ -32,6 +32,13 @@ Estos valores se pueden cambiar por mundo. Los jugadores en creativo o
 espectador no se seleccionan como objetivos. Se conserva el formato de
 recompensas ponderadas y comandos `;s`, `;p`, `;f` del sistema original.
 
+Cuando BloodMoon controla el clima (`ThunderDuringBloodMoon: true`), al terminar
+desactiva lluvia y truenos y mantiene el cielo despejado durante 12.000 ticks.
+También lo limpia al descargar el mundo o recargar/desactivar el sistema. No
+restaura la tormenta anterior: tras un reinicio esa tormenta podía ser la propia
+lluvia de BloodMoon y quedarse activa al terminar. Si el control del clima está
+desactivado durante toda la noche, se conserva el clima natural del mundo.
+
 ## Comandos
 
 Todos completan sus argumentos según permisos. Desde un jugador utilizan su
@@ -65,8 +72,22 @@ por minuto y un uso cada 7,2 segundos; el progreso parcial se guarda al desactiv
 para que cambiar su estado no reinicie el consumo. Al morir, desconectarse o terminar
 la BloodMoon, la protección se desactiva.
 
-Los mensajes están en español con naranja `#F4B183` y rojo `#EF9292`. Las action bars
-comienzan con `۞`, el mismo símbolo de las misiones. El aviso de inicio dice:
+Al bloquear una horda vuelve el aviso original con flecha blanca, nombre azul
+claro, texto azul y título del amuleto rojo. Se anuncia a los jugadores conectados,
+suena una selección de baliza para el portador y aparece una espiral de partículas
+alrededor de él. El aviso, sonido y animación tienen un límite de una vez cada
+cinco segundos; todas las hordas protegidas siguen cancelándose dentro de ese plazo.
+
+El indicador continuo del amuleto usa la cola compartida de `ActionBarHandler`.
+Cede mientras aparecen avisos y vuelve a su estado más reciente cuando termina
+la cola. Desactivarlo elimina solo su indicador, conservando los mensajes de
+misiones visibles o pendientes.
+
+Los mensajes están en español con naranja `#F4B183`, rojo `#EF9292`, melocotón
+`#FFD2AE` y coral `#F7AAA1`. Se resaltan nombres, avisos y recompensas dentro de
+esa paleta. Las action bars comienzan con `۞`, el mismo símbolo de las misiones;
+sus textos de inicio/final y horda también se pueden editar en `mensajes.yml`.
+El aviso de inicio dice:
 
 > Bloodmoon >
 >
@@ -88,6 +109,11 @@ definitiva, reemplazar el JAR y reiniciar el servidor. No hay que borrar ni crea
 manualmente `plugins/QuasoPlugin/bloodmoon/mensajes.yml`. Si se personaliza ese
 archivo, `/bloodmoon reload` aplica los cambios.
 
+La paleta nueva se aplica también a archivos existentes: únicamente se reemplazan
+los textos que coincidan exactamente con los mensajes predeterminados anteriores.
+Los mensajes personalizados y `%void%` permanecen intactos; no hace falta borrar
+el archivo para recibir los colores nuevos.
+
 ## Validación
 
 `mvn clean verify` con Java 25 comprueba calendario y reinicios, importación de
@@ -95,9 +121,15 @@ configuración, mobs reforzados, cancelación completa de hordas, spawns junto a
 paredes/techos y fuera de límites, argumentos de comandos y consumo del amuleto.
 También comprueba los mensajes del primer arranque, archivos incompletos,
 recargas y disponibilidad de los valores predeterminados si falla el guardado.
-También ejecuta las pruebas existentes de Quaso. Las pruebas usan colaboradores
-Bukkit simulados; falta confirmar el comportamiento real en el servidor Paper
-con su configuración, terreno, resource pack y otros plugins.
+Comprueba la migración de la paleta sin sobrescribir mensajes personalizados,
+el despejado al amanecer/final, las recargas del clima y una noche reanudada.
+También ejecuta las pruebas existentes de Quaso. La suite completa tiene 112
+pruebas correctas. El servidor interno Paper 26.2-129 con MySQL completó dos
+arranques y comprobó el clima, los atributos reales de cielo/niebla, la vuelta
+al estado normal, el aislamiento entre mundos y la restauración después de
+reiniciar. Los diálogos reales de homes también se serializaron correctamente.
+El comportamiento con jugadores, su terreno, resource pack y otras integraciones
+requiere probarse en el cliente.
 
 Para comprobarlo allí: `/bloodmoon start`, generar una horda sin amuleto, activar
 el amuleto con diamantes y repetir la horda; después `/bloodmoon stop`. Verificar

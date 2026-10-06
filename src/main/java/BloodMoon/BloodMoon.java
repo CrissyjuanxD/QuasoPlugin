@@ -32,6 +32,7 @@ public final class BloodMoon implements Listener {
     private final File cacheFile;
     private final YamlConfiguration cache;
     private final LocaleReader locales;
+    private final BloodMoonSky sky;
     private BukkitTask clock;
     private boolean shuttingDown;
 
@@ -41,6 +42,7 @@ public final class BloodMoon implements Listener {
         cacheFile = new File(plugin.getDataFolder(), "bloodmoon/estado.yml");
         cache = YamlConfiguration.loadConfiguration(cacheFile);
         locales = new LocaleReader(plugin);
+        sky = new BloodMoonSky(plugin);
     }
 
     public void enable() {
@@ -69,11 +71,19 @@ public final class BloodMoon implements Listener {
     }
     public List<World> getWorlds() { return worlds.values().stream().map(BloodMoonActuator::getWorld).toList(); }
     public boolean isShuttingDown() { return shuttingDown; }
+    public boolean isSkyActive(World world) { return sky.isActive(world); }
+    public boolean syncSky(World world, boolean active) {
+        ConfigReader config = getConfigReader(world);
+        boolean show = active && config != null && config.GetBloodMoonSkyEnabled();
+        return sky.syncWorld(world, show) && show;
+    }
 
     public void LoadWorld(World world) {
         if (world.getEnvironment() != World.Environment.NORMAL || configs.containsKey(world.getUID())) return;
         ConfigReader config = new ConfigReader(plugin, world);
         configs.put(world.getUID(), config);
+        // Incluye mundos excluidos: un reloj guardado no debe dejarles el cielo rojo al reiniciar.
+        syncSky(world, false);
         if (config.GetIsBlacklistedConfig()) return;
         importLegacyCache(world);
         String path = world.getUID().toString();
@@ -122,6 +132,7 @@ public final class BloodMoon implements Listener {
 
     public void reload() {
         locales.RefreshLocales();
+        sky.refreshAvailability();
         for (ConfigReader reader : configs.values()) reader.RefreshConfigs();
         for (World world : new ArrayList<>(Bukkit.getWorlds())) {
             ConfigReader reader = getConfigReader(world);
@@ -146,6 +157,7 @@ public final class BloodMoon implements Listener {
             HandlerList.unregisterAll(actuator);
         }
         configs.remove(world.getUID());
+        sky.clearWorld(world);
     }
     @EventHandler public void onWorldLoad(WorldLoadEvent event) { LoadWorld(event.getWorld()); }
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true) public void onWorldUnload(WorldUnloadEvent event) { unload(event.getWorld()); }

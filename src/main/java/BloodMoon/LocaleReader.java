@@ -1,8 +1,7 @@
 package BloodMoon;
 
+import Handlers.ActionBarHandler;
 import net.md_5.bungee.api.ChatColor;
-import net.md_5.bungee.api.ChatMessageType;
-import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
@@ -20,6 +19,8 @@ import java.util.regex.Pattern;
 public final class LocaleReader {
     public static final String ORANGE = ChatColor.of("#F4B183").toString();
     public static final String RED = ChatColor.of("#EF9292").toString();
+    public static final String PEACH = ChatColor.of("#FFD2AE").toString();
+    public static final String CORAL = ChatColor.of("#F7AAA1").toString();
     private static final Pattern HEX = Pattern.compile("&#([a-fA-F0-9]{6})");
     private final JavaPlugin plugin;
     private final File file;
@@ -35,11 +36,28 @@ public final class LocaleReader {
         locales = YamlConfiguration.loadConfiguration(file);
         try (var stream = plugin.getResource("bloodmoon-defaults/mensajes.yml")) {
             if (stream == null) throw new IOException("Faltan los mensajes de BloodMoon");
-            locales.setDefaults(YamlConfiguration.loadConfiguration(new InputStreamReader(stream, StandardCharsets.UTF_8)));
+            var defaults = YamlConfiguration.loadConfiguration(new InputStreamReader(stream, StandardCharsets.UTF_8));
+            migratePreviousDefaults(defaults);
+            locales.setDefaults(defaults);
             locales.options().copyDefaults(true);
             locales.save(file);
         } catch (IOException ex) {
             plugin.getLogger().warning("No se pudieron guardar los mensajes de BloodMoon: " + ex.getMessage());
+        }
+    }
+
+    private void migratePreviousDefaults(YamlConfiguration defaults) throws IOException {
+        // Solo cambia mensajes idénticos a la versión anterior; conserva ediciones y %void%.
+        try (var previous = plugin.getResource("bloodmoon-defaults/mensajes-v1.yml")) {
+            if (previous == null) return;
+            var oldDefaults = YamlConfiguration.loadConfiguration(new InputStreamReader(previous, StandardCharsets.UTF_8));
+            for (String id : oldDefaults.getKeys(false)) {
+                String oldValue = oldDefaults.getString(id);
+                String newValue = defaults.getString(id);
+                if (oldValue != null && newValue != null && oldValue.equals(locales.getString(id))) {
+                    locales.set(id, newValue);
+                }
+            }
         }
     }
 
@@ -75,8 +93,9 @@ public final class LocaleReader {
         if (!message.isEmpty()) Bukkit.broadcastMessage(message);
     }
     public static void actionBar(Player player, String message) {
-        player.spigot().sendMessage(ChatMessageType.ACTION_BAR,
-                TextComponent.fromLegacyText(ORANGE + "۞ " + message));
+        if (message == null || message.isEmpty()) return;
+        ActionBarHandler.get(BloodMoon.GetInstance().getPlugin())
+                .sendNotification(player, "bloodmoon:" + message, ORANGE + "۞ " + message);
     }
     public static void amuletMessage(Player player, String message) {
         player.sendMessage(ORANGE + "Bloodmoon > " + RED + message);

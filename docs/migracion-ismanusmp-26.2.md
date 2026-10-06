@@ -72,6 +72,28 @@ antiguo o cancelado no puede ejecutar el TP. Pedir otro `/home` reemplaza la
 petición anterior. Los operadores se teletransportan inmediatamente, sin
 programar la cuenta atrás.
 
+`/home list` es público y muestra las diez posiciones disponibles, ordenadas
+por nombre, con la paleta dorada, crema y verde de los mensajes de homes. En
+clientes Java desde 1.21.6 abre un diálogo con dos columnas, botones para ir a
+cada home, su destino al pasar el cursor y un botón para cerrar. Las posiciones
+vacías quedan desactivadas. Los clientes anteriores reciben las mismas diez
+posiciones en el chat, con enlaces `[Ir]` que se pueden pulsar.
+
+La versión se decide por el protocolo de cada jugador (`Player#getProtocolVersion`),
+no por la versión del servidor. Si ViaVersion está habilitado, se consulta primero
+su API por reflexión, sin añadir una dependencia obligatoria. Un protocolo
+desconocido, de snapshot o una API de Via inaccesible usa el listado en chat.
+Los botones ejecutan `/home <nombre>` como ese jugador, por lo que mantienen la
+espera, las cancelaciones y el teletransporte instantáneo de los operadores.
+Abrir el listado no cancela una petición de teletransporte que ya estuviera
+pendiente.
+
+`list` queda reservado para el listado. Los nombres nuevos admiten hasta 32
+letras, números, guiones y guiones bajos. Los nombres antiguos que no cumplen
+ese formato se conservan visibles pero sin un enlace que ejecute comandos;
+pueden borrarse con `/delhome` y guardarse de nuevo. Los datos con coordenadas
+inválidas muestran un error al jugador sin causar una excepción del plugin.
+
 ## Comprobaciones
 
 `mvn clean verify` con Java 25 ejecuta los tests de los ciclos vacíos y la ráfaga
@@ -79,6 +101,11 @@ de anuncios, el mantenimiento y su persistencia, el contenido y configuración
 del scoreboard, la convivencia con los eventos, el tiempo del TP, los
 operadores y todas las cancelaciones de homes. También conserva los tests de
 monederos, item models y GUI de misiones.
+
+Los tests de `/home list` verifican el protocolo mínimo del diálogo, sus diez
+botones, la reutilización de `/home`, el chat para clientes antiguos, el caso de
+ViaVersion sin una API consultable, los listados vacíos y los nombres o destinos
+malformados. El aspecto visual del diálogo requiere un cliente Java conectado.
 
 La comprobación visual con el resource pack y los comandos en Paper 26.2 sigue
 pendiente en el servidor. Para reproducir el fallo de anuncios ya no hace falta

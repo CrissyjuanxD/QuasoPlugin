@@ -233,6 +233,7 @@ public class QuasoPlugin extends JavaPlugin implements Listener {
         if (homesCmd != null) homesCmd.shutdown();
         if (amuletBloodM != null) amuletBloodM.shutdown();
         if (bloodMoon != null) bloodMoon.shutdown();
+        ActionBarHandler.shutdown(this);
 
         if (economyItemsFunctions != null) economyItemsFunctions.shutdown();
         if (dinoCoinsManager != null) dinoCoinsManager.shutdown();
@@ -691,7 +692,7 @@ public class QuasoPlugin extends JavaPlugin implements Listener {
             getLogger().warning("El datapack de QuasoPlugin (biomas de la Warden Cave y del End) se acaba de instalar o no está cargado. "
                     + "Reinicia el server; si la carpeta del mundo " + WORLD_NAME + " ya existía sin los biomas, bórrala para que se genere bien.");
         } else if (datapackUpdated) {
-            getLogger().warning("Se actualizó el datapack de QuasoPlugin (biomas y encantamientos). Reinicia el server para que se cargue.");
+            getLogger().warning("Se actualizó el datapack de QuasoPlugin (biomas, encantamientos y cielo de BloodMoon). Reinicia el server para que se cargue.");
         }
 
         createInfestedWorld();

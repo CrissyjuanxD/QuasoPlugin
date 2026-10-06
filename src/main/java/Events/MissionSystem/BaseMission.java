@@ -12,18 +12,16 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 import java.util.function.IntUnaryOperator;
 
 public abstract class BaseMission implements Mission, Listener {
     private static final String C_LABEL = "#FFCC99";
     private static final String C_VALUE = "#FFA07A";
-    private static ActionBarHandler actionBar;
-    private static SuccessNotification success;
+    private final ActionBarHandler actionBar;
+    private final SuccessNotification success;
 
     protected final JavaPlugin plugin;
     protected final MissionHandler handler;
@@ -34,7 +32,6 @@ public abstract class BaseMission implements Mission, Listener {
     private final int coins;
     private int parent;
     private final Map<String, MissionObjective> objectives = new LinkedHashMap<>();
-    private final Map<UUID, Long> lastBar = new HashMap<>();
 
     protected BaseMission(JavaPlugin plugin, MissionHandler handler, int number, String name,
                           MissionDifficulty difficulty, int coins, String description) {
@@ -45,10 +42,8 @@ public abstract class BaseMission implements Mission, Listener {
         this.difficulty = difficulty;
         this.coins = coins;
         this.description = wrap(description);
-        if (actionBar == null) {
-            actionBar = new ActionBarHandler(plugin);
-            success = new SuccessNotification(plugin);
-        }
+        actionBar = ActionBarHandler.get(plugin);
+        success = new SuccessNotification(plugin);
     }
 
     protected void extraOf(int baseMission) {
@@ -148,18 +143,29 @@ public abstract class BaseMission implements Mission, Listener {
         data.setProgressValue(key, now);
         save(player, data);
 
-        if (!check(player)) {
-            showProgress(player, data, objective, now >= objective.target());
-        }
+        // También se anuncia el último objetivo antes de entregar la recompensa de la misión.
+        showProgress(player, data, objective, now >= objective.target());
+        check(player);
     }
 
     // Si ya cumplió todos los objetivos la completa y entrega la ficha
     protected boolean check(Player player) {
         if (!tracking(player)) return false;
         MissionData data = data(player);
+        boolean completed = true;
+        boolean changed = false;
         for (MissionObjective objective : objectives.values()) {
-            if (value(player, data, objective) < objective.target()) return false;
+            int current = Math.max(0, Math.min(objective.target(), value(player, data, objective)));
+            if (current != data.getProgressInt(objective.key())) {
+                // Estadísticas y logros se calculan en vivo: también deben entrar en la cola.
+                data.setProgressValue(objective.key(), current);
+                changed = true;
+                showProgress(player, data, objective, current >= objective.target());
+            }
+            if (current < objective.target()) completed = false;
         }
+        if (changed) save(player, data);
+        if (!completed) return false;
         success.showSuccess(player);
         handler.completeMission(player, number);
         return true;
@@ -178,32 +184,15 @@ public abstract class BaseMission implements Mission, Listener {
     }
 
     protected void sendBar(Player player, String message) {
-        actionBar.sendActionBar(player, ChatColor.GOLD + "۞ " + message);
+        actionBar.sendProgress(player, "mission:" + number + ":info", ChatColor.GOLD + "۞ " + message);
     }
 
     protected void showProgress(Player player, MissionData data, MissionObjective changed, boolean force) {
-        long now = System.currentTimeMillis();
-        Long last = lastBar.get(player.getUniqueId());
-        if (!force && last != null && now - last < 400) return;
-        lastBar.put(player.getUniqueId(), now);
-
-        StringBuilder msg = new StringBuilder(ChatColor.GOLD + "۞ ");
-        if (objectives.size() <= 3) {
-            boolean first = true;
-            for (MissionObjective objective : objectives.values()) {
-                if (!first) msg.append(ChatColor.GRAY).append(" | ");
-                msg.append(format(objective, value(player, data, objective)));
-                first = false;
-            }
-        } else {
-            int done = 0;
-            for (MissionObjective objective : objectives.values()) {
-                if (value(player, data, objective) >= objective.target()) done++;
-            }
-            msg.append(format(changed, value(player, data, changed)))
-                    .append(ChatColor.GRAY).append(" (").append(done).append("/").append(objectives.size()).append(")");
-        }
-        actionBar.sendActionBar(player, msg.toString());
+        String key = "mission:" + number + ":" + changed.key();
+        String message = ChatColor.GOLD + "۞ " + ChatColor.of(C_LABEL) + "[" + handler.tag(number) + "] "
+                + format(changed, value(player, data, changed));
+        if (force) actionBar.sendNotification(player, key, message);
+        else actionBar.sendProgress(player, key, message);
     }
 
     private String format(MissionObjective objective, int value) {
@@ -256,9 +245,7 @@ public abstract class BaseMission implements Mission, Listener {
     }
 
     // Para limpiar lo que la misión guarda en memoria de cada jugador
-    public void onQuit(Player player) {
-        lastBar.remove(player.getUniqueId());
-    }
+    public void onQuit(Player player) {}
 
     private static String wrap(String text) {
         StringBuilder result = new StringBuilder();

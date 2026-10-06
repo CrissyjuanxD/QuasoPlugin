@@ -102,7 +102,9 @@ class BloodMoonLifecycleTest {
         assertFalse(manager.isActive(world));
         assertEquals(5, manager.getActuator(world).getCycle().nextNight());
     }
-    @Test void disablingWeatherDuringReloadStillRestoresTheWeatherOwnedByBloodMoon() throws Exception {
+    @Test void disablingWeatherDuringReloadStillClearsTheWeatherOwnedByBloodMoon() throws Exception {
+        when(world.hasStorm()).thenReturn(true);
+        when(world.isThundering()).thenReturn(true);
         manager = new BloodMoon(plugin);
         manager.enable();
         manager.getActuator(world).StartBloodMoon();
@@ -114,6 +116,26 @@ class BloodMoonLifecycleTest {
         manager.reload();
         verify(world).setStorm(false);
         verify(world).setThundering(false);
+        verify(world).setClearWeatherDuration(12000);
         assertTrue(manager.isActive(world));
+    }
+    @Test void aResumedBloodMoonDoesNotKeepItsPreviouslySavedRainWhenItEnds() {
+        when(world.hasStorm()).thenReturn(true);
+        when(world.isThundering()).thenReturn(true);
+        manager = new BloodMoon(plugin);
+        manager.enable();
+        manager.getActuator(world).StartBloodMoon();
+        manager.shutdown();
+        manager = new BloodMoon(plugin);
+        manager.enable();
+        assertTrue(manager.isActive(world));
+        clearInvocations(world);
+        manager.getActuator(world).StopBloodMoon();
+        verify(world).setStorm(false);
+        verify(world).setThundering(false);
+        verify(world).setClearWeatherDuration(12000);
+        verify(world, never()).setStorm(true);
+        verify(world, never()).setThundering(true);
+        assertFalse(manager.isActive(world));
     }
 }

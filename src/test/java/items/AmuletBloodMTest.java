@@ -2,10 +2,14 @@ package items;
 
 import BloodMoon.BloodMoon;
 import BloodMoon.BloodMoonHordeEvent;
+import Handlers.ActionBarHandler;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
+import org.bukkit.Server;
+import org.bukkit.Sound;
+import org.bukkit.Particle;
 import org.bukkit.World;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
@@ -18,6 +22,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitScheduler;
 import org.bukkit.scheduler.BukkitTask;
@@ -34,6 +39,7 @@ import static org.mockito.Mockito.*;
 
 class AmuletBloodMTest {
     private AmuletBloodM amuletHandler;
+    private JavaPlugin plugin;
     private BloodMoon bloodMoon;
     private Player player;
     private World world;
@@ -42,11 +48,16 @@ class AmuletBloodMTest {
     private AtomicBoolean enchanted;
     private final Map<String, Object> saved = new HashMap<>();
     private final List<Runnable> sessions = new ArrayList<>();
+    private final List<Runnable> actionBarTimers = new ArrayList<>();
+    private final List<String> actionBarMessages = new ArrayList<>();
     private MockedStatic<Bukkit> bukkit;
     @BeforeAll static void initializePaper() { support.PaperTestRegistry.initialize(); }
     @BeforeEach void setup() {
-        JavaPlugin plugin = mock(JavaPlugin.class);
+        plugin = mock(JavaPlugin.class);
         when(plugin.namespace()).thenReturn("quasoplugin");
+        Server server = mock(Server.class);
+        when(plugin.getServer()).thenReturn(server);
+        when(server.getPluginManager()).thenReturn(mock(PluginManager.class));
         bloodMoon = mock(BloodMoon.class);
         world = mock(World.class);
         when(world.getEnvironment()).thenReturn(World.Environment.NORMAL);
@@ -57,7 +68,14 @@ class AmuletBloodMTest {
         when(player.isOnline()).thenReturn(true);
         when(player.getWorld()).thenReturn(world);
         when(player.getLocation()).thenAnswer(call -> new Location(world, 0, 64, 0));
-        when(player.spigot()).thenReturn(mock(Player.Spigot.class));
+        Player.Spigot spigot = mock(Player.Spigot.class);
+        when(player.spigot()).thenReturn(spigot);
+        doAnswer(call -> {
+            actionBarMessages.add(net.md_5.bungee.api.chat.BaseComponent.toPlainText(
+                    (net.md_5.bungee.api.chat.BaseComponent[]) call.getRawArguments()[1]));
+            return null;
+        }).when(spigot).sendMessage(eq(net.md_5.bungee.api.ChatMessageType.ACTION_BAR),
+                any(net.md_5.bungee.api.chat.BaseComponent[].class));
         when(world.getPlayers()).thenReturn(List.of(player));
         PlayerInventory inventory = mock(PlayerInventory.class);
         when(player.getInventory()).thenReturn(inventory);
@@ -87,6 +105,7 @@ class AmuletBloodMTest {
         BukkitScheduler scheduler = mock(BukkitScheduler.class);
         when(scheduler.runTaskTimer(any(Plugin.class), any(Runnable.class), anyLong(), anyLong())).thenAnswer(call -> {
             if ((long) call.getArgument(3) == 4L) sessions.add(call.getArgument(1));
+            if ((long) call.getArgument(3) == 10L) actionBarTimers.add(call.getArgument(1));
             BukkitTask task = mock(BukkitTask.class);
             when(task.getTaskId()).thenReturn(sessions.size() + 1);
             return task;
@@ -94,9 +113,10 @@ class AmuletBloodMTest {
         bukkit = mockStatic(Bukkit.class);
         bukkit.when(Bukkit::getScheduler).thenReturn(scheduler);
         bukkit.when(() -> Bukkit.getPlayer(player.getUniqueId())).thenReturn(player);
+        bukkit.when(Bukkit::getOnlinePlayers).thenReturn(List.of(player));
         amuletHandler = new AmuletBloodM(plugin, bloodMoon);
     }
-    @AfterEach void cleanup() { amuletHandler.shutdown(); bukkit.close(); }
+    @AfterEach void cleanup() { amuletHandler.shutdown(); ActionBarHandler.shutdown(plugin); bukkit.close(); }
     private void click() {
         PlayerInteractEvent event = mock(PlayerInteractEvent.class);
         when(event.getPlayer()).thenReturn(player);
@@ -153,5 +173,31 @@ class AmuletBloodMTest {
         assertFalse(amuletHandler.isProtecting(player));
         assertTrue(sessions.isEmpty());
         assertFalse(enchanted.get());
+    }
+
+    @Test void blockingAHordeRestoresItsColoredBroadcastSoundAndVisualEffectOnlyOnce() {
+        click();
+        BloodMoonHordeEvent first = new BloodMoonHordeEvent(player, List.of(new Location(world, 10, 64, 0)));
+        amuletHandler.onHordeSpawn(first);
+        BloodMoonHordeEvent second = new BloodMoonHordeEvent(player, List.of(new Location(world, 10, 64, 0)));
+        amuletHandler.onHordeSpawn(second);
+        assertTrue(first.isCancelled());
+        assertTrue(second.isCancelled());
+        verify(player, times(1)).sendMessage(contains("ha bloqueado la horda con su"));
+        verify(player, times(1)).playSound(any(Location.class), eq(Sound.BLOCK_BEACON_POWER_SELECT), eq(1f), eq(1.6f));
+        verify(world, times(1)).spawnParticle(eq(Particle.DUST), any(Location.class), eq(24),
+                eq(0.6), eq(0.8), eq(0.6), eq(0d), any(Particle.DustOptions.class));
+    }
+
+    @Test void amuletUpdatesAndDeactivationDoNotOverwriteTheCurrentMissionNotice() {
+        click();
+        ActionBarHandler.get(plugin).sendNotification(player, "mission:test:objective", "Objetivo completado");
+        clearInvocations(player.spigot());
+        for (int i = 0; i < 10; i++) sessions.getFirst().run();
+        click();
+        // El fondo se actualizó y luego se retiró; el aviso visible sigue siendo el de la misión.
+        verifyNoInteractions(player.spigot());
+        actionBarTimers.getFirst().run();
+        assertEquals("Objetivo completado", actionBarMessages.getLast());
     }
 }

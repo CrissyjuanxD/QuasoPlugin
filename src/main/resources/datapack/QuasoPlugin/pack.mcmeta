@@ -1,6 +1,6 @@
 {
   "pack": {
-    "description": "QuasoPlugin: biomas de la Warden Cave y del End, y encantamientos",
+    "description": "QuasoPlugin: biomas, encantamientos y cielo de BloodMoon",
     "pack_format": 107,
     "min_format": [107, 0],
     "max_format": [107, 99]

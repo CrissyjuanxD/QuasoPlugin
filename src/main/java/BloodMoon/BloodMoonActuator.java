@@ -27,6 +27,7 @@ import java.util.*;
 
 /** Lógica del JAR original por mundo, con tareas cancelables y spawns seguros. */
 public final class BloodMoonActuator implements Listener {
+    private static final int CLEAR_WEATHER_TICKS = 12000;
     private static final Set<EntityType> REWARDED = EnumSet.of(EntityType.ZOMBIE, EntityType.SKELETON,
             EntityType.SPIDER, EntityType.CREEPER, EntityType.HUSK, EntityType.DROWNED, EntityType.WITCH,
             EntityType.ZOMBIE_VILLAGER, EntityType.PHANTOM, EntityType.ENDERMAN);
@@ -44,9 +45,7 @@ public final class BloodMoonActuator implements Listener {
     private long activeDay = -1;
     private long generation;
     private int originalSpawnLimit;
-    private boolean originalStorm, originalThunder;
     private boolean controlsWeather;
-    private int originalWeatherDuration, originalThunderDuration;
 
     public enum HordeResult { SPAWNED, BLOCKED, NO_SAFE_LOCATION, DISABLED }
     private record PlannedSpawn(EntityType type, Location location, SafeSpawnFinder.Size size) {}
@@ -94,14 +93,14 @@ public final class BloodMoonActuator implements Listener {
         activeDay = world.getFullTime() / 24000;
         cycle.started(activeDay, config().GetIntervalConfig());
         originalSpawnLimit = world.getSpawnLimit(SpawnCategory.MONSTER);
-        originalStorm = world.hasStorm(); originalThunder = world.isThundering();
-        originalWeatherDuration = world.getWeatherDuration(); originalThunderDuration = world.getThunderDuration();
         controlsWeather = config().GetThunderingConfig();
         runCommands(config().GetPreBloodMoonCommands());
         if (!active || closed) return false;
         world.setSpawnLimit(SpawnCategory.MONSTER, config().GetSpawnRateConfig());
+        boolean redSky = manager.syncSky(world, true);
+        controlsWeather |= redSky;
         if (!config().GetPermanentBloodMoonConfig()) {
-            BarFlag[] flags = config().GetDarkenSkyConfig() ? new BarFlag[]{BarFlag.CREATE_FOG, BarFlag.DARKEN_SKY} : new BarFlag[0];
+            BarFlag[] flags = !redSky && config().GetDarkenSkyConfig() ? new BarFlag[]{BarFlag.CREATE_FOG, BarFlag.DARKEN_SKY} : new BarFlag[0];
             nightBar = Bukkit.createBossBar(manager.getLocaleReader().GetLocaleString("BloodMoonTitleBar"), BarColor.RED, BarStyle.SEGMENTED_12, flags);
             for (Player player : world.getPlayers()) nightBar.addPlayer(player);
             repeat(this::updateNightBar, 0, 20);
@@ -117,6 +116,7 @@ public final class BloodMoonActuator implements Listener {
     private void finish(boolean notify) {
         if (!active) return;
         active = false;
+        manager.syncSky(world, false);
         generation++;
         for (BukkitTask task : tasks) task.cancel();
         tasks.clear();
@@ -124,14 +124,20 @@ public final class BloodMoonActuator implements Listener {
         blacklisted.clear();
         world.setSpawnLimit(SpawnCategory.MONSTER, originalSpawnLimit);
         if (controlsWeather) {
-            world.setStorm(originalStorm); world.setThundering(originalThunder);
-            world.setWeatherDuration(originalWeatherDuration); world.setThunderDuration(originalThunderDuration);
+            // Una tormenta guardada al reiniciar puede ser la de la propia BloodMoon.
+            // Al terminar su control del clima, la noche siempre deja el cielo despejado.
+            world.setStorm(false);
+            world.setThundering(false);
+            world.setWeatherDuration(CLEAR_WEATHER_TICKS);
+            world.setThunderDuration(CLEAR_WEATHER_TICKS);
+            world.setClearWeatherDuration(CLEAR_WEATHER_TICKS);
+            controlsWeather = false;
         }
         runCommands(config().GetPostBloodMoonCommands());
         if (notify) {
             LocaleReader.MessageAllLocale("BloodMoonEndingMessage", null, null, world);
             for (Player player : world.getPlayers()) {
-                LocaleReader.actionBar(player, LocaleReader.RED + "La BloodMoon ha terminado.");
+                LocaleReader.actionBar(player, manager.getLocaleReader().GetLocaleString("BloodMoonEndActionBar"));
                 if (config().GetBloodMoonEndSoundConfig()) player.playSound(player.getLocation(), Sound.UI_TOAST_CHALLENGE_COMPLETE, 1f, 1.2f);
             }
             manager.remember(this);
@@ -168,8 +174,17 @@ public final class BloodMoonActuator implements Listener {
     }
     private void ambient() {
         if (config().GetBloodMoonPeriodicSoundConfig()) for (Player player : world.getPlayers()) player.playSound(player.getLocation(), Sound.AMBIENT_CAVE, 1f, 0.7f);
-        if (config().GetThunderingConfig()) {
+        if (manager.isSkyActive(world)) {
+            // El clima vanilla se aplica después del datapack y desatura sus colores.
             controlsWeather = true;
+            world.setStorm(false);
+            world.setThundering(false);
+            world.setWeatherDuration(CLEAR_WEATHER_TICKS);
+            world.setThunderDuration(CLEAR_WEATHER_TICKS);
+            world.setClearWeatherDuration(CLEAR_WEATHER_TICKS);
+        } else if (config().GetThunderingConfig()) {
+            controlsWeather = true;
+            world.setClearWeatherDuration(0);
             world.setStorm(true); world.setThundering(true); world.setThunderDuration(12000); world.setWeatherDuration(12000);
         }
         later(this::ambient, random.nextInt(200) + 320);
@@ -223,7 +238,7 @@ public final class BloodMoonActuator implements Listener {
         }
         if (spawned == 0) return HordeResult.NO_SAFE_LOCATION;
         LocaleReader.MessageAllLocale("HordeArrived", new String[]{"$p"}, new String[]{target.getName()}, world);
-        LocaleReader.actionBar(target, LocaleReader.RED + "¡Una horda de BloodMoon te acecha!");
+        LocaleReader.actionBar(target, manager.getLocaleReader().GetLocaleString("HordeActionBar"));
         return HordeResult.SPAWNED;
     }
 
@@ -298,7 +313,7 @@ public final class BloodMoonActuator implements Listener {
     private void warning(Player player) {
         LocaleReader.MessageLocale("BloodMoonWarningTitle", null, null, player);
         LocaleReader.MessageLocale("BloodMoonWarningBody", null, null, player);
-        LocaleReader.actionBar(player, LocaleReader.RED + "Ha empezado una BloodMoon.");
+        LocaleReader.actionBar(player, manager.getLocaleReader().GetLocaleString("BloodMoonStartActionBar"));
     }
     private void syncPlayer(Player player) {
         if (nightBar != null) {

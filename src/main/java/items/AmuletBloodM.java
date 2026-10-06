@@ -1,8 +1,7 @@
 package items;
 
 import net.md_5.bungee.api.ChatColor;
-import net.md_5.bungee.api.ChatMessageType;
-import net.md_5.bungee.api.chat.TextComponent;
+import Handlers.ActionBarHandler;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -44,6 +43,8 @@ public class AmuletBloodM implements Listener {
 
     private final JavaPlugin plugin;
     private final BloodMoon bloodMoon;
+    private final ActionBarHandler actionBars;
+    private static final String ACTION_BAR_SOURCE = "bloodmoon-amulet";
     private final NamespacedKey amuletIdKey;
     private final NamespacedKey diamondTicksKey;
     private final NamespacedKey usosKey;
@@ -57,6 +58,7 @@ public class AmuletBloodM implements Listener {
     public AmuletBloodM(JavaPlugin plugin, BloodMoon bloodMoon) {
         this.plugin = plugin;
         this.bloodMoon = bloodMoon;
+        this.actionBars = ActionBarHandler.get(plugin);
         this.amuletIdKey = new NamespacedKey(plugin, "amulet_bloodmoon");
         this.diamondTicksKey = new NamespacedKey(plugin, "amulet_diamond_ticks");
         this.usosKey = new NamespacedKey(plugin, "amulet_usos");
@@ -202,6 +204,7 @@ public class AmuletBloodM implements Listener {
     }
 
     private void deactivateAmulet(Player player, ItemStack amulet, boolean notify) {
+        actionBars.clearBackground(player, ACTION_BAR_SOURCE);
         AmuletSession session = activeSessions.remove(player.getUniqueId());
         hordeMessageCooldown.remove(player.getUniqueId());
         if (session != null) {
@@ -222,13 +225,13 @@ public class AmuletBloodM implements Listener {
             player.setCooldown(Material.TORCHFLOWER_SEEDS, 80);
             player.playSound(player.getLocation(), Sound.BLOCK_BEACON_DEACTIVATE, 1f, 1.5f);
             LocaleReader.amuletMessage(player, "Has desactivado el Amuleto Luna de Sangre.");
-            player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(""));
         }
     }
 
     private void sendActionBar(Player player, boolean isDiamondPaid) {
         String state = isDiamondPaid ? "-1 diamante" : "Activado";
-        LocaleReader.actionBar(player, LocaleReader.ORANGE + "Amuleto Luna de Sangre: " + LocaleReader.RED + state);
+        actionBars.setBackground(player, ACTION_BAR_SOURCE, LocaleReader.ORANGE + "۞ "
+                + LocaleReader.PEACH + "Amuleto Luna de Sangre: " + LocaleReader.RED + state);
     }
 
     private void playAuraAnimation(Player player, boolean isActivation) {
@@ -413,10 +416,20 @@ public class AmuletBloodM implements Listener {
             long now = System.currentTimeMillis();
             if (now - hordeMessageCooldown.getOrDefault(uuid, 0L) >= 5000) {
                 hordeMessageCooldown.put(uuid, now);
-                for (Player viewer : player.getWorld().getPlayers()) {
-                    LocaleReader.amuletMessage(viewer, player.getName() + " ha bloqueado una horda con su Amuleto Luna de Sangre.");
+                String message = ChatColor.WHITE + "" + ChatColor.BOLD + "→ "
+                        + ChatColor.of("#89bfe1") + ChatColor.BOLD + player.getName()
+                        + ChatColor.RESET + " " + ChatColor.of("#53b6f3") + "ha bloqueado la horda con su "
+                        + ChatColor.of("#e17575") + ChatColor.BOLD + "Amuleto de Luna de Sangre";
+                for (Player viewer : Bukkit.getOnlinePlayers()) {
+                    viewer.sendMessage(message);
                 }
-                LocaleReader.actionBar(player, LocaleReader.RED + "Horda bloqueada por tu amuleto.");
+                player.playSound(player.getLocation(), Sound.BLOCK_BEACON_POWER_SELECT, 1f, 1.6f);
+                playAuraAnimation(player, true);
+                player.getWorld().spawnParticle(Particle.DUST, player.getLocation().add(0, 1, 0),
+                        24, 0.6, 0.8, 0.6, 0, new Particle.DustOptions(org.bukkit.Color.fromRGB(225, 117, 117), 1.2f));
+                actionBars.sendNotification(player, "bloodmoon-horde-blocked",
+                        LocaleReader.ORANGE + "۞ " + LocaleReader.CORAL + "Horda bloqueada "
+                                + LocaleReader.PEACH + "por tu amuleto.");
             }
             return;
         }

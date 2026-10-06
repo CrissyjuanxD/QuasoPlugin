@@ -1,6 +1,17 @@
 package Commands;
 
 import imp.crissyjuanxd.QuasoPlugin;
+import io.papermc.paper.dialog.Dialog;
+import io.papermc.paper.registry.data.dialog.ActionButton;
+import io.papermc.paper.registry.data.dialog.DialogBase;
+import io.papermc.paper.registry.data.dialog.action.DialogAction;
+import io.papermc.paper.registry.data.dialog.body.DialogBody;
+import io.papermc.paper.registry.data.dialog.type.DialogType;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.event.ClickEvent;
+import net.kyori.adventure.text.event.HoverEvent;
+import net.kyori.adventure.text.format.TextColor;
+import net.kyori.adventure.text.format.TextDecoration;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -24,6 +35,7 @@ import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.util.StringUtil;
 
 import java.io.File;
@@ -31,6 +43,14 @@ import java.io.IOException;
 import java.util.*;
 
 public class Homes implements CommandExecutor, TabCompleter, Listener {
+
+    private static final int MAX_HOMES = 10;
+    private static final int DIALOG_PROTOCOL = 771; // Java 1.21.6 introduce los diálogos.
+    private static final TextColor GOLD = TextColor.color(0xE28B20);
+    private static final TextColor CREAM = TextColor.color(0xF4D990);
+    private static final TextColor GREEN = TextColor.color(0xC9DC8A);
+    private static final TextColor ORANGE = TextColor.color(0xDD6110);
+    private static final TextColor MUTED = TextColor.color(0xAAA391);
 
     private final QuasoPlugin plugin;
     private File homesFile;
@@ -61,12 +81,16 @@ public class Homes implements CommandExecutor, TabCompleter, Listener {
         }
 
         Player player = (Player) sender;
-        String homeName = (args.length > 0) ? args[0].toLowerCase() : "base";
+        String homeName = (args.length > 0) ? args[0].toLowerCase(Locale.ROOT) : "base";
 
         if (command.getName().equalsIgnoreCase("sethome")) {
+            if (!isUsableHomeName(homeName)) {
+                player.sendMessage(ChatColor.of("#F4D990") + "Usa un nombre de hasta 32 letras, números, guiones o guiones bajos. 'list' está reservado para /home list.");
+                return true;
+            }
             Set<String> playerHomes = getPlayerHomes(player);
 
-            if (playerHomes.size() >= 10 && !playerHomes.contains(homeName)) {
+            if (playerHomes.size() >= MAX_HOMES && !playerHomes.contains(homeName)) {
                 player.sendMessage(ChatColor.RED + "Has alcanzado el límite máximo de 10 homes. Usa /delhome para borrar alguna.");
                 return true;
             }
@@ -112,6 +136,14 @@ public class Homes implements CommandExecutor, TabCompleter, Listener {
         }
 
         if (command.getName().equalsIgnoreCase("home")) {
+            if (homeName.equals("list")) {
+                if (args.length > 1) {
+                    player.sendMessage(ChatColor.of("#F4D990") + "Usa /home list para ver tus homes.");
+                } else {
+                    showHomeList(player);
+                }
+                return true;
+            }
             Set<String> playerHomes = getPlayerHomes(player);
 
             if (playerHomes.isEmpty()) {
@@ -134,9 +166,18 @@ public class Homes implements CommandExecutor, TabCompleter, Listener {
             }
 
             String worldName = parts[0];
-            double x = Double.parseDouble(parts[1]) + 0.5;
-            double y = Double.parseDouble(parts[2]);
-            double z = Double.parseDouble(parts[3]) + 0.5;
+            double x, y, z;
+            try {
+                x = Double.parseDouble(parts[1]) + 0.5;
+                y = Double.parseDouble(parts[2]);
+                z = Double.parseDouble(parts[3]) + 0.5;
+                if (!Double.isFinite(x) || !Double.isFinite(y) || !Double.isFinite(z)) {
+                    throw new NumberFormatException("Coordenadas no finitas");
+                }
+            } catch (NumberFormatException malformed) {
+                player.sendMessage(ChatColor.RED + "Error en los datos de la casa. Vuelve a establecerla con /sethome.");
+                return true;
+            }
 
             World world = Bukkit.getWorld(worldName);
             if (world == null) {
@@ -203,7 +244,8 @@ public class Homes implements CommandExecutor, TabCompleter, Listener {
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
         if (args.length == 1 && sender instanceof Player) {
             Player player = (Player) sender;
-            Set<String> homes = getPlayerHomes(player);
+            Set<String> homes = new HashSet<>(getPlayerHomes(player));
+            if (command.getName().equalsIgnoreCase("home")) homes.add("list");
             List<String> completions = new ArrayList<>();
 
             StringUtil.copyPartialMatches(args[0], homes, completions);
@@ -211,6 +253,99 @@ public class Homes implements CommandExecutor, TabCompleter, Listener {
             return completions;
         }
         return Collections.emptyList();
+    }
+
+    private boolean isUsableHomeName(String name) {
+        // Los botones solo ejecutan un argumento literal; nunca comandos guardados en el YAML.
+        return !name.equals("list") && name.matches("[\\p{L}\\p{N}_-]{1,32}");
+    }
+
+    private void showHomeList(Player player) {
+        List<String> names = getPlayerHomes(player).stream().sorted().limit(MAX_HOMES).toList();
+        int protocol = clientProtocol(player);
+        // Los snapshots usan IDs especiales que no permiten deducir qué interfaces admiten.
+        if (protocol >= DIALOG_PROTOCOL && protocol < (1 << 30)) {
+            player.showDialog(createHomeDialog(player, names));
+        } else {
+            showHomeListInChat(player, names);
+        }
+        player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 0.6f, 1.5f);
+    }
+
+    int clientProtocol(Player player) {
+        Plugin via = plugin.getServer().getPluginManager().getPlugin("ViaVersion");
+        if (via != null && via.isEnabled()) {
+            try {
+                // Via puede traducir el handshake antes de que lo lea Paper: su API tiene prioridad.
+                ClassLoader loader = via.getClass().getClassLoader();
+                Class<?> viaClass = Class.forName("com.viaversion.viaversion.api.Via", true, loader);
+                Class<?> apiClass = Class.forName("com.viaversion.viaversion.api.ViaAPI", true, loader);
+                Object api = viaClass.getMethod("getAPI").invoke(null);
+                return ((Number) apiClass.getMethod("getPlayerVersion", UUID.class)
+                        .invoke(api, player.getUniqueId())).intValue();
+            } catch (ReflectiveOperationException | LinkageError | ClassCastException unavailable) {
+                // Si no se puede conocer el cliente traducido, el chat funciona en todas las versiones.
+                return -1;
+            }
+        }
+        return player.getProtocolVersion();
+    }
+
+    private Dialog createHomeDialog(Player player, List<String> names) {
+        List<ActionButton> buttons = new ArrayList<>(MAX_HOMES);
+        for (int slot = 0; slot < MAX_HOMES; slot++) {
+            String name = slot < names.size() ? names.get(slot) : null;
+            boolean usable = name != null && isUsableHomeName(name);
+            Component label = Component.text((slot + 1) + " · ", GOLD)
+                    .append(Component.text(name == null ? "Disponible" : name, usable ? GREEN : MUTED));
+            Component tooltip = name == null
+                    ? Component.text("Guarda un home con /sethome <nombre>.", CREAM)
+                    : usable ? homeTooltip(player, name)
+                    : Component.text("Nombre antiguo no compatible. Bórralo y guarda un home con otro nombre.", CREAM);
+            buttons.add(ActionButton.create(label, tooltip, 150,
+                    usable ? DialogAction.staticAction(ClickEvent.runCommand("/home " + name)) : null));
+        }
+        Component title = Component.text("۞ ", GOLD).decorate(TextDecoration.BOLD)
+                .append(Component.text("Tus homes", CREAM).decorate(TextDecoration.BOLD));
+        Component introduction = Component.text(names.size() + " de " + MAX_HOMES + " homes guardados", GREEN)
+                .append(Component.newline())
+                .append(Component.text("Elige tu destino. " + teleportInstructions(player), CREAM));
+        DialogBase base = DialogBase.builder(title).canCloseWithEscape(true).pause(false)
+                .afterAction(DialogBase.DialogAfterAction.CLOSE)
+                .body(List.of(DialogBody.plainMessage(introduction, 310))).build();
+        ActionButton close = ActionButton.create(Component.text("Cerrar", ORANGE), null, 150, null);
+        DialogType type = DialogType.multiAction(buttons, close, 2);
+        return Dialog.create(builder -> builder.empty().base(base).type(type));
+    }
+
+    private void showHomeListInChat(Player player, List<String> names) {
+        player.sendMessage(Component.text("۞ Tus homes ", GOLD).decorate(TextDecoration.BOLD)
+                .append(Component.text("(" + names.size() + "/" + MAX_HOMES + ")", CREAM)));
+        for (int slot = 0; slot < MAX_HOMES; slot++) {
+            String name = slot < names.size() ? names.get(slot) : null;
+            boolean usable = name != null && isUsableHomeName(name);
+            Component line = Component.text("  " + (slot + 1) + " · ", GOLD)
+                    .append(Component.text(name == null ? "Disponible" : name, usable ? GREEN : MUTED));
+            if (usable) {
+                line = line.append(Component.text("  [Ir]", ORANGE).decorate(TextDecoration.BOLD))
+                        .clickEvent(ClickEvent.runCommand("/home " + name))
+                        .hoverEvent(HoverEvent.showText(homeTooltip(player, name)));
+            }
+            player.sendMessage(line);
+        }
+        player.sendMessage(Component.text("Guarda un home con /sethome <nombre>. " + teleportInstructions(player), CREAM));
+    }
+
+    private String teleportInstructions(Player player) {
+        return player.isOp() ? "Como operador, te teletransportas al instante."
+                : "El viaje tarda 5 segundos; moverte o recibir daño lo cancela.";
+    }
+
+    private Component homeTooltip(Player player, String name) {
+        String data = homesConfig.getString("Homes." + player.getName() + "." + name);
+        return Component.text("Ir a " + name, GREEN)
+                .append(Component.newline())
+                .append(Component.text(data == null ? "Destino no disponible" : data, CREAM));
     }
 
     // Si le pegan mientras espera el tp se cancela

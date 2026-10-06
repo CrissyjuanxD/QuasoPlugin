@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.stream.Stream;
 
 // El datapack del plugin: los biomas de la Warden Cave y del End, la lista de biomas donde sale la Ancient City y
-// los encantamientos. Es uno solo para todo el plugin
+// los encantamientos y la capa visual de BloodMoon. Es uno solo para todo el plugin
 public final class QuasoDatapack {
 
     private static final String NAME = "QuasoPlugin";
@@ -24,6 +24,9 @@ public final class QuasoDatapack {
     private static final String[] OLD_PACKS = {"QuasoWardenCave"};
     private static final String[] BASE_FILES = {
             "pack.mcmeta",
+            "data/quaso/world_clock/bloodmoon.json",
+            "data/quaso/timeline/bloodmoon_sky.json",
+            "data/minecraft/tags/timeline/in_overworld.json",
             "data/quaso/worldgen/biome/caverna_sculk.json",
             "data/quaso/worldgen/biome/pantano_profundo.json",
             "data/quaso/worldgen/biome/abismo_flotante.json",

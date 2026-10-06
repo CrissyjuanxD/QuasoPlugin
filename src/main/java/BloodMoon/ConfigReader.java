@@ -69,6 +69,7 @@ public final class ConfigReader {
     public int GetSpawnRateConfig() { return Math.max(0, config.getInt("BloodMoonSpawnMobRate", 25)); }
     public boolean GetBloodMoonEndSoundConfig() { return config.getBoolean("PlaySoundUponBloodMoonEnd", true); }
     public boolean GetDarkenSkyConfig() { return config.getBoolean("DarkenSky", true); }
+    public boolean GetBloodMoonSkyEnabled() { return config.getBoolean("BloodMoonSkyEnabled", true); }
     public boolean GetMobHitParticleConfig() { return config.getBoolean("MobHitParticleEffect", true); }
     public boolean GetPlayerHitParticleConfig() { return config.getBoolean("PlayerHitParticleEffect", true); }
     public boolean GetPlayerDamageSoundConfig() { return config.getBoolean("PlaySoundUponHit", true); }

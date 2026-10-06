@@ -17,6 +17,9 @@ LightningEffectOnMobDeath: true
 PlaySoundUponBloodMoonEnd: true
 PlayPeriodicSoundsDuringBloodMoon: true
 DarkenSky: true
+# Cielo y niebla rojos con el datapack (26.2). Requiere reiniciar tras instalar/actualizar el pack.
+# Cuando está disponible, conserva el cielo despejado y reemplaza DarkenSky y la tormenta durante el evento.
+BloodMoonSkyEnabled: true
 PlaySoundUponHit: true
 PlayerHitParticleEffect: true
 MobHitParticleEffect: true

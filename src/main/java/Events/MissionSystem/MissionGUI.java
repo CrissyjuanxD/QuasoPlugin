@@ -155,7 +155,7 @@ public class MissionGUI implements Listener {
                         + ChatColor.of("#D3D3D3") + "+ objetos");
             }
             if (mission.getParentMission() > 0) {
-                lore.add(ChatColor.of("#7FD4FF") + "Misión extra (sale con la #" + mission.getParentMission() + ")");
+                lore.add(ChatColor.of("#7FD4FF") + "Misión extra");
             }
             lore.add(completed ? ChatColor.of("#98FB98") + "✔ Completada" : ChatColor.of("#FFA07A") + "✖ Pendiente");
 

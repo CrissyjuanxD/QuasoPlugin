@@ -1,6 +1,7 @@
 package imp.crissyjuanxd;
 
 import Armors.WardenArmor;
+import BloodMoon.BloodMoon;
 import Bosses.BossChunkListener;
 import Bosses.BossRewards;
 import Bosses.InfestedWardenLairs;
@@ -124,6 +125,7 @@ public class QuasoPlugin extends JavaPlugin implements Listener {
     private EconomyFlyTotem economyFlyTotem;
     private excavatorItem ExcavatorItem;
     private AmuletBloodM amuletBloodM;
+    private BloodMoon bloodMoon;
     private AmuletInmortal amuletInmortal;
     private LifeCampfire lifeCampfire;
     private HappyGhastEnchant happyGhastEnchant;
@@ -183,6 +185,7 @@ public class QuasoPlugin extends JavaPlugin implements Listener {
         registerBaseListeners();
         saveDefaultConfig();
         ItemModels.load(this);
+        bloodMoon = new BloodMoon(this);
 
         this.databaseManager = new DatabaseManager(this);
         this.teamsHandler = new TeamsHandler();
@@ -213,6 +216,7 @@ public class QuasoPlugin extends JavaPlugin implements Listener {
         initInfestedCavesDimension();
         initEnchantmentSystem();
         initEndSystem();
+        bloodMoon.enable();
 
         getLogger().info("DinoNuggetsSMP habilitado completamente.");
     }
@@ -227,6 +231,8 @@ public class QuasoPlugin extends JavaPlugin implements Listener {
         if (autoAnnouncer != null) autoAnnouncer.shutdown();
         if (mainScoreboard != null) mainScoreboard.shutdown();
         if (homesCmd != null) homesCmd.shutdown();
+        if (amuletBloodM != null) amuletBloodM.shutdown();
+        if (bloodMoon != null) bloodMoon.shutdown();
 
         if (economyItemsFunctions != null) economyItemsFunctions.shutdown();
         if (dinoCoinsManager != null) dinoCoinsManager.shutdown();
@@ -320,7 +326,7 @@ public class QuasoPlugin extends JavaPlugin implements Listener {
         economyIceTotem = new EconomyIceTotem(this);
         economyFlyTotem = new EconomyFlyTotem(this);
         ExcavatorItem = new excavatorItem(this);
-        amuletBloodM = new AmuletBloodM(this);
+        amuletBloodM = new AmuletBloodM(this, bloodMoon);
         amuletInmortal = new AmuletInmortal(this);
         lifeCampfire = new LifeCampfire(this);
         happyGhastEnchant = new HappyGhastEnchant(this);
@@ -833,6 +839,8 @@ public class QuasoPlugin extends JavaPlugin implements Listener {
     public PortalManager getPortalManager() { return portalManager; }
 
     public MantenimientoHandler getMantenimientoHandler() { return mantenimientoHandler; }
+
+    public BloodMoon getBloodMoon() { return bloodMoon; }
 
     public StructureManager getStructureManager() { return structureManager; }
 

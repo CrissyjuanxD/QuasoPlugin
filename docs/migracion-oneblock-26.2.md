@@ -4,8 +4,9 @@ La migración toma como referencia OneBlockPlugin `fe27648` (master).
 
 ## Probar en el servidor
 
-Usar Java 25 y Paper 26.2. Quaso conserva sus integraciones con EliteMobs,
-FastAsyncWorldEdit y BloodMoon.
+Usar Java 25 y Paper 26.2. Quaso conserva sus integraciones con EliteMobs y
+FastAsyncWorldEdit. La BloodMoon ahora forma parte de Quaso; ver
+[su migración](bloodmoon-26.2.md).
 
 Los nuevos ítems se pueden obtener con `/giveqp <ítem> [cantidad] [jugador]`:
 

@@ -26,7 +26,7 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
-import org.spectralmemories.bloodmoon.BloodmoonActuator;
+import BloodMoon.BloodMoonActuator;
 
 import java.util.*;
 
@@ -308,7 +308,7 @@ public class OneChanges implements Listener, Change {
         Player killer = event.getEntity().getKiller();
         if (killer == null) return;
 
-        BloodmoonActuator actuator = BloodmoonActuator.GetActuator(event.getEntity().getWorld());
+        BloodMoonActuator actuator = BloodMoonActuator.GetActuator(event.getEntity().getWorld());
         if (actuator != null && actuator.isInProgress()) {
 
             int chance = random.nextInt(100);

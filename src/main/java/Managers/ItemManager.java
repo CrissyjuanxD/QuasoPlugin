@@ -44,7 +44,7 @@ public class ItemManager {
         this.economyIceTotem = new EconomyIceTotem(plugin);
         this.economyFlyTotem = new EconomyFlyTotem(plugin);
         this.ExcavatorItem = new excavatorItem(plugin);
-        this.amuletBloodM = new AmuletBloodM(plugin);
+        this.amuletBloodM = new AmuletBloodM(plugin, plugin.getBloodMoon());
         this.amuletInmortal = new AmuletInmortal(plugin);
         this.lifeCampfire = new LifeCampfire(plugin);
         this.iceBowItem = new IceBowItem(plugin);

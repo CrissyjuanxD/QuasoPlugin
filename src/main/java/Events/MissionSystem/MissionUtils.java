@@ -24,7 +24,7 @@ import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.spectralmemories.bloodmoon.BloodmoonActuator;
+import BloodMoon.BloodMoonActuator;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -98,7 +98,7 @@ public final class MissionUtils implements Listener {
 
     public static boolean isBloodMoon(World world) {
         try {
-            BloodmoonActuator actuator = BloodmoonActuator.GetActuator(world);
+            BloodMoonActuator actuator = BloodMoonActuator.GetActuator(world);
             return actuator != null && actuator.isInProgress();
         } catch (Throwable ignored) {
             return false;

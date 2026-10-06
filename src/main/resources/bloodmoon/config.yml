@@ -1,0 +1,67 @@
+# BloodMoon nativa de Quaso, basada en BloodMoon 0.8.1 de SpectralMemories.
+# Se genera una copia independiente por mundo NORMAL en bloodmoon/<mundo>/config.yml.
+# BloodMoonInterval se mide en días de Minecraft; los tiempos de hordas, en ticks.
+# DropItemList: MATERIAL:cantidad:peso[:$name nombre][:$desc texto$ntexto][:$enchant clave,nivel;...].
+# CommandsOnStart/End: comando;s (consola), comando;p (jugador), comando;f (consola por jugador).
+# Marcadores: $w = mundo, $p = jugador. No incluyen ningún cambio de inventario o experiencia al morir.
+IsBlacklisted: false
+PermanentBloodMoon: false
+BloodMoonInterval: 5
+ItemDropsMaximum: 4
+ItemDropsMinimum: 0
+ExperienceDropMult: 4
+MobDamageMultiplicator: 2
+MobHealthMultiplicator: 3
+LightningEffectOnPlayerDeath: true
+LightningEffectOnMobDeath: true
+PlaySoundUponBloodMoonEnd: true
+PlayPeriodicSoundsDuringBloodMoon: true
+DarkenSky: true
+PlaySoundUponHit: true
+PlayerHitParticleEffect: true
+MobHitParticleEffect: true
+ThunderDuringBloodMoon: true
+PreventSleeping: true
+MobsFromSpawnerNoReward: false
+ShieldPreventsEffects: true
+BloodMoonSpawnMobRate: 25
+DropItemList:
+  - "IRON_INGOT:5:10"
+  - "GOLD_INGOT:2:5"
+  - "DIAMOND:1:1"
+  - "IRON_BLOCK:1:5"
+  - "GOLD_BLOCK:1:2"
+ZOMBIEEffects:
+  - "WITHER,7,1"
+HUSKEffects:
+  - "WITHER,7,1"
+DROWNEDEffects:
+  - "WITHER,7,1"
+ZOMBIE_VILLAGEREffects:
+  - "WITHER,7,1"
+SKELETONEffects:
+  - "SLOW,3.5,1"
+CREEPEREffects:
+  - "LIGHTNING"
+PHANTOMEffects:
+  - "LEVITATION,1.5,3"
+SPIDEREffects:
+  - "POISON,4,1"
+ENDERMANEffects:
+  - "SLOW,2.5,2"
+
+# Comandos al empezar y terminar la BloodMoon
+CommandsOnStart: []
+CommandsOnEnd: []
+
+# Ajustes de las hordas
+HordesEnabled: true
+BaselineHordeSpawnrate: 800
+HordeSpawnrateVariation: 200
+HordeMobWhitelist:
+ - "ZOMBIE"
+ - "SKELETON"
+ - "SPIDER"
+HordeSpawnDistance: 12
+HordeMinPopulation: 3
+HordeMaxPopulation: 10

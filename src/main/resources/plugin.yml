@@ -5,6 +5,11 @@ api-version: '26.2'
 author: CrissyJuanXD
 description: Plugin dedicado para el streamer Crosszy
 commands:
+  bloodmoon:
+    description: Controla la BloodMoon y sus hordas.
+    usage: /bloodmoon <show|start|stop|reload|spawnhorde>
+    permission: bloodmoon.bloodmoon
+    permission-message: 'No tienes permiso para usar este comando.'
   revive:
     description: Revive a player.
     usage: /revive <player>
@@ -286,4 +291,20 @@ commands:
     permission-message: No tienes permiso para usar este comando.
 
 depend: [EliteMobs]
-softdepend: [FastAsyncWorldEdit, BloodMoon]
+softdepend: [FastAsyncWorldEdit, WorldGuard]
+
+permissions:
+  bloodmoon.bloodmoon:
+    default: true
+    description: Permite usar el comando BloodMoon.
+  bloodmoon.show:
+    default: true
+    description: Permite consultar cuándo comienza la próxima BloodMoon.
+  bloodmoon.start:
+    default: op
+  bloodmoon.stop:
+    default: op
+  bloodmoon.reload:
+    default: op
+  bloodmoon.spawnhorde:
+    default: op

@@ -30,6 +30,7 @@ public class QuasoReloadCommand implements CommandExecutor {
         if (plugin instanceof QuasoPlugin quaso && quaso.getMantenimientoHandler() != null) {
             quaso.getMantenimientoHandler().reload();
         }
+        if (plugin instanceof QuasoPlugin quaso && quaso.getBloodMoon() != null) quaso.getBloodMoon().reload();
         databaseManager.reload();
 
         sender.sendMessage(ChatColor.GREEN + "§l[QuasoPlugin] §aConfiguración y Base de Datos recargadas correctamente.");

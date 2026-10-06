@@ -5,6 +5,7 @@
 # CommandsOnStart/End: comando;s (consola), comando;p (jugador), comando;f (consola por jugador).
 # Marcadores: $w = mundo, $p = jugador. No incluyen ningún cambio de inventario o experiencia al morir.
 IsBlacklisted: false
+# Si se activa, hay BloodMoon cada noche; siempre termina al amanecer.
 PermanentBloodMoon: false
 BloodMoonInterval: 5
 ItemDropsMaximum: 4
@@ -18,7 +19,7 @@ PlaySoundUponBloodMoonEnd: true
 PlayPeriodicSoundsDuringBloodMoon: true
 DarkenSky: true
 # Cielo y niebla rojos con el datapack (26.2). Requiere reiniciar tras instalar/actualizar el pack.
-# Cuando está disponible, conserva el cielo despejado y reemplaza DarkenSky y la tormenta durante el evento.
+# Transiciones de 30 segundos y niebla carmesí; compatible con ThunderDuringBloodMoon.
 BloodMoonSkyEnabled: true
 PlaySoundUponHit: true
 PlayerHitParticleEffect: true

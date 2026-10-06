@@ -8,11 +8,14 @@ class BloodMoonCycleTest {
         BloodMoonCycle cycle = new BloodMoonCycle(0, 5, -1);
         assertEquals(5, cycle.remaining(0));
         assertFalse(cycle.isDue(3, 18000));
-        assertFalse(cycle.isDue(4, 11999));
-        assertTrue(cycle.isDue(4, 12000));
+        assertFalse(cycle.isDue(4, 12999));
+        assertTrue(cycle.isDue(4, 13000));
+        assertTrue(cycle.isDue(4, 22999));
+        assertFalse(cycle.isDue(4, 23000));
+        assertFalse(cycle.isDue(4, 23999));
         cycle.started(4, 5);
         assertFalse(cycle.isDue(8, 18000));
-        assertTrue(cycle.isDue(9, 12000));
+        assertTrue(cycle.isDue(9, 13000));
     }
     @Test void eveningWarningsDoNotRepeatWhenWorldTimeIsPaused() {
         BloodMoonCycle cycle = new BloodMoonCycle(0, 5, -1);

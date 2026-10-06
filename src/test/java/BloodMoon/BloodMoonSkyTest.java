@@ -9,6 +9,9 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitScheduler;
+import org.bukkit.scheduler.BukkitTask;
+import java.util.ArrayList;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -29,11 +32,23 @@ class BloodMoonSkyTest {
     private CommandSender sender;
     private ConsoleCommandSender console;
     private JavaPlugin plugin;
+    private final List<Runnable> callbacks = new ArrayList<>();
+    private final List<BukkitTask> tasks = new ArrayList<>();
+    private final List<Long> delays = new ArrayList<>();
 
     @BeforeEach void setup() {
         plugin = mock(JavaPlugin.class);
         server = mock(Server.class);
         when(plugin.getServer()).thenReturn(server);
+        BukkitScheduler scheduler = mock(BukkitScheduler.class);
+        when(server.getScheduler()).thenReturn(scheduler);
+        when(scheduler.runTaskLater(eq(plugin), any(Runnable.class), anyLong())).thenAnswer(call -> {
+            callbacks.add(call.getArgument(1));
+            delays.add(call.getArgument(2));
+            BukkitTask task = mock(BukkitTask.class);
+            tasks.add(task);
+            return task;
+        });
         CommandMap commands = mock(CommandMap.class);
         when(server.getCommandMap()).thenReturn(commands);
         time = mock(Command.class);
@@ -70,23 +85,59 @@ class BloodMoonSkyTest {
         verify(server).dispatchCommand(sender, "minecraft:execute in minecraft:world run minecraft:time of quaso:bloodmoon pause");
     }
 
-    @Test void startingAndStoppingOnlyChangeTheDedicatedClockOfTheTargetWorld() {
+    @Test void fadesRunOnTheDedicatedClockAndStopAtTheirEndpointsWithoutChangingTheDay() {
         assertTrue(sky.syncWorld(world, true));
         assertTrue(sky.isActive(world));
+        assertEquals(600L, delays.getFirst());
+        verify(server).dispatchCommand(sender, "minecraft:execute in minecraft:world run minecraft:time of quaso:bloodmoon resume");
+        when(world.getGameTime()).thenReturn(600L);
+        callbacks.getFirst().run();
         assertTrue(sky.syncWorld(world, false));
         assertFalse(sky.isActive(world));
-        verify(server).dispatchCommand(sender, "minecraft:execute in minecraft:world run minecraft:time of quaso:bloodmoon set 1");
-        verify(server).dispatchCommand(sender, "minecraft:execute in minecraft:world run minecraft:time of quaso:bloodmoon set 0");
-        verify(server, times(2)).dispatchCommand(sender, "minecraft:execute in minecraft:world run minecraft:time of quaso:bloodmoon pause");
+        assertEquals(600L, delays.getLast());
+        when(world.getGameTime()).thenReturn(1200L);
+        callbacks.getLast().run();
+        verify(server, times(2)).dispatchCommand(sender, "minecraft:execute in minecraft:world run minecraft:time of quaso:bloodmoon set 600");
+        verify(server, times(2)).dispatchCommand(sender, "minecraft:execute in minecraft:world run minecraft:time of quaso:bloodmoon set 0");
         verify(world, never()).setTime(anyLong());
         verify(world, never()).setFullTime(anyLong());
+    }
+
+    @Test void interruptingAFadeAndReloadingContinueFromTheCurrentIntensityAndCancelOldTasks() {
+        sky.syncWorld(world, true);
+        Runnable obsolete = callbacks.getFirst();
+        when(world.getGameTime()).thenReturn(200L);
+        sky.refreshAvailability();
+        sky.syncWorld(world, false);
+        verify(tasks.getFirst()).cancel();
+        assertEquals(200L, delays.getLast());
+        verify(server).dispatchCommand(sender, "minecraft:execute in minecraft:world run minecraft:time of quaso:bloodmoon set 1000");
+        when(world.getGameTime()).thenReturn(250L);
+        sky.syncWorld(world, true);
+        verify(tasks.get(1)).cancel();
+        assertEquals(450L, delays.getLast());
+        verify(server).dispatchCommand(sender, "minecraft:execute in minecraft:world run minecraft:time of quaso:bloodmoon set 150");
+        clearInvocations(server);
+        obsolete.run();
+        verify(server, never()).dispatchCommand(any(), anyString());
+    }
+
+    @Test void shutdownResetsAnUnfinishedFadeAndItsStaleTaskCannotRestoreTheColor() {
+        sky.syncWorld(world, true);
+        Runnable obsolete = callbacks.getFirst();
+        sky.shutdown();
+        verify(tasks.getFirst()).cancel();
+        assertFalse(sky.isActive(world));
+        clearInvocations(server);
+        obsolete.run();
+        verify(server, never()).dispatchCommand(any(), anyString());
     }
 
     @Test void repeatedStateUpdatesDoNotSpamCommands() {
         assertTrue(sky.syncWorld(world, true));
         assertTrue(sky.syncWorld(world, true));
         assertTrue(sky.syncWorld(world, true));
-        verify(server, times(2)).dispatchCommand(eq(sender), anyString());
+        verify(server, times(3)).dispatchCommand(eq(sender), anyString());
     }
 
     @Test void excludedEnvironmentsKeepTheirOwnVisualsAndClocks() {
@@ -101,10 +152,10 @@ class BloodMoonSkyTest {
         assertTrue(sky.syncWorld(world, true));
         sky.clearWorld(world);
         assertFalse(sky.isActive(world));
-        verify(server, times(2)).dispatchCommand(sender, "minecraft:execute in minecraft:world run minecraft:time of quaso:bloodmoon set 0");
+        verify(server, times(3)).dispatchCommand(sender, "minecraft:execute in minecraft:world run minecraft:time of quaso:bloodmoon set 0");
         sky.refreshAvailability();
         assertTrue(sky.syncWorld(world, false));
-        verify(server, times(3)).dispatchCommand(sender, "minecraft:execute in minecraft:world run minecraft:time of quaso:bloodmoon set 0");
+        verify(server, times(4)).dispatchCommand(sender, "minecraft:execute in minecraft:world run minecraft:time of quaso:bloodmoon set 0");
     }
 
     @Test void failedExecutionDoesNotClaimThatRedSkyIsActive() {
@@ -126,8 +177,8 @@ class BloodMoonSkyTest {
         sky.refreshAvailability();
         assertFalse(sky.syncWorld(world, true));
         verify(logger).warning(contains("time.affects-all-worlds: false"));
-        verify(server).dispatchCommand(sender, "minecraft:execute in minecraft:world run minecraft:time of quaso:bloodmoon pause");
-        verify(server).dispatchCommand(sender, "minecraft:execute in minecraft:world run minecraft:time of quaso:bloodmoon set 0");
-        verify(server, never()).dispatchCommand(sender, "minecraft:execute in minecraft:world run minecraft:time of quaso:bloodmoon set 1");
+        verify(server, times(3)).dispatchCommand(sender, "minecraft:execute in minecraft:world run minecraft:time of quaso:bloodmoon pause");
+        verify(server, times(3)).dispatchCommand(sender, "minecraft:execute in minecraft:world run minecraft:time of quaso:bloodmoon set 0");
+        verify(server, never()).dispatchCommand(sender, "minecraft:execute in minecraft:world run minecraft:time of quaso:bloodmoon resume");
     }
 }

@@ -68,26 +68,22 @@ public final class BloodMoonActuator implements Listener {
         ConfigReader reader = config();
         long day = world.getFullTime() / 24000, time = world.getTime();
         cycle.observe(day, reader.GetIntervalConfig());
-        if (reader.GetPermanentBloodMoonConfig()) {
-            if (!active) StartBloodMoon();
-            return;
-        }
-        if (active && (time < 12000 || day != activeDay)) {
+        if (active && (!BloodMoonCycle.isNight(time) || day != activeDay)) {
             finish(true);
             return;
         }
         if (active) return;
         if (cycle.shouldWarn(day, time)) {
-            long nights = cycle.nextNight() - day;
+            long nights = reader.GetPermanentBloodMoonConfig() ? 0 : cycle.nextNight() - day;
             if (nights <= 0) LocaleReader.MessageAllLocale("BloodMoonTonight", null, null, world);
             else if (nights == 1) LocaleReader.MessageAllLocale("BloodMoonTomorrow", null, null, world);
             else LocaleReader.MessageAllLocale("DaysBeforeBloodMoon", new String[]{"$d"}, new String[]{String.valueOf(nights)}, world);
         }
-        if (cycle.isDue(day, time)) StartBloodMoon();
+        if (BloodMoonCycle.isNight(time) && (reader.GetPermanentBloodMoonConfig() || cycle.isDue(day, time))) StartBloodMoon();
     }
 
     public boolean StartBloodMoon() {
-        if (active || closed) return false;
+        if (active || closed || !BloodMoonCycle.isNight(world.getTime())) return false;
         active = true;
         generation++;
         activeDay = world.getFullTime() / 24000;
@@ -98,13 +94,10 @@ public final class BloodMoonActuator implements Listener {
         if (!active || closed) return false;
         world.setSpawnLimit(SpawnCategory.MONSTER, config().GetSpawnRateConfig());
         boolean redSky = manager.syncSky(world, true);
-        controlsWeather |= redSky;
-        if (!config().GetPermanentBloodMoonConfig()) {
-            BarFlag[] flags = !redSky && config().GetDarkenSkyConfig() ? new BarFlag[]{BarFlag.CREATE_FOG, BarFlag.DARKEN_SKY} : new BarFlag[0];
-            nightBar = Bukkit.createBossBar(manager.getLocaleReader().GetLocaleString("BloodMoonTitleBar"), BarColor.RED, BarStyle.SEGMENTED_12, flags);
-            for (Player player : world.getPlayers()) nightBar.addPlayer(player);
-            repeat(this::updateNightBar, 0, 20);
-        }
+        BarFlag[] flags = !redSky && config().GetDarkenSkyConfig() ? new BarFlag[]{BarFlag.CREATE_FOG, BarFlag.DARKEN_SKY} : new BarFlag[0];
+        nightBar = Bukkit.createBossBar(manager.getLocaleReader().GetLocaleString("BloodMoonTitleBar"), BarColor.RED, BarStyle.SEGMENTED_12, flags);
+        for (Player player : world.getPlayers()) nightBar.addPlayer(player);
+        repeat(this::updateNightBar, 0, 20);
         for (Player player : world.getPlayers()) warning(player);
         ambient();
         scheduleHorde();
@@ -147,7 +140,7 @@ public final class BloodMoonActuator implements Listener {
     public void reload() {
         if (active) {
             finish(false);
-            if (config().GetPermanentBloodMoonConfig() || world.getTime() >= 12000) StartBloodMoon();
+            if (BloodMoonCycle.isNight(world.getTime())) StartBloodMoon();
         } else if (config().GetPermanentBloodMoonConfig()) StartBloodMoon();
         manager.remember(this);
     }
@@ -170,19 +163,12 @@ public final class BloodMoonActuator implements Listener {
     }
 
     private void updateNightBar() {
-        if (nightBar != null) nightBar.setProgress(Math.clamp((world.getTime() - 12000) / 12000.0, 0, 1));
+        if (nightBar != null) nightBar.setProgress(Math.clamp((world.getTime() - BloodMoonCycle.NIGHT_START)
+                / (double) (BloodMoonCycle.NIGHT_END - BloodMoonCycle.NIGHT_START), 0, 1));
     }
     private void ambient() {
         if (config().GetBloodMoonPeriodicSoundConfig()) for (Player player : world.getPlayers()) player.playSound(player.getLocation(), Sound.AMBIENT_CAVE, 1f, 0.7f);
-        if (manager.isSkyActive(world)) {
-            // El clima vanilla se aplica después del datapack y desatura sus colores.
-            controlsWeather = true;
-            world.setStorm(false);
-            world.setThundering(false);
-            world.setWeatherDuration(CLEAR_WEATHER_TICKS);
-            world.setThunderDuration(CLEAR_WEATHER_TICKS);
-            world.setClearWeatherDuration(CLEAR_WEATHER_TICKS);
-        } else if (config().GetThunderingConfig()) {
+        if (config().GetThunderingConfig()) {
             controlsWeather = true;
             world.setClearWeatherDuration(0);
             world.setStorm(true); world.setThundering(true); world.setThunderDuration(12000); world.setWeatherDuration(12000);

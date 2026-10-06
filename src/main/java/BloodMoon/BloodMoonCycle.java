@@ -2,6 +2,8 @@ package BloodMoon;
 
 /** Calendario persistente basado en días del mundo, independiente de tareas de Bukkit. */
 public final class BloodMoonCycle {
+    public static final int NIGHT_START = 13000;
+    public static final int NIGHT_END = 23000;
     private long nextNight;
     private long warnedDay = Long.MIN_VALUE;
     private long lastDay;
@@ -13,9 +15,10 @@ public final class BloodMoonCycle {
 
     public long nextNight() { return nextNight; }
     public long remaining(long day) { return Math.max(1, nextNight - day + 1); }
-    public boolean isDue(long day, long time) { return day >= nextNight && time >= 12000; }
+    public static boolean isNight(long time) { return time >= NIGHT_START && time < NIGHT_END; }
+    public boolean isDue(long day, long time) { return day >= nextNight && isNight(time); }
     public boolean shouldWarn(long day, long time) {
-        if (time < 11000 || warnedDay == day) return false;
+        if (time < 11000 || time >= NIGHT_END || warnedDay == day) return false;
         warnedDay = day;
         return true;
     }

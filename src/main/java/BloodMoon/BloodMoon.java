@@ -56,7 +56,7 @@ public final class BloodMoon implements Listener {
         }
         clock = GetScheduler().runTaskTimer(plugin, () -> {
             for (BloodMoonActuator actuator : List.copyOf(worlds.values())) actuator.checkNight();
-        }, 1L, 40L);
+        }, 1L, 20L);
     }
 
     public static BloodMoon GetInstance() { return instance; }
@@ -73,6 +73,7 @@ public final class BloodMoon implements Listener {
     public boolean isShuttingDown() { return shuttingDown; }
     public boolean isSkyActive(World world) { return sky.isActive(world); }
     public boolean syncSky(World world, boolean active) {
+        if (shuttingDown) { sky.clearWorld(world); return false; }
         ConfigReader config = getConfigReader(world);
         boolean show = active && config != null && config.GetBloodMoonSkyEnabled();
         return sky.syncWorld(world, show) && show;
@@ -83,7 +84,7 @@ public final class BloodMoon implements Listener {
         ConfigReader config = new ConfigReader(plugin, world);
         configs.put(world.getUID(), config);
         // Incluye mundos excluidos: un reloj guardado no debe dejarles el cielo rojo al reiniciar.
-        syncSky(world, false);
+        sky.clearWorld(world);
         if (config.GetIsBlacklistedConfig()) return;
         importLegacyCache(world);
         String path = world.getUID().toString();
@@ -92,8 +93,8 @@ public final class BloodMoon implements Listener {
         BloodMoonActuator actuator = new BloodMoonActuator(this, world, cycle);
         worlds.put(world.getUID(), actuator);
         Bukkit.getPluginManager().registerEvents(actuator, plugin);
-        if (config.GetPermanentBloodMoonConfig()
-                || (cache.getBoolean(path + ".active") && cache.getLong(path + ".active-day", -1) == day && world.getTime() >= 12000)) {
+        if (BloodMoonCycle.isNight(world.getTime()) && (config.GetPermanentBloodMoonConfig()
+                || (cache.getBoolean(path + ".active") && cache.getLong(path + ".active-day", -1) == day))) {
             actuator.StartBloodMoon();
         }
     }
@@ -113,7 +114,7 @@ public final class BloodMoon implements Listener {
                 long checkAt = result.getLong("checkAt");
                 long day = world.getFullTime() / 24000;
                 cache.set(path + ".next-night", Math.max(day, checkAt / 24000) + Math.max(0, remaining - 1));
-                cache.set(path + ".active", remaining == 0 && world.getTime() >= 12000);
+                cache.set(path + ".active", remaining == 0 && BloodMoonCycle.isNight(world.getTime()));
                 cache.set(path + ".active-day", day);
             }
         } catch (Exception ex) {
@@ -167,6 +168,7 @@ public final class BloodMoon implements Listener {
         if (clock != null) clock.cancel();
         for (BloodMoonActuator actuator : worlds.values()) { remember(actuator); actuator.shutdown(); HandlerList.unregisterAll(actuator); }
         worlds.clear();
+        sky.shutdown();
         configs.clear();
         HandlerList.unregisterAll(this);
         instance = null;

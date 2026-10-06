@@ -4,29 +4,182 @@
     "minecraft:visual/sky_color": {
       "modifier": "alpha_blend",
       "keyframes": [
-        { "ticks": 0, "value": "#00ef9292" },
-        { "ticks": 1, "value": "#ffef9292" }
+        {
+          "ticks": 0,
+          "value": "#00ff1008"
+        },
+        {
+          "ticks": 600,
+          "value": "#ffff1008"
+        },
+        {
+          "ticks": 1200,
+          "value": "#00ff1008"
+        }
       ]
     },
     "minecraft:visual/fog_color": {
       "modifier": "alpha_blend",
       "keyframes": [
-        { "ticks": 0, "value": "#00d46c64" },
-        { "ticks": 1, "value": "#ffd46c64" }
+        {
+          "ticks": 0,
+          "value": "#00ff180c"
+        },
+        {
+          "ticks": 600,
+          "value": "#ffff180c"
+        },
+        {
+          "ticks": 1200,
+          "value": "#00ff180c"
+        }
       ]
     },
     "minecraft:visual/cloud_color": {
       "modifier": "alpha_blend",
       "keyframes": [
-        { "ticks": 0, "value": "#00f4b183" },
-        { "ticks": 1, "value": "#aaf4b183" }
+        {
+          "ticks": 0,
+          "value": "#00e82010"
+        },
+        {
+          "ticks": 600,
+          "value": "#ffe82010"
+        },
+        {
+          "ticks": 1200,
+          "value": "#00e82010"
+        }
       ]
     },
     "minecraft:visual/sky_light_factor": {
       "modifier": "alpha_blend",
       "keyframes": [
-        { "ticks": 0, "value": { "value": 0.45, "alpha": 0.0 } },
-        { "ticks": 1, "value": { "value": 0.45, "alpha": 1.0 } }
+        {
+          "ticks": 0,
+          "value": {
+            "value": 0.3,
+            "alpha": 0.0
+          }
+        },
+        {
+          "ticks": 600,
+          "value": {
+            "value": 0.3,
+            "alpha": 1.0
+          }
+        },
+        {
+          "ticks": 1200,
+          "value": {
+            "value": 0.3,
+            "alpha": 0.0
+          }
+        }
+      ]
+    },
+    "minecraft:visual/fog_start_distance": {
+      "modifier": "alpha_blend",
+      "keyframes": [
+        {
+          "ticks": 0,
+          "value": {
+            "value": 32.0,
+            "alpha": 0.0
+          }
+        },
+        {
+          "ticks": 600,
+          "value": {
+            "value": 32.0,
+            "alpha": 1.0
+          }
+        },
+        {
+          "ticks": 1200,
+          "value": {
+            "value": 32.0,
+            "alpha": 0.0
+          }
+        }
+      ]
+    },
+    "minecraft:visual/fog_end_distance": {
+      "modifier": "alpha_blend",
+      "keyframes": [
+        {
+          "ticks": 0,
+          "value": {
+            "value": 160.0,
+            "alpha": 0.0
+          }
+        },
+        {
+          "ticks": 600,
+          "value": {
+            "value": 160.0,
+            "alpha": 1.0
+          }
+        },
+        {
+          "ticks": 1200,
+          "value": {
+            "value": 160.0,
+            "alpha": 0.0
+          }
+        }
+      ]
+    },
+    "minecraft:visual/sky_fog_end_distance": {
+      "modifier": "alpha_blend",
+      "keyframes": [
+        {
+          "ticks": 0,
+          "value": {
+            "value": 48.0,
+            "alpha": 0.0
+          }
+        },
+        {
+          "ticks": 600,
+          "value": {
+            "value": 48.0,
+            "alpha": 1.0
+          }
+        },
+        {
+          "ticks": 1200,
+          "value": {
+            "value": 48.0,
+            "alpha": 0.0
+          }
+        }
+      ]
+    },
+    "minecraft:visual/cloud_fog_end_distance": {
+      "modifier": "alpha_blend",
+      "keyframes": [
+        {
+          "ticks": 0,
+          "value": {
+            "value": 64.0,
+            "alpha": 0.0
+          }
+        },
+        {
+          "ticks": 600,
+          "value": {
+            "value": 64.0,
+            "alpha": 1.0
+          }
+        },
+        {
+          "ticks": 1200,
+          "value": {
+            "value": 64.0,
+            "alpha": 0.0
+          }
+        }
       ]
     }
   }

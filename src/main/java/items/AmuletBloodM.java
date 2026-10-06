@@ -416,7 +416,7 @@ public class AmuletBloodM implements Listener {
             long now = System.currentTimeMillis();
             if (now - hordeMessageCooldown.getOrDefault(uuid, 0L) >= 5000) {
                 hordeMessageCooldown.put(uuid, now);
-                String message = ChatColor.WHITE + "" + ChatColor.BOLD + "→ "
+                String message = ChatColor.GRAY + "► "
                         + ChatColor.of("#89bfe1") + ChatColor.BOLD + player.getName()
                         + ChatColor.RESET + " " + ChatColor.of("#53b6f3") + "ha bloqueado la horda con su "
                         + ChatColor.of("#e17575") + ChatColor.BOLD + "Amuleto de Luna de Sangre";

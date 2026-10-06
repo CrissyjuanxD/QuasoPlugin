@@ -181,7 +181,7 @@ class BloodMoonActuatorTest {
             verify(world, never()).setThundering(true);
         }
     }
-    @Test void redSkyKeepsClearWeatherAndAvoidsTheBossbarDarkeningFlags() {
+    @Test void redSkyKeepsTheStormAndAvoidsTheBossbarDarkeningFlags() {
         when(config.GetThunderingConfig()).thenReturn(true);
         when(config.GetDarkenSkyConfig()).thenReturn(true);
         when(manager.syncSky(world, true)).thenReturn(true);
@@ -190,14 +190,14 @@ class BloodMoonActuatorTest {
             singleton.when(BloodMoon::GetInstance).thenReturn(manager);
             assertTrue(actuator.StartBloodMoon());
             verify(manager).syncSky(world, true);
-            verify(world).setStorm(false);
-            verify(world).setThundering(false);
-            verify(world, never()).setStorm(true);
-            verify(world, never()).setThundering(true);
+            verify(world).setStorm(true);
+            verify(world).setThundering(true);
+            verify(world, never()).setStorm(false);
+            verify(world, never()).setThundering(false);
             bukkit.verify(() -> Bukkit.createBossBar(anyString(), any(), any(), eq(new org.bukkit.boss.BarFlag[0])));
         }
     }
-    @Test void redSkyRestoresClearWeatherAtTheEndEvenWhenNormalStormsAreDisabled() {
+    @Test void redSkyDoesNotTakeOverWeatherWhenStormsAreExplicitlyDisabled() {
         when(config.GetThunderingConfig()).thenReturn(false);
         when(manager.syncSky(world, true)).thenReturn(true);
         when(manager.isSkyActive(world)).thenReturn(true);
@@ -207,9 +207,9 @@ class BloodMoonActuatorTest {
             clearInvocations(world);
             actuator.StopBloodMoon();
             verify(manager).syncSky(world, false);
-            verify(world).setStorm(false);
-            verify(world).setThundering(false);
-            verify(world).setClearWeatherDuration(12000);
+            verify(world, never()).setStorm(anyBoolean());
+            verify(world, never()).setThundering(anyBoolean());
+            verify(world, never()).setClearWeatherDuration(anyInt());
         }
     }
     @Test void dawnClearsBloodMoonWeatherAndCancelledAmbientTasksCannotRestoreIt() {
@@ -218,8 +218,8 @@ class BloodMoonActuatorTest {
             singleton.when(BloodMoon::GetInstance).thenReturn(manager);
             actuator.StartBloodMoon();
             List<Runnable> oldCallbacks = List.copyOf(callbacks);
-            when(world.getTime()).thenReturn(0L);
-            when(world.getFullTime()).thenReturn(24000L);
+            when(world.getTime()).thenReturn(23000L);
+            when(world.getFullTime()).thenReturn(23000L);
             clearInvocations(world);
             actuator.checkNight();
             for (Runnable callback : oldCallbacks) callback.run();
@@ -229,6 +229,27 @@ class BloodMoonActuatorTest {
             verify(world).setClearWeatherDuration(12000);
             verify(world, never()).setStorm(true);
             verify(world, never()).setThundering(true);
+        }
+    }
+    @Test void permanentModeStillRunsOnlyAtNightAndLastsUntilDawn() {
+        when(config.GetPermanentBloodMoonConfig()).thenReturn(true);
+        try (var singleton = mockStatic(BloodMoon.class)) {
+            singleton.when(BloodMoon::GetInstance).thenReturn(manager);
+            when(world.getTime()).thenReturn(12999L);
+            actuator.checkNight();
+            assertFalse(actuator.isInProgress());
+            when(world.getTime()).thenReturn(13000L);
+            actuator.checkNight();
+            assertTrue(actuator.isInProgress());
+            when(world.getTime()).thenReturn(22999L);
+            actuator.checkNight();
+            assertTrue(actuator.isInProgress());
+            when(world.getTime()).thenReturn(23000L);
+            actuator.checkNight();
+            assertFalse(actuator.isInProgress());
+            actuator.checkNight();
+            assertFalse(actuator.isInProgress());
+            assertFalse(actuator.StartBloodMoon());
         }
     }
     @Test void bloodMoonWithoutWeatherControlPreservesNaturalRain() {

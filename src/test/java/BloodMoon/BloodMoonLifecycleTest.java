@@ -95,8 +95,8 @@ class BloodMoonLifecycleTest {
         manager.enable();
         manager.getActuator(world).StartBloodMoon();
         manager.shutdown();
-        when(world.getTime()).thenReturn(0L);
-        when(world.getFullTime()).thenReturn(24000L);
+        when(world.getTime()).thenReturn(23000L);
+        when(world.getFullTime()).thenReturn(23000L);
         manager = new BloodMoon(plugin);
         manager.enable();
         assertFalse(manager.isActive(world));

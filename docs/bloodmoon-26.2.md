@@ -2,7 +2,7 @@
 
 El paquete `BloodMoon` y su clase principal `BloodMoon` integran la lógica de
 BloodMoon 0.8.1 de SpectralMemories, recuperada del JAR que había en `libs`.
-Conserva el ciclo por mundo, noches permanentes, avisos, barra nocturna, clima,
+Conserva el ciclo por mundo, avisos, barra nocturna, clima,
 sonidos, efectos de combate, bloqueo de camas, experiencia y botín configurable,
 comandos al inicio/final y hordas. El jefe zombi, sus poderes, configuración y
 comandos se han retirado por petición del usuario. La suite de desarrollo del
@@ -31,6 +31,10 @@ resistencia ×3, experiencia ×4 y hordas de 3–10 mobs. El rango de aparición
 Estos valores se pueden cambiar por mundo. Los jugadores en creativo o
 espectador no se seleccionan como objetivos. Se conserva el formato de
 recompensas ponderadas y comandos `;s`, `;p`, `;f` del sistema original.
+
+La BloodMoon transcurre de 13000 a 23000 ticks. `PermanentBloodMoon` la activa
+cada noche, respetando también el amanecer. El cielo y la niebla carmesí tienen
+transiciones de 30 segundos; ver [cielo y tormenta](bloodmoon-cielo-26.2.md).
 
 Cuando BloodMoon controla el clima (`ThunderDuringBloodMoon: true`), al terminar
 desactiva lluvia y truenos y mantiene el cielo despejado durante 12.000 ticks.
@@ -72,7 +76,7 @@ por minuto y un uso cada 7,2 segundos; el progreso parcial se guarda al desactiv
 para que cambiar su estado no reinicie el consumo. Al morir, desconectarse o terminar
 la BloodMoon, la protección se desactiva.
 
-Al bloquear una horda vuelve el aviso original con flecha blanca, nombre azul
+Al bloquear una horda aparece el aviso con `►` gris, nombre azul
 claro, texto azul y título del amuleto rojo. Se anuncia a los jugadores conectados,
 suena una selección de baliza para el portador y aparece una espiral de partículas
 alrededor de él. El aviso, sonido y animación tienen un límite de una vez cada
@@ -85,11 +89,12 @@ misiones visibles o pendientes.
 
 Los mensajes están en español con naranja `#F4B183`, rojo `#EF9292`, melocotón
 `#FFD2AE` y coral `#F7AAA1`. Se resaltan nombres, avisos y recompensas dentro de
-esa paleta. Las action bars comienzan con `۞`, el mismo símbolo de las misiones;
+esa paleta. Las respuestas privadas de comandos usan verde lima pastel y
+los separadores `►` son grises. Las action bars comienzan con `۞`, el mismo símbolo de las misiones;
 sus textos de inicio/final y horda también se pueden editar en `mensajes.yml`.
 El aviso de inicio dice:
 
-> Bloodmoon >
+> Bloodmoon ►
 >
 > Ha empezado una BloodMoon.
 > Los monstruos son más fuertes y las hordas acechan durante la noche.
@@ -123,7 +128,7 @@ También comprueba los mensajes del primer arranque, archivos incompletos,
 recargas y disponibilidad de los valores predeterminados si falla el guardado.
 Comprueba la migración de la paleta sin sobrescribir mensajes personalizados,
 el despejado al amanecer/final, las recargas del clima y una noche reanudada.
-También ejecuta las pruebas existentes de Quaso. La suite completa tiene 112
+También ejecuta las pruebas existentes de Quaso. La suite completa tiene 113
 pruebas correctas. El servidor interno Paper 26.2-129 con MySQL completó dos
 arranques y comprobó el clima, los atributos reales de cielo/niebla, la vuelta
 al estado normal, el aislamiento entre mundos y la restauración después de

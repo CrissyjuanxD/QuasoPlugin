@@ -20,16 +20,16 @@ public final class BloodMoonCommands implements TabExecutor {
         if (args.length == 0) { help(sender); return true; }
         String action = args[0].toLowerCase(Locale.ROOT);
         if (!COMMANDS.contains(action)) {
-            LocaleReader.MessageLocale("CommandNotFound", new String[]{"$d"}, new String[]{args[0]}, sender);
+            LocaleReader.CommandLocale("CommandNotFound", new String[]{"$d"}, new String[]{args[0]}, sender);
             return true;
         }
         if (!sender.hasPermission("bloodmoon.bloodmoon") || !sender.hasPermission("bloodmoon." + action)) {
-            LocaleReader.MessageLocale("NoPermission", null, null, sender);
+            LocaleReader.CommandLocale("NoPermission", null, null, sender);
             return true;
         }
         if (action.equals("reload")) {
             manager.reload();
-            LocaleReader.MessageLocale("PluginReloaded", null, null, sender);
+            LocaleReader.CommandLocale("PluginReloaded", null, null, sender);
             return true;
         }
         int parameter = sender instanceof Player ? 1 : 2;
@@ -40,23 +40,22 @@ public final class BloodMoonCommands implements TabExecutor {
             world = Bukkit.getWorld(args[1]);
         }
         BloodMoonActuator actuator = manager.getActuator(world);
-        if (actuator == null) { LocaleReader.MessageLocale("NoBloodMoonInWorld", null, null, sender); return true; }
+        if (actuator == null) { LocaleReader.CommandLocale("NoBloodMoonInWorld", null, null, sender); return true; }
         ConfigReader config = manager.getConfigReader(world);
         switch (action) {
             case "show" -> {
-                if (config.GetPermanentBloodMoonConfig()) LocaleReader.MessageLocale("WorldIsPermanentBloodMoon", null, null, sender);
-                else if (actuator.isInProgress()) LocaleReader.MessageLocale("BloodMoonRightNow", null, null, sender);
-                else LocaleReader.MessageLocale("DaysBeforeBloodMoon", new String[]{"$d"}, new String[]{String.valueOf(actuator.getCycle().remaining(world.getFullTime() / 24000))}, sender);
+                if (config.GetPermanentBloodMoonConfig()) LocaleReader.CommandLocale("WorldIsPermanentBloodMoon", null, null, sender);
+                else if (actuator.isInProgress()) LocaleReader.CommandLocale("BloodMoonRightNow", null, null, sender);
+                else LocaleReader.CommandLocale("DaysBeforeBloodMoon", new String[]{"$d"}, new String[]{String.valueOf(actuator.getCycle().remaining(world.getFullTime() / 24000))}, sender);
             }
             case "start" -> {
-                if (actuator.isInProgress()) LocaleReader.MessageLocale("BloodMoonRightNow", null, null, sender);
-                else { world.setTime(12001); actuator.StartBloodMoon(); reply(sender, "BloodMoon iniciada en " + world.getName() + "."); }
+                if (actuator.isInProgress()) LocaleReader.CommandLocale("BloodMoonRightNow", null, null, sender);
+                else { world.setTime(BloodMoonCycle.NIGHT_START); actuator.StartBloodMoon(); reply(sender, "BloodMoon iniciada en " + world.getName() + "."); }
             }
             case "stop" -> {
-                if (config.GetPermanentBloodMoonConfig()) LocaleReader.MessageLocale("CannotStopBloodMoon", null, null, sender);
+                if (config.GetPermanentBloodMoonConfig()) LocaleReader.CommandLocale("CannotStopBloodMoon", null, null, sender);
                 else {
-                    actuator.StopBloodMoon(); world.setTime(0);
-                    actuator.getCycle().stopped(world.getFullTime() / 24000, config.GetIntervalConfig());
+                    actuator.StopBloodMoon(); world.setTime(BloodMoonCycle.NIGHT_END);
                     manager.remember(actuator);
                     reply(sender, "BloodMoon detenida en " + world.getName() + ".");
                 }
@@ -66,7 +65,7 @@ public final class BloodMoonCommands implements TabExecutor {
                 if (args.length > parameter) {
                     Player target = Bukkit.getPlayerExact(args[parameter]);
                     if (target == null || !target.getWorld().equals(world)) {
-                        LocaleReader.MessageLocale("NoPlayerOfName", new String[]{"$p", "$w"}, new String[]{args[parameter], world.getName()}, sender);
+                        LocaleReader.CommandLocale("NoPlayerOfName", new String[]{"$p", "$w"}, new String[]{args[parameter], world.getName()}, sender);
                         return true;
                     }
                     result = actuator.SpawnHorde(target);
@@ -82,10 +81,10 @@ public final class BloodMoonCommands implements TabExecutor {
         }
         return true;
     }
-    private void reply(CommandSender sender, String message) { sender.sendMessage(LocaleReader.ORANGE + "Bloodmoon > " + LocaleReader.RED + message); }
+    private void reply(CommandSender sender, String message) { LocaleReader.commandMessage(sender, "Bloodmoon ► " + message); }
     private void help(CommandSender sender) {
         String world = sender instanceof Player ? "" : " <mundo>";
-        LocaleReader.MessageLocale("AllowedCommands", new String[]{"$d"}, new String[]{
+        LocaleReader.CommandLocale("AllowedCommands", new String[]{"$d"}, new String[]{
                 "show" + world + ", start" + world + ", stop" + world + ", reload, spawnhorde" + world + " [jugador]"}, sender);
     }
 

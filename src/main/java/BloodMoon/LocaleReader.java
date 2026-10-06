@@ -21,6 +21,9 @@ public final class LocaleReader {
     public static final String RED = ChatColor.of("#EF9292").toString();
     public static final String PEACH = ChatColor.of("#FFD2AE").toString();
     public static final String CORAL = ChatColor.of("#F7AAA1").toString();
+    public static final String LIME = ChatColor.of("#C9F5A5").toString();
+    public static final String LIME_TITLE = ChatColor.of("#AEE87A").toString();
+    public static final String PREFIX = ORANGE + "Bloodmoon " + ChatColor.GRAY + "► " + RED;
     private static final Pattern HEX = Pattern.compile("&#([a-fA-F0-9]{6})");
     private final JavaPlugin plugin;
     private final File file;
@@ -48,14 +51,16 @@ public final class LocaleReader {
 
     private void migratePreviousDefaults(YamlConfiguration defaults) throws IOException {
         // Solo cambia mensajes idénticos a la versión anterior; conserva ediciones y %void%.
-        try (var previous = plugin.getResource("bloodmoon-defaults/mensajes-v1.yml")) {
-            if (previous == null) return;
-            var oldDefaults = YamlConfiguration.loadConfiguration(new InputStreamReader(previous, StandardCharsets.UTF_8));
-            for (String id : oldDefaults.getKeys(false)) {
-                String oldValue = oldDefaults.getString(id);
-                String newValue = defaults.getString(id);
-                if (oldValue != null && newValue != null && oldValue.equals(locales.getString(id))) {
-                    locales.set(id, newValue);
+        for (String resource : java.util.List.of("mensajes-v1.yml", "mensajes-v2.yml")) {
+            try (var previous = plugin.getResource("bloodmoon-defaults/" + resource)) {
+                if (previous == null) continue;
+                var oldDefaults = YamlConfiguration.loadConfiguration(new InputStreamReader(previous, StandardCharsets.UTF_8));
+                for (String id : oldDefaults.getKeys(false)) {
+                    String oldValue = oldDefaults.getString(id);
+                    String newValue = defaults.getString(id);
+                    if (oldValue != null && newValue != null && oldValue.equals(locales.getString(id))) {
+                        locales.set(id, newValue);
+                    }
                 }
             }
         }
@@ -84,6 +89,19 @@ public final class LocaleReader {
         String message = format(id, args, replacements);
         if (!message.isEmpty()) sender.sendMessage(message);
     }
+    public static void CommandLocale(String id, String[] args, String[] replacements, CommandSender sender) {
+        commandMessage(sender, format(id, args, replacements));
+    }
+    public static void commandMessage(CommandSender sender, String message) {
+        if (message == null || message.isEmpty()) return;
+        String plain = ChatColor.stripColor(message);
+        String prefix = "Bloodmoon ► ";
+        if (plain.startsWith(prefix)) {
+            sender.sendMessage(LIME_TITLE + "Bloodmoon " + ChatColor.GRAY + "► " + LIME + plain.substring(prefix.length()));
+        } else {
+            sender.sendMessage(LIME + plain.replace("►", ChatColor.GRAY + "►" + LIME));
+        }
+    }
     public static void MessageAllLocale(String id, String[] args, String[] replacements, World world) {
         String message = format(id, args, replacements);
         if (!message.isEmpty()) for (Player player : world.getPlayers()) player.sendMessage(message);
@@ -98,6 +116,6 @@ public final class LocaleReader {
                 .sendNotification(player, "bloodmoon:" + message, ORANGE + "۞ " + message);
     }
     public static void amuletMessage(Player player, String message) {
-        player.sendMessage(ORANGE + "Bloodmoon > " + RED + message);
+        player.sendMessage(PREFIX + message);
     }
 }

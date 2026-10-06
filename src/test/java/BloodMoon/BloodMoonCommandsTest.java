@@ -66,7 +66,7 @@ class BloodMoonCommandsTest {
             when(locales.GetLocaleString("PluginReloaded")).thenReturn("Recargado");
             assertTrue(commands.onCommand(console, command, "bloodmoon", new String[]{"reload"}));
             verify(manager).reload();
-            verify(console).sendMessage("Recargado");
+            verify(console).sendMessage(LocaleReader.LIME + "Recargado");
             verify(manager, never()).getActuator(any());
         }
     }

@@ -7,6 +7,7 @@ import org.bukkit.command.CommandMap;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitTask;
 
 import java.util.HashMap;
 import java.util.List;
@@ -17,7 +18,31 @@ import java.util.UUID;
 public final class BloodMoonSky {
     private static final String CLOCK = "quaso:bloodmoon";
     private final JavaPlugin plugin;
-    private final Map<UUID, Boolean> states = new HashMap<>();
+    // La timeline sube de 0 a 600 y baja de 600 a 1200; no toca el reloj del día.
+    public static final int FADE_TICKS = 600;
+    private final Map<UUID, Transition> states = new HashMap<>();
+
+    private static final class Transition {
+        final World world;
+        final boolean active;
+        final int from;
+        final long started;
+        BukkitTask task;
+
+        Transition(World world, boolean active, int from) {
+            this.world = world;
+            this.active = active;
+            this.from = from;
+            started = world.getGameTime();
+        }
+
+        int strength() {
+            long elapsed = Math.max(0, world.getGameTime() - started);
+            return (int) Math.clamp(active ? from + elapsed : from - elapsed, 0, FADE_TICKS);
+        }
+
+        void cancel() { if (task != null) task.cancel(); }
+    }
     private Boolean registered;
     private boolean sharedClocks;
     private CommandSender sender;
@@ -65,40 +90,79 @@ public final class BloodMoonSky {
     }
 
     public boolean syncWorld(World world, boolean active) {
-        if (world == null || world.getEnvironment() != World.Environment.NORMAL || world.getKey() == null || !isClockRegistered()) return false;
-        // Incluso con relojes globales hay que apagar y pausar el propio: uno recién registrado corre por defecto.
-        if (active && sharedClocks) return false;
-        Boolean previous = states.get(world.getUID());
-        if (previous != null && previous == active) return true;
+        if (!supported(world)) return false;
+        // Los relojes globales no permiten aplicar el efecto solo al mundo elegido.
+        if (sharedClocks) { clearWorld(world); return !active; }
+        Transition previous = states.get(world.getUID());
+        if (previous != null && previous.active == active) return true;
+        int strength = previous == null ? 0 : previous.strength();
+        if (previous != null) previous.cancel();
+        states.remove(world.getUID());
+        long duration = active ? FADE_TICKS - strength : strength;
+        int position = duration == 0 ? (active ? FADE_TICKS : 0)
+                : (active ? strength : 2 * FADE_TICKS - strength);
+        if (!command(world, "pause") || !command(world, "set " + position)
+                || (duration > 0 && !command(world, "resume"))) {
+            command(world, "pause");
+            command(world, "set 0");
+            return false;
+        }
+        Transition transition = new Transition(world, active, strength);
+        states.put(world.getUID(), transition);
+        if (duration > 0) {
+            transition.task = plugin.getServer().getScheduler().runTaskLater(plugin, () -> {
+                if (states.get(world.getUID()) != transition) return;
+                // Fija exactamente el extremo, aunque el scheduler y el reloj difieran un tick.
+                if (!command(world, "pause") || !command(world, "set " + (active ? FADE_TICKS : 0))) {
+                    clearWorld(world);
+                    return;
+                }
+                states.put(world.getUID(), new Transition(world, active, active ? FADE_TICKS : 0));
+            }, duration);
+        }
+        return true;
+    }
+
+    private boolean supported(World world) {
+        return world != null && world.getEnvironment() == World.Environment.NORMAL
+                && world.getKey() != null && isClockRegistered();
+    }
+
+    private boolean command(World world, String argument) {
         Server server = plugin.getServer();
         if (sender == null) sender = server.createCommandSender(message -> {});
         if (sender == null) return false;
-        String prefix = "minecraft:execute in " + world.getKey() + " run minecraft:time of " + CLOCK + " ";
         try {
-            // El reloj propio queda fijo; el tiempo del mundo, las fases lunares y los spawns no cambian.
-            if (!server.dispatchCommand(sender, prefix + "pause")
-                    || !server.dispatchCommand(sender, prefix + "set " + (active ? 1 : 0))) return false;
-            states.put(world.getUID(), active);
-            return true;
+            return server.dispatchCommand(sender, "minecraft:execute in " + world.getKey()
+                    + " run minecraft:time of " + CLOCK + " " + argument);
         } catch (RuntimeException ignored) {
-            registered = false;
-            states.clear();
             return false;
         }
     }
 
     public boolean isActive(World world) {
-        return world != null && Boolean.TRUE.equals(states.get(world.getUID()));
+        Transition state = world == null ? null : states.get(world.getUID());
+        return state != null && state.active;
     }
 
+    /** Al cargar, descargar o apagar, no puede quedar un fade ni un reloj rojo huérfano. */
     public void clearWorld(World world) {
-        syncWorld(world, false);
-        if (world != null) states.remove(world.getUID());
+        if (world == null) return;
+        Transition previous = states.remove(world.getUID());
+        if (previous != null) previous.cancel();
+        if (supported(world)) {
+            command(world, "pause");
+            command(world, "set 0");
+        }
+    }
+
+    public void shutdown() {
+        for (Transition transition : List.copyOf(states.values())) clearWorld(transition.world);
     }
 
     public void refreshAvailability() {
         registered = null;
         sharedClocks = false;
-        states.clear();
+        // Conserva el progreso: recargar o invertir la transición no debe dar un salto de color.
     }
 }

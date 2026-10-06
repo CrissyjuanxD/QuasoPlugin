@@ -6,11 +6,17 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.TextDisplay;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
+import org.bukkit.event.world.WorldLoadEvent;
+import org.bukkit.event.world.WorldUnloadEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.File;
@@ -20,14 +26,15 @@ import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-public class GravesManager {
+public class GravesManager implements Listener {
     private final JavaPlugin plugin;
     private final Map<UUID, Grave> activeGraves = new HashMap<>();
+    private final Set<String> pendingGraves = new HashSet<>();
 
     private File configFile;
     private FileConfiguration config;
     private File dataFile;
-    private FileConfiguration data;
+    private GraveStorage storage;
 
     private boolean anyoneCanOpen;
     private int expiryMinutes;
@@ -36,6 +43,7 @@ public class GravesManager {
         this.plugin = plugin;
         loadConfig();
         loadData();
+        plugin.getServer().getPluginManager().registerEvents(this, plugin);
         startExpiryTask();
     }
 
@@ -62,46 +70,105 @@ public class GravesManager {
         expiryMinutes = config.getInt("expiry-minutes", 30);
     }
 
-    // Carga las tumbas de tumbas_data.yml y les vuelve a crear los displays por si quedaron mal después de un reinicio
+    // Los mundos de otros plugins y wardencave pueden cargarse después de este sistema.
     private void loadData() {
         dataFile = new File(plugin.getDataFolder(), "tumbas_data.yml");
-        if (!dataFile.exists()) {
-            try { dataFile.createNewFile(); } catch (IOException ignored) {}
+        try {
+            storage = new GraveStorage(dataFile);
+        } catch (IOException | RuntimeException error) {
+            throw new IllegalStateException("No se pudo leer tumbas_data.yml; el archivo se conserva sin sobrescribir.", error);
         }
-        data = YamlConfiguration.loadConfiguration(dataFile);
         activeGraves.clear();
+        for (String key : storage.records().keySet()) restoreGrave(key, true);
+    }
 
-        if (data.contains("graves")) {
-            for (String key : data.getConfigurationSection("graves").getKeys(false)) {
-                UUID id = UUID.fromString(key);
-                UUID owner = UUID.fromString(data.getString("graves." + key + ".owner"));
-                String ownerName = data.getString("graves." + key + ".ownerName");
-                Location loc = data.getLocation("graves." + key + ".location");
-                long creation = data.getLong("graves." + key + ".creationTime");
-                long expiry = data.getLong("graves." + key + ".expiryTime");
-                List<ItemStack> items = (List<ItemStack>) data.getList("graves." + key + ".items");
-
-                Grave grave = new Grave(id, owner, ownerName, loc, creation, expiry, items);
-                activeGraves.put(id, grave);
-
-                cleanupVisuals(id, loc);
-                spawnGraveVisuals(id, ownerName, loc, creation);
+    private void restoreGrave(String key, boolean warnMissingWorld) {
+        try {
+            UUID id = UUID.fromString(key);
+            Object raw = storage.records().get(key);
+            if (!(raw instanceof Map<?, ?> rawRecord) || !(rawRecord.get("location") instanceof Map<?, ?> coordinates)) {
+                throw new IllegalArgumentException("Falta una ubicación válida.");
             }
+            Object worldName = coordinates.get("world");
+            if (!(worldName instanceof String name) || name.isBlank()) throw new IllegalArgumentException("Falta el nombre del mundo.");
+            World world = coordinates.get("world-uuid") instanceof String uuid
+                    ? Bukkit.getWorld(UUID.fromString(uuid)) : Bukkit.getWorld(name);
+            if (world == null) {
+                pendingGraves.add(key);
+                if (warnMissingWorld) plugin.getLogger().warning("La tumba " + key + " espera al mundo " + name + "; sus objetos se conservan.");
+                return;
+            }
+            Location loc = new Location(world, coordinate(coordinates, "x"), coordinate(coordinates, "y"), coordinate(coordinates, "z"),
+                    (float) optionalCoordinate(coordinates, "yaw"), (float) optionalCoordinate(coordinates, "pitch"));
+            YamlConfiguration record = storage.read(key);
+            String ownerId = record.getString("owner");
+            if (ownerId == null) throw new IllegalArgumentException("Falta el dueño de la tumba.");
+            UUID owner = UUID.fromString(ownerId);
+            String ownerName = record.getString("ownerName", owner.toString());
+            if (rawRecord.get("items") != null && !(rawRecord.get("items") instanceof List<?>)) {
+                throw new IllegalArgumentException("La lista de objetos no es válida.");
+            }
+            List<?> savedItems = rawRecord.get("items") instanceof List<?> list ? list : List.of();
+            List<?> decodedItems = record.getList("items", List.of());
+            if (savedItems.size() != decodedItems.size()) throw new IllegalArgumentException("No se pudo leer la lista completa de objetos.");
+            List<ItemStack> items = new ArrayList<>();
+            for (int index = 0; index < decodedItems.size(); index++) {
+                Object item = decodedItems.get(index);
+                if (item == null && savedItems.get(index) != null) throw new IllegalArgumentException("Hay un objeto que no se pudo leer.");
+                if (item != null && !(item instanceof ItemStack)) throw new IllegalArgumentException("Hay un objeto que no se pudo leer.");
+                items.add((ItemStack) item);
+            }
+            Grave grave = new Grave(id, owner, ownerName, loc, record.getLong("creationTime"), record.getLong("expiryTime"), items);
+            activeGraves.put(id, grave);
+            pendingGraves.remove(key);
+            // WorldLoadEvent ocurre antes de que terminen de cargar las entidades guardadas.
+            // Esperar un tick y cargarlas antes de limpiar evita duplicar los displays al reiniciar.
+            Bukkit.getScheduler().runTask(plugin, () -> {
+                if (activeGraves.get(id) != grave || Bukkit.getWorld(world.getUID()) != world) return;
+                world.getChunkAt(loc).getEntities();
+                Location displayLocation = loc.clone().add(0.5, 0.5, 0.5);
+                if (loc.getBlockX() >> 4 != displayLocation.getBlockX() >> 4 || loc.getBlockZ() >> 4 != displayLocation.getBlockZ() >> 4) {
+                    world.getChunkAt(displayLocation).getEntities();
+                }
+                cleanupVisuals(id, loc);
+                spawnGraveVisuals(id, ownerName, loc, grave.getCreationTime());
+                plugin.getLogger().info("Tumba " + key + " restaurada en " + world.getName() + ".");
+            });
+        } catch (IllegalArgumentException | InvalidConfigurationException error) {
+            pendingGraves.remove(key);
+            plugin.getLogger().warning("No se pudo restaurar la tumba " + key + ": " + error.getMessage() + " Se conserva su registro y sus objetos.");
         }
     }
 
-    public void saveData() {
-        data.set("graves", null);
-        for (Grave grave : activeGraves.values()) {
-            String path = "graves." + grave.getId().toString();
-            data.set(path + ".owner", grave.getOwner().toString());
-            data.set(path + ".ownerName", grave.getOwnerName());
-            data.set(path + ".location", grave.getLocation());
-            data.set(path + ".creationTime", grave.getCreationTime());
-            data.set(path + ".expiryTime", grave.getExpiryTime());
-            data.set(path + ".items", grave.getItems());
+    private static double coordinate(Map<?, ?> coordinates, String key) {
+        Object value = coordinates.get(key);
+        if (!(value instanceof Number number) || !Double.isFinite(number.doubleValue())) throw new IllegalArgumentException("Coordenada " + key + " inválida.");
+        return number.doubleValue();
+    }
+
+    private static double optionalCoordinate(Map<?, ?> coordinates, String key) {
+        return coordinates.containsKey(key) ? coordinate(coordinates, key) : 0;
+    }
+
+    @EventHandler public void onWorldLoad(WorldLoadEvent event) {
+        for (String key : Set.copyOf(pendingGraves)) restoreGrave(key, false);
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    public void onWorldUnload(WorldUnloadEvent event) {
+        for (Grave grave : List.copyOf(activeGraves.values())) {
+            if (!event.getWorld().equals(grave.getLocation().getWorld())) continue;
+            storage.put(grave);
+            activeGraves.remove(grave.getId());
+            pendingGraves.add(grave.getId().toString());
         }
-        try { data.save(dataFile); } catch (IOException ignored) {}
+        saveData();
+    }
+
+    public void saveData() {
+        for (Grave grave : activeGraves.values()) storage.put(grave);
+        try { storage.save(); }
+        catch (IOException error) { plugin.getLogger().severe("No se pudieron guardar las tumbas: " + error.getMessage()); }
     }
 
     // La tumba va un bloque arriba de donde murió; si murió en el vacío queda 5 bloques arriba del fondo del mundo
@@ -176,12 +243,14 @@ public class GravesManager {
     public void removeGrave(UUID id) {
         Grave grave = activeGraves.remove(id);
         if (grave != null) {
+            storage.records().remove(id.toString());
             cleanupVisuals(id, grave.getLocation());
             saveData();
         }
     }
 
     private void cleanupVisuals(UUID id, Location loc) {
+        if (loc == null || loc.getWorld() == null) return;
         String tag = "grave_" + id.toString();
         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "execute in " + loc.getWorld().getKey().toString() + " run kill @e[tag=" + tag + "]");
     }
@@ -195,6 +264,7 @@ public class GravesManager {
                 List<UUID> toRemove = new ArrayList<>();
 
                 for (Grave grave : activeGraves.values()) {
+                    if (grave.getLocation().getWorld() == null) continue;
                     long remaining = grave.getExpiryTime() - now;
 
                     if (remaining <= 0) {

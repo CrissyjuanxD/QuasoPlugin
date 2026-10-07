@@ -1,6 +1,8 @@
 package Dificultades.CustomMobs;
 
 import Dificultades.Features.MobSoundManager;
+import com.destroystokyo.paper.event.entity.EntityAddToWorldEvent;
+import com.destroystokyo.paper.event.entity.EntityRemoveFromWorldEvent;
 import items.CorruptedMobItems;
 import org.bukkit.*;
 import org.bukkit.attribute.Attribute;
@@ -19,6 +21,8 @@ import org.bukkit.util.Vector;
 
 import java.util.*;
 
+// El Zombie Floral (antes Corrupted Zombie): mismo comportamiento, la clave PDC sigue siendo corrupted_zombie para que
+// las misiones, los spawners y los que ya estaban en el mundo sigan contando
 public class CorruptedZombies implements Listener {
 
     private final JavaPlugin plugin;
@@ -79,7 +83,8 @@ public class CorruptedZombies implements Listener {
         }
     }
 
-    // Una sola tarea para todos los zombies corruptos que revisa si pueden disparar
+    // Una sola tarea para todos los zombies florales: el aura de partículas y si pueden disparar. La lista solo tiene
+    // los cargados (los que se descargan o hacen despawn salen con EntityRemoveFromWorldEvent)
     private void startCentralTask() {
         if (mainTask != null && !mainTask.isCancelled()) return;
 
@@ -94,16 +99,28 @@ public class CorruptedZombies implements Listener {
                     Entity entity = Bukkit.getEntity(id);
 
                     if (entity == null || !entity.isValid() || entity.isDead()) {
-                        if (entity != null && !entity.isValid()) it.remove();
+                        it.remove();
                         continue;
                     }
 
                     if (entity instanceof Zombie zombie) {
+                        ParticulasFlorales.aura(zombie.getLocation(), zombie.getHeight());
                         processZombieAI(zombie);
                     }
                 }
             }
         }.runTaskTimer(plugin, 0L, 20L);
+    }
+
+    // Vuelven a la lista cuando se carga su chunk
+    @EventHandler
+    public void onZombieLoad(EntityAddToWorldEvent event) {
+        if (event.getEntity() instanceof Zombie zombie && isCorrupted(zombie)) activeZombies.add(zombie.getUniqueId());
+    }
+
+    @EventHandler
+    public void onZombieUnload(EntityRemoveFromWorldEvent event) {
+        if (event.getEntity() instanceof Zombie) activeZombies.remove(event.getEntity().getUniqueId());
     }
 
     private void processZombieAI(Zombie zombie) {
@@ -132,7 +149,7 @@ public class CorruptedZombies implements Listener {
 
     private void applyCorruptedZombieAttributes(Zombie zombie) {
         zombie.getPersistentDataContainer().set(corruptedKey, PersistentDataType.BYTE, (byte) 1);
-        zombie.setCustomName(ChatColor.DARK_PURPLE + "" + ChatColor.BOLD + "Corrupted Zombie");
+        zombie.setCustomName(net.md_5.bungee.api.ChatColor.of("#FF8CC6") + "" + ChatColor.BOLD + "Zombie Floral");
         zombie.setCustomNameVisible(false);
         zombie.getAttribute(Attribute.FOLLOW_RANGE).setBaseValue(32);
         Objects.requireNonNull(zombie.getAttribute(Attribute.ATTACK_DAMAGE)).setBaseValue(3.0);
@@ -160,7 +177,7 @@ public class CorruptedZombies implements Listener {
         return distanceXZ <= 15 * 15 && distanceY <= 15;
     }
 
-    // Dispara una wind charge con partículas de portal hacia el jugador
+    // Dispara una wind charge con estela floral hacia el jugador
     private void lanzarSnowball(Zombie zombie, Player player) {
         WindCharge snowball = zombie.launchProjectile(WindCharge.class);
 
@@ -173,12 +190,17 @@ public class CorruptedZombies implements Listener {
         snowball.setCustomName("Corrupted Zombie WindCharge");
         snowball.setCustomNameVisible(false);
 
-        Bukkit.getScheduler().runTaskTimer(plugin, () -> {
-            if (snowball.isValid()) {
-                snowball.getWorld().spawnParticle(Particle.PORTAL, snowball.getLocation(), 10);
-                snowball.getWorld().spawnParticle(Particle.SMOKE, snowball.getLocation(), 5, 0.2, 0.2, 0.2, 0.1);
+        // La estela se corta cuando la wind charge pega o desaparece (antes la tarea seguía para siempre)
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                if (!snowball.isValid()) {
+                    cancel();
+                    return;
+                }
+                ParticulasFlorales.estela(snowball.getLocation());
             }
-        }, 0L, 1L);
+        }.runTaskTimer(plugin, 0L, 1L);
 
         Bukkit.getScheduler().runTaskLater(plugin, () -> {
             if (snowball.isValid()) {
@@ -223,6 +245,7 @@ public class CorruptedZombies implements Listener {
             zombie.getWorld().playSound(zombie.getLocation(), Sound.ENTITY_ZOMBIE_DEATH, SoundCategory.HOSTILE, 1.0f, 0.6f);
 
             activeZombies.remove(zombie.getUniqueId());
+            ParticulasFlorales.estallido(zombie.getLocation().add(0, 1, 0));
 
             if (Math.random() <= 0.30) {
                 zombie.getWorld().dropItemNaturally(zombie.getLocation(), CorruptedMobItems.createCorruptedMeet());

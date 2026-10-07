@@ -738,8 +738,8 @@ public class CustomSpawnerHandler implements Listener {
         switch (mobType.toLowerCase()) {
             case "bombita": return "Bombita";
             case "iceologer": return "Iceologer";
-            case "corruptedzombie": return "Corrupted Zombie";
-            case "corruptedspider": return "Corrupted Spider";
+            case "corruptedzombie": return "Zombie Floral";
+            case "corruptedspider": return "Spider Floral";
             case "queenbee": return "Abeja Floral";
             case "hellishbee": return "Abeja Infernal";
             case "infestedbee": return "Infested Bee";

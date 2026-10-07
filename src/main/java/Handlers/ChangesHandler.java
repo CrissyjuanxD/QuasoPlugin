@@ -1,6 +1,7 @@
 package Handlers;
 
 import Dificultades.Change;
+import Dificultades.ExtraChanges;
 import Dificultades.OneChanges;
 import Dificultades.ThreeChanges;
 import Dificultades.TwoChanges;
@@ -27,6 +28,7 @@ public class ChangesHandler {
         this.file = new File(plugin.getDataFolder(), "cambios.yml");
 
         register(new OneChanges(plugin));
+        register(new ExtraChanges(plugin));
         register(new TwoChanges(plugin));
         register(new ThreeChanges(plugin));
 
@@ -46,7 +48,7 @@ public class ChangesHandler {
         return changes.values();
     }
 
-    // Acepta el nombre del cambio (uno, dos, tres) o su número (1, 2, 3)
+    // Acepta el nombre del cambio (uno, extra, dos, tres) o su número en ese orden (1, 2, 3, 4)
     public Change find(String name) {
         Change byId = changes.get(name.toLowerCase(Locale.ROOT));
         if (byId != null) return byId;

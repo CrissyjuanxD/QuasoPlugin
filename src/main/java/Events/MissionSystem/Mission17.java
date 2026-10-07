@@ -16,10 +16,10 @@ import static Events.MissionSystem.MissionRewards.*;
 public class Mission17 extends BaseMission {
 
     public Mission17(JavaPlugin plugin, MissionHandler handler) {
-        super(plugin, handler, 17, "Cazador de Corruptos", MissionDifficulty.DIFICIL, 18,
-                "Mata 25 Corrupted Zombies y 25 Corrupted Spiders. Salen en oleadas en las raids.");
-        counter("zombies", "Corrupted Zombies", 25);
-        counter("aranas", "Corrupted Spiders", 25);
+        super(plugin, handler, 17, "Cazador Floral", MissionDifficulty.DIFICIL, 18,
+                "Mata 25 Zombies Florales y 25 Spiders Florales. Salen en las raids y, desde el día 14, solos por el mundo.");
+        counter("zombies", "Zombies Florales", 25);
+        counter("aranas", "Spiders Florales", 25);
     }
 
     @Override

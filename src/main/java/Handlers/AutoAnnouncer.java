@@ -27,7 +27,7 @@ public class AutoAnnouncer implements CommandExecutor {
             "En las zonas de pesca, cuando algo pica vuelve a usar la caña justo cuando el marcador esté en el verde. Los premios especiales los compra la Pescadería.",
             "Durante la BloodMoon los monstruos sueltan Fragmentos de BloodMoon. En la tienda de Cambios, 6 fragmentos valen 1 DinoCoin.",
             "En el casino se juega con DinoFichas. En la tienda de Cambios 1 DinoCoin son 5 DinoFichas, y 6 DinoFichas vuelven a ser 1 DinoCoin.",
-            "Las raids están cambiadas: los raiders son Bombitas, desde la segunda oleada salen Iceologers y a veces llega una horda de corruptos.",
+            "Las raids están cambiadas: los raiders son Bombitas, desde la segunda oleada salen Iceologers y a veces llega una horda de Zombies y Spiders Florales.",
             "/sethome <nombre> guarda una base (hasta 10), /home <nombre> te lleva y /delhome <nombre> la borra; en /menu, Homes te las muestra todas. /spawn y /tiendas te llevan al spawn y a las tiendas.",
             "Usa /proteccion o Protecciones en /menu para proteger tu base.",
             "La tienda del spawn va creciendo durante la temporada: salen items nuevos y lo que ya estaba sube un poco de precio. Lo más fuerte nunca se vende, sale de misiones, bosses y biomas.",

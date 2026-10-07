@@ -416,7 +416,7 @@ public class OneChanges implements Listener, Change {
         }.runTaskTimer(plugin, 20L, 20L);
     }
 
-    // Cambia raiders por Bombitas, desde la 2da oleada mete Iceologers y a veces una horda de corruptos
+    // Cambia raiders por Bombitas, desde la 2da oleada mete Iceologers y a veces una horda de mobs florales
     @EventHandler
     public void onRaidWaveSpawn(RaidSpawnWaveEvent event) {
         if (!isApplied) return;
@@ -574,7 +574,7 @@ public class OneChanges implements Listener, Change {
 
         String jsonMessage = "[\"\",{\"text\":\"\\u06de\",\"bold\":true,\"color\":\"#C17CE5\"}," +
                 "{\"text\":\" Ha aparecido una oleada de\",\"color\":\"#E28761\"}," +
-                "{\"text\":\" Corrupted Mobs \",\"bold\":true,\"color\":\"dark_purple\"}," +
+                "{\"text\":\" Mobs Florales \",\"bold\":true,\"color\":\"#FF8CC6\"}," +
                 "{\"text\":\"\\u26a0\",\"bold\":true,\"color\":\"dark_red\"}]";
 
         Location raidLoc = event.getRaid().getLocation();

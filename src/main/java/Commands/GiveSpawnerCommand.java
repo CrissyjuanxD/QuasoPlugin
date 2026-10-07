@@ -140,13 +140,13 @@ public class GiveSpawnerCommand implements CommandExecutor, TabCompleter {
                     customModelData = 1002;
                     break;
                 case "corruptedzombie":
-                    displayName = ChatColor.DARK_PURPLE + "" + ChatColor.BOLD + "Spawner de Corrupted Zombie";
-                    description = "Genera Zombies Corruptos";
+                    displayName = ChatColor.LIGHT_PURPLE + "" + ChatColor.BOLD + "Spawner de Zombie Floral";
+                    description = "Genera Zombies Florales";
                     customModelData = 1003;
                     break;
                 case "corruptedspider":
-                    displayName = ChatColor.DARK_PURPLE + "" + ChatColor.BOLD + "Spawner de Corrupted Spider";
-                    description = "Genera Arañas Corruptas";
+                    displayName = ChatColor.YELLOW + "" + ChatColor.BOLD + "Spawner de Spider Floral";
+                    description = "Genera Spiders Florales";
                     customModelData = 1004;
                     break;
                 case "queenbee":

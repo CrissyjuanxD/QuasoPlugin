@@ -1,5 +1,6 @@
 package Events.MissionSystem;
 
+import Gui.Invisible;
 import items.Misionesitem;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.NamespacedKey;
@@ -127,10 +128,18 @@ public class MissionGUI implements Listener {
             before += sectionPages;
         }
 
+        // Las dos primeras filas (el panel de la textura) y los slots sin misión llevan items invisibles
+        ItemStack relleno = Invisible.relleno();
+        for (int slot = 0; slot < PANEL_SLOTS; slot++) gui.setItem(slot, relleno);
+
         gui.setItem(PREV_SLOT, createArrow("§e⬅ Anterior Página", page, pages, tipo));
         gui.setItem(NEXT_SLOT, createArrow("§eSiguiente Página ➔", page, pages, tipo));
 
-        for (int i = 0; i < MISSION_SLOTS.length && first + i < order.size(); i++) {
+        for (int i = 0; i < MISSION_SLOTS.length; i++) {
+            if (first + i >= order.size()) {
+                gui.setItem(MISSION_SLOTS[i], relleno);
+                continue;
+            }
             int missionNum = order.get(first + i);
             Mission mission = missionHandler.getMissions().get(missionNum);
             gui.setItem(MISSION_SLOTS[i], createMissionItem(mission, player, missionHandler.getData(player, missionNum), missionNum));

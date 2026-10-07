@@ -140,6 +140,17 @@ public class HabilidadesManager {
         saveConfig();
     }
 
+    // El Libro de Habilidades se gasta una vez y deja entrar al árbol desde /menu. Los que ya compraron algún nivel con
+    // el libro de antes entran sin gastar otro
+    public boolean tieneAcceso(UUID playerUUID) {
+        return habilidadesConfig.getBoolean("acceso." + playerUUID, false) || !getPlayerHabilidades(playerUUID).isEmpty();
+    }
+
+    public void darAcceso(UUID playerUUID) {
+        habilidadesConfig.set("acceso." + playerUUID, true);
+        saveConfig();
+    }
+
     // Para comprar un nivel hay que tener el anterior
     public boolean canUnlock(UUID playerUUID, HabilidadesType type, int level) {
         if (level == 1) {

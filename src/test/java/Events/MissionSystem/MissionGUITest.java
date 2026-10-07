@@ -2,6 +2,7 @@ package Events.MissionSystem;
 
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
+import org.bukkit.NamespacedKey;
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -61,11 +62,11 @@ class MissionGUITest {
             MissionGUI gui = new MissionGUI(plugin, handler);
 
             gui.openMissionGUI(player, 1);
-            assertEquals(3, stacks.constructed().size());
+            assertEquals(4, stacks.constructed().size());
             verify(inventory).setItem(18, stacks.constructed().getLast());
 
             gui.openMissionGUI(player, 2);
-            assertEquals(6, stacks.constructed().size());
+            assertEquals(8, stacks.constructed().size());
             ItemStack extraItem = stacks.constructed().getLast();
             @SuppressWarnings("unchecked") ArgumentCaptor<List<String>> lore = ArgumentCaptor.forClass(List.class);
             verify(extraItem.getItemMeta()).setLore(lore.capture());
@@ -77,7 +78,7 @@ class MissionGUITest {
     }
 
     @Test
-    void keepsHeaderEmptyAndBlocksClickAndDragTransfers() {
+    void fillsTheHeaderAndEmptySlotsWithInvisibleItemsAndBlocksTransfers() {
         JavaPlugin plugin = mock(JavaPlugin.class);
         Server server = mock(Server.class);
         when(plugin.getServer()).thenReturn(server);
@@ -100,15 +101,20 @@ class MissionGUITest {
             MissionGUI gui = new MissionGUI(plugin, handler);
             gui.openMissionGUI(player);
 
-            for (int slot = 0; slot < 18; slot++) {
-                verify(inventory, never()).setItem(eq(slot), any());
+            // Sin misiones: el panel de arriba y los slots de misiones llevan el mismo item invisible y sin tooltip
+            ItemStack filler = stacks.constructed().getFirst();
+            verify(filler.getItemMeta()).setItemModel(NamespacedKey.minecraft("air"));
+            verify(filler.getItemMeta()).setHideTooltip(true);
+            for (int slot = 0; slot < 54; slot++) {
+                if (slot == 45 || slot == 53) verify(inventory, never()).setItem(slot, filler);
+                else verify(inventory).setItem(slot, filler);
             }
             verify(inventory).setItem(eq(45), any());
             verify(inventory).setItem(eq(53), any());
             verify(player).openInventory(inventory);
-            assertEquals(2, stacks.constructed().size());
+            assertEquals(3, stacks.constructed().size());
 
-            // Empty header and lower inventory must be protected too (including shift clicks).
+            // Header and lower inventory must be protected too (including shift clicks).
             for (int slot : new int[]{0, 17, 60}) {
                 InventoryClickEvent click = mock(InventoryClickEvent.class);
                 when(click.getInventory()).thenReturn(inventory);

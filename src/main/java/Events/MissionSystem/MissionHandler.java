@@ -352,7 +352,7 @@ public class MissionHandler implements Listener {
                     .append("{\"text\":\"MISIÓN EXTRA\",\"bold\":true,\"color\":\"" + TipoMision.EXTRA.primario + "\"},")
                     .append(missionLine(extra, TipoMision.EXTRA.secundario));
         }
-        json.append(",{\"text\":\"usa /misiones para abrir su interfaz o usa el item de Misiones\",\"color\":\"gray\"}]");
+        json.append(",{\"text\":\"usa /menu o /misiones para abrir su interfaz o usa el item de Misiones\",\"color\":\"gray\"}]");
 
         for (Player online : Bukkit.getOnlinePlayers()) {
             ruletaAnimation.playAnimation(online, json.toString());
@@ -429,7 +429,7 @@ public class MissionHandler implements Listener {
         String json = "[\"\",{\"text\":\"\\n۞ \",\"bold\":true,\"color\":\"#ffaa00\"}," +
                 "{\"text\":\"NUEVAS MISIONES DESBLOQUEADAS\",\"bold\":true,\"color\":\"#FFA500\"}," +
                 "{\"text\":\"\\nSe abrieron " + count + " misiones de golpe.\\n\\n\",\"color\":\"#dda0dd\"}," +
-                "{\"text\":\"usa /misiones para abrir su interfaz o usa el item de Misiones\",\"color\":\"gray\"}]";
+                "{\"text\":\"usa /menu o /misiones para abrir su interfaz o usa el item de Misiones\",\"color\":\"gray\"}]";
         for (Player online : Bukkit.getOnlinePlayers()) {
             ruletaAnimation.playAnimation(online, json);
         }

@@ -17,18 +17,19 @@ public class AutoAnnouncer implements CommandExecutor {
 
     // Lo importante desde el día 1, en el orden en que se le va a ir necesitando a un jugador nuevo
     public static final List<String> MENSAJES = List.of(
-            "Usa /misiones o el Libro de Misiones para ver la misión del día. Cada día se abre una nueva y algunas traen una misión extra.",
+            "Usa /menu para abrir el menú principal: desde ahí entras a tus Misiones, Trabajos, Habilidades, Protecciones y Homes.",
+            "Usa /menu, /misiones o el Libro de Misiones para ver la misión del día. Cada día se abre una nueva y algunas traen una misión extra.",
             "Al completar una misión recibes una Ficha de Misión: llévala a la Estatua de Recompensas del spawn para abrir tu cofre con DinoCoins y objetos. Las misiones extra pagan directo a tu monedero.",
             "Las DinoCoins se guardan en el Monedero, que se compra en el Mercado por 5 DinoCoins. Para comprar en la tienda o subir habilidades llévalas en el inventario.",
-            "Con el Libro de Habilidades subes Vitalidad, Resistencia y Agilidad. Cada nivel cuesta DinoCoins, experiencia y bloques; si lo pierdes, la Biblioteca lo vende por 1 DinoCoin.",
+            "Usa el Libro de Habilidades para desbloquear tu árbol en /menu: ahí subes Vitalidad, Resistencia y Agilidad con DinoCoins, experiencia y bloques. La Biblioteca vende el libro por 1 DinoCoin.",
             "Si mueres, tus cosas quedan en una tumba a tus pies. Los primeros 20 minutos solo tú puedes abrirla y después cualquiera durante 10 minutos. Usa /muertes para ver dónde quedaron.",
-            "Usa /trabajos para elegir uno de los 6 trabajos y ganar DinoCoins al subir de nivel. Entrar cuesta 5 DinoCoins, 10 niveles y 5 diamantes, y te puedes cambiar cada 24 horas sin perder tu nivel.",
+            "Usa /menu o /trabajos para elegir uno de los 6 trabajos y ganar DinoCoins al subir de nivel. Entrar cuesta 5 DinoCoins, 10 niveles y 5 diamantes, y te puedes cambiar cada 24 horas sin perder tu nivel.",
             "En las zonas de pesca, cuando algo pica vuelve a usar la caña justo cuando el marcador esté en el verde. Los premios especiales los compra la Pescadería.",
             "Durante la BloodMoon los monstruos sueltan Fragmentos de BloodMoon. En la tienda de Cambios, 6 fragmentos valen 1 DinoCoin.",
             "En el casino se juega con DinoFichas. En la tienda de Cambios 1 DinoCoin son 5 DinoFichas, y 6 DinoFichas vuelven a ser 1 DinoCoin.",
             "Las raids están cambiadas: los raiders son Bombitas, desde la segunda oleada salen Iceologers y a veces llega una horda de corruptos.",
-            "/sethome <nombre> guarda una base (hasta 10), /home <nombre> te lleva y /delhome <nombre> la borra. /spawn y /tiendas te llevan al spawn y a las tiendas.",
-            "Usa /proteccion para recibir la guía con los comandos para proteger tu base.",
+            "/sethome <nombre> guarda una base (hasta 10), /home <nombre> te lleva y /delhome <nombre> la borra; en /menu, Homes te las muestra todas. /spawn y /tiendas te llevan al spawn y a las tiendas.",
+            "Usa /proteccion o Protecciones en /menu para proteger tu base.",
             "La tienda del spawn va creciendo durante la temporada: salen items nuevos y lo que ya estaba sube un poco de precio. Lo más fuerte nunca se vende, sale de misiones, bosses y biomas.",
             "Con 30 misiones completas pasas a DinoNugget+ y la misión 100 te da el rol DinoLeyenda.",
             "Usa /twitch para vincular tu cuenta de Twitch: los subs y VIPs del canal reclaman su kit cada mes, y los subs pueden usar /fly en el Overworld y el Nether."

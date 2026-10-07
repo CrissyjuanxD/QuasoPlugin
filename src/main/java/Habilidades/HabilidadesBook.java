@@ -14,7 +14,7 @@ import java.util.List;
 
 public class HabilidadesBook {
 
-    // Libro que abre el menú de habilidades
+    // Libro que se gasta para desbloquear el árbol de habilidades en /menu
     public static ItemStack createHabilidadesBook() {
         ItemStack book = new ItemStack(Material.KNOWLEDGE_BOOK);
         ItemMeta meta = book.getItemMeta();
@@ -27,7 +27,8 @@ public class HabilidadesBook {
         lore.add(ChatColor.of("#E0AAFF") + "el poder de desbloquear habilidades");
         lore.add(ChatColor.of("#E0AAFF") + "únicas y poderosas.");
         lore.add("");
-        lore.add(ChatColor.of("#9D4EDD") + "Click derecho para abrir");
+        lore.add(ChatColor.of("#9D4EDD") + "Click derecho para desbloquear");
+        lore.add(ChatColor.of("#9D4EDD") + "tu árbol de habilidades en /menu");
         lore.add("");
 
         meta.setLore(lore);
@@ -39,5 +40,12 @@ public class HabilidadesBook {
         meta.setItemModel(NamespacedKey.minecraft("libro_habilidades"));
         book.setItemMeta(meta);
         return book;
+    }
+
+    @SuppressWarnings("deprecation")
+    public static boolean isLibro(ItemStack item) {
+        if (item == null || item.getType() != Material.KNOWLEDGE_BOOK || !item.hasItemMeta()) return false;
+        ItemMeta meta = item.getItemMeta();
+        return meta.hasCustomModelData() && meta.getCustomModelData() == 9999;
     }
 }

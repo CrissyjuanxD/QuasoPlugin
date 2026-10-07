@@ -403,6 +403,62 @@ public class HabilidadesEffects {
         }
     }
 
+    // Al gastar el Libro de Habilidades: dos espirales moradas suben alrededor del jugador (2 segundos), estallan en
+    // una esfera de runas y sale el mensaje de que el árbol ya está en /menu
+    public void playLibroAnimation(Player player) {
+        Particle.DustOptions lila = new Particle.DustOptions(Color.fromRGB(199, 125, 255), 1.3f);
+        Particle.DustOptions rosa = new Particle.DustOptions(Color.fromRGB(224, 170, 255), 1.1f);
+        player.playSound(player.getLocation(), Sound.BLOCK_ENCHANTMENT_TABLE_USE, 1f, 0.8f);
+
+        new BukkitRunnable() {
+            int tick = 0;
+
+            @Override
+            public void run() {
+                if (!player.isOnline()) {
+                    cancel();
+                    return;
+                }
+                Location base = player.getLocation();
+                World world = base.getWorld();
+
+                if (tick < 40) {
+                    double altura = tick * 0.06;
+                    double radio = 1.1 - tick * 0.015;
+                    for (int brazo = 0; brazo < 2; brazo++) {
+                        double angulo = tick * 0.45 + brazo * Math.PI;
+                        Location punto = base.clone().add(Math.cos(angulo) * radio, altura, Math.sin(angulo) * radio);
+                        world.spawnParticle(Particle.DUST, punto, 2, 0.02, 0.02, 0.02, 0, brazo == 0 ? lila : rosa);
+                        world.spawnParticle(Particle.ENCHANT, punto, 3, 0.1, 0.1, 0.1, 0.4);
+                    }
+                    if (tick % 8 == 0) player.playSound(base, Sound.ITEM_BOOK_PAGE_TURN, 0.8f, 0.8f + tick * 0.02f);
+                    tick++;
+                    return;
+                }
+
+                Location centro = base.clone().add(0, 1.2, 0);
+                for (int i = 0; i < 60; i++) {
+                    double theta = Math.random() * Math.PI * 2;
+                    double phi = Math.acos(2 * Math.random() - 1);
+                    Location punto = centro.clone().add(Math.sin(phi) * Math.cos(theta) * 1.6, Math.cos(phi) * 1.6,
+                            Math.sin(phi) * Math.sin(theta) * 1.6);
+                    world.spawnParticle(Particle.DUST, punto, 1, 0, 0, 0, 0, i % 2 == 0 ? lila : rosa);
+                }
+                world.spawnParticle(Particle.WITCH, centro, 40, 0.6, 0.8, 0.6, 0.1);
+                world.spawnParticle(Particle.END_ROD, centro, 25, 0.2, 0.2, 0.2, 0.12);
+                player.playSound(base, Sound.ENTITY_PLAYER_LEVELUP, 1f, 1.2f);
+                player.playSound(base, Sound.BLOCK_BEACON_ACTIVATE, 0.7f, 1.6f);
+
+                player.sendMessage("");
+                player.sendMessage(ChatColor.of("#C77DFF") + "" + ChatColor.BOLD + "۞ ¡Árbol de Habilidades desbloqueado!");
+                player.sendMessage(ChatColor.of("#E0AAFF") + "Puedes entrar a tu árbol de habilidades en " + ChatColor.WHITE + "/menu"
+                        + ChatColor.of("#E0AAFF") + ", en el apartado de " + ChatColor.of("#C77DFF") + "Habilidades" + ChatColor.of("#E0AAFF") + ".");
+                player.sendMessage("");
+                cancel();
+            }
+        }.runTaskTimer(plugin, 0L, 1L);
+    }
+
     // +5 de vida por nivel hasta el 4 y +8 por cada nivel desde el 5
     private double calculateExtraHealth(int level) {
         double extra = 0;

@@ -37,19 +37,26 @@ public class HabilidadesListener implements Listener {
         this.actionBar = new ActionBarHandler(plugin);
     }
 
-    // El libro de habilidades (custom model data 9999) abre el menú
+    // El libro de habilidades ya no abre el menú: se gasta y deja entrar al árbol desde /menu. Si ya tienes acceso no
+    // se gasta
     @EventHandler
     public void onInteract(PlayerInteractEvent event) {
-        if (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
-            ItemStack item = event.getItem();
-            if (item != null && item.getType() == Material.KNOWLEDGE_BOOK && item.hasItemMeta()) {
-                if (item.getItemMeta().hasCustomModelData() && item.getItemMeta().getCustomModelData() == 9999) {
-                    event.setCancelled(true);
-                    HabilidadesGUI gui = new HabilidadesGUI(plugin, manager);
-                    gui.openHabilidadesGUI(event.getPlayer());
-                }
-            }
+        if (event.getAction() != Action.RIGHT_CLICK_AIR && event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
+        ItemStack libro = event.getItem();
+        if (!HabilidadesBook.isLibro(libro) || event.getHand() == null) return;
+        event.setCancelled(true);
+        Player player = event.getPlayer();
+
+        if (manager.tieneAcceso(player.getUniqueId())) {
+            player.sendMessage(ChatColor.of("#E0AAFF") + "Ya tienes tu árbol de habilidades. Entra con " + ChatColor.WHITE + "/menu"
+                    + ChatColor.of("#E0AAFF") + ", en el apartado de " + ChatColor.of("#C77DFF") + "Habilidades" + ChatColor.of("#E0AAFF") + ".");
+            player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 1f, 1f);
+            return;
         }
+
+        player.getInventory().setItem(event.getHand(), libro.getAmount() > 1 ? libro.asQuantity(libro.getAmount() - 1) : null);
+        manager.darAcceso(player.getUniqueId());
+        effects.playLibroAnimation(player);
     }
 
     @EventHandler

@@ -1,5 +1,6 @@
 package Trabajos;
 
+import Gui.Invisible;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -27,6 +28,8 @@ import static Trabajos.TrabajosTexto.*;
 final class TrabajosGUI implements Listener {
 
     private static final int SLOT_GUIA = 22;
+    // El fondo es una textura del resource pack que se dibuja con estos caracteres del título (igual que misiones)
+    static final String TITULO = "㈁㈁" + ChatColor.WHITE + "㈄";
 
     private final JavaPlugin plugin;
     private final TrabajosManager manager;
@@ -47,17 +50,21 @@ final class TrabajosGUI implements Listener {
 
     void abrir(Player player) {
         Menu menu = new Menu();
-        Inventory inventory = Bukkit.createInventory(menu, 27, CAFE_OSCURO + "" + ChatColor.BOLD + "☕ " + CAFE + ChatColor.BOLD + "Trabajos");
+        Inventory inventory = Bukkit.createInventory(menu, 27, TITULO);
         menu.inventory = inventory;
         llenar(player, inventory);
         player.openInventory(inventory);
     }
 
-    // Sin paneles: el fondo del menú lo pone el resource pack
+    // El fondo del menú lo pone el resource pack; los slots que sobran llevan items invisibles
     private void llenar(Player player, Inventory inventory) {
         DatosTrabajo datos = manager.datos(player);
         for (Trabajo trabajo : Trabajo.values()) inventory.setItem(trabajo.slot(), papel(datos, trabajo));
         inventory.setItem(SLOT_GUIA, guia());
+        ItemStack relleno = Invisible.relleno();
+        for (int slot = 0; slot < inventory.getSize(); slot++) {
+            if (inventory.getItem(slot) == null) inventory.setItem(slot, relleno);
+        }
     }
 
     // El lore cambia con el nivel: lo que falta para subir, la recompensa del próximo nivel y el próximo bonus

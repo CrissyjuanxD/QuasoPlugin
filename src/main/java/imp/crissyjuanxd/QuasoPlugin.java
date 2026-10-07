@@ -32,6 +32,7 @@ import ShopSystem.*;
 import StatueManager.*;
 import SistemaTumbas.*;
 import items.MochilaCommand;
+import Gui.MenuPrincipal;
 import Gui.dinocoins.DinoCoinsManager;
 import Gui.dinocoins.DinoCoinsCommand;
 import Dificultades.CustomMobs.*;
@@ -112,6 +113,7 @@ public class QuasoPlugin extends JavaPlugin implements Listener {
     private GravesManager gravesManager;
 
     private MissionHandler missionHandler;
+    private MissionGUI missionGUI;
     private MissionRewardHandler missionRewardHandler;
 
     private AltarFunctions altarFunctions;
@@ -218,6 +220,7 @@ public class QuasoPlugin extends JavaPlugin implements Listener {
         initEndSystem();
         twitchManager = new TwitchManager(this, missionHandler);
         trabajosManager = new TrabajosManager(this, databaseManager, dinoCoinsManager);
+        initMenu();
         bloodMoon.enable();
 
         getLogger().info("DinoNuggetsSMP habilitado completamente.");
@@ -370,7 +373,7 @@ public class QuasoPlugin extends JavaPlugin implements Listener {
         this.missionHandler = new MissionHandler(this, databaseManager);
         missionHandler.setDinoCoins(dinoCoinsManager);
 
-        MissionGUI missionGUI = new MissionGUI(this, missionHandler);
+        missionGUI = new MissionGUI(this, missionHandler);
 
         MissionCommands missionCommands = new MissionCommands(missionHandler, missionGUI);
 
@@ -466,8 +469,6 @@ public class QuasoPlugin extends JavaPlugin implements Listener {
 
         SnowballDamage snowballDamage1 = new SnowballDamage(this);
         Bukkit.getPluginManager().registerEvents(snowballDamage1, this);
-
-        this.getCommand("proteccion").setExecutor(new ComandoProteccion());
     }
 
     private void initGameplaySystem() {
@@ -527,6 +528,13 @@ public class QuasoPlugin extends JavaPlugin implements Listener {
         GravesCommand tumbasAdminCmd = new GravesCommand(gravesManager);
         getCommand("tumbas").setExecutor(tumbasAdminCmd);
         getCommand("tumbas").setTabCompleter(tumbasAdminCmd);
+    }
+
+    // /menu va al final porque abre las misiones, los trabajos y el árbol de habilidades
+    private void initMenu() {
+        MenuPrincipal menu = new MenuPrincipal(this, missionGUI, trabajosManager, habilidadesManager, habilidadesGUI);
+        getServer().getPluginManager().registerEvents(menu, this);
+        Objects.requireNonNull(getCommand("menu")).setExecutor(menu);
     }
 
     private void initHabilidadesSystem() {

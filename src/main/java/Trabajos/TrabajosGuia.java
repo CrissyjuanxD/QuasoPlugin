@@ -84,7 +84,7 @@ final class TrabajosGuia {
                             + GRIS + " · " + BLANCO + TrabajosManager.COSTO_NIVELES + " niveles de experiencia\n"
                             + GRIS + " · " + CELESTE + TrabajosManager.COSTO_DIAMANTES + " diamantes",
                     GRIS + "Las DinoCoins salen del inventario y, si no alcanzan, de tus monederos.",
-                    CREMA + "Abre " + BLANCO + "/trabajos" + CREMA + " y haz clic en el papel del trabajo que quieras. Solo puedes tener "
+                    CREMA + "Abre " + BLANCO + "/menu" + CREMA + " (Trabajos) o " + BLANCO + "/trabajos" + CREMA + " y haz clic en el papel del trabajo que quieras. Solo puedes tener "
                             + BLANCO + "un trabajo" + CREMA + " a la vez.");
             case CAMBIAR -> List.of(
                     CREMA + "Después de entrar tienes que esperar " + BLANCO + "24 horas" + CREMA + " para cambiarte. Cambiarte cuesta lo mismo que entrar.",
@@ -116,7 +116,8 @@ final class TrabajosGuia {
                             + GRIS + " · " + CREMA + "Solo cuenta en supervivencia.\n"
                             + GRIS + " · " + CREMA + "Pasadas " + numero(TrabajoNiveles.TOPE_POR_HORA) + " XP en una hora, lo que sigue rinde la cuarta parte.");
             case COMANDOS -> List.of(
-                    BLANCO + "/trabajos" + GRIS + " · " + CREMA + "Abre el menú.\n"
+                    BLANCO + "/menu" + GRIS + " · " + CREMA + "El menú principal; Trabajos abre este menú.\n"
+                            + BLANCO + "/trabajos" + GRIS + " · " + CREMA + "Abre el menú.\n"
                             + BLANCO + "/trabajos info" + GRIS + " · " + CREMA + "Tu trabajo, nivel, lo que falta y la recompensa.\n"
                             + BLANCO + "/trabajos guia" + GRIS + " · " + CREMA + "Abre esta guía.",
                     CREMA + "Cada trabajo tiene " + DORADO + "10 misiones" + CREMA + " (llegar al nivel 10, 20... 100). Están en las últimas páginas del menú de misiones y siempre están activas.");

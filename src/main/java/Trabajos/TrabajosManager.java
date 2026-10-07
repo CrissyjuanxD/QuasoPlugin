@@ -59,6 +59,7 @@ public final class TrabajosManager implements Listener {
     });
     private final BukkitTask autoguardado;
     private final TrabajosXp xp;
+    private final TrabajosGUI gui;
     // Sube con cada /trabajos reset: una carga que empezó antes del reset se descarta
     private volatile int generacion;
 
@@ -68,7 +69,7 @@ public final class TrabajosManager implements Listener {
         this.monedas = monedas;
         instance = this;
 
-        TrabajosGUI gui = new TrabajosGUI(plugin, this);
+        gui = new TrabajosGUI(plugin, this);
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
         xp = new TrabajosXp(this);
         plugin.getServer().getPluginManager().registerEvents(xp, plugin);
@@ -82,6 +83,11 @@ public final class TrabajosManager implements Listener {
     }
 
     // ---------------------------------------------------------------- Para otros sistemas
+
+    // El menú de trabajos, para abrirlo desde /menu
+    public void abrirMenu(Player player) {
+        gui.abrir(player);
+    }
 
     // La línea "Trabajo:" del scoreboard
     public static String lineaScoreboard(Player player) {

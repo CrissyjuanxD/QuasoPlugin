@@ -12,25 +12,37 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.UUID;
 
 public class HabilidadesGUI implements Listener {
 
+    // El fondo es una textura del resource pack que se dibuja con estos caracteres del título (igual que misiones)
+    static final String TITULO = "㈁㈁" + ChatColor.WHITE + "㈅";
+
     private final JavaPlugin plugin;
     private final HabilidadesManager manager;
-    private final String GUI_TITLE = ChatColor.of("#C77DFF") + "Libro de Habilidades";
 
-    private final Map<UUID, Integer> playerPages = new HashMap<>();
-    private final int MAX_PAGES = 2;
+    // Marca el inventario como árbol de habilidades y recuerda la página
+    private static final class Menu implements InventoryHolder {
+        private final int page;
+        private Inventory inventory;
+
+        Menu(int page) {
+            this.page = page;
+        }
+
+        @Override
+        public Inventory getInventory() {
+            return inventory;
+        }
+    }
 
     public HabilidadesGUI(JavaPlugin plugin, HabilidadesManager manager) {
         this.plugin = plugin;
@@ -43,8 +55,9 @@ public class HabilidadesGUI implements Listener {
 
     // Dos páginas: niveles 1-4 y 5-8 de cada habilidad
     public void openHabilidadesGUI(Player player, int page) {
-        playerPages.put(player.getUniqueId(), page);
-        Inventory gui = Bukkit.createInventory(null, 54, GUI_TITLE + " - Pág " + page);
+        Menu menu = new Menu(page);
+        Inventory gui = Bukkit.createInventory(menu, 54, TITULO);
+        menu.inventory = gui;
 
         fillGUIWithPanels(gui, page);
         fillGUIWithSkills(gui, player, page);
@@ -271,7 +284,7 @@ public class HabilidadesGUI implements Listener {
 
     @EventHandler
     public void onInventoryClick(InventoryClickEvent event) {
-        if (!event.getView().getTitle().startsWith(GUI_TITLE)) return;
+        if (!(event.getInventory().getHolder() instanceof Menu menu)) return;
         event.setCancelled(true);
 
         if (!(event.getWhoClicked() instanceof Player)) return;
@@ -280,7 +293,7 @@ public class HabilidadesGUI implements Listener {
         int slot = event.getRawSlot();
         if (slot >= 54) return;
 
-        int page = playerPages.getOrDefault(player.getUniqueId(), 1);
+        int page = menu.page;
 
         if (slot == 45 && page == 2) {
             openHabilidadesGUI(player, 1);
@@ -399,6 +412,6 @@ public class HabilidadesGUI implements Listener {
 
     @EventHandler
     public void onDrag(InventoryDragEvent event) {
-        if (event.getView().getTitle().startsWith(GUI_TITLE)) event.setCancelled(true);
+        if (event.getInventory().getHolder() instanceof Menu) event.setCancelled(true);
     }
 }

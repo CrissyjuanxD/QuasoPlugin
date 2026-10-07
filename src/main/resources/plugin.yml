@@ -104,6 +104,9 @@ commands:
   misiones:
     description: Abre la interfaz del sistema de misiones
     usage: /misiones
+  menu:
+    description: Abre el menú principal (misiones, trabajos, habilidades, protecciones y homes)
+    usage: /menu
   mobcap:
     description: Comando principal para gestionar MobCap
     usage: /mobcap <info|setbase|doble|triple|normal|habilitar|deshabilitar|reset|reload|mob>
@@ -134,9 +137,6 @@ commands:
     usage: /pvp <activate|deactivate>
     permission: viciont_hardcore3.command.pvp
     permission-message: No tienes permiso para usar este comando.
-  proteccion:
-    description: Obtiene la guía de protecciones
-    usage: /proteccion
   mochilas:
     description: Comando para administrar mochilas
     usage: /mochilas <jugador>

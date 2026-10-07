@@ -1,162 +1,257 @@
 package Pesca;
 
 import imp.crissyjuanxd.QuasoPlugin;
-import net.md_5.bungee.api.ChatMessageType;
-import net.md_5.bungee.api.chat.ComponentBuilder;
-import net.md_5.bungee.api.chat.TextComponent;
+import net.kyori.adventure.bossbar.BossBar;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextComponent;
+import net.kyori.adventure.text.format.TextColor;
+import net.kyori.adventure.text.format.TextDecoration;
+import net.kyori.adventure.title.Title;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.Particle;
 import org.bukkit.Sound;
+import org.bukkit.SoundCategory;
+import org.bukkit.entity.FishHook;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
+import org.bukkit.util.Vector;
 
+import java.time.Duration;
+import java.util.Random;
+import java.util.function.Consumer;
+
+// El minijuego de las zonas de pesca: el pez tira del anzuelo y un marcador recorre la barra. Para tirar hay que volver
+// a usar la caña: verde = pesca perfecta, naranja = buena y rojo = normal. Si no tira en 6 segundos el pez se escapa
 public class FishingMiniGame {
 
-    private static final String COLOR_RED    = "#F02E3B";
-    private static final String COLOR_ORANGE = "#EF911C";
-    private static final String COLOR_GREEN  = "#78E58A";
-    private static final String COLOR_WHITE  = "#F0F0F0";
-    private static final String COLOR_GOLD   = "gold";
+    public enum Resultado { NORMAL, BUENA, PERFECTA, ESCAPO, SOLTO }
 
-    private static final int TOTAL_SLOTS = 14;
-    private static final int MAX_TICKS = 100;
+    static final int CASILLAS = 24;
+    static final int VERDE = 2;
+    static final int NARANJA = 4;
+    static final int DURACION = 120;
+    // El clic con el que picó no cuenta como tirar
+    static final int GRACIA = 4;
+    static final int MAX_RETRASO = 6;
 
-    private static final int[] BASE_PATTERN = {0, 0, 0, 0, 0, 1, 1, 2, 1, 1, 0, 0, 0, 0};
+    private static final String SEGMENTO = "▬";
+    private static final TextColor AGUA = TextColor.color(0x61B1F2);
+    private static final TextColor AGUA_CLARA = TextColor.color(0x9FD8F5);
+    private static final TextColor ROJO = TextColor.color(0xC9545D);
+    private static final TextColor NARANJA_COLOR = TextColor.color(0xEFA94A);
+    private static final TextColor VERDE_COLOR = TextColor.color(0x7BE38E);
+    private static final TextColor MARCADOR = TextColor.color(0xFFFFFF);
+    private static final Title.Times TIEMPOS = Title.Times.times(Duration.ZERO, Duration.ofMillis(400), Duration.ZERO);
 
     private final QuasoPlugin plugin;
     private final Player player;
-    private final Runnable onComplete;
+    private final FishHook hook;
     private final ItemStack vanillaLoot;
-    private final int colorOffset;
+    private final Consumer<Resultado> alTerminar;
+    private final Random random = new Random();
+    private final BossBar tiempo;
+    private final int verdeDesde;
+    private final int[] historial = new int[MAX_RETRASO + 1];
 
-    private int cursorPos;
-    private int direction;
+    private Location anzuelo;
+    private double posicion;
+    private int direccion;
+    private double velocidad;
+    private double velocidadObjetivo;
+    private int casilla;
+    private int ticks;
+    private int proximoTiron;
     private BukkitTask task;
+    private boolean terminado;
 
-    private boolean finished = false;
-    private boolean failedByTime = false;
-
-    private static int globalOffset = 0;
-
-    // Cada partida arranca con el patrón de colores corrido para que no sea siempre igual
-    public FishingMiniGame(QuasoPlugin plugin, Player player, ItemStack vanillaLoot, Runnable onComplete) {
+    public FishingMiniGame(QuasoPlugin plugin, Player player, FishHook hook, ItemStack vanillaLoot, Consumer<Resultado> alTerminar) {
         this.plugin = plugin;
         this.player = player;
+        this.hook = hook;
         this.vanillaLoot = vanillaLoot;
-        this.onComplete = onComplete;
-
-        this.colorOffset = globalOffset;
-        globalOffset = (globalOffset + 1) % TOTAL_SLOTS;
-
-        this.cursorPos = 0;
-        this.direction = 1;
-    }
-
-    public int getSlotType(int index) {
-        int realIndex = (index + colorOffset) % TOTAL_SLOTS;
-        return BASE_PATTERN[realIndex];
-    }
-
-    public int getCurrentSlotType() {
-        return getSlotType(cursorPos);
+        this.alTerminar = alTerminar;
+        this.anzuelo = hook.getLocation();
+        this.verdeDesde = verdeAleatorio(random);
+        // Arranca en un borde al azar y va hacia el otro
+        boolean izquierda = random.nextBoolean();
+        this.posicion = izquierda ? 0 : CASILLAS - 1;
+        this.direccion = izquierda ? 1 : -1;
+        this.velocidad = 0.6;
+        this.velocidadObjetivo = 0.6;
+        this.casilla = (int) posicion;
+        this.proximoTiron = 6;
+        this.tiempo = BossBar.bossBar(Component.text("≈ ", AGUA).append(Component.text("¡Algo picó! Vuelve a usar la caña para tirar", AGUA_CLARA))
+                .append(Component.text(" ≈", AGUA)), 1f, BossBar.Color.BLUE, BossBar.Overlay.NOTCHED_12);
     }
 
     public ItemStack getVanillaLoot() {
         return vanillaLoot;
     }
 
-    public boolean isFailedByTime() {
-        return failedByTime;
-    }
-
-    // El cursor va y viene por la barra durante 5 segundos; si no hace click pierde
-    public void start() {
-        int tickSpeed = 1;
-
-        task = new BukkitRunnable() {
-            int ticksElapsed = 0;
-
-            @Override
-            public void run() {
-                if (!player.isOnline() || finished) {
-                    cancel();
-                    return;
-                }
-
-                ticksElapsed += tickSpeed;
-
-                if (ticksElapsed >= MAX_TICKS) {
-                    failedByTime = true;
-                    finished = true;
-                    cancel();
-                    player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(""));
-                    onComplete.run();
-                    return;
-                }
-
-                sendActionBar();
-                player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_HAT, 0.2f, 2.0f);
-
-                cursorPos += direction;
-                if (cursorPos <= 0) {
-                    cursorPos = 0;
-                    direction = 1;
-                } else if (cursorPos >= TOTAL_SLOTS - 1) {
-                    cursorPos = TOTAL_SLOTS - 1;
-                    direction = -1;
-                }
-            }
-        }.runTaskTimer(plugin, 0L, tickSpeed);
-    }
-
-    public void playerClick() {
-        if (finished) return;
-        finished = true;
-        if (task != null) task.cancel();
-
-        player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(""));
-        onComplete.run();
+    // Dónde estaba el anzuelo la última vez (ahí sale el premio)
+    public Location getAnzuelo() {
+        return anzuelo.clone();
     }
 
     public boolean isFinished() {
-        return finished;
+        return terminado;
     }
 
-    // Dibuja la barra en la action bar: rojo falla, naranja normal y verde el mejor premio
-    private void sendActionBar() {
-        ComponentBuilder cb = new ComponentBuilder();
+    public void start() {
+        // Sin otra picada mientras dura el minijuego: el segundo clic recoge la caña en vez de pescar otra vez
+        hook.resetFishingState();
+        hook.setWaitTime(DURACION + 200);
+        player.showBossBar(tiempo);
+        player.playSound(player.getLocation(), Sound.ENTITY_FISHING_BOBBER_SPLASH, SoundCategory.PLAYERS, 1f, 1f);
+        player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, SoundCategory.PLAYERS, 0.6f, 1.6f);
+        dibujar();
+        task = Bukkit.getScheduler().runTaskTimer(plugin, this::tick, 1L, 1L);
+    }
 
-        cb.append("≪").color(net.md_5.bungee.api.ChatColor.of(COLOR_GOLD)).bold(false);
-        cb.append("║").color(net.md_5.bungee.api.ChatColor.WHITE).bold(false);
+    // Volver a usar la caña. Con el ping se mira dónde estaba el marcador cuando el jugador lo vio
+    public void tirar() {
+        if (terminado || ticks < GRACIA) return;
+        terminar(zona(historial[(ticks - retraso(player.getPing(), ticks)) % historial.length], verdeDesde));
+    }
 
-        int i = 0;
-        while (i < TOTAL_SLOTS) {
-            if (i == cursorPos) {
-                cb.append("■").color(net.md_5.bungee.api.ChatColor.of(COLOR_WHITE)).bold(false);
-                i++;
-            } else {
-                int slotType = getSlotType(i);
-                String hex = colorForType(slotType);
-                StringBuilder sb = new StringBuilder();
-                while (i < TOTAL_SLOTS && i != cursorPos && getSlotType(i) == slotType) {
-                    sb.append("■");
-                    i++;
-                }
-                cb.append(sb.toString()).color(net.md_5.bungee.api.ChatColor.of(hex)).bold(false);
-            }
+    // Se fue del server: se corta sin premio
+    public void cancelar() {
+        if (terminado) return;
+        terminado = true;
+        if (task != null) task.cancel();
+        player.hideBossBar(tiempo);
+        if (hook.isValid()) hook.remove();
+    }
+
+    private void tick() {
+        if (terminado) return;
+        if (!player.isOnline()) {
+            cancelar();
+            return;
+        }
+        if (!hook.isValid()) {
+            terminar(Resultado.SOLTO);
+            return;
+        }
+        ticks++;
+        anzuelo = hook.getLocation();
+        if (ticks >= DURACION) {
+            terminar(Resultado.ESCAPO);
+            return;
         }
 
-        cb.append("║").color(net.md_5.bungee.api.ChatColor.WHITE).bold(false);
-        cb.append("≫").color(net.md_5.bungee.api.ChatColor.of(COLOR_GOLD)).bold(false);
+        mover();
+        historial[ticks % historial.length] = casilla;
+        dibujar();
+        animar();
 
-        player.spigot().sendMessage(ChatMessageType.ACTION_BAR, cb.create());
+        float restante = 1f - (float) ticks / DURACION;
+        tiempo.progress(restante);
+        tiempo.color(restante > 0.5f ? BossBar.Color.BLUE : restante > 0.25f ? BossBar.Color.YELLOW : BossBar.Color.RED);
     }
 
-    private String colorForType(int type) {
-        return switch (type) {
-            case 1  -> COLOR_ORANGE;
-            case 2  -> COLOR_GREEN;
-            default -> COLOR_RED;
+    // El pez cambia de fuerza cada medio segundo: el marcador acelera y frena en vez de ir siempre igual
+    private void mover() {
+        if (ticks % 10 == 0) velocidadObjetivo = 0.45 + random.nextDouble() * 0.5;
+        velocidad += (velocidadObjetivo - velocidad) * 0.3;
+        posicion += direccion * velocidad;
+        if (posicion <= 0) {
+            posicion = -posicion;
+            direccion = 1;
+        } else if (posicion >= CASILLAS - 1) {
+            posicion = 2 * (CASILLAS - 1) - posicion;
+            direccion = -1;
+        }
+        int anterior = casilla;
+        casilla = (int) Math.round(posicion);
+        if (zona(casilla, verdeDesde) == Resultado.PERFECTA && zona(anterior, verdeDesde) != Resultado.PERFECTA) {
+            player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_BELL, SoundCategory.PLAYERS, 0.35f, 1.8f);
+        }
+    }
+
+    // Estela en el agua y, cada tanto, un tirón que hunde el corcho
+    private void animar() {
+        if (ticks % 2 == 0) anzuelo.getWorld().spawnParticle(Particle.FISHING, anzuelo, 2, 0.15, 0.02, 0.15, 0.01);
+        if (ticks % 4 == 0) player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_HAT, SoundCategory.PLAYERS, 0.12f, 1.6f);
+        if (ticks < proximoTiron) return;
+        proximoTiron = ticks + 14 + random.nextInt(11);
+        hook.setVelocity(new Vector((random.nextDouble() - 0.5) * 0.12, -0.25, (random.nextDouble() - 0.5) * 0.12));
+        anzuelo.getWorld().spawnParticle(Particle.SPLASH, anzuelo, 14, 0.2, 0.05, 0.2, 0);
+        anzuelo.getWorld().spawnParticle(Particle.BUBBLE_POP, anzuelo, 4, 0.15, 0.05, 0.15, 0.02);
+        anzuelo.getWorld().playSound(anzuelo, Sound.ENTITY_FISHING_BOBBER_SPLASH, SoundCategory.PLAYERS, 0.35f, 1.2f + random.nextFloat() * 0.3f);
+    }
+
+    // ≈ ▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬ ≈ en el subtítulo: el marcador va en blanco y las casillas de al lado brillan un poco
+    private void dibujar() {
+        TextComponent.Builder barra = Component.text().append(Component.text("≈ ", AGUA));
+        StringBuilder tramo = new StringBuilder();
+        TextColor colorTramo = null;
+        for (int i = 0; i < CASILLAS; i++) {
+            if (i == casilla) {
+                if (!tramo.isEmpty()) barra.append(Component.text(tramo.toString(), colorTramo));
+                tramo.setLength(0);
+                colorTramo = null;
+                barra.append(Component.text(SEGMENTO, MARCADOR, TextDecoration.BOLD));
+                continue;
+            }
+            TextColor color = color(zona(i, verdeDesde));
+            if (Math.abs(i - casilla) == 1) color = TextColor.lerp(0.45f, color, MARCADOR);
+            if (colorTramo != null && !color.equals(colorTramo)) {
+                barra.append(Component.text(tramo.toString(), colorTramo));
+                tramo.setLength(0);
+            }
+            colorTramo = color;
+            tramo.append(SEGMENTO);
+        }
+        if (!tramo.isEmpty()) barra.append(Component.text(tramo.toString(), colorTramo));
+        barra.append(Component.text(" ≈", AGUA));
+        // El primer momento avisa en grande que picó
+        Component arriba = ticks < 16 ? Component.text("¡Pica!", AGUA, TextDecoration.BOLD) : Component.empty();
+        player.showTitle(Title.title(arriba, barra.build(), TIEMPOS));
+    }
+
+    private void terminar(Resultado resultado) {
+        terminado = true;
+        if (task != null) task.cancel();
+        player.hideBossBar(tiempo);
+        // Al tick siguiente: el clic llega dentro del evento de pesca y la caña todavía está usando el anzuelo
+        Bukkit.getScheduler().runTask(plugin, () -> {
+            if (hook.isValid()) {
+                anzuelo = hook.getLocation();
+                hook.remove();
+            }
+            if (player.isOnline()) alTerminar.accept(resultado);
+        });
+    }
+
+    private static TextColor color(Resultado zona) {
+        return switch (zona) {
+            case PERFECTA -> VERDE_COLOR;
+            case BUENA -> NARANJA_COLOR;
+            default -> ROJO;
         };
+    }
+
+    // ---------------------------------------------------------------- Reglas (sin Bukkit, para los tests)
+
+    static Resultado zona(int casilla, int verdeDesde) {
+        if (casilla >= verdeDesde && casilla < verdeDesde + VERDE) return Resultado.PERFECTA;
+        if (casilla >= verdeDesde - NARANJA && casilla < verdeDesde + VERDE + NARANJA) return Resultado.BUENA;
+        return Resultado.NORMAL;
+    }
+
+    // El verde cae en cualquier parte, pero siempre con su naranja completo y algo de rojo a cada lado
+    static int verdeAleatorio(Random random) {
+        int desde = NARANJA + 1;
+        int hasta = CASILLAS - VERDE - NARANJA - 1;
+        return desde + random.nextInt(hasta - desde + 1);
+    }
+
+    // Cuántos ticks atrás mirar: lo que tarda en llegar la barra y volver el clic (como mucho 300 ms)
+    static int retraso(int ping, int ticks) {
+        int atras = (int) Math.round(Math.max(0, ping) / 50.0);
+        return Math.max(0, Math.min(Math.min(MAX_RETRASO, ticks - 1), atras));
     }
 }

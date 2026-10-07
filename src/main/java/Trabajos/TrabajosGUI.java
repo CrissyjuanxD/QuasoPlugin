@@ -53,13 +53,8 @@ final class TrabajosGUI implements Listener {
         player.openInventory(inventory);
     }
 
+    // Sin paneles: el fondo del menú lo pone el resource pack
     private void llenar(Player player, Inventory inventory) {
-        ItemStack fondo = new ItemStack(Material.WHITE_STAINED_GLASS_PANE);
-        ItemMeta metaFondo = fondo.getItemMeta();
-        metaFondo.setHideTooltip(true);
-        fondo.setItemMeta(metaFondo);
-        for (int i = 0; i < inventory.getSize(); i++) inventory.setItem(i, fondo);
-
         DatosTrabajo datos = manager.datos(player);
         for (Trabajo trabajo : Trabajo.values()) inventory.setItem(trabajo.slot(), papel(datos, trabajo));
         inventory.setItem(SLOT_GUIA, guia());

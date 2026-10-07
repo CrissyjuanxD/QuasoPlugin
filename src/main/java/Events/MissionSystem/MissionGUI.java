@@ -31,7 +31,6 @@ public class MissionGUI implements Listener {
     private static final int PREV_SLOT = 45;
     private static final int NEXT_SLOT = 53;
     private static final int[] MISSION_SLOTS = buildMissionSlots();
-    private static final int JOBS_PER_PAGE = 30;
 
     private final JavaPlugin plugin;
     private final MissionHandler missionHandler;
@@ -72,10 +71,10 @@ public class MissionGUI implements Listener {
     }
 
     private int maxPages() {
-        return normalPages() + (jobOrder().size() + JOBS_PER_PAGE - 1) / JOBS_PER_PAGE;
+        return normalPages() + (jobOrder().size() + MISSION_SLOTS.length - 1) / MISSION_SLOTS.length;
     }
 
-    // Páginas exclusivas de trabajos: 3 trabajos por página, sus 10 misiones seguidas
+    // Páginas exclusivas de trabajos: las 10 misiones de cada trabajo seguidas, llenando cada página
     private List<Integer> jobOrder() {
         List<Integer> order = new ArrayList<>();
         for (int number : missionHandler.getMissions().keySet()) {
@@ -126,9 +125,8 @@ public class MissionGUI implements Listener {
         gui.setItem(NEXT_SLOT, createArrow("§eSiguiente Página ➔", page, pages, jobs));
 
         List<Integer> order = jobs ? jobOrder() : menuOrder();
-        int perPage = jobs ? JOBS_PER_PAGE : MISSION_SLOTS.length;
-        int first = (jobs ? page - normal - 1 : page - 1) * perPage;
-        for (int i = 0; i < perPage && first + i < order.size(); i++) {
+        int first = (jobs ? page - normal - 1 : page - 1) * MISSION_SLOTS.length;
+        for (int i = 0; i < MISSION_SLOTS.length && first + i < order.size(); i++) {
             int missionNum = order.get(first + i);
             Mission mission = missionHandler.getMissions().get(missionNum);
             gui.setItem(MISSION_SLOTS[i], createMissionItem(mission, player, missionHandler.getData(player, missionNum), missionNum));

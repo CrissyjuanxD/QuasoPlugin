@@ -72,6 +72,12 @@ class TrabajosTest {
         assertEquals(4, TrabajosXp.xpMonstruo(8));
         assertEquals(6, TrabajosXp.xpMonstruo(20));
         assertEquals(15, TrabajosXp.xpMonstruo(500));
+
+        assertEquals(20, TrabajosXp.xpElite(0));
+        assertEquals(25, TrabajosXp.xpElite(10));
+        assertEquals(40, TrabajosXp.xpElite(40));
+        assertEquals(60, TrabajosXp.xpElite(200));
+        assertTrue(TrabajosXp.xpElite(1) > TrabajosXp.xpMonstruo(500));
     }
 
     @Test

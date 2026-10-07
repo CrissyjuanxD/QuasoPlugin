@@ -85,21 +85,61 @@ class ActionBarHandlerTest {
     }
 
     @Test
-    void threeSimultaneousObjectivesKeepTheirOrderAndFourSecondsEach() {
+    void threeSimultaneousObjectivesKeepTheirOrderAndFiveSecondsEach() {
         actionBars.sendNotification(player, "one", "Primero");
         actionBars.sendNotification(player, "two", "Segundo");
         actionBars.sendNotification(player, "three", "Tercero");
         assertEquals("Primero", visible());
-        tick(7);
+        tick(9);
         assertEquals("Primero", visible());
         tick(1);
         assertEquals("Segundo", visible());
-        tick(7);
+        tick(9);
         assertEquals("Segundo", visible());
         tick(1);
         assertEquals("Tercero", visible());
+        tick(10);
+        assertEquals("Tercero", visible());
+        assertFalse(messages.contains(""));
+    }
+
+    @Test
+    void theLastMessageFadesOutOnTheClientInsteadOfBeingErased() {
+        actionBars.sendNotification(player, "job", "Minería +5 XP");
+        tick(4);
+        // Último reenvío a los 2 segundos: el cliente lo deja 3 más y lo desvanece justo al llegar a los 5
+        assertEquals(5, messages.size());
+        tick(6);
+        assertEquals(5, messages.size());
+        assertEquals("Minería +5 XP", visible());
+        actionBars.sendNotification(player, "next", "Siguiente");
+        assertEquals("Siguiente", visible());
+    }
+
+    @Test
+    void aMessageWithSomethingWaitingIsResentUntilItsTurnEnds() {
+        actionBars.sendNotification(player, "one", "Primero");
+        actionBars.sendNotification(player, "two", "Segundo");
+        tick(7);
+        assertEquals(8, messages.size());
+        tick(2);
+        assertEquals(8, messages.size());
+        tick(1);
+        assertEquals("Segundo", visible());
+    }
+
+    @Test
+    void jobProgressStaysOnScreenWhileItKeepsChangingAndNothingElseWaits() {
+        actionBars.sendProgress(player, "trabajo", "Minería +1 XP");
         tick(8);
-        assertEquals("", visible());
+        actionBars.sendProgress(player, "trabajo", "Minería +2 XP");
+        tick(8);
+        assertEquals("Minería +2 XP", visible());
+        actionBars.sendProgress(player, "mission", "Misión 1/10");
+        actionBars.sendProgress(player, "trabajo", "Minería +3 XP");
+        assertEquals("Minería +3 XP", visible());
+        tick(2);
+        assertEquals("Misión 1/10", visible());
     }
 
     @Test
@@ -110,7 +150,7 @@ class ActionBarHandlerTest {
             actionBars.setBackground(player, "amulet", "Amuleto: -1 diamante");
         }
         assertEquals("Objetivo completado", visible());
-        tick(7);
+        tick(9);
         assertEquals("Objetivo completado", visible());
         tick(1);
         assertEquals("Amuleto: -1 diamante", visible());
@@ -123,10 +163,11 @@ class ActionBarHandlerTest {
         actionBars.sendNotification(player, "two", "Segundo");
         actionBars.clearBackground(player, "amulet");
         assertEquals("Primero", visible());
-        tick(8);
+        tick(10);
         assertEquals("Segundo", visible());
-        tick(8);
-        assertEquals("", visible());
+        tick(10);
+        assertEquals("Segundo", visible());
+        assertFalse(messages.contains(""));
     }
 
     @Test
@@ -139,10 +180,10 @@ class ActionBarHandlerTest {
             actionBars.sendProgress(player, "two", "Progreso B: " + i);
         }
         assertEquals("Progreso A: 1000", visible());
-        tick(1);
+        tick(5);
         assertEquals("Progreso B: 1000", visible());
-        tick(6);
-        assertEquals("", visible());
+        tick(10);
+        assertEquals("Progreso B: 1000", visible());
     }
 
     @Test
@@ -152,10 +193,10 @@ class ActionBarHandlerTest {
         actionBars.sendProgress(player, "goal", "Objetivo 2/10");
         actionBars.sendNotification(player, "goal", "Objetivo 10/10");
         actionBars.sendProgress(player, "goal", "Objetivo 9/10");
-        tick(8);
+        tick(10);
         assertEquals("Objetivo 10/10", visible());
-        tick(8);
-        assertEquals("", visible());
+        tick(10);
+        assertEquals("Objetivo 10/10", visible());
         assertFalse(messages.contains("Objetivo 1/10"));
         assertFalse(messages.contains("Objetivo 2/10"));
         assertFalse(messages.contains("Objetivo 9/10"));
@@ -165,8 +206,8 @@ class ActionBarHandlerTest {
     void repeatedNotificationsForTheSameObjectiveDoNotBuildAnEndlessQueue() {
         actionBars.sendNotification(player, "goal", "Completado");
         for (int i = 0; i < 100; i++) actionBars.sendNotification(player, "goal", "Completado");
-        tick(8);
-        assertEquals("", visible());
+        tick(10);
+        assertEquals("Completado", visible());
         int sent = messages.size();
         tick(20);
         assertEquals(sent, messages.size());
@@ -179,7 +220,7 @@ class ActionBarHandlerTest {
         another.sendNotification(player, "mission", "Misión");
         actionBars.setBackground(player, "amulet", "Amuleto actualizado");
         assertEquals("Misión", visible());
-        tick(8);
+        tick(10);
         assertEquals("Amuleto actualizado", visible());
         verify(scheduler, times(1)).runTaskTimer(eq(plugin), any(Runnable.class), eq(10L), eq(10L));
         verify(manager, times(1)).registerEvents(any(Listener.class), eq(plugin));
@@ -197,9 +238,9 @@ class ActionBarHandlerTest {
         PlayerQuitEvent quit = mock(PlayerQuitEvent.class);
         when(quit.getPlayer()).thenReturn(player);
         ((ActionBarHandler) registered.getValue()).onQuit(quit);
-        tick(8);
+        tick(10);
         assertFalse(messages.contains("Pendiente A"));
-        assertEquals("", otherMessages.getLast());
+        assertEquals("Jugador B", otherMessages.getLast());
         actionBars.sendNotification(player, "new", "Sesión nueva");
         assertEquals("Sesión nueva", visible());
     }
@@ -222,8 +263,10 @@ class ActionBarHandlerTest {
         actionBars.sendNotification(player, "current", "Aviso actual");
         for (int i = 0; i < 1000; i++) actionBars.sendProgress(player, "progress:" + i, "Progreso " + i);
         actionBars.sendNotification(player, "important", "Objetivo importante completado");
-        tick(450);
-        assertEquals("", visible());
+        tick(700);
+        int sent = messages.size();
+        tick(20);
+        assertEquals(sent, messages.size());
         assertTrue(messages.contains("Objetivo importante completado"));
         assertTrue(messages.stream().distinct().count() <= 66);
     }
@@ -237,8 +280,8 @@ class ActionBarHandlerTest {
         assertEquals("", visible());
         actionBars.sendNotification(player, "new", "Misión nueva");
         assertEquals("Misión nueva", visible());
-        tick(8);
-        assertEquals("", visible());
+        tick(10);
+        assertEquals("Misión nueva", visible());
         verify(scheduler, times(2)).runTaskTimer(eq(plugin), any(Runnable.class), eq(10L), eq(10L));
     }
 }

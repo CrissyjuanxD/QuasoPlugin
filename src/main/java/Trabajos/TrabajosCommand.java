@@ -33,7 +33,7 @@ final class TrabajosCommand implements CommandExecutor, TabCompleter {
             return true;
         }
         if (args.length > 0 && args[0].equalsIgnoreCase("info")) info(player);
-        else if (args.length > 0 && args[0].equalsIgnoreCase("guia")) gui.abrirGuia(player);
+        else if (args.length > 0 && args[0].equalsIgnoreCase("guia")) TrabajosGuia.abrir(player);
         else gui.abrir(player);
         return true;
     }

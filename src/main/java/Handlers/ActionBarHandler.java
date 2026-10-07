@@ -21,8 +21,10 @@ import java.util.UUID;
 /** Una cola por jugador compartida entre las misiones y los indicadores continuos. */
 public final class ActionBarHandler implements Listener {
     private static final int REFRESH_TICKS = 10;
-    private static final int NOTIFICATION_TICKS = 80;
-    private static final int PROGRESS_TICKS = 60;
+    private static final int MESSAGE_TICKS = 100;
+    // El cliente deja cada action bar 3 segundos y la desvanece en el último
+    private static final int CLIENT_TICKS = 60;
+    private static final int CLIENT_FADE_TICKS = 20;
     private static final int MAX_PENDING = 64;
     private static final Map<JavaPlugin, Coordinator> COORDINATORS = new HashMap<>();
 
@@ -41,7 +43,7 @@ public final class ActionBarHandler implements Listener {
         sendNotification(player, "notice:" + message, message);
     }
 
-    /** Los objetivos completados conservan su orden y cuatro segundos de lectura. */
+    /** Los objetivos completados conservan su orden y cinco segundos de lectura. */
     public void sendNotification(Player player, String key, String message) {
         coordinator().enqueue(player, key, message, false);
     }
@@ -122,6 +124,8 @@ public final class ActionBarHandler implements Listener {
             if (bars.active != null && Objects.equals(key, bars.active.key)) {
                 if (progress && bars.active.progress) {
                     bars.active.message = message;
+                    // Si nadie espera turno sigue en pantalla 5 segundos desde el último cambio
+                    if (bars.pending.isEmpty()) bars.until = tick + MESSAGE_TICKS;
                     display(player, message);
                     return;
                 }
@@ -146,14 +150,22 @@ public final class ActionBarHandler implements Listener {
             if (bars.active == null) advance(bars);
         }
 
+        // Sin nada más que mostrar no se borra: el último aviso ya se desvaneció solo
         private void advance(PlayerBars bars) {
             bars.active = bars.pending.pollFirst();
             if (bars.active != null) {
-                bars.until = tick + (bars.active.progress ? PROGRESS_TICKS : NOTIFICATION_TICKS);
+                bars.until = tick + MESSAGE_TICKS;
                 display(bars.player, bars.active.message);
-            } else {
-                display(bars.player, bars.background != null ? bars.background : "");
+            } else if (bars.background != null) {
+                display(bars.player, bars.background);
             }
+        }
+
+        // El último aviso deja de reenviarse 3 segundos antes de terminar para que el cliente lo desvanezca justo a
+        // los 5 segundos; si viene otro se sigue reenviando para que no se apague antes de cambiar
+        private boolean resend(PlayerBars bars) {
+            long left = bars.until - tick;
+            return bars.pending.isEmpty() && bars.background == null ? left >= CLIENT_TICKS : left > CLIENT_FADE_TICKS;
         }
 
         private void refresh() {
@@ -167,7 +179,7 @@ public final class ActionBarHandler implements Listener {
                 }
                 if (bars.active != null) {
                     if (tick >= bars.until) advance(bars);
-                    else display(bars.player, bars.active.message);
+                    else if (resend(bars)) display(bars.player, bars.active.message);
                 } else if (bars.background != null) {
                     display(bars.player, bars.background);
                 }

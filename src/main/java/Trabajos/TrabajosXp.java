@@ -2,6 +2,8 @@ package Trabajos;
 
 import Events.MissionSystem.BossDefeatedEvent;
 import Events.MissionSystem.MissionUtils;
+import com.magmaguy.elitemobs.entitytracker.EntityTracker;
+import com.magmaguy.elitemobs.mobconstructor.EliteEntity;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -47,6 +49,8 @@ public final class TrabajosXp implements Listener {
     private final BloquesColocados colocados;
     private final Map<UUID, Long> ultimoMovimiento = new HashMap<>();
     private final Map<UUID, Map<Lugar, Long>> construidos = new HashMap<>();
+    // Los élites que están muriendo y su nivel (EliteMobs los suelta antes de MONITOR)
+    private final Map<UUID, Integer> elites = new HashMap<>();
 
     TrabajosXp(TrabajosManager manager) {
         this.manager = manager;
@@ -156,16 +160,37 @@ public final class TrabajosXp implements Listener {
 
     // ---------------------------------------------------------------- Guerrero
 
+    // En LOWEST para ver si es élite antes de que EliteMobs lo suelte
+    @EventHandler(priority = EventPriority.LOWEST)
+    public void marcarElite(EntityDeathEvent event) {
+        LivingEntity entity = event.getEntity();
+        if (entity.getKiller() != null && MissionUtils.isElite(entity)) elites.put(entity.getUniqueId(), nivelElite(entity));
+    }
+
     @EventHandler(priority = EventPriority.MONITOR)
     public void onKill(EntityDeathEvent event) {
         LivingEntity entity = event.getEntity();
+        Integer elite = elites.remove(entity.getUniqueId());
         Player killer = entity.getKiller();
-        if (killer == null || !(entity instanceof Enemy) || MissionUtils.bossId(entity) != null) return;
+        if (event.isCancelled() || killer == null || !(entity instanceof Enemy) || MissionUtils.bossId(entity) != null) return;
         CreatureSpawnEvent.SpawnReason razon = entity.getEntitySpawnReason();
         if (razon == CreatureSpawnEvent.SpawnReason.SPAWNER || razon == CreatureSpawnEvent.SpawnReason.TRIAL_SPAWNER
                 || razon == CreatureSpawnEvent.SpawnReason.SPAWNER_EGG || entity.fromMobSpawner()) return;
+        if (elite != null) {
+            dar(killer, Trabajo.GUERRERO, xpElite(elite));
+            return;
+        }
         AttributeInstance vida = entity.getAttribute(Attribute.MAX_HEALTH);
         dar(killer, Trabajo.GUERRERO, xpMonstruo(vida != null ? vida.getValue() : 20));
+    }
+
+    private static int nivelElite(LivingEntity entity) {
+        try {
+            EliteEntity elite = EntityTracker.getEliteMobEntity(entity);
+            if (elite != null) return elite.getLevel();
+        } catch (Throwable ignored) {
+        }
+        return 0;
     }
 
     // Los jefes le dan XP a todos los que pelearon
@@ -272,6 +297,11 @@ public final class TrabajosXp implements Listener {
     // De 4 (zombi, araña) a 15 XP según la vida del monstruo
     static double xpMonstruo(double vidaMaxima) {
         return Math.max(4, Math.min(15, Math.round(2 + vidaMaxima / 5)));
+    }
+
+    // Los élites dan de 20 a 60 XP según su nivel de EliteMobs (nivel 0 si no se pudo leer)
+    static double xpElite(int nivel) {
+        return Math.max(20, Math.min(60, Math.round(20 + nivel / 2.0)));
     }
 
     static double xpPesca(ItemStack item) {

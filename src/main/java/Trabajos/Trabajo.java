@@ -7,7 +7,7 @@ import java.util.Locale;
 public enum Trabajo {
     GUERRERO("guerrero", "Guerrero", "⚔", "#D98C7A", 1,
             List.of("Defiende el server de los", "monstruos que lo rondan."),
-            List.of("Matar monstruos: 4 a 15 XP", "Jefes de evento: 250 XP", "Wither y Dragón: 400 y 600 XP")),
+            List.of("Matar monstruos: 4 a 15 XP", "Monstruos élite: 20 a 60 XP", "Jefes de evento: 250 XP", "Wither y Dragón: 400 y 600 XP")),
     MINERIA("mineria", "Minería", "⛏", "#A9B7C6", 3,
             List.of("Baja a las cuevas y saca", "los minerales del mundo."),
             List.of("Piedra, deepslate y similares: 0,05 XP", "Carbón, cobre y redstone: 2 a 5 XP", "Hierro, oro y lapislázuli: 5 a 8 XP", "Diamante, esmeralda y debris: 15 a 30 XP")),

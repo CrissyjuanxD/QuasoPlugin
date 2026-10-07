@@ -1,5 +1,6 @@
 package Handlers;
 
+import Trabajos.TrabajosManager;
 import Events.MissionSystem.MissionHandler;
 import Handlers.Teams.TeamType;
 import Gui.dinocoins.DinoCoinsManager;
@@ -110,7 +111,7 @@ public class MainScoreboard extends BukkitRunnable implements Listener {
         setLine(scoreboard, objective, 6, ChatColor.GRAY + "    ");
         setLine(scoreboard, objective, 5, ChatColor.of("#2fae60") + icon("dinocoins", "\uE904") + ChatColor.WHITE + "DinoCoins: " + ChatColor.of("#4ade80") + dinoCoinsManager.getCachedDinoCoins(player.getUniqueId()));
         setLine(scoreboard, objective, 4, ChatColor.GRAY + "     ");
-        setLine(scoreboard, objective, 3, ChatColor.of("#a8505f") + icon("trabajo", "\uE905") + ChatColor.WHITE + "Trabajo: " + ChatColor.GRAY + "Pendiente");
+        setLine(scoreboard, objective, 3, ChatColor.of("#a8505f") + icon("trabajo", "\uE905") + ChatColor.WHITE + "Trabajo: " + TrabajosManager.lineaScoreboard(player));
         setLine(scoreboard, objective, 2, ChatColor.GRAY + "      ");
         setLine(scoreboard, objective, 1, ChatColor.of("#fdfd96") + icon("ip", "\uE906") + "croissant.holy.gg");
     }

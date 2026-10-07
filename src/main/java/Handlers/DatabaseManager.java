@@ -108,6 +108,20 @@ public class DatabaseManager {
                     "inventory_contents LONGTEXT, " +
                     "saved_at DATETIME DEFAULT CURRENT_TIMESTAMP);");
 
+            // Trabajos: el nivel y la experiencia de cada trabajo, y cuál tiene ahora y desde cuándo
+            stmt.executeUpdate("CREATE TABLE IF NOT EXISTS player_jobs (" +
+                    "uuid VARCHAR(36), " +
+                    "job VARCHAR(20), " +
+                    "level INT DEFAULT 0, " +
+                    "xp DOUBLE DEFAULT 0, " +
+                    "PRIMARY KEY (uuid, job));");
+
+            stmt.executeUpdate("CREATE TABLE IF NOT EXISTS player_job_state (" +
+                    "uuid VARCHAR(36) PRIMARY KEY, " +
+                    "player_name VARCHAR(16), " +
+                    "active_job VARCHAR(20), " +
+                    "joined_at BIGINT DEFAULT 0);");
+
             plugin.getLogger().info("Conectado a MySQL y tablas verificadas.");
 
         }
@@ -472,6 +486,74 @@ public class DatabaseManager {
             stmt.executeUpdate();
         } catch (SQLException error) {
             plugin.getLogger().severe("Error registrando monedas: " + error.getMessage());
+        }
+    }
+
+
+    // ---------------------------------------------------------------- Trabajos
+
+    public record JobProgress(int level, double xp) {}
+
+    public record JobsData(String activeJob, long joinedAt, Map<String, JobProgress> progress) {}
+
+    // Lanza la excepción si MySQL falla: así el jugador no gana XP sobre datos vacíos que después pisarían los reales
+    public JobsData loadJobs(UUID uuid) throws SQLException {
+        Map<String, JobProgress> progress = new HashMap<>();
+        String activeJob = null;
+        long joinedAt = 0;
+        try (Connection conn = getConnection()) {
+            try (PreparedStatement stmt = conn.prepareStatement("SELECT active_job, joined_at FROM player_job_state WHERE uuid = ?")) {
+                stmt.setString(1, uuid.toString());
+                ResultSet rs = stmt.executeQuery();
+                if (rs.next()) {
+                    activeJob = rs.getString("active_job");
+                    joinedAt = rs.getLong("joined_at");
+                }
+            }
+            try (PreparedStatement stmt = conn.prepareStatement("SELECT job, level, xp FROM player_jobs WHERE uuid = ?")) {
+                stmt.setString(1, uuid.toString());
+                ResultSet rs = stmt.executeQuery();
+                while (rs.next()) progress.put(rs.getString("job"), new JobProgress(rs.getInt("level"), rs.getDouble("xp")));
+            }
+        }
+        return new JobsData(activeJob, joinedAt, progress);
+    }
+
+    public void saveJobs(UUID uuid, String playerName, JobsData data) throws SQLException {
+        try (Connection conn = getConnection()) {
+            conn.setAutoCommit(false);
+            try (PreparedStatement state = conn.prepareStatement("INSERT INTO player_job_state (uuid, player_name, active_job, joined_at) " +
+                    "VALUES (?, ?, ?, ?) ON DUPLICATE KEY UPDATE player_name=VALUES(player_name), active_job=VALUES(active_job), joined_at=VALUES(joined_at)");
+                 PreparedStatement jobs = conn.prepareStatement("INSERT INTO player_jobs (uuid, job, level, xp) VALUES (?, ?, ?, ?) " +
+                         "ON DUPLICATE KEY UPDATE level=VALUES(level), xp=VALUES(xp)")) {
+                state.setString(1, uuid.toString());
+                state.setString(2, playerName);
+                state.setString(3, data.activeJob());
+                state.setLong(4, data.joinedAt());
+                state.executeUpdate();
+                for (Map.Entry<String, JobProgress> entry : data.progress().entrySet()) {
+                    jobs.setString(1, uuid.toString());
+                    jobs.setString(2, entry.getKey());
+                    jobs.setInt(3, entry.getValue().level());
+                    jobs.setDouble(4, entry.getValue().xp());
+                    jobs.addBatch();
+                }
+                jobs.executeBatch();
+                conn.commit();
+            } catch (SQLException error) {
+                conn.rollback();
+                throw error;
+            } finally {
+                conn.setAutoCommit(true);
+            }
+        }
+    }
+
+    // /trabajos reset: todos empiezan de cero
+    public void deleteAllJobs() throws SQLException {
+        try (Connection conn = getConnection(); Statement stmt = conn.createStatement()) {
+            stmt.executeUpdate("DELETE FROM player_jobs");
+            stmt.executeUpdate("DELETE FROM player_job_state");
         }
     }
 

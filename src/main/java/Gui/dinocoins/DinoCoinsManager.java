@@ -152,19 +152,24 @@ public class DinoCoinsManager implements Listener {
 
     public boolean addPhysicalDinoCoins(Player player, int amount) {
         if (amount <= 0) return false;
-        return change(player, amount, loadWallets(player, true));
+        return change(player, amount, loadWallets(player, true)) == 0;
     }
 
     public boolean removePhysicalDinoCoins(Player player, int amount) {
         if (amount <= 0) return false;
-        return change(player, -amount, loadWallets(player, false));
+        return change(player, -amount, loadWallets(player, false)) == 0;
     }
 
     // /dinocoins add y remove: la base de datos se lee y se escribe fuera del hilo del server. done recibe true si se
     // movió toda la cantidad
     public void changeAsync(Player player, int delta, java.util.function.Consumer<Boolean> done) {
+        changeAsyncMoved(player, delta, moved -> done.accept(moved == Math.abs(delta)));
+    }
+
+    // Como changeAsync, pero avisa cuántas DinoCoins se movieron de verdad (para devolverlas si falta algo)
+    public void changeAsyncMoved(Player player, int delta, java.util.function.IntConsumer done) {
         if (delta == 0) {
-            done.accept(false);
+            done.accept(0);
             return;
         }
         Set<String> carried = getCarriedWallets(player, delta > 0);
@@ -173,10 +178,10 @@ public class DinoCoinsManager implements Listener {
             Map<String, ItemStack[]> stored = loadStored(playerId, carried, true);
             Bukkit.getScheduler().runTask(plugin, () -> {
                 if (!player.isOnline()) {
-                    done.accept(false);
+                    done.accept(0);
                     return;
                 }
-                done.accept(change(player, delta, merge(carried, stored)));
+                done.accept(Math.abs(delta) - change(player, delta, merge(carried, stored)));
             });
         });
     }
@@ -232,8 +237,9 @@ public class DinoCoinsManager implements Listener {
         return wallets;
     }
 
-    // delta > 0 agrega DinoCoins (de a 64 por slot) y delta < 0 las saca; nunca toca las DinoFichas
-    private boolean change(Player player, int delta, Map<String, ItemStack[]> wallets) {
+    // delta > 0 agrega DinoCoins (de a 64 por slot) y delta < 0 las saca; nunca toca las DinoFichas. Devuelve lo
+    // que no se pudo mover
+    private int change(Player player, int delta, Map<String, ItemStack[]> wallets) {
         int remaining = Math.abs(delta);
         Map<String, ItemStack[]> changed = new LinkedHashMap<>();
         for (Map.Entry<String, ItemStack[]> entry : wallets.entrySet()) {
@@ -264,7 +270,7 @@ public class DinoCoinsManager implements Listener {
             else save.run();
         }
         updatePlayerTotalAsync(player);
-        return remaining == 0;
+        return remaining;
     }
 
     private int fill(ItemStack[] contents, int remaining) {

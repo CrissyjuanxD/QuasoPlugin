@@ -276,6 +276,10 @@ commands:
     description: Administra el sistema de Twitch (solo los nicks de twitch.yml).
     usage: /twitchadmin <estado|canal|info|lista|historial|darkit|vincular|desvincular|revisar|fly|simular|kits|recargar>
     aliases: [tadmin]
+  trabajos:
+    description: Menú de trabajos, información de tu trabajo y comandos de admin.
+    usage: /trabajos [info|guia|ver <jugador>|nivel add/remove <jugador> <n>|xp <jugador> <n>|espera <jugador>|reset]
+    aliases: [trabajo, jobs]
   fly:
     description: Activa o desactiva el vuelo (subs del canal y operadores).
     usage: /fly

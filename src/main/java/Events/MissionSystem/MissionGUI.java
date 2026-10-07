@@ -31,6 +31,7 @@ public class MissionGUI implements Listener {
     private static final int PREV_SLOT = 45;
     private static final int NEXT_SLOT = 53;
     private static final int[] MISSION_SLOTS = buildMissionSlots();
+    private static final int JOBS_PER_PAGE = 30;
 
     private final JavaPlugin plugin;
     private final MissionHandler missionHandler;
@@ -65,21 +66,35 @@ public class MissionGUI implements Listener {
         return slots.stream().mapToInt(Integer::intValue).toArray();
     }
 
-    // Las páginas salen de cuántas misiones hay en el menú (140 misiones = 5 páginas)
-    private int maxPages() {
+    // Las páginas salen de cuántas misiones hay en el menú (140 misiones = 5 páginas) y al final van las de trabajo
+    private int normalPages() {
         return Math.max(1, (menuOrder().size() + MISSION_SLOTS.length - 1) / MISSION_SLOTS.length);
+    }
+
+    private int maxPages() {
+        return normalPages() + (jobOrder().size() + JOBS_PER_PAGE - 1) / JOBS_PER_PAGE;
+    }
+
+    // Páginas exclusivas de trabajos: 3 trabajos por página, sus 10 misiones seguidas
+    private List<Integer> jobOrder() {
+        List<Integer> order = new ArrayList<>();
+        for (int number : missionHandler.getMissions().keySet()) {
+            if (MisionTrabajo.es(number)) order.add(number);
+        }
+        order.sort(null);
+        return order;
     }
 
     // Cada misión normal seguida de sus extras (#1, sus extras, #2, sus extras...); una extra sin su misión va al final
     private List<Integer> menuOrder() {
         List<Integer> order = new ArrayList<>();
         for (Mission mission : missionHandler.getMissions().values()) {
-            if (mission.getParentMission() != 0) continue;
+            if (mission.getParentMission() != 0 || MisionTrabajo.es(mission.getMissionNumber())) continue;
             order.add(mission.getMissionNumber());
             order.addAll(missionHandler.getExtras(mission.getMissionNumber()));
         }
         for (int number : missionHandler.getMissions().keySet()) {
-            if (!order.contains(number)) order.add(number);
+            if (!order.contains(number) && !MisionTrabajo.es(number)) order.add(number);
         }
         return order;
     }
@@ -105,12 +120,15 @@ public class MissionGUI implements Listener {
         Inventory gui = Bukkit.createInventory(menu, 54, TITLE);
         menu.inventory = gui;
 
-        gui.setItem(PREV_SLOT, createArrow("§e⬅ Anterior Página", page, pages));
-        gui.setItem(NEXT_SLOT, createArrow("§eSiguiente Página ➔", page, pages));
+        int normal = normalPages();
+        boolean jobs = page > normal;
+        gui.setItem(PREV_SLOT, createArrow("§e⬅ Anterior Página", page, pages, jobs));
+        gui.setItem(NEXT_SLOT, createArrow("§eSiguiente Página ➔", page, pages, jobs));
 
-        List<Integer> order = menuOrder();
-        int first = (page - 1) * MISSION_SLOTS.length;
-        for (int i = 0; i < MISSION_SLOTS.length && first + i < order.size(); i++) {
+        List<Integer> order = jobs ? jobOrder() : menuOrder();
+        int perPage = jobs ? JOBS_PER_PAGE : MISSION_SLOTS.length;
+        int first = (jobs ? page - normal - 1 : page - 1) * perPage;
+        for (int i = 0; i < perPage && first + i < order.size(); i++) {
             int missionNum = order.get(first + i);
             Mission mission = missionHandler.getMissions().get(missionNum);
             gui.setItem(MISSION_SLOTS[i], createMissionItem(mission, player, missionHandler.getData(player, missionNum), missionNum));
@@ -119,11 +137,12 @@ public class MissionGUI implements Listener {
         player.openInventory(gui);
     }
 
-    private ItemStack createArrow(String name, int page, int pages) {
+    private ItemStack createArrow(String name, int page, int pages, boolean jobs) {
         ItemStack item = new ItemStack(Material.SPECTRAL_ARROW);
         ItemMeta meta = item.getItemMeta();
         meta.setDisplayName(name);
-        meta.setLore(List.of(ChatColor.of("#D3D3D3") + "Página " + page + " de " + pages));
+        meta.setLore(jobs ? List.of(ChatColor.of("#D3D3D3") + "Página " + page + " de " + pages, ChatColor.of("#C8A27C") + "Misiones de trabajo")
+                : List.of(ChatColor.of("#D3D3D3") + "Página " + page + " de " + pages));
         meta.setEnchantmentGlintOverride(true);
         meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
         item.setItemMeta(meta);
@@ -156,6 +175,9 @@ public class MissionGUI implements Listener {
             }
             if (mission.getParentMission() > 0) {
                 lore.add(ChatColor.of("#7FD4FF") + "Misión extra");
+            }
+            if (mission instanceof MisionTrabajo trabajo) {
+                lore.add(ChatColor.of(trabajo.getTrabajo().color()) + trabajo.getTrabajo().icono() + " Misión de trabajo");
             }
             lore.add(completed ? ChatColor.of("#98FB98") + "✔ Completada" : ChatColor.of("#FFA07A") + "✖ Pendiente");
 

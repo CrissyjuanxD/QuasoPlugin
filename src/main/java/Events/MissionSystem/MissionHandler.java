@@ -94,6 +94,11 @@ public class MissionHandler implements Listener {
             Mission mission = factory.apply(plugin, this);
             missions.put(mission.getMissionNumber(), mission);
         }
+        // Las misiones de trabajo están activas siempre
+        for (Mission mission : MisionTrabajo.todas(plugin, this)) {
+            missions.put(mission.getMissionNumber(), mission);
+            globalActiveMissions.add(mission.getMissionNumber());
+        }
     }
 
     // Avisa en consola si alguna recompensa apunta a un item que no existe
@@ -353,6 +358,11 @@ public class MissionHandler implements Listener {
             return false;
         }
 
+        if (MisionTrabajo.es(missionNumber)) {
+            sender.sendMessage(ChatColor.RED + "Las misiones de trabajo están siempre activas.");
+            return false;
+        }
+
         if (!globalActiveMissions.contains(missionNumber)) {
             sender.sendMessage(ChatColor.RED + "La misión " + missionNumber + " no está activa globalmente.");
             return false;
@@ -397,6 +407,7 @@ public class MissionHandler implements Listener {
 
     public void deactivateAll(CommandSender sender) {
         List<Integer> active = new ArrayList<>(globalActiveMissions);
+        active.removeIf(MisionTrabajo::es);
         for (int number : active) setGlobalState(number, false);
         sender.sendMessage(active.isEmpty() ? ChatColor.RED + "No hay misiones activas."
                 : ChatColor.GREEN + "Se desactivaron " + active.size() + " misiones.");
@@ -404,7 +415,7 @@ public class MissionHandler implements Listener {
 
     // Desactiva todo y borra el progreso de todos en la base de datos; no tiene vuelta atrás
     public void resetAll(CommandSender sender) {
-        globalActiveMissions.clear();
+        globalActiveMissions.removeIf(number -> !MisionTrabajo.es(number));
         for (Player online : Bukkit.getOnlinePlayers()) {
             if (playerCache.containsKey(online.getUniqueId())) playerCache.put(online.getUniqueId(), new HashMap<>());
             for (Mission mission : missions.values()) {

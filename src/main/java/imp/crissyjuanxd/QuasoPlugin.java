@@ -1,5 +1,6 @@
 package imp.crissyjuanxd;
 
+import Trabajos.TrabajosManager;
 import Armors.WardenArmor;
 import BloodMoon.BloodMoon;
 import Bosses.BossChunkListener;
@@ -87,6 +88,7 @@ public class QuasoPlugin extends JavaPlugin implements Listener {
     private DatabaseManager databaseManager;
     private TeamsHandler teamsHandler;
     private TwitchManager twitchManager;
+    private TrabajosManager trabajosManager;
     private AutoAnnouncer autoAnnouncer;
     private MantenimientoHandler mantenimientoHandler;
     private MainScoreboard mainScoreboard;
@@ -217,6 +219,7 @@ public class QuasoPlugin extends JavaPlugin implements Listener {
         initEnchantmentSystem();
         initEndSystem();
         twitchManager = new TwitchManager(this, missionHandler);
+        trabajosManager = new TrabajosManager(this, databaseManager, dinoCoinsManager);
         bloodMoon.enable();
 
         getLogger().info("DinoNuggetsSMP habilitado completamente.");
@@ -230,6 +233,7 @@ public class QuasoPlugin extends JavaPlugin implements Listener {
                         Prefix + "&aha sido deshabilitado!, &eVersion: " + Version));
 
         if (twitchManager != null) twitchManager.shutdown();
+        if (trabajosManager != null) trabajosManager.shutdown();
         if (autoAnnouncer != null) autoAnnouncer.shutdown();
         if (mainScoreboard != null) mainScoreboard.shutdown();
         if (homesCmd != null) homesCmd.shutdown();

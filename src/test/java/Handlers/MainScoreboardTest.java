@@ -130,7 +130,7 @@ class MainScoreboardTest {
         assertEquals("\uE902 Rango: DinoNugget", line(9));
         assertEquals("\uE903 Misiones: 12/100", line(7));
         assertEquals("\uE904 DinoCoins: 320", line(5));
-        assertEquals("\uE905 Trabajo: Pendiente", line(3));
+        assertEquals("\uE905 Trabajo: Ninguno", line(3));
         assertEquals("\uE906 croissant.holy.gg", line(1));
         assertTrue(entries.get("ZMiembro").contains("Crosszy"));
         config.set("main-scoreboard.titulo", "\uE950");

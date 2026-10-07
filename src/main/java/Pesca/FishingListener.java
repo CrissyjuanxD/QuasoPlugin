@@ -1,5 +1,6 @@
 package Pesca;
 
+import Trabajos.TrabajosXp;
 import Managers.ItemManager;
 import com.destroystokyo.paper.event.player.PlayerJumpEvent;
 import imp.crissyjuanxd.QuasoPlugin;
@@ -198,6 +199,7 @@ public class FishingListener implements Listener {
             applyFishingRodDamage(player);
 
             sendResultMessage(player, slotType, giveCustom, reward);
+            TrabajosXp.pescoEnZona(player, reward, giveCustom);
         });
     }
 

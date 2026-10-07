@@ -368,6 +368,7 @@ public class QuasoPlugin extends JavaPlugin implements Listener {
 
     private void initMissionSystem() {
         this.missionHandler = new MissionHandler(this, databaseManager);
+        missionHandler.setDinoCoins(dinoCoinsManager);
 
         MissionGUI missionGUI = new MissionGUI(this, missionHandler);
 
@@ -520,6 +521,8 @@ public class QuasoPlugin extends JavaPlugin implements Listener {
         GravesPublicCommand tumbaCmd = new GravesPublicCommand(gravesManager);
         getCommand("tumba").setExecutor(tumbaCmd);
         getCommand("tumba").setTabCompleter(tumbaCmd);
+        getCommand("muertes").setExecutor(tumbaCmd);
+        getCommand("muertes").setTabCompleter(tumbaCmd);
 
         GravesCommand tumbasAdminCmd = new GravesCommand(gravesManager);
         getCommand("tumbas").setExecutor(tumbasAdminCmd);

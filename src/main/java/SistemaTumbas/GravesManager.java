@@ -36,8 +36,13 @@ public class GravesManager implements Listener {
     private File dataFile;
     private GraveStorage storage;
 
-    private boolean anyoneCanOpen;
+    private ModoTumba modo;
     private int expiryMinutes;
+    private int privateMinutes;
+    private int openMinutes;
+    private boolean teleport;
+    // Tumbas mixtas que ya se abrieron para todos (para avisarle al dueño una sola vez)
+    private final Set<UUID> announcedOpen = new HashSet<>();
 
     public GravesManager(JavaPlugin plugin) {
         this.plugin = plugin;
@@ -47,28 +52,66 @@ public class GravesManager implements Listener {
         startExpiryTask();
     }
 
-    // Crea tumbas_config.yml si no existe y lee quién puede abrirlas y cuántos minutos duran
+    // Crea tumbas_config.yml si no existe (o le agrega lo nuevo a uno viejo) y lee el modo, los tiempos y si /muertes tepea
     public void loadConfig() {
         if (!plugin.getDataFolder().exists()) plugin.getDataFolder().mkdirs();
 
         configFile = new File(plugin.getDataFolder(), "tumbas_config.yml");
-        if (!configFile.exists()) {
-            try {
-                configFile.createNewFile();
-                try (PrintWriter writer = new PrintWriter(new FileWriter(configFile))) {
-                    writer.println("# ¿Puede cualquier persona abrir una tumba ajena? (Si es false, solo el dueño puede)");
-                    writer.println("anyone-can-open: false");
-                    writer.println("");
-                    writer.println("# Minutos antes de que la tumba desaparezca y suelte las cosas al suelo");
+        boolean nuevo = !configFile.exists();
+        config = YamlConfiguration.loadConfiguration(configFile);
+        if (nuevo || !config.contains("modo")) {
+            String modoInicial = config.getBoolean("anyone-can-open", false) ? "abierta" : "mixta";
+            try (PrintWriter writer = new PrintWriter(new FileWriter(configFile, !nuevo))) {
+                if (nuevo) {
+                    writer.println("# Minutos antes de que la tumba desaparezca y suelte las cosas al suelo (modos privada y abierta)");
                     writer.println("expiry-minutes: 30");
                 }
-            } catch (IOException e) { e.printStackTrace(); }
+                writer.println("");
+                writer.println("# Quién puede abrir una tumba ajena: privada (solo el dueño), abierta (cualquiera) o mixta");
+                writer.println("# (solo el dueño los primeros minutos y después cualquiera). El dueño y los admins siempre pueden");
+                writer.println("modo: " + modoInicial);
+                writer.println("# En la mixta: minutos que es solo del dueño y minutos que queda abierta antes de soltar las cosas");
+                writer.println("minutos-privada: 20");
+                writer.println("minutos-abierta: 10");
+                writer.println("");
+                writer.println("# /muertes te tepea a tu tumba (true) o solo te dice dónde está y hay que ir caminando (false)");
+                writer.println("muertes-teleport: false");
+            } catch (IOException e) {
+                plugin.getLogger().warning("No se pudo escribir tumbas_config.yml: " + e.getMessage());
+            }
+            config = YamlConfiguration.loadConfiguration(configFile);
         }
 
-        config = YamlConfiguration.loadConfiguration(configFile);
-        anyoneCanOpen = config.getBoolean("anyone-can-open", false);
-        expiryMinutes = config.getInt("expiry-minutes", 30);
+        modo = ModoTumba.parse(config.getString("modo"), ModoTumba.MIXTA);
+        expiryMinutes = Math.max(1, config.getInt("expiry-minutes", 30));
+        privateMinutes = Math.max(0, config.getInt("minutos-privada", 20));
+        openMinutes = Math.max(1, config.getInt("minutos-abierta", 10));
+        teleport = config.getBoolean("muertes-teleport", false);
     }
+
+    private long lifetimeMillis() {
+        return modo.minutosDeVida(expiryMinutes, privateMinutes, openMinutes) * 60_000L;
+    }
+
+    // El dueño y los admins siempre; los demás según el modo
+    public boolean canOpen(Grave grave, Player player) {
+        if (grave.getOwner().equals(player.getUniqueId()) || player.hasPermission("tumbas.admin")) return true;
+        return isOpenForAll(grave);
+    }
+
+    public boolean isOpenForAll(Grave grave) {
+        return modo.abiertaParaTodos(grave.getCreationTime(), System.currentTimeMillis(), privateMinutes);
+    }
+
+    // Cuánto falta para que otros la puedan abrir (0 si ya pueden; -1 si nunca, en el modo privada)
+    public long millisUntilOpen(Grave grave) {
+        if (modo == ModoTumba.PRIVADA) return -1;
+        if (modo == ModoTumba.ABIERTA) return 0;
+        return Math.max(0, grave.getCreationTime() + privateMinutes * 60_000L - System.currentTimeMillis());
+    }
+
+    public ModoTumba getModo() { return modo; }
+    public boolean teleportsToGrave() { return teleport; }
 
     // Los mundos de otros plugins y wardencave pueden cargarse después de este sistema.
     private void loadData() {
@@ -125,11 +168,8 @@ public class GravesManager implements Listener {
             // Esperar un tick y cargarlas antes de limpiar evita duplicar los displays al reiniciar.
             Bukkit.getScheduler().runTask(plugin, () -> {
                 if (activeGraves.get(id) != grave || Bukkit.getWorld(world.getUID()) != world) return;
+                // El modelo y el cuadro van en el bloque de la tumba: alcanza con su chunk
                 world.getChunkAt(loc).getEntities();
-                Location displayLocation = loc.clone().add(0.5, 0.5, 0.5);
-                if (loc.getBlockX() >> 4 != displayLocation.getBlockX() >> 4 || loc.getBlockZ() >> 4 != displayLocation.getBlockZ() >> 4) {
-                    world.getChunkAt(displayLocation).getEntities();
-                }
                 cleanupVisuals(id, loc);
                 spawnGraveVisuals(id, ownerName, loc, grave.getCreationTime());
                 plugin.getLogger().info("Tumba " + key + " restaurada en " + world.getName() + ".");
@@ -171,19 +211,19 @@ public class GravesManager implements Listener {
         catch (IOException error) { plugin.getLogger().severe("No se pudieron guardar las tumbas: " + error.getMessage()); }
     }
 
-    // La tumba va un bloque arriba de donde murió; si murió en el vacío queda 5 bloques arriba del fondo del mundo
+    // La tumba va en el bloque de los pies del jugador. Si murió en el vacío del End va al último suelo que pisó, y en
+    // otro vacío 5 bloques arriba del fondo del mundo
     public void createGrave(Player player, List<ItemStack> items) {
         UUID id = UUID.randomUUID();
-
-        Location loc = player.getLocation();
-        Location blockLoc = new Location(loc.getWorld(), loc.getBlockX() + 0.5, loc.getBlockY() + 1.0, loc.getBlockZ() + 0.5);
-
+        Location blockLoc = feet(player.getLocation());
         if (blockLoc.getY() < blockLoc.getWorld().getMinHeight()) {
-            blockLoc.setY(blockLoc.getWorld().getMinHeight() + 5);
+            Location ground = Encantamientos.RetornoDelVacio.ultimoSuelo(player);
+            if (ground != null && ground.getWorld() == blockLoc.getWorld()) blockLoc = feet(ground);
+            else blockLoc.setY(blockLoc.getWorld().getMinHeight() + 5);
         }
 
         long creationTime = System.currentTimeMillis();
-        long expiryTime = creationTime + (expiryMinutes * 60 * 1000L);
+        long expiryTime = creationTime + lifetimeMillis();
 
         Grave grave = new Grave(id, player.getUniqueId(), player.getName(), blockLoc, creationTime, expiryTime, items);
         activeGraves.put(id, grave);
@@ -192,12 +232,16 @@ public class GravesManager implements Listener {
         spawnGraveVisuals(id, player.getName(), blockLoc, creationTime);
     }
 
+    private static Location feet(Location loc) {
+        return new Location(loc.getWorld(), loc.getBlockX() + 0.5, loc.getBlockY(), loc.getBlockZ() + 0.5);
+    }
+
     // Tumba vacía con cualquier nombre, solo de decoración
     public void createFakeGrave(String fakeName, Location loc) {
         UUID id = UUID.randomUUID();
-        Location blockLoc = new Location(loc.getWorld(), loc.getBlockX() + 0.5, loc.getBlockY() + 1.0, loc.getBlockZ() + 0.5);
+        Location blockLoc = feet(loc);
         long creationTime = System.currentTimeMillis();
-        long expiryTime = creationTime + (expiryMinutes * 60 * 1000L);
+        long expiryTime = creationTime + lifetimeMillis();
 
         Grave grave = new Grave(id, UUID.randomUUID(), fakeName, blockLoc, creationTime, expiryTime, new ArrayList<>());
         activeGraves.put(id, grave);
@@ -215,8 +259,9 @@ public class GravesManager implements Listener {
         String tag = "grave_" + graveId.toString();
         String timerTag = "timer_" + graveId.toString();
 
-        String interactionCmd = String.format("execute in %s positioned %f %f %f run summon interaction ~ ~0.5 ~ {width:1f,height:1.2f,Tags:[\"%s\"]}",
-                loc.getWorld().getKey().toString(), loc.getX(), loc.getY(), loc.getZ(), tag);
+        // El cuadro para clickear ocupa el bloque de la tumba, justo donde está el modelo
+        String interactionCmd = String.format(Locale.ROOT, "execute in %s positioned %d.5 %d %d.5 run summon interaction ~ ~ ~ {width:1.05f,height:1.15f,Tags:[\"%s\"]}",
+                loc.getWorld().getKey().toString(), loc.getBlockX(), loc.getBlockY(), loc.getBlockZ(), tag);
         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), interactionCmd);
 
         String rawNbt = "{Tags:[\"" + tag + "\"],Passengers:[" +
@@ -234,13 +279,15 @@ public class GravesManager implements Listener {
                 "{id:\"minecraft:text_display\",Tags:[\"" + timerTag + "\",\"" + tag + "\"],text:[{text:\"00:00:00\",color:\"#858585\",bold:true,font:\"minecraft:uniform\"}],text_opacity:255,background:0,alignment:\"center\",line_width:210,transformation:[-0.3f,0f,0f,0.495f,0f,0.3f,0f,0.3125f,0f,0f,-1f,0.67875f,0f,0f,0f,1f],brightness:{sky:15,block:15}}" +
                 "]}";
 
-        String command = String.format("execute in %s positioned %f %f %f run summon block_display ~0.5 ~0.5 ~0.5 %s",
-                loc.getWorld().getKey().toString(), loc.getX(), loc.getY(), loc.getZ(), rawNbt);
+        // El modelo está armado desde la esquina del bloque: con la raíz ahí queda centrado en el bloque y apoyado en el suelo
+        String command = String.format(Locale.ROOT, "execute in %s positioned %d %d %d run summon block_display ~ ~ ~ %s",
+                loc.getWorld().getKey().toString(), loc.getBlockX(), loc.getBlockY(), loc.getBlockZ(), rawNbt);
 
         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
     }
 
     public void removeGrave(UUID id) {
+        announcedOpen.remove(id);
         Grave grave = activeGraves.remove(id);
         if (grave != null) {
             storage.records().remove(id.toString());
@@ -276,16 +323,18 @@ public class GravesManager implements Listener {
                         }
                         toRemove.add(grave.getId());
                     } else {
+                        announceOpening(grave);
                         if (grave.getLocation().getWorld() != null && grave.getLocation().getWorld().isChunkLoaded(grave.getLocation().getBlockX() >> 4, grave.getLocation().getBlockZ() >> 4)) {
-                            long totalSecs = remaining / 1000;
-                            long mins = totalSecs / 60;
-                            long secs = totalSecs % 60;
-                            String timeStr = String.format("00:%02d:%02d", mins, secs);
+                            // Mientras es privada cuenta hasta que se abre; abierta (en ámbar) cuenta hasta que suelta las cosas
+                            long untilOpen = millisUntilOpen(grave);
+                            boolean privatePhase = modo == ModoTumba.MIXTA && untilOpen > 0;
+                            String timeStr = ModoTumba.reloj(privatePhase ? untilOpen : remaining);
+                            String color = privatePhase || modo == ModoTumba.PRIVADA ? "#858585" : "#E3B778";
                             String timerTag = "timer_" + grave.getId().toString();
 
                             for (Entity entity : grave.getLocation().getWorld().getNearbyEntities(grave.getLocation(), 2, 2, 2)) {
                                 if (entity instanceof TextDisplay textDisplay && entity.getScoreboardTags().contains(timerTag)) {
-                                    textDisplay.setText(ChatColor.of("#858585") + "" + ChatColor.BOLD + timeStr);
+                                    textDisplay.setText(ChatColor.of(color) + "" + ChatColor.BOLD + timeStr);
                                 }
                             }
                         }
@@ -299,7 +348,18 @@ public class GravesManager implements Listener {
         }.runTaskTimer(plugin, 20L, 20L);
     }
 
+    // En la mixta le avisa al dueño (si está conectado) cuando su tumba ya la puede abrir cualquiera
+    private void announceOpening(Grave grave) {
+        if (modo != ModoTumba.MIXTA || announcedOpen.contains(grave.getId()) || !isOpenForAll(grave)) return;
+        announcedOpen.add(grave.getId());
+        Player owner = Bukkit.getPlayer(grave.getOwner());
+        if (owner != null) {
+            Location loc = grave.getLocation();
+            owner.sendMessage(TumbaMessages.warn("Tu tumba en X:" + loc.getBlockX() + " Y:" + loc.getBlockY() + " Z:" + loc.getBlockZ()
+                    + " ya la puede abrir cualquiera. Desaparece en " + ModoTumba.reloj(grave.getExpiryTime() - System.currentTimeMillis()) + "."));
+        }
+    }
+
     public Collection<Grave> getGraves() { return activeGraves.values(); }
-    public boolean canAnyoneOpen() { return anyoneCanOpen; }
     public Grave getGraveById(UUID id) { return activeGraves.get(id); }
 }

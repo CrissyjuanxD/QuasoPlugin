@@ -33,7 +33,14 @@ public class ShopGUI {
         setupSession(player, villager, gui, false);
     }
 
+    // Si es una tienda automática avisa que lo que cambie a mano se pisa en la próxima sección
     public void openConfigGUI(Player player, Villager villager) {
+        String shopId = villager.getPersistentDataContainer().get(shopManager.shopIdKey, PersistentDataType.STRING);
+        String catalogo = shopManager.getCatalogos().get(shopId);
+        if (catalogo != null) {
+            player.sendMessage(ChatColor.GOLD + "Esta tienda es automática (" + catalogo + "): lo que cambies acá se pisa al cambiar de sección.");
+            player.sendMessage(ChatColor.GRAY + "Para precios usa /tienda precio o /tienda ajuste; para editarla a mano, /tienda soltar.");
+        }
         String villagerName = villager.getCustomName() != null ? villager.getCustomName() : "Tienda";
         String title = ChatColor.RED + "" + ChatColor.BOLD + "Configurar: " + ChatColor.RESET + villagerName;
         if (title.length() > 32) title = title.substring(0, 32);

@@ -271,12 +271,63 @@ public class ShopManager {
         try { config.save(tradesFile); } catch (IOException e) { plugin.getLogger().severe("Error guardando el catálogo: " + e.getMessage()); }
     }
 
+    // El aldeano deja de ser automático: se queda con sus tradeos y se edita a mano como cualquier tienda
+    public void soltarCatalogo(String shopId) {
+        setCatalogo(shopId, null);
+    }
+
+    // Precios puestos a mano para una tienda del catálogo (producto -> precio)
+    public Map<String, Integer> getPreciosManuales(String tienda) {
+        FileConfiguration config = YamlConfiguration.loadConfiguration(tradesFile);
+        Map<String, Integer> precios = new LinkedHashMap<>();
+        ConfigurationSection section = config.getConfigurationSection("precios." + tienda);
+        if (section == null) return precios;
+        for (String producto : section.getKeys(false)) precios.put(producto, section.getInt(producto));
+        return precios;
+    }
+
+    // precio null vuelve al automático
+    public void setPrecioManual(String tienda, String producto, Integer precio) {
+        FileConfiguration config = YamlConfiguration.loadConfiguration(tradesFile);
+        config.set("precios." + tienda + "." + producto, precio);
+        try { config.save(tradesFile); } catch (IOException e) { plugin.getLogger().severe("Error guardando el precio: " + e.getMessage()); }
+    }
+
+    // Ajuste en % de todos los precios automáticos de una tienda (-20 = 20% más barato)
+    public int getAjuste(String tienda) {
+        return YamlConfiguration.loadConfiguration(tradesFile).getInt("ajustes." + tienda, 0);
+    }
+
+    public void setAjuste(String tienda, int ajuste) {
+        FileConfiguration config = YamlConfiguration.loadConfiguration(tradesFile);
+        config.set("ajustes." + tienda, ajuste == 0 ? null : ajuste);
+        try { config.save(tradesFile); } catch (IOException e) { plugin.getLogger().severe("Error guardando el ajuste: " + e.getMessage()); }
+    }
+
+    public int precio(CatalogoTienda.Tienda tienda, CatalogoTienda.Oferta oferta, int seccion) {
+        return CatalogoTienda.precioFinal(oferta, seccion, getPreciosManuales(tienda.id()).get(oferta.producto()), getAjuste(tienda.id()));
+    }
+
+    // Vuelve a poner los tradeos en todos los aldeanos de esa tienda (después de cambiar un precio)
+    public int reaplicar(CatalogoTienda.Tienda tienda) {
+        int aldeanos = 0;
+        for (Map.Entry<String, String> entrada : getCatalogos().entrySet()) {
+            if (!entrada.getValue().equals(tienda.id())) continue;
+            aplicarCatalogo(entrada.getKey(), tienda, getSeccion());
+            aldeanos++;
+        }
+        return aldeanos;
+    }
+
     // Escribe los 10 tradeos que le tocan a ese aldeano en esa sección y, si está cargado, se los pone
     public void aplicarCatalogo(String shopId, CatalogoTienda.Tienda tienda, int seccion) {
+        Map<String, Integer> manuales = getPreciosManuales(tienda.id());
+        int ajuste = getAjuste(tienda.id());
         List<MerchantRecipe> recipes = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
             CatalogoTienda.Oferta oferta = i < tienda.ofertas().size() ? tienda.ofertas().get(i) : null;
-            MerchantRecipe recipe = oferta != null && CatalogoTienda.abierta(oferta, seccion) ? tradeo(oferta, seccion) : null;
+            MerchantRecipe recipe = oferta != null && CatalogoTienda.abierta(oferta, seccion)
+                    ? tradeo(oferta, CatalogoTienda.precioFinal(oferta, seccion, manuales.get(oferta.producto()), ajuste)) : null;
             if (recipe == null) {
                 recipe = new MerchantRecipe(createEmptyTradeItem(), 9999);
                 recipe.addIngredient(createEmptyTradeItem());
@@ -289,9 +340,8 @@ public class ShopManager {
     }
 
     // Precio de más de 64 DinoCoins: un stack en el primer lugar y el resto en el segundo
-    private MerchantRecipe tradeo(CatalogoTienda.Oferta oferta, int seccion) {
+    private MerchantRecipe tradeo(CatalogoTienda.Oferta oferta, int precio) {
         ItemStack producto = CustomItemRegistry.getCustomItem(oferta.producto(), oferta.cantidadProducto());
-        int precio = CatalogoTienda.precio(oferta, seccion);
         ItemStack pago = CustomItemRegistry.getCustomItem(oferta.pago(), Math.min(64, precio));
         if (producto == null || pago == null) {
             plugin.getLogger().warning("Catálogo de la tienda: no existe el item " + (producto == null ? oferta.producto() : oferta.pago()));

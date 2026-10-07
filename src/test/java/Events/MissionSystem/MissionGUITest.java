@@ -27,7 +27,7 @@ import static org.mockito.Mockito.*;
 
 class MissionGUITest {
     @Test
-    void extraMissionsKeepTheirParentAndOrderButHideTheReleaseExplanationInTheirLore() {
+    void extraMissionsGetTheirOwnPagesAfterTheNormalOnes() {
         JavaPlugin plugin = mock(JavaPlugin.class);
         Server server = mock(Server.class);
         when(plugin.getServer()).thenReturn(server);
@@ -44,7 +44,8 @@ class MissionGUITest {
         missions.put(6, parent);
         missions.put(36, extra);
         when(handler.getMissions()).thenReturn(missions);
-        when(handler.getExtras(6)).thenReturn(List.of(36));
+        when(handler.tipo(6)).thenReturn(TipoMision.NORMAL);
+        when(handler.tipo(36)).thenReturn(TipoMision.EXTRA);
         when(handler.displayName(6)).thenReturn("#6 Principal");
         when(handler.displayName(36)).thenReturn("Extra #6 Adicional");
         MissionData data = new MissionData();
@@ -57,17 +58,21 @@ class MissionGUITest {
              MockedConstruction<ItemStack> stacks = mockConstruction(ItemStack.class,
                      (stack, context) -> when(stack.getItemMeta()).thenReturn(mock(ItemMeta.class)))) {
             bukkit.when(() -> Bukkit.createInventory(any(InventoryHolder.class), eq(54), anyString())).thenReturn(inventory);
-            new MissionGUI(plugin, handler).openMissionGUI(player);
+            MissionGUI gui = new MissionGUI(plugin, handler);
 
-            assertEquals(4, stacks.constructed().size());
+            gui.openMissionGUI(player, 1);
+            assertEquals(3, stacks.constructed().size());
+            verify(inventory).setItem(18, stacks.constructed().getLast());
+
+            gui.openMissionGUI(player, 2);
+            assertEquals(6, stacks.constructed().size());
             ItemStack extraItem = stacks.constructed().getLast();
             @SuppressWarnings("unchecked") ArgumentCaptor<List<String>> lore = ArgumentCaptor.forClass(List.class);
             verify(extraItem.getItemMeta()).setLore(lore.capture());
             List<String> plainLore = lore.getValue().stream().map(ChatColor::stripColor).toList();
-            assertTrue(plainLore.contains("Misión extra"));
+            assertTrue(plainLore.contains("Misión extra de la #6"));
             assertTrue(plainLore.stream().noneMatch(line -> line.contains("sale con")));
-            verify(inventory).setItem(19, extraItem);
-            assertEquals(6, extra.getParentMission());
+            verify(inventory).setItem(18, extraItem);
         }
     }
 

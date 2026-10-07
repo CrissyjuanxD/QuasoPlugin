@@ -18,8 +18,7 @@ import java.util.Map;
 import java.util.function.IntUnaryOperator;
 
 public abstract class BaseMission implements Mission, Listener {
-    private static final String C_LABEL = "#FFCC99";
-    private static final String C_VALUE = "#FFA07A";
+    private static final String C_VALUE = "#FFFFFF";
     private final ActionBarHandler actionBar;
     private final SuccessNotification success;
 
@@ -183,24 +182,31 @@ public abstract class BaseMission implements Mission, Listener {
         set(player, key, (current - data.getProgressInt(baseKey)) / divisor);
     }
 
-    protected void sendBar(Player player, String message) {
-        actionBar.sendProgress(player, "mission:" + number + ":info", ChatColor.GOLD + "۞ " + message);
+    public TipoMision tipo() {
+        return TipoMision.de(number, parent);
     }
 
+    protected void sendBar(Player player, String message) {
+        actionBar.sendProgress(player, "mission:" + number + ":info", ChatColor.of(tipo().primario) + "۞ " + message);
+    }
+
+    // El ۞ y la etiqueta van con el color fuerte del tipo de misión y el objetivo con el suave
     protected void showProgress(Player player, MissionData data, MissionObjective changed, boolean force) {
         String key = "mission:" + number + ":" + changed.key();
-        String message = ChatColor.GOLD + "۞ " + ChatColor.of(C_LABEL) + "[" + handler.tag(number) + "] "
-                + format(changed, value(player, data, changed));
+        TipoMision tipo = tipo();
+        String message = ChatColor.of(tipo.primario) + "۞ [" + handler.tag(number) + "] "
+                + format(tipo, changed, value(player, data, changed));
         if (force) actionBar.sendNotification(player, key, message);
         else actionBar.sendProgress(player, key, message);
     }
 
-    private String format(MissionObjective objective, int value) {
+    private String format(TipoMision tipo, MissionObjective objective, int value) {
         boolean done = value >= objective.target();
+        ChatColor label = ChatColor.of(tipo.secundario);
         if (objective.format() == MissionObjective.Format.FLAG) {
-            return (done ? ChatColor.GREEN + "✔ " : ChatColor.of(C_VALUE) + "✖ ") + ChatColor.of(C_LABEL) + objective.label();
+            return (done ? ChatColor.GREEN + "✔ " : ChatColor.of(C_VALUE) + "✖ ") + label + objective.label();
         }
-        return ChatColor.of(C_LABEL) + objective.label() + ": " + (done ? ChatColor.GREEN : ChatColor.of(C_VALUE)) + objective.formatValue(value);
+        return label + objective.label() + ": " + (done ? ChatColor.GREEN : ChatColor.of(C_VALUE)) + objective.formatValue(value);
     }
 
     // Líneas de progreso para el menú de misiones (de a dos por línea si son muchas)

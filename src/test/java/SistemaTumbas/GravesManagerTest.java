@@ -217,7 +217,7 @@ class GravesManagerTest {
         bukkit.verify(() -> Bukkit.dispatchCommand(any(), contains("run summon")), never());
     }
 
-    @Test void displaysAtChunkBoundariesAlsoLoadTheNeighboringEntitiesBeforeCleanup() throws Exception {
+    @Test void theModelAndItsClickBoxStayInsideTheGravesOwnBlock() throws Exception {
         fixture("wardencave");
         Path file = directory.resolve("tumbas_data.yml");
         Files.writeString(file, Files.readString(file).replace("x: 0.5", "x: 15.5").replace("z: 0.5", "z: 15.5"));
@@ -225,7 +225,18 @@ class GravesManagerTest {
         bukkit.when(() -> Bukkit.getWorld(world.getUID())).thenReturn(world);
         new GravesManager(plugin);
         visualTasks.getFirst().run();
-        verify(world).getChunkAt(argThat((Location loc) -> loc.getBlockX() == 16 && loc.getBlockZ() == 16));
-        verify(chunk, times(2)).getEntities();
+        verify(chunk, times(1)).getEntities();
+        bukkit.verify(() -> Bukkit.dispatchCommand(any(), contains("positioned 15 -55 15 run summon block_display ~ ~ ~")));
+        bukkit.verify(() -> Bukkit.dispatchCommand(any(), contains("positioned 15.5 -55 15.5 run summon interaction ~ ~ ~")));
+    }
+
+    @Test void anOldConfigGetsTheNewModesWithTheMixedOneByDefault() throws Exception {
+        Files.writeString(directory.resolve("tumbas_config.yml"), "anyone-can-open: false\nexpiry-minutes: 30\n");
+        GravesManager manager = new GravesManager(plugin);
+        assertEquals(ModoTumba.MIXTA, manager.getModo());
+        assertFalse(manager.teleportsToGrave());
+        String config = Files.readString(directory.resolve("tumbas_config.yml"));
+        assertTrue(config.contains("minutos-privada: 20"));
+        assertTrue(config.contains("minutos-abierta: 10"));
     }
 }

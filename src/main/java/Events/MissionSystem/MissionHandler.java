@@ -1,5 +1,6 @@
 package Events.MissionSystem;
 
+import Gui.dinocoins.DinoCoinsManager;
 import Handlers.DatabaseManager;
 import Handlers.Teams.TeamType;
 import TitleListener.MisionAnimation;
@@ -69,6 +70,7 @@ public class MissionHandler implements Listener {
     private final Map<Integer, Mission> missions = new TreeMap<>();
     private final Set<Integer> globalActiveMissions = ConcurrentHashMap.newKeySet();
     private final MisionAnimation ruletaAnimation;
+    private DinoCoinsManager dinoCoins;
     private long tickSecond = 0;
 
     public MissionHandler(JavaPlugin plugin, DatabaseManager dbManager) {
@@ -274,6 +276,33 @@ public class MissionHandler implements Listener {
         return mission != null && mission.getParentMission() > 0 ? "Extra #" + mission.getParentMission() : "#" + missionNumber;
     }
 
+    public TipoMision tipo(int missionNumber) {
+        Mission mission = missions.get(missionNumber);
+        return TipoMision.de(missionNumber, mission != null ? mission.getParentMission() : 0);
+    }
+
+    // Cómo se escribe en los comandos: 1, 1ex o 170tra
+    public String token(int missionNumber) {
+        Mission mission = missions.get(missionNumber);
+        return TipoMision.token(missionNumber, mission != null ? mission.getParentMission() : 0);
+    }
+
+    // El número de misión de "1", "1ex", "170tra" (o el número de siempre); -1 si no existe
+    public int parse(String text) {
+        int number = TipoMision.parse(text, parent -> {
+            Mission base = missions.get(parent);
+            if (base == null || base.getParentMission() != 0 || MisionTrabajo.es(parent)) return -1;
+            List<Integer> extras = getExtras(parent);
+            return extras.isEmpty() ? -1 : extras.get(0);
+        });
+        return missions.containsKey(number) ? number : -1;
+    }
+
+    // Las extras pagan directo al monedero (lo que no entra va al inventario)
+    public void setDinoCoins(DinoCoinsManager dinoCoins) {
+        this.dinoCoins = dinoCoins;
+    }
+
     private String plainName(int missionNumber) {
         Mission mission = missions.get(missionNumber);
         return mission != null ? ChatColor.stripColor(mission.getName()) : "Unknown";
@@ -296,7 +325,7 @@ public class MissionHandler implements Listener {
         }
 
         if (globalActiveMissions.contains(missionNumber)) {
-            sender.sendMessage(ChatColor.RED + "La misión " + missionNumber + " ya está activada globalmente.");
+            sender.sendMessage(ChatColor.RED + "La misión " + token(missionNumber) + " ya está activada globalmente.");
             return;
         }
 
@@ -309,18 +338,19 @@ public class MissionHandler implements Listener {
         for (int extra : extras) setGlobalState(extra, true);
 
         if (extras.isEmpty()) {
-            sender.sendMessage(ChatColor.GREEN + "Misión " + missionNumber + " activada globalmente.");
+            sender.sendMessage(ChatColor.GREEN + "Misión " + token(missionNumber) + " activada globalmente.");
         } else {
-            sender.sendMessage(ChatColor.GREEN + "Misión " + missionNumber + " activada globalmente junto con la extra " + extras + ".");
+            sender.sendMessage(ChatColor.GREEN + "Misión " + token(missionNumber) + " activada globalmente junto con su extra.");
         }
 
-        StringBuilder json = new StringBuilder("[\"\",{\"text\":\"\\n۞ \",\"bold\":true,\"color\":\"#ffaa00\"},")
-                .append("{\"text\":\"NUEVA MISIÓN DESBLOQUEADA\",\"bold\":true,\"color\":\"#FFA500\"},")
-                .append(missionLine(missionNumber, "#dda0dd"));
+        TipoMision normal = tipo(missionNumber);
+        StringBuilder json = new StringBuilder("[\"\",{\"text\":\"\\n۞ \",\"bold\":true,\"color\":\"" + normal.primario + "\"},")
+                .append("{\"text\":\"NUEVA MISIÓN DESBLOQUEADA\",\"bold\":true,\"color\":\"" + normal.primario + "\"},")
+                .append(missionLine(missionNumber, normal.secundario));
         for (int extra : extras) {
-            json.append(",{\"text\":\"\\n۞ \",\"bold\":true,\"color\":\"#ffaa00\"},")
-                    .append("{\"text\":\"MISIÓN EXTRA\",\"bold\":true,\"color\":\"#7FD4FF\"},")
-                    .append(missionLine(extra, "#9fe2bf"));
+            json.append(",{\"text\":\"\\n۞ \",\"bold\":true,\"color\":\"" + TipoMision.EXTRA.primario + "\"},")
+                    .append("{\"text\":\"MISIÓN EXTRA\",\"bold\":true,\"color\":\"" + TipoMision.EXTRA.primario + "\"},")
+                    .append(missionLine(extra, TipoMision.EXTRA.secundario));
         }
         json.append(",{\"text\":\"usa /misiones para abrir su interfaz o usa el item de Misiones\",\"color\":\"gray\"}]");
 
@@ -364,7 +394,7 @@ public class MissionHandler implements Listener {
         }
 
         if (!globalActiveMissions.contains(missionNumber)) {
-            sender.sendMessage(ChatColor.RED + "La misión " + missionNumber + " no está activa globalmente.");
+            sender.sendMessage(ChatColor.RED + "La misión " + token(missionNumber) + " no está activa globalmente.");
             return false;
         }
 
@@ -377,8 +407,8 @@ public class MissionHandler implements Listener {
             }
         }
 
-        sender.sendMessage(ChatColor.GREEN + "Misión " + missionNumber + " desactivada globalmente"
-                + (extras.isEmpty() ? "." : " junto con la extra " + extras + "."));
+        sender.sendMessage(ChatColor.GREEN + "Misión " + token(missionNumber) + " desactivada globalmente"
+                + (extras.isEmpty() ? "." : " junto con su extra."));
         return true;
     }
 
@@ -450,19 +480,23 @@ public class MissionHandler implements Listener {
         data.setCompleted(true);
         saveData(player, missionNumber, data);
 
-        giveMissionToken(player, missionNumber);
+        TipoMision tipo = tipo(missionNumber);
+        if (tipo != TipoMision.EXTRA) giveMissionToken(player, missionNumber);
 
         String missionName = displayName(missionNumber);
 
         String jsonMessage = String.format(
-                "[\"\",{\"text\":\"\\n۞ \",\"bold\":true,\"color\":\"#ffaa00\"}," +
-                        "{\"text\":\"%s\",\"bold\":true,\"color\":\"#87ceeb\"}," +
-                        "{\"text\":\" ha completado la misión \",\"color\":\"#7eaee4\"}," +
+                "[\"\",{\"text\":\"\\n۞ \",\"bold\":true,\"color\":\"%3$s\"}," +
+                        "{\"text\":\"%1$s\",\"bold\":true,\"color\":\"%4$s\"}," +
+                        "{\"text\":\" ha completado la %5$s \",\"color\":\"%3$s\"}," +
                         "{\"text\":\"[\",\"color\":\"white\"}," +
-                        "{\"text\":\"%s\",\"bold\":true,\"color\":\"#dda0dd\"}," +
+                        "{\"text\":\"%2$s\",\"bold\":true,\"color\":\"%4$s\"}," +
                         "{\"text\":\"]\\n\",\"color\":\"white\"}]",
                 player.getName(),
-                missionName.replace("\"", "\\\"")
+                missionName.replace("\"", "\\\""),
+                tipo.primario,
+                tipo.secundario,
+                tipo.nombre.toLowerCase(Locale.ROOT)
         );
 
         String consoleMessage = player.getName() + " ha completado la misión [" + missionName + "]";
@@ -487,6 +521,8 @@ public class MissionHandler implements Listener {
             }
         }
 
+        if (tipo == TipoMision.EXTRA && missions.get(missionNumber) instanceof BaseMission extra) payExtra(player, extra.getCoins());
+
         long completedCount = getCompletedCount(player);
 
         player.sendMessage(ChatColor.GREEN + "Progreso Total: " + ChatColor.GOLD + completedCount +
@@ -494,6 +530,15 @@ public class MissionHandler implements Listener {
 
         updateRole(player, completedCount, missionNumber);
         return true;
+    }
+
+    // Las extras no dan ficha ni cofre: sus DinoCoins van directo al monedero
+    private void payExtra(Player player, int coins) {
+        if (coins <= 0) return;
+        if (dinoCoins != null) dinoCoins.deposit(player, coins);
+        else DinoCoinsManager.giveLoose(player, coins);
+        player.sendMessage(ChatColor.of(TipoMision.EXTRA.primario) + "Has obtenido " + ChatColor.of(TipoMision.EXTRA.secundario)
+                + coins + " Dinocoins" + ChatColor.of(TipoMision.EXTRA.primario) + ".");
     }
 
     public long getCompletedCount(Player player) {
@@ -577,6 +622,10 @@ public class MissionHandler implements Listener {
     }
 
     public void addMissionToPlayer(CommandSender sender, String playerName, int missionNumber) {
+        if (!missions.containsKey(missionNumber)) {
+            sender.sendMessage(ChatColor.RED + "Esa misión no existe.");
+            return;
+        }
         Player target = Bukkit.getPlayer(playerName);
         if (target == null) {
             sender.sendMessage(ChatColor.RED + "Jugador no encontrado o offline.");
@@ -594,10 +643,15 @@ public class MissionHandler implements Listener {
 
         completeMission(target.getName(), missionNumber);
 
-        sender.sendMessage(ChatColor.GREEN + "Has forzado la completación de la misión " + missionNumber + " para " + playerName);
+        sender.sendMessage(ChatColor.GREEN + "Has forzado la completación de la misión " + token(missionNumber) + " ("
+                + displayName(missionNumber) + ") para " + playerName);
     }
 
     public void removeMissionFromPlayer(CommandSender sender, String playerName, int missionNumber) {
+        if (!missions.containsKey(missionNumber)) {
+            sender.sendMessage(ChatColor.RED + "Esa misión no existe.");
+            return;
+        }
         Player target = Bukkit.getPlayer(playerName);
         if (target == null) {
             sender.sendMessage(ChatColor.RED + "Jugador no encontrado o offline.");
@@ -613,7 +667,7 @@ public class MissionHandler implements Listener {
 
         saveData(target, missionNumber, data);
 
-        sender.sendMessage(ChatColor.GREEN + "Misión " + missionNumber + " reiniciada para " + playerName);
+        sender.sendMessage(ChatColor.GREEN + "Misión " + token(missionNumber) + " (" + displayName(missionNumber) + ") reiniciada para " + playerName);
     }
 
     public Map<Integer, Mission> getMissions() { return missions; }

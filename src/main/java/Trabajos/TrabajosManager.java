@@ -3,7 +3,6 @@ package Trabajos;
 import Gui.dinocoins.DinoCoinsManager;
 import Handlers.ActionBarHandler;
 import Handlers.DatabaseManager;
-import items.EconomyItems;
 import items.EconomyItemsFunctions;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
@@ -286,24 +285,8 @@ public final class TrabajosManager implements Listener {
     // Las DinoCoins van a los monederos; lo que no entra (o si no tiene monedero) va al inventario o al suelo
     void darMonedas(Player player, int cantidad) {
         if (cantidad <= 0) return;
-        if (monedas == null) {
-            darMonedasSueltas(player, cantidad);
-            return;
-        }
-        monedas.changeAsyncMoved(player, cantidad, movidas -> {
-            if (movidas < cantidad && player.isOnline()) darMonedasSueltas(player, cantidad - movidas);
-        });
-    }
-
-    private static void darMonedasSueltas(Player player, int cantidad) {
-        while (cantidad > 0) {
-            ItemStack monedas = EconomyItems.createVithiumCoin();
-            monedas.setAmount(Math.min(64, cantidad));
-            cantidad -= monedas.getAmount();
-            for (ItemStack resto : player.getInventory().addItem(monedas).values()) {
-                player.getWorld().dropItemNaturally(player.getLocation(), resto);
-            }
-        }
+        if (monedas == null) DinoCoinsManager.giveLoose(player, cantidad);
+        else monedas.deposit(player, cantidad);
     }
 
     // ---------------------------------------------------------------- Entrar a un trabajo
@@ -390,6 +373,8 @@ public final class TrabajosManager implements Listener {
                 + "! Vas por el nivel " + TrabajosTexto.BLANCO + d.nivel(trabajo) + TrabajosTexto.CREMA + "."
                 + (anterior != null ? " Tu nivel de " + anterior.nombre() + " queda guardado." : ""));
         player.sendMessage(TrabajosTexto.PREFIJO + TrabajosTexto.GRIS + "Podrás cambiarte de nuevo en 24 horas.");
+        Bukkit.broadcastMessage(TrabajosTexto.PREFIJO + TrabajosTexto.BLANCO + player.getName() + TrabajosTexto.CREMA
+                + " ha seleccionado el trabajo " + TrabajosTexto.nombre(trabajo) + TrabajosTexto.CREMA + ".");
         player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_BELL, SoundCategory.PLAYERS, 1f, 1.2f);
         player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_WORK_CARTOGRAPHER, SoundCategory.PLAYERS, 1f, 1f);
     }

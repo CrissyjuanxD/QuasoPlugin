@@ -38,3 +38,28 @@ La regresión se reprodujo en Paper 26.2 build 129 con una tumba antigua en
 corrección. Las pruebas automatizadas cubren carga tardía, descarga/recarga,
 mundos ausentes, objetos/metadata, registros inválidos, borrado independiente,
 copias originales, identidad del mundo y fallos de deserialización de objetos.
+
+## Modos, /muertes y modelo (Version #32)
+
+La tumba va en el bloque de los pies del jugador: el modelo queda apoyado en el
+suelo y el cuadro para clickearla ocupa ese mismo bloque. Si muere en el vacío
+del End va al último suelo que pisó.
+
+`tumbas_config.yml` (a un archivo viejo se le agregan solas las opciones nuevas):
+
+| Opción | Por defecto | Qué hace |
+|---|---|---|
+| `modo` | `mixta` | `privada` (solo el dueño), `abierta` (cualquiera) o `mixta` |
+| `minutos-privada` | 20 | En la mixta, minutos que es solo del dueño |
+| `minutos-abierta` | 10 | En la mixta, minutos que queda abierta antes de soltar las cosas |
+| `expiry-minutes` | 30 | Lo que dura en los modos privada y abierta |
+| `muertes-teleport` | `false` | Si `/muertes` te tepea o solo te dice dónde está |
+
+El dueño y los admins (`tumbas.admin`) siempre la pueden abrir. El reloj de la
+tumba cuenta en gris hasta que se abre y en ámbar hasta que suelta las cosas; en
+la mixta se le avisa al dueño cuando ya la puede abrir cualquiera.
+
+`/muertes` (y `/tumba`) lista tus tumbas con el mundo, las coordenadas, el tiempo
+desde que moriste (00:05:00 y subiendo) y si está privada o abierta. Se hace
+clic en una para ir (si `muertes-teleport` es `true`) o para ver sus coordenadas.
+`/tumbas reload` relee la configuración.

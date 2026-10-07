@@ -193,6 +193,13 @@ public final class CatalogoTienda {
         return (int) Math.min(PRECIO_MAXIMO, Math.round(oferta.cantidadPago() * Math.pow(1 + SUBIDA, pasaron)));
     }
 
+    // El precio que se cobra: el que puso el admin a mano (/tienda precio) o el de la sección con el ajuste en % de esa
+    // tienda (/tienda ajuste), siempre entre 1 y 128
+    public static int precioFinal(Oferta oferta, int seccion, Integer manual, int ajuste) {
+        int precio = manual != null ? manual : (int) Math.round(precio(oferta, seccion) * (100 + ajuste) / 100.0);
+        return Math.max(1, Math.min(PRECIO_MAXIMO, precio));
+    }
+
     public static boolean abierta(Oferta oferta, int seccion) {
         return seccion >= oferta.seccion();
     }

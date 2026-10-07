@@ -78,6 +78,17 @@ class CatalogoTiendaTest {
     }
 
     @Test
+    void manualPricesWinAndTheAdjustmentMovesTheAutomaticOnes() {
+        CatalogoTienda.Oferta mochila = new CatalogoTienda.Oferta("mochila_nivel_1", 1, "dinocoins", 20, 1, false);
+        assertEquals(20, CatalogoTienda.precioFinal(mochila, 1, null, 0));
+        assertEquals(16, CatalogoTienda.precioFinal(mochila, 1, null, -20));
+        assertEquals(22, CatalogoTienda.precioFinal(mochila, 1, null, 10));
+        assertEquals(7, CatalogoTienda.precioFinal(mochila, 3, 7, 50));
+        assertEquals(1, CatalogoTienda.precioFinal(mochila, 1, null, -99));
+        assertEquals(CatalogoTienda.PRECIO_MAXIMO, CatalogoTienda.precioFinal(mochila, 6, null, 300));
+    }
+
+    @Test
     void theDayPicksTheLatestSectionThatAlreadyOpened() {
         assertEquals(1, CatalogoTienda.seccionDelDia(1));
         assertEquals(1, CatalogoTienda.seccionDelDia(19));

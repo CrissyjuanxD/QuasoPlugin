@@ -22,6 +22,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 public class MissionGUI implements Listener {
@@ -65,37 +66,27 @@ public class MissionGUI implements Listener {
         return slots.stream().mapToInt(Integer::intValue).toArray();
     }
 
-    // Las páginas salen de cuántas misiones hay en el menú (140 misiones = 5 páginas) y al final van las de trabajo
-    private int normalPages() {
-        return Math.max(1, (menuOrder().size() + MISSION_SLOTS.length - 1) / MISSION_SLOTS.length);
+    // El menú tiene tres secciones seguidas, cada una desde una página nueva: las misiones (1 a 100), las extras
+    // (ordenadas por su misión: Extra #1, Extra #2...) y las de trabajo (141 a 200)
+    private List<Integer> order(TipoMision tipo) {
+        List<Integer> order = new ArrayList<>();
+        for (Mission mission : missionHandler.getMissions().values()) {
+            if (missionHandler.tipo(mission.getMissionNumber()) == tipo) order.add(mission.getMissionNumber());
+        }
+        if (tipo == TipoMision.EXTRA) {
+            order.sort(Comparator.comparingInt(number -> missionHandler.getMissions().get(number).getParentMission()));
+        }
+        return order;
+    }
+
+    private int pagesOf(List<Integer> order) {
+        return (order.size() + MISSION_SLOTS.length - 1) / MISSION_SLOTS.length;
     }
 
     private int maxPages() {
-        return normalPages() + (jobOrder().size() + MISSION_SLOTS.length - 1) / MISSION_SLOTS.length;
-    }
-
-    // Páginas exclusivas de trabajos: las 10 misiones de cada trabajo seguidas, llenando cada página
-    private List<Integer> jobOrder() {
-        List<Integer> order = new ArrayList<>();
-        for (int number : missionHandler.getMissions().keySet()) {
-            if (MisionTrabajo.es(number)) order.add(number);
-        }
-        order.sort(null);
-        return order;
-    }
-
-    // Cada misión normal seguida de sus extras (#1, sus extras, #2, sus extras...); una extra sin su misión va al final
-    private List<Integer> menuOrder() {
-        List<Integer> order = new ArrayList<>();
-        for (Mission mission : missionHandler.getMissions().values()) {
-            if (mission.getParentMission() != 0 || MisionTrabajo.es(mission.getMissionNumber())) continue;
-            order.add(mission.getMissionNumber());
-            order.addAll(missionHandler.getExtras(mission.getMissionNumber()));
-        }
-        for (int number : missionHandler.getMissions().keySet()) {
-            if (!order.contains(number) && !MisionTrabajo.es(number)) order.add(number);
-        }
-        return order;
+        int pages = 0;
+        for (TipoMision tipo : TipoMision.values()) pages += pagesOf(order(tipo));
+        return Math.max(1, pages);
     }
 
     // El item de Misiones abre el menú (los viejos con custom model data 9999 también sirven)
@@ -119,13 +110,26 @@ public class MissionGUI implements Listener {
         Inventory gui = Bukkit.createInventory(menu, 54, TITLE);
         menu.inventory = gui;
 
-        int normal = normalPages();
-        boolean jobs = page > normal;
-        gui.setItem(PREV_SLOT, createArrow("§e⬅ Anterior Página", page, pages, jobs));
-        gui.setItem(NEXT_SLOT, createArrow("§eSiguiente Página ➔", page, pages, jobs));
+        // Busca en qué sección cae la página
+        TipoMision tipo = TipoMision.NORMAL;
+        List<Integer> order = List.of();
+        int first = 0;
+        int before = 0;
+        for (TipoMision candidate : TipoMision.values()) {
+            List<Integer> list = order(candidate);
+            int sectionPages = pagesOf(list);
+            if (page <= before + sectionPages) {
+                tipo = candidate;
+                order = list;
+                first = (page - before - 1) * MISSION_SLOTS.length;
+                break;
+            }
+            before += sectionPages;
+        }
 
-        List<Integer> order = jobs ? jobOrder() : menuOrder();
-        int first = (jobs ? page - normal - 1 : page - 1) * MISSION_SLOTS.length;
+        gui.setItem(PREV_SLOT, createArrow("§e⬅ Anterior Página", page, pages, tipo));
+        gui.setItem(NEXT_SLOT, createArrow("§eSiguiente Página ➔", page, pages, tipo));
+
         for (int i = 0; i < MISSION_SLOTS.length && first + i < order.size(); i++) {
             int missionNum = order.get(first + i);
             Mission mission = missionHandler.getMissions().get(missionNum);
@@ -135,23 +139,28 @@ public class MissionGUI implements Listener {
         player.openInventory(gui);
     }
 
-    private ItemStack createArrow(String name, int page, int pages, boolean jobs) {
+    private ItemStack createArrow(String name, int page, int pages, TipoMision tipo) {
         ItemStack item = new ItemStack(Material.SPECTRAL_ARROW);
         ItemMeta meta = item.getItemMeta();
         meta.setDisplayName(name);
-        meta.setLore(jobs ? List.of(ChatColor.of("#D3D3D3") + "Página " + page + " de " + pages, ChatColor.of("#C8A27C") + "Misiones de trabajo")
-                : List.of(ChatColor.of("#D3D3D3") + "Página " + page + " de " + pages));
+        String section = switch (tipo) {
+            case NORMAL -> "Misiones";
+            case EXTRA -> "Misiones extra";
+            case TRABAJO -> "Misiones de trabajo";
+        };
+        meta.setLore(List.of(ChatColor.of("#D3D3D3") + "Página " + page + " de " + pages, ChatColor.of(tipo.primario) + section));
         meta.setEnchantmentGlintOverride(true);
         meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
         item.setItemMeta(meta);
         return item;
     }
 
-    // Papel con el item model según el estado: bloqueada, pendiente o completada
+    // Papel con el item model según el estado: bloqueada, pendiente o completada. El nombre va con el color de su tipo
     private ItemStack createMissionItem(Mission mission, Player player, MissionData data, int missionNum) {
         ItemStack item = new ItemStack(Material.PAPER);
         ItemMeta meta = item.getItemMeta();
         List<String> lore = new ArrayList<>();
+        TipoMision tipo = missionHandler.tipo(missionNum);
 
         if (!data.isActive()) {
             meta.setDisplayName(ChatColor.of("#A0A0A0") + missionHandler.tag(missionNum) + " ???");
@@ -159,7 +168,7 @@ public class MissionGUI implements Listener {
             meta.setItemModel(NamespacedKey.minecraft("map"));
         } else {
             boolean completed = data.isCompleted();
-            meta.setDisplayName(ChatColor.of(completed ? "#90EE90" : "#FFB6C1") + missionHandler.displayName(missionNum));
+            meta.setDisplayName(ChatColor.of(completed ? "#90EE90" : tipo.secundario) + missionHandler.displayName(missionNum));
             meta.setItemModel(NamespacedKey.minecraft(completed ? "lime_banner" : "guster_banner_pattern"));
 
             for (String line : mission.getDescription().split("\n")) {
@@ -169,10 +178,10 @@ public class MissionGUI implements Listener {
             if (mission instanceof BaseMission base) {
                 lore.add(ChatColor.of("#F0E68C") + "Dificultad: " + base.getDifficulty().colored());
                 lore.add(ChatColor.of("#F0E68C") + "Recompensa: " + ChatColor.of("#FFD700") + base.getCoins() + " DinoCoins "
-                        + ChatColor.of("#D3D3D3") + "+ objetos");
+                        + ChatColor.of("#D3D3D3") + (tipo == TipoMision.EXTRA ? "directo al monedero" : "+ objetos"));
             }
-            if (mission.getParentMission() > 0) {
-                lore.add(ChatColor.of("#7FD4FF") + "Misión extra");
+            if (tipo == TipoMision.EXTRA) {
+                lore.add(ChatColor.of(tipo.primario) + "Misión extra de la #" + mission.getParentMission());
             }
             if (mission instanceof MisionTrabajo trabajo) {
                 lore.add(ChatColor.of(trabajo.getTrabajo().color()) + trabajo.getTrabajo().icono() + " Misión de trabajo");

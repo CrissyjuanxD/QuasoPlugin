@@ -107,13 +107,14 @@ public class MissionCommands implements CommandExecutor, TabCompleter {
         return false;
     }
 
+    // Acepta 1 (normal), 1ex (la extra de la misión 1) y 170tra (de trabajo); también el número de siempre
     private Integer parseNumber(CommandSender sender, String text) {
-        try {
-            return Integer.parseInt(text);
-        } catch (NumberFormatException e) {
-            sender.sendMessage(ChatColor.RED + "El número de misión debe ser válido.");
+        int number = missionHandler.parse(text);
+        if (number < 0) {
+            sender.sendMessage(ChatColor.RED + "Esa misión no existe. Usa el número (1), la extra con ex (1ex) o la de trabajo con tra (170tra).");
             return null;
         }
+        return number;
     }
 
     // Primero avisa lo que borra; recién con /missions reset confirmar (dentro de 30 segundos) lo hace
@@ -144,12 +145,33 @@ public class MissionCommands implements CommandExecutor, TabCompleter {
 
     private void sendHelpMenu(CommandSender sender) {
         sender.sendMessage(ChatColor.GOLD + "=== Menú de Administración de Misiones ===");
+        sender.sendMessage(ChatColor.GRAY + "Las misiones se escriben 1 (normal), 1ex (la extra de la 1) o 170tra (de trabajo).");
         sender.sendMessage(ChatColor.YELLOW + "/missions activar <número|todas> " + ChatColor.GRAY + "- Activa una misión (con sus extras) o todas.");
         sender.sendMessage(ChatColor.YELLOW + "/missions desactivar <número|todas> " + ChatColor.GRAY + "- Desactiva una misión (con sus extras) o todas.");
         sender.sendMessage(ChatColor.YELLOW + "/missions complete <jugador> <número> " + ChatColor.GRAY + "- Completa forzosamente una misión a un jugador.");
         sender.sendMessage(ChatColor.YELLOW + "/missions remove <jugador> <número> " + ChatColor.GRAY + "- Reinicia la misión a un jugador.");
         sender.sendMessage(ChatColor.YELLOW + "/missions reset " + ChatColor.GRAY + "- Desactiva todo y borra los datos de misiones (pide confirmación).");
         sender.sendMessage(ChatColor.YELLOW + "/missions savedata " + ChatColor.GRAY + "- Guarda los datos de todos a la Base de Datos.");
+    }
+
+    // Las normales (1), sus extras (1ex) y las de trabajo (170tra); las de trabajo no se activan porque siempre lo están
+    private List<String> tokens(boolean withJobs) {
+        List<String> normal = new ArrayList<>();
+        List<String> extras = new ArrayList<>();
+        List<String> jobs = new ArrayList<>();
+        for (int number : missionHandler.getMissions().keySet()) {
+            switch (missionHandler.tipo(number)) {
+                case NORMAL -> normal.add(missionHandler.token(number));
+                case EXTRA -> extras.add(missionHandler.token(number));
+                case TRABAJO -> {
+                    if (withJobs) jobs.add(missionHandler.token(number));
+                }
+            }
+        }
+        extras.sort(java.util.Comparator.comparingInt(token -> Integer.parseInt(token.replace(TipoMision.EXTRA.sufijo, ""))));
+        normal.addAll(extras);
+        normal.addAll(jobs);
+        return normal;
     }
 
     @Override
@@ -163,7 +185,7 @@ public class MissionCommands implements CommandExecutor, TabCompleter {
                 String sub = args[0].toLowerCase();
                 if (sub.equals("activar") || sub.equals("desactivar")) {
                     completions.add("todas");
-                    for (int number : missionHandler.getMissions().keySet()) completions.add(String.valueOf(number));
+                    completions.addAll(tokens(false));
                 } else if (sub.equals("complete") || sub.equals("remove")) {
                     for (Player player : org.bukkit.Bukkit.getOnlinePlayers()) {
                         completions.add(player.getName());
@@ -173,16 +195,13 @@ public class MissionCommands implements CommandExecutor, TabCompleter {
                 }
             } else if (args.length == 3) {
                 String sub = args[0].toLowerCase();
-                if (sub.equals("complete") || sub.equals("remove")) {
-                    for (int number : missionHandler.getMissions().keySet()) completions.add(String.valueOf(number));
-                }
+                if (sub.equals("complete") || sub.equals("remove")) completions.addAll(tokens(true));
             }
         }
 
         if (!args[args.length - 1].isEmpty()) {
             List<String> filtered = new ArrayList<>();
             StringUtil.copyPartialMatches(args[args.length - 1], completions, filtered);
-            Collections.sort(filtered);
             return filtered;
         }
 

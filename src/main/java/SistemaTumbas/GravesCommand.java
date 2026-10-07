@@ -37,22 +37,20 @@ public class GravesCommand implements CommandExecutor, TabCompleter {
 
         switch (args[0].toLowerCase()) {
             case "list":
-                sender.sendMessage("§aTumbas activas en el servidor: " + manager.getGraves().size());
+                sender.sendMessage("§aTumbas activas en el servidor: " + manager.getGraves().size() + " §7(modo " + manager.getModo().name().toLowerCase() + ")");
                 for (Grave g : manager.getGraves()) {
-                    long remaining = g.getExpiryTime() - System.currentTimeMillis();
-                    long mins = (remaining / 1000) / 60;
-                    long secs = (remaining / 1000) % 60;
                     String shortId = "#" + g.getId().toString().substring(0, 4);
-
-                    sender.sendMessage(String.format("§7- %s §8(%s) §7[X:%d Y:%d Z:%d] §c⏱ %02d:%02d",
+                    sender.sendMessage(String.format("§7- %s §8(%s) §7[X:%d Y:%d Z:%d] §c⏱ %s",
                             g.getOwnerName(), shortId,
-                            g.getLocation().getBlockX(), g.getLocation().getBlockY(), g.getLocation().getBlockZ(), mins, secs));
+                            g.getLocation().getBlockX(), g.getLocation().getBlockY(), g.getLocation().getBlockZ(),
+                            ModoTumba.reloj(g.getExpiryTime() - System.currentTimeMillis())));
                 }
                 break;
 
             case "reload":
                 manager.loadConfig();
-                sender.sendMessage("§aConfiguración recargada exitosamente.");
+                sender.sendMessage("§aConfiguración recargada: modo " + manager.getModo().name().toLowerCase()
+                        + (manager.teleportsToGrave() ? ", /muertes tepea." : ", /muertes no tepea."));
                 break;
 
             case "remove":
@@ -60,10 +58,11 @@ public class GravesCommand implements CommandExecutor, TabCompleter {
 
                 if (args.length == 1 && sender instanceof Player player) {
                     Block target = player.getTargetBlockExact(5);
+                    // La tumba está en el bloque de aire de los pies: vale mirarlo o mirar el suelo de abajo
                     if (target != null) {
                         for (Grave g : manager.getGraves()) {
                             if (g.getLocation().getBlockX() == target.getX() &&
-                                    g.getLocation().getBlockY() == target.getY() &&
+                                    (g.getLocation().getBlockY() == target.getY() || g.getLocation().getBlockY() == target.getY() + 1) &&
                                     g.getLocation().getBlockZ() == target.getZ()) {
                                 toRemove = g.getId();
                                 break;

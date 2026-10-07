@@ -206,7 +206,7 @@ commands:
     permission-message: No tienes permiso para usar este comando.
   tienda:
     description: Carga el catálogo de la tienda por secciones (días 1, 20, 30, 40, 50 y 100)
-    usage: /tienda <dia|seccion|crear|asignar|precios|info>
+    usage: /tienda <dia|seccion|crear|asignar|precios|precio|ajuste|soltar|nueva|info>
     permission: quasoplugin.tienda.admin
     permission-message: No tienes permiso para usar este comando.
   removeshop:
@@ -259,6 +259,9 @@ commands:
   tumba:
     description: Ver la lista de tus tumbas activas
     usage: /tumba
+  muertes:
+    description: Lista tus tumbas con el mundo, las coordenadas y cuánto hace que moriste
+    usage: /muertes [#id]
   tumbas:
     description: Comando de administrador de tumbas
     usage: /tumbas <list|remove|place|reload>

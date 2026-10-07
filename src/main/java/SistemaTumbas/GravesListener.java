@@ -32,12 +32,12 @@ public class GravesListener implements Listener {
             event.getDrops().clear();
 
             manager.createGrave(player, dropsToSave);
-            player.sendMessage(String.format("§cHas muerto. Se ha creado una tumba con tus objetos en: X:%d Y:%d Z:%d",
-                    player.getLocation().getBlockX(), player.getLocation().getBlockY(), player.getLocation().getBlockZ()));
+            player.sendMessage(TumbaMessages.error("Has muerto. Tus cosas quedaron en una tumba en X:" + player.getLocation().getBlockX()
+                    + " Y:" + player.getLocation().getBlockY() + " Z:" + player.getLocation().getBlockZ() + ". " + TumbaMessages.accent("/muertes")));
         }
     }
 
-    // Click derecho a la tumba abre sus items; solo el dueño o un admin, salvo que anyone-can-open esté en true
+    // Click derecho a la tumba abre sus items: el dueño y los admins siempre, los demás según el modo de las tumbas
     @EventHandler
     public void onInteractEntity(PlayerInteractEntityEvent event) {
         if (event.getRightClicked() instanceof org.bukkit.entity.Interaction interaction) {
@@ -52,11 +52,11 @@ public class GravesListener implements Listener {
                     if (grave != null) {
                         Player player = event.getPlayer();
 
-                        if (!player.hasPermission("tumbas.admin") && !manager.canAnyoneOpen()) {
-                            if (!grave.getOwner().equals(player.getUniqueId())) {
-                                player.sendMessage("§cEsta tumba pertenece a " + grave.getOwnerName() + " y no puedes abrirla.");
-                                return;
-                            }
+                        if (!manager.canOpen(grave, player)) {
+                            long untilOpen = manager.millisUntilOpen(grave);
+                            player.sendMessage(TumbaMessages.error("Esta tumba es de " + grave.getOwnerName()
+                                    + (untilOpen > 0 ? ". Se abre para todos en " + ModoTumba.reloj(untilOpen) + "." : " y solo la puede abrir su dueño.")));
+                            return;
                         }
 
                         player.openInventory(grave.getInventory());

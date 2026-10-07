@@ -186,6 +186,25 @@ public class DinoCoinsManager implements Listener {
         });
     }
 
+    // Paga directo a los monederos; lo que no entra (o si no tiene monedero) va al inventario o al suelo
+    public void deposit(Player player, int amount) {
+        if (amount <= 0) return;
+        changeAsyncMoved(player, amount, moved -> {
+            if (moved < amount && player.isOnline()) giveLoose(player, amount - moved);
+        });
+    }
+
+    public static void giveLoose(Player player, int amount) {
+        while (amount > 0) {
+            ItemStack coins = EconomyItems.createVithiumCoin();
+            coins.setAmount(Math.min(64, amount));
+            amount -= coins.getAmount();
+            for (ItemStack left : player.getInventory().addItem(coins).values()) {
+                player.getWorld().dropItemNaturally(player.getLocation(), left);
+            }
+        }
+    }
+
     // /dinocoins get sin consultar MySQL en el hilo del server
     public void totalsAsync(Player player, java.util.function.Consumer<int[]> done) {
         UUID playerId = player.getUniqueId();

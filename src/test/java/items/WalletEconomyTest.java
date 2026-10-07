@@ -310,6 +310,30 @@ class WalletEconomyTest {
     }
 
     @Test
+    void aDatabaseErrorNeverSavesAWalletAsEmpty() throws Exception {
+        when(database.getPlayerBackpacks(playerId)).thenReturn(List.of(new DatabaseManager.BackpackInfo("stored", "Monedero", 6, "")));
+        when(database.loadBackpackContentsStrict("stored")).thenThrow(new java.sql.SQLException("sin conexión"));
+        when(plugin.getLogger()).thenReturn(java.util.logging.Logger.getLogger("WalletTest"));
+        try (MockedStatic<Bukkit> bukkit = mockStatic(Bukkit.class)) {
+            DinoCoinsManager manager = manager(bukkit);
+            assertFalse(manager.addPhysicalDinoCoins(player, 10));
+            assertFalse(manager.removePhysicalDinoCoins(player, 10));
+            verify(database, never()).saveBackpack(eq("stored"), any(), any(), any(), anyInt(), any());
+        }
+    }
+
+    @Test
+    void carriedWalletsChangeOwnerSoAGiftStopsCountingForTheOldOwner() {
+        ItemStack wallet = wallet("regalado");
+        when(playerInventory.getContents()).thenReturn(new ItemStack[]{wallet});
+        try (MockedStatic<Bukkit> bukkit = mockStatic(Bukkit.class)) {
+            DinoCoinsManager manager = manager(bukkit);
+            manager.updatePlayerTotalAsync(player);
+            verify(database).claimWallets(eq(playerId), any(), eq(java.util.Set.of("regalado")), eq(6));
+        }
+    }
+
+    @Test
     void respectsWalletCapacityAndNeverSpendsDinoFichasAsCoins() {
         when(database.getPlayerBackpacks(playerId)).thenReturn(List.of(new DatabaseManager.BackpackInfo("wallet", "Monedero", 6, "")));
         ItemStack[] contents = new ItemStack[18];

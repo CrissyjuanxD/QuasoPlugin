@@ -255,6 +255,30 @@ class BloodMoonActuatorTest {
             assertFalse(actuator.StartBloodMoon());
         }
     }
+    @Test void reloadingDuringTheNightDoesNotRepeatRewardsOrWarnings() {
+        when(config.GetPreBloodMoonCommands()).thenReturn(new String[]{"say inicio;s"});
+        when(config.GetPostBloodMoonCommands()).thenReturn(new String[]{"say fin;s"});
+        try (var singleton = mockStatic(BloodMoon.class)) {
+            singleton.when(BloodMoon::GetInstance).thenReturn(manager);
+            assertTrue(actuator.StartBloodMoon());
+            actuator.reload();
+            assertTrue(actuator.isInProgress());
+            bukkit.verify(() -> Bukkit.dispatchCommand(any(), eq("say inicio")), times(1));
+            bukkit.verify(() -> Bukkit.dispatchCommand(any(), eq("say fin")), never());
+            actuator.StopBloodMoon();
+            bukkit.verify(() -> Bukkit.dispatchCommand(any(), eq("say fin")), times(1));
+        }
+    }
+    @Test void daylightFromTimeSetOrSleepingEndsTheEvent() {
+        try (var singleton = mockStatic(BloodMoon.class)) {
+            singleton.when(BloodMoon::GetInstance).thenReturn(manager);
+            assertTrue(actuator.StartBloodMoon());
+            when(world.getTime()).thenReturn(1000L);
+            actuator.checkNight();
+            assertFalse(actuator.isInProgress());
+            verify(world, never()).setTime(anyLong());
+        }
+    }
     @Test void fixedNightDoesNotEndTheEventOrResetItsDurationWhenReloaded() {
         try (var singleton = mockStatic(BloodMoon.class)) {
             singleton.when(BloodMoon::GetInstance).thenReturn(manager);

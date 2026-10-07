@@ -46,16 +46,29 @@ public final class BloodMoonCommands implements TabExecutor {
             case "show" -> {
                 if (config.GetPermanentBloodMoonConfig()) LocaleReader.CommandLocale("WorldIsPermanentBloodMoon", null, null, sender);
                 else if (actuator.isInProgress()) LocaleReader.CommandLocale("BloodMoonRightNow", null, null, sender);
-                else LocaleReader.CommandLocale("DaysBeforeBloodMoon", new String[]{"$d"}, new String[]{String.valueOf(actuator.getCycle().remaining(world.getFullTime() / 24000))}, sender);
+                else {
+                    long nights = actuator.getCycle().nightsUntil(world.getFullTime() / 24000);
+                    if (nights == 0) LocaleReader.CommandLocale("BloodMoonTonight", null, null, sender);
+                    else if (nights == 1) LocaleReader.CommandLocale("BloodMoonTomorrow", null, null, sender);
+                    else LocaleReader.CommandLocale("DaysBeforeBloodMoon", new String[]{"$d"}, new String[]{String.valueOf(nights)}, sender);
+                }
             }
             case "start" -> {
                 if (actuator.isInProgress()) LocaleReader.CommandLocale("BloodMoonRightNow", null, null, sender);
-                else { world.setTime(BloodMoonCycle.NIGHT_START); actuator.StartBloodMoon(); reply(sender, "BloodMoon iniciada en " + world.getName() + "."); }
+                else {
+                    // Lleva el reloj al anochecer del mismo día (hacia atrás si ya amaneció) sin sumar un día
+                    long time = world.getTime();
+                    if (!BloodMoonCycle.isNight(time)) world.setFullTime(world.getFullTime() - time + BloodMoonCycle.NIGHT_START);
+                    actuator.StartBloodMoon();
+                    reply(sender, "BloodMoon iniciada en " + world.getName() + ".");
+                }
             }
             case "stop" -> {
                 if (config.GetPermanentBloodMoonConfig()) LocaleReader.CommandLocale("CannotStopBloodMoon", null, null, sender);
+                else if (!actuator.isInProgress()) reply(sender, "No hay una BloodMoon activa en " + world.getName() + ".");
                 else {
-                    actuator.StopBloodMoon(); world.setTime(BloodMoonCycle.NIGHT_END);
+                    actuator.StopBloodMoon();
+                    BloodMoonActuator.toDawn(world);
                     manager.remember(actuator);
                     reply(sender, "BloodMoon detenida en " + world.getName() + ".");
                 }

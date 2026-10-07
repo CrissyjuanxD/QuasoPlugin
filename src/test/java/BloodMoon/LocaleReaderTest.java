@@ -48,6 +48,15 @@ class LocaleReaderTest {
         assertNotNull(YamlConfiguration.loadConfiguration(messages.toFile()).getString("BloodMoonWarningBody"));
     }
 
+    @Test void aTypoDoesNotWipeTheMessagesFile() throws Exception {
+        Files.createDirectories(messages.getParent());
+        String broken = "BloodMoonTonight: 'Hoy hay BloodMoon\nDaysBeforeBloodMoon: [sin cerrar\n";
+        Files.writeString(messages, broken);
+        LocaleReader reader = new LocaleReader(plugin);
+        assertEquals(broken, Files.readString(messages), "El archivo con error se deja como estaba para corregirlo");
+        assertFalse(reader.GetLocaleString("BloodMoonTonight").contains("No se encontró el mensaje"));
+    }
+
     @Test void bloodMoonActionBarsUseTheSharedQueueAndKeepTheirSymbolAndColors() {
         BloodMoon bloodMoon = mock(BloodMoon.class);
         when(bloodMoon.getPlugin()).thenReturn(plugin);

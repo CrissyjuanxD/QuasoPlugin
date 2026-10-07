@@ -170,7 +170,7 @@ public class MobCapManager {
         }
 
         for (World world : Bukkit.getWorlds()) {
-            if (!managed(world)) continue;
+            if (!managed(world) || inBloodMoon(world)) continue;
             Integer originalLimit = originalLimits.get(world.getName());
             if (originalLimit != null) {
                 world.setSpawnLimit(SpawnCategory.MONSTER, originalLimit);
@@ -188,7 +188,7 @@ public class MobCapManager {
         int effectiveMobCap = getCurrentEffectiveMobCap();
 
         for (World world : Bukkit.getWorlds()) {
-            if (!managed(world)) continue;
+            if (!managed(world) || inBloodMoon(world)) continue;
             try {
                 Integer currentLimit = currentLimits.get(world.getName());
                 if (currentLimit == null || !currentLimit.equals(effectiveMobCap)) {
@@ -208,6 +208,26 @@ public class MobCapManager {
     // La Warden Cave tiene su propio límite (wardencave.limite_mobs en config.yml)
     private static boolean managed(World world) {
         return !world.getName().equals(QuasoPlugin.WORLD_NAME);
+    }
+
+    // Mientras dura una BloodMoon el límite es el de la BloodMoon: los cambios se aplican cuando termina
+    private static boolean inBloodMoon(World world) {
+        BloodMoon.BloodMoon bloodMoon = BloodMoon.BloodMoon.GetInstance();
+        return bloodMoon != null && bloodMoon.isActive(world);
+    }
+
+    public static MobCapManager current() {
+        return instance;
+    }
+
+    // La BloodMoon lo llama al terminar: devuelve el límite que tiene que tener ese mundo ahora (no el de hace horas).
+    // Devuelve false si el mundo no lo maneja el MobCap
+    public synchronized boolean reapply(World world) {
+        if (!isInitialized || !managed(world)) return false;
+        int limit = enabled ? getCurrentEffectiveMobCap() : originalLimits.getOrDefault(world.getName(), world.getSpawnLimit(SpawnCategory.MONSTER));
+        world.setSpawnLimit(SpawnCategory.MONSTER, limit);
+        currentLimits.put(world.getName(), limit);
+        return true;
     }
 
     public int getCurrentEffectiveMobCap() {

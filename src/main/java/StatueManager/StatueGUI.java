@@ -138,7 +138,7 @@ public class StatueGUI implements Listener {
 
                 if (e.getClick().isRightClick()) {
                     p.closeInventory();
-                    p.sendMessage(ChatColor.GREEN + "Escribe el NOMBRE del efecto en el chat (ej: SATURATION, ABSORPTION, LUCK):");
+                    p.sendMessage(ChatColor.GREEN + "Escribe el NOMBRE del efecto en el chat (ej: SATURATION, ABSORPTION, HASTE):");
                     chatInputMode.put(p.getUniqueId(), "EFF_NAME");
                 } else {
                     PotionEffectType curEff = data.getEffectType();
@@ -226,12 +226,14 @@ public class StatueGUI implements Listener {
                 }
                 if (mode.equals("EFF_NAME")) {
                     PotionEffectType type = PotionEffectType.getByName(msg.toUpperCase());
-                    if (type != null) {
+                    if (EffectListener.ReservedEffects.isReserved(type)) {
+                        p.sendMessage(ChatColor.RED + "Ese efecto lo usa el plugin para Keep Inventory, Inmunidad o Corrupture: elige otro.");
+                    } else if (type != null) {
                         data.setEffect(type, data.getEffectAmplifier());
                         p.sendMessage(ChatColor.GREEN + "Efecto establecido: " + type.getName());
                         refreshLiveStatues(item);
                     } else {
-                        p.sendMessage(ChatColor.RED + "Efecto no encontrado. Usa nombres en inglés (ej: BLINDNESS, LUCK).");
+                        p.sendMessage(ChatColor.RED + "Efecto no encontrado. Usa nombres en inglés (ej: BLINDNESS, HASTE).");
                     }
                 }
             } catch (NumberFormatException ex) {

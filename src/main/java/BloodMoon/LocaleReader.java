@@ -5,6 +5,7 @@ import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -35,15 +36,27 @@ public final class LocaleReader {
         RefreshLocales();
     }
 
+    // Si mensajes.yml tiene un error no se pisa: se siguen usando los mensajes de antes (o los de fábrica al arrancar)
     public void RefreshLocales() {
-        locales = YamlConfiguration.loadConfiguration(file);
+        YamlConfiguration loaded = new YamlConfiguration();
+        boolean broken = false;
+        if (file.isFile()) {
+            try {
+                loaded.load(file);
+            } catch (IOException | InvalidConfigurationException ex) {
+                plugin.getLogger().severe("bloodmoon/mensajes.yml tiene un error y no se cargó: " + ex.getMessage());
+                if (locales != null) return;
+                broken = true;
+            }
+        }
+        locales = loaded;
         try (var stream = plugin.getResource("bloodmoon-defaults/mensajes.yml")) {
             if (stream == null) throw new IOException("Faltan los mensajes de BloodMoon");
             var defaults = YamlConfiguration.loadConfiguration(new InputStreamReader(stream, StandardCharsets.UTF_8));
             migratePreviousDefaults(defaults);
             locales.setDefaults(defaults);
             locales.options().copyDefaults(true);
-            locales.save(file);
+            if (!broken) locales.save(file);
         } catch (IOException ex) {
             plugin.getLogger().warning("No se pudieron guardar los mensajes de BloodMoon: " + ex.getMessage());
         }

@@ -362,9 +362,10 @@ public class EconomyItemsFunctions implements Listener {
                     ? "⚠ El Monedero solo puede guardar DinoCoins y DinoFichas."
                     : "⚠ Las DinoCoins y DinoFichas solo se pueden guardar en un Monedero."));
         }
-        // Las bundles vanilla no deben servir como otro monedero.
-        if (event.getClick() == ClickType.RIGHT && ((isCurrency(cursor) && isBundle(current))
-                || (isCurrency(current) && isBundle(cursor)))) {
+        // Las bundles vanilla no deben servir como otro monedero: desde 1.21.2 se llenan con clic izquierdo o derecho
+        // (PLACE_ALL_INTO_BUNDLE y compañía), así que se corta cualquier clic que junte monedas y una bundle
+        if ((isCurrency(cursor) && isBundle(current)) || (isCurrency(current) && isBundle(cursor))
+                || (event.getAction().name().contains("BUNDLE") && (isCurrency(cursor) || isCurrency(current)))) {
             event.setCancelled(true);
         }
     }
@@ -372,11 +373,18 @@ public class EconomyItemsFunctions implements Listener {
     private boolean isEmpty(ItemStack item) { return item == null || item.getType().isAir(); }
     private boolean isBundle(ItemStack item) { return item != null && item.getItemMeta() instanceof BundleMeta; }
 
+    // Una bundle que ya tiene monedas adentro cuenta como monedas
+    private static boolean holdsCurrency(ItemStack item) {
+        if (isCurrency(item)) return true;
+        return item != null && item.getItemMeta() instanceof BundleMeta bundle
+                && bundle.getItems().stream().anyMatch(EconomyItemsFunctions::isCurrency);
+    }
+
     private boolean canStore(Inventory top, int slot, ItemStack item) {
         if (top.getHolder() instanceof BackpackHolder holder) {
-            return holder.isWallet() ? isCurrency(item) : !isCurrency(item) && !isMochila(item);
+            return holder.isWallet() ? isCurrency(item) : !holdsCurrency(item) && !isMochila(item);
         }
-        if (!isCurrency(item)) return true;
+        if (!holdsCurrency(item)) return true;
         if (top.getHolder() instanceof CasinoInventoryHolder casino) {
             return slot == casino.getTokenSlot() && isDinoFicha(item);
         }
@@ -398,12 +406,12 @@ public class EconomyItemsFunctions implements Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onInventoryMoveItem(InventoryMoveItemEvent event) {
-        if (isCurrency(event.getItem())) event.setCancelled(true);
+        if (holdsCurrency(event.getItem())) event.setCancelled(true);
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onInventoryPickupItem(InventoryPickupItemEvent event) {
-        if (isCurrency(event.getItem().getItemStack())) event.setCancelled(true);
+        if (holdsCurrency(event.getItem().getItemStack())) event.setCancelled(true);
     }
 
     private void handleAdminGuiClick(InventoryClickEvent event, Player player, ItemStack current) {
@@ -687,6 +695,13 @@ public class EconomyItemsFunctions implements Listener {
         Inventory open = openBackpacks.get(uuid);
         ItemStack[] contents = open != null ? open.getContents() : mochilasCache.get(uuid);
         if (contents == null) contents = dbManager.loadBackpackContents(uuid);
+        return contents == null ? null : copyContents(contents);
+    }
+
+    // Solo lo que está en memoria (abierta o en caché), sin ir a la base de datos
+    public ItemStack[] getLoadedBackpackContents(String uuid) {
+        Inventory open = openBackpacks.get(uuid);
+        ItemStack[] contents = open != null ? open.getContents() : mochilasCache.get(uuid);
         return contents == null ? null : copyContents(contents);
     }
 

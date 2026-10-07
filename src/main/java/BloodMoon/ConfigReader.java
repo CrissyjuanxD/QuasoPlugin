@@ -1,6 +1,7 @@
 package BloodMoon;
 
 import org.bukkit.World;
+import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -31,8 +32,23 @@ public final class ConfigReader {
         RefreshConfigs();
     }
 
+    // Si el archivo tiene un error no se pisa: al recargar se sigue con lo que había y al arrancar ese mundo queda
+    // sin BloodMoon hasta que se arregle
     public void RefreshConfigs() {
-        config = YamlConfiguration.loadConfiguration(file);
+        YamlConfiguration loaded = new YamlConfiguration();
+        if (file.isFile()) {
+            try {
+                loaded.load(file);
+            } catch (IOException | InvalidConfigurationException ex) {
+                plugin.getLogger().severe("bloodmoon/" + file.getParentFile().getName() + "/config.yml tiene un error y no se cargó: "
+                        + ex.getMessage());
+                if (config != null) return;
+                config = defaults();
+                config.set("IsBlacklisted", true);
+                return;
+            }
+        }
+        config = loaded;
         try (var stream = plugin.getResource("bloodmoon-defaults/config.yml")) {
             if (stream == null) throw new IOException("Falta bloodmoon-defaults/config.yml");
             config.setDefaults(YamlConfiguration.loadConfiguration(new InputStreamReader(stream, StandardCharsets.UTF_8)));
@@ -47,6 +63,15 @@ public final class ConfigReader {
         } catch (IOException ex) {
             plugin.getLogger().warning("No se pudo guardar BloodMoon: " + ex.getMessage());
         }
+    }
+
+    private YamlConfiguration defaults() {
+        YamlConfiguration fallback = new YamlConfiguration();
+        try (var stream = plugin.getResource("bloodmoon-defaults/config.yml")) {
+            if (stream != null) fallback = YamlConfiguration.loadConfiguration(new InputStreamReader(stream, StandardCharsets.UTF_8));
+        } catch (IOException ignored) {
+        }
+        return fallback;
     }
 
     public String[] GetMobEffectConfig(String mob) {

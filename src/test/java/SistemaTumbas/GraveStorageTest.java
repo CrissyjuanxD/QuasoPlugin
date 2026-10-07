@@ -18,6 +18,18 @@ import static org.mockito.Mockito.*;
 class GraveStorageTest {
     @TempDir Path directory;
 
+    @Test void aFileBiggerThanThreeMegabytesStillLoads() throws Exception {
+        Path file = directory.resolve("tumbas_data.yml");
+        StringBuilder yaml = new StringBuilder("graves:\n");
+        String padding = "x".repeat(1000);
+        for (int i = 0; i < 4000; i++) {
+            yaml.append("  t").append(i).append(":\n    owner: '").append(padding).append("'\n");
+        }
+        Files.writeString(file, yaml);
+        assertTrue(Files.size(file) > 3 * 1024 * 1024);
+        assertEquals(4000, new GraveStorage(file.toFile()).records().size());
+    }
+
     @Test void unknownWorldRecordsKeepTheirItemsAndGetAnOriginalFileBackup() throws Exception {
         Path file = directory.resolve("tumbas_data.yml");
         String original = """

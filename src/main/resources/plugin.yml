@@ -96,26 +96,6 @@ commands:
     usage: /giveqp <item> [cantidad] [jugador]
     permission: viciont_hardcore3.command.givevct
     permission-message: No tienes permiso para usar este comando.
-  addnightmare:
-    description: Añade el evento Nightmare a un jugador o a todos.
-    usage: /addnightmare <player|@a>
-    permission: viciont_hardcore3.command.addnightmare
-    permission-message: No tienes permiso para usar este comando.
-  removenightmare:
-    description: Remueve el evento Nightmare a un jugador o a todos.
-    usage: /removenightmare <player|@a>
-    permission: viciont_hardcore3.command.removenightmare
-    permission-message: No tienes permiso para usar este comando.
-  resetnightmarecooldown:
-    description: Resetea el cooldown del evento Nightmare a un jugador o a todos.
-    usage: /resetnightmarecooldown <player|@a>
-    permission: viciont_hardcore3.command.resetnightmarecooldown
-    permission-message: No tienes permiso para usar este comando.
-  levelnightmare:
-    description: Ajusta el nivel de la pesadilla
-    usage: /levelnightmare <jugador|@a> <Nvl1/Nvl2/Nvl3>
-    permission: viciont_hardcore3.command.levelnightmare
-    permission-message: No tienes permiso para usar este comando.
   missions:
     description: Comando administrativo para misiones.
     usage: /missions

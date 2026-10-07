@@ -83,7 +83,6 @@ public class QuasoPlugin extends JavaPlugin implements Listener {
     private static QuasoPlugin instance;
 
     private ChangesHandler changesHandler;
-    private NightmareMechanic nightmareMechanic;
 
     private DatabaseManager databaseManager;
     private TeamsHandler teamsHandler;
@@ -240,12 +239,6 @@ public class QuasoPlugin extends JavaPlugin implements Listener {
 
         if (economyItemsFunctions != null) economyItemsFunctions.shutdown();
         if (dinoCoinsManager != null) dinoCoinsManager.shutdown();
-
-        if (nightmareMechanic != null) {
-            nightmareMechanic.onDisableNightmare();
-        } else {
-            Bukkit.getLogger().severe("nightmareMechanic is null, cannot disable nightmare.");
-        }
 
         if (config != null) {
             MobCapManager.getInstance(this, config).shutdown();
@@ -472,8 +465,6 @@ public class QuasoPlugin extends JavaPlugin implements Listener {
     }
 
     private void initGameplaySystem() {
-        this.nightmareMechanic = new NightmareMechanic(this, tiempoCommand, successNotif);
-
         this.effectManager = new CustomEffectManager();
 
         CorruptureEffect corruptureEffect = new CorruptureEffect(this);
@@ -492,12 +483,6 @@ public class QuasoPlugin extends JavaPlugin implements Listener {
 
         this.effectPreventionListener = new EffectPreventionListener();
         getServer().getPluginManager().registerEvents(effectPreventionListener, this);
-
-        NightmareCommand nightmareCommand = new NightmareCommand(this, nightmareMechanic);
-        Objects.requireNonNull(this.getCommand("addnightmare")).setExecutor(nightmareCommand);
-        Objects.requireNonNull(this.getCommand("removenightmare")).setExecutor(nightmareCommand);
-        Objects.requireNonNull(this.getCommand("resetnightmarecooldown")).setExecutor(nightmareCommand);
-        Objects.requireNonNull(this.getCommand("levelnightmare")).setExecutor(nightmareCommand);
 
         chatBubbleManager = new ChatBubbleManager(this);
 

@@ -16,6 +16,8 @@ public final class BloodMoonCycle {
 
     public long nextNight() { return nextNight; }
     public long remaining(long day) { return Math.max(1, nextNight - day + 1); }
+    // Noches que faltan: 0 = esta noche, 1 = mañana (lo mismo para el aviso y para /bloodmoon show)
+    public long nightsUntil(long day) { return Math.max(0, nextNight - day); }
     public static boolean isNight(long time) { return time >= NIGHT_START && time < NIGHT_END; }
     public boolean isDue(long day, long time) { return day >= nextNight && isNight(time); }
     public boolean shouldWarn(long day, long time) {

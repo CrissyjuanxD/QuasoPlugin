@@ -58,15 +58,16 @@ public class DinoCoinsCommand implements CommandExecutor, TabCompleter {
                     return true;
                 }
 
-                if (subCommand.equals("add")) {
-                    boolean success = dinocoinsManager.addPhysicalDinoCoins(target, amount);
-                    if (success) sender.sendMessage("§aSe añadieron " + amount + " DinoCoins a los monederos de " + target.getName());
-                    else sender.sendMessage("§eSe añadieron algunos DinoCoins, pero el/los monedero(s) se llenaron antes de terminar.");
-                } else {
-                    boolean success = dinocoinsManager.removePhysicalDinoCoins(target, amount);
-                    if (success) sender.sendMessage("§aSe removieron " + amount + " DinoCoins de los monederos de " + target.getName());
-                    else sender.sendMessage("§eSe retiraron las DinoCoins disponibles, pero el jugador no tenía suficientes para completar la cantidad.");
-                }
+                int delta = subCommand.equals("add") ? amount : -amount;
+                dinocoinsManager.changeAsync(target, delta, success -> {
+                    if (subCommand.equals("add")) {
+                        if (success) sender.sendMessage("§aSe añadieron " + amount + " DinoCoins a los monederos de " + target.getName());
+                        else sender.sendMessage("§eSe añadieron algunos DinoCoins, pero el/los monedero(s) se llenaron antes de terminar.");
+                    } else {
+                        if (success) sender.sendMessage("§aSe removieron " + amount + " DinoCoins de los monederos de " + target.getName());
+                        else sender.sendMessage("§eSe retiraron las DinoCoins disponibles, pero el jugador no tenía suficientes para completar la cantidad.");
+                    }
+                });
                 break;
 
             case "get":
@@ -76,9 +77,8 @@ public class DinoCoinsCommand implements CommandExecutor, TabCompleter {
                 }
                 Player getTarget = Bukkit.getPlayer(args[1]);
                 if (getTarget != null) {
-                    int total = dinocoinsManager.calculatePhysicalDinoCoins(getTarget);
-                    int tokens = dinocoinsManager.calculatePhysicalDinoFichas(getTarget);
-                    sender.sendMessage("§a" + getTarget.getName() + " tiene " + total + " DinoCoins y " + tokens + " DinoFichas en sus monederos.");
+                    dinocoinsManager.totalsAsync(getTarget, totals -> sender.sendMessage("§a" + getTarget.getName() + " tiene "
+                            + totals[0] + " DinoCoins y " + totals[1] + " DinoFichas en sus monederos."));
                 } else {
                     sender.sendMessage("§cJugador no encontrado u offline.");
                 }

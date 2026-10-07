@@ -73,14 +73,16 @@ public final class BloodMoonActuator implements Listener {
     public void checkNight() {
         if (closed) return;
         if (active) {
-            if (getRemainingTicks() == 0) finish(true);
+            // También termina si se hizo de día por /time o al dormir: si no, seguiría con sol y el amanecer forzado
+            // saltaría un día entero
+            if (getRemainingTicks() == 0 || world.getTime() < BloodMoonCycle.NIGHT_START) finish(true);
             return;
         }
         ConfigReader reader = config();
         long day = world.getFullTime() / 24000, time = world.getTime();
         cycle.observe(day, reader.GetIntervalConfig());
         if (cycle.shouldWarn(day, time)) {
-            long nights = reader.GetPermanentBloodMoonConfig() ? 0 : cycle.nextNight() - day;
+            long nights = reader.GetPermanentBloodMoonConfig() ? 0 : cycle.nightsUntil(day);
             if (nights <= 0) LocaleReader.MessageAllLocale("BloodMoonTonight", null, null, world);
             else if (nights == 1) LocaleReader.MessageAllLocale("BloodMoonTomorrow", null, null, world);
             else LocaleReader.MessageAllLocale("DaysBeforeBloodMoon", new String[]{"$d"}, new String[]{String.valueOf(nights)}, world);
@@ -92,10 +94,12 @@ public final class BloodMoonActuator implements Listener {
         if (active || closed || !BloodMoonCycle.isNight(world.getTime())) return false;
         long day = world.getFullTime() / 24000;
         cycle.started(day, config().GetIntervalConfig());
-        return resume(BloodMoonCycle.NIGHT_END - world.getTime(), day);
+        return resume(BloodMoonCycle.NIGHT_END - world.getTime(), day, true);
     }
 
-    boolean resume(long remaining, long day) {
+    // starting = una noche nueva (comandos de inicio y avisos). Al recargar o al reiniciar el server la misma noche
+    // sigue sin volver a dar los premios ni a repetir el aviso
+    boolean resume(long remaining, long day, boolean starting) {
         if (active || closed || remaining <= 0) return false;
         active = true;
         generation++;
@@ -106,7 +110,7 @@ public final class BloodMoonActuator implements Listener {
         if (controlsDayClock) world.setFullTime(activeDay * 24000 + BloodMoonCycle.FROZEN_TIME);
         originalSpawnLimit = world.getSpawnLimit(SpawnCategory.MONSTER);
         controlsWeather = config().GetThunderingConfig();
-        runCommands(config().GetPreBloodMoonCommands());
+        if (starting) runCommands(config().GetPreBloodMoonCommands());
         if (!active || closed) return false;
         world.setSpawnLimit(SpawnCategory.MONSTER, config().GetSpawnRateConfig());
         boolean redSky = manager.syncSky(world, true);
@@ -114,7 +118,7 @@ public final class BloodMoonActuator implements Listener {
         nightBar = Bukkit.createBossBar(manager.getLocaleReader().GetLocaleString("BloodMoonTitleBar"), BarColor.RED, BarStyle.SEGMENTED_12, flags);
         for (Player player : world.getPlayers()) nightBar.addPlayer(player);
         repeat(this::updateNightBar, 0, 20);
-        for (Player player : world.getPlayers()) warning(player);
+        if (starting) for (Player player : world.getPlayers()) warning(player);
         ambient();
         scheduleHorde();
         manager.remember(this);
@@ -122,12 +126,22 @@ public final class BloodMoonActuator implements Listener {
     }
 
     public void StopBloodMoon() { if (!config().GetPermanentBloodMoonConfig()) finish(true); }
-    private void finish(boolean notify) {
+
+    // Lleva el reloj al amanecer de esta misma noche. World.setTime solo avanza, así que fuera de la noche (por
+    // ejemplo ya de día) no se toca: si no, saltaría al amanecer del día siguiente
+    static void toDawn(World world) {
+        long time = world.getTime();
+        if (BloodMoonCycle.isNight(time)) world.setFullTime(world.getFullTime() - time + BloodMoonCycle.NIGHT_END);
+    }
+
+    // ended = la BloodMoon terminó de verdad (comandos de fin, avisos y amanecer). Sin ended es una pausa por recarga
+    // o apagado: no repite nada y conserva la lista de mobs de spawner sin recompensa
+    private void finish(boolean ended) {
         if (!active) return;
         active = false;
         if (controlsDayClock) {
             // Termina al amanecer; evita volver a iniciar esa misma noche en modo permanente.
-            if (notify) world.setTime(BloodMoonCycle.NIGHT_END);
+            if (ended) toDawn(world);
             manager.setDayClockPaused(world, false);
             controlsDayClock = false;
         }
@@ -136,8 +150,10 @@ public final class BloodMoonActuator implements Listener {
         for (BukkitTask task : tasks) task.cancel();
         tasks.clear();
         if (nightBar != null) { nightBar.removeAll(); nightBar = null; }
-        blacklisted.clear();
-        world.setSpawnLimit(SpawnCategory.MONSTER, originalSpawnLimit);
+        if (ended) blacklisted.clear();
+        // El MobCap puede haber cambiado mientras duraba: se aplica el de ahora y no el que había al empezar
+        mobcap.MobCapManager mobCap = mobcap.MobCapManager.current();
+        if (mobCap == null || !mobCap.reapply(world)) world.setSpawnLimit(SpawnCategory.MONSTER, originalSpawnLimit);
         if (controlsWeather) {
             // Una tormenta guardada al reiniciar puede ser la de la propia BloodMoon.
             // Al terminar su control del clima, la noche siempre deja el cielo despejado.
@@ -148,8 +164,8 @@ public final class BloodMoonActuator implements Listener {
             world.setClearWeatherDuration(CLEAR_WEATHER_TICKS);
             controlsWeather = false;
         }
-        runCommands(config().GetPostBloodMoonCommands());
-        if (notify) {
+        if (ended) runCommands(config().GetPostBloodMoonCommands());
+        if (ended) {
             LocaleReader.MessageAllLocale("BloodMoonEndingMessage", null, null, world);
             for (Player player : world.getPlayers()) {
                 LocaleReader.actionBar(player, manager.getLocaleReader().GetLocaleString("BloodMoonEndActionBar"));
@@ -164,7 +180,7 @@ public final class BloodMoonActuator implements Listener {
             long remaining = getRemainingTicks();
             long day = activeDay;
             finish(false);
-            resume(remaining, day);
+            resume(remaining, day, false);
         } else if (config().GetPermanentBloodMoonConfig()) StartBloodMoon();
         manager.remember(this);
     }

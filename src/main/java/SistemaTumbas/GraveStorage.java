@@ -18,7 +18,7 @@ import java.util.Map;
 /** Lee primero los datos puros: Bukkit no debe resolver mundos antes de que existan. */
 final class GraveStorage {
     private final File file;
-    private final Yaml yaml = new Yaml(new SafeConstructor(new LoaderOptions()));
+    private final Yaml yaml = new Yaml(new SafeConstructor(loaderOptions()));
     private final Map<String, Object> root;
     private final Map<String, Object> records;
     private boolean legacyBackupNeeded;
@@ -35,6 +35,14 @@ final class GraveStorage {
         root.put("graves", records);
         legacyBackupNeeded = records.values().stream().anyMatch(value -> value instanceof Map<?, ?> record
                 && record.get("location") instanceof Map<?, ?> location && location.containsKey("=="));
+    }
+
+    // SnakeYAML corta en 3 MB por defecto; las tumbas que esperan un mundo no vencen y el archivo puede crecer, así
+    // que se quita el tope como hace Bukkit con YamlConfiguration
+    private static LoaderOptions loaderOptions() {
+        LoaderOptions options = new LoaderOptions();
+        options.setCodePointLimit(Integer.MAX_VALUE);
+        return options;
     }
 
     Map<String, Object> records() { return records; }

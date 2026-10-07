@@ -86,7 +86,9 @@ public final class BloodMoon implements Listener {
     }
 
     public void LoadWorld(World world) {
-        if (world.getEnvironment() != World.Environment.NORMAL || configs.containsKey(world.getUID())) return;
+        // La Warden Cave es NORMAL pero tiene la hora fija: una BloodMoon ahí la dejaría de día para siempre
+        if (world.getEnvironment() != World.Environment.NORMAL || world.getName().equals(imp.crissyjuanxd.QuasoPlugin.WORLD_NAME)
+                || configs.containsKey(world.getUID())) return;
         ConfigReader config = new ConfigReader(plugin, world);
         configs.put(world.getUID(), config);
         // Incluye mundos excluidos: un reloj guardado no debe dejarles el cielo rojo al reiniciar.
@@ -103,7 +105,7 @@ public final class BloodMoon implements Listener {
         if (cache.getBoolean(path + ".active") && cache.contains(path + ".remaining-ticks")
                 && cache.getLong(path + ".active-day", -1) == day
                 && (world.getTime() == BloodMoonCycle.NIGHT_END || BloodMoonCycle.isNight(world.getTime()))) {
-            actuator.resume(cache.getLong(path + ".remaining-ticks"), day);
+            actuator.resume(cache.getLong(path + ".remaining-ticks"), day, false);
         } else if (BloodMoonCycle.isNight(world.getTime()) && (config.GetPermanentBloodMoonConfig()
                 || (cache.getBoolean(path + ".active") && cache.getLong(path + ".active-day", -1) == day))) {
             actuator.StartBloodMoon();

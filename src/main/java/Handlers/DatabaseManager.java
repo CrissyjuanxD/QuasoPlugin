@@ -318,6 +318,41 @@ public class DatabaseManager {
         return null;
     }
 
+    // Como loadBackpackContents, pero un error de la base de datos se avisa en vez de parecer una mochila vacía
+    // (si no, quien la modifica después la guardaría vacía). Devuelve null si la mochila todavía no se guardó
+    public ItemStack[] loadBackpackContentsStrict(String backpackUuid) throws SQLException {
+        String sql = "SELECT contents FROM player_backpacks WHERE backpack_uuid = ?";
+        try (Connection conn = getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, backpackUuid);
+            ResultSet rs = stmt.executeQuery();
+            if (!rs.next()) return null;
+            String data = rs.getString("contents");
+            if (data == null || data.isEmpty()) return null;
+            ItemStack[] items = ItemSerializer.deserialize(data);
+            if (items == null) throw new SQLException("contenido ilegible de " + backpackUuid);
+            return items;
+        }
+    }
+
+    // Los monederos pasan a ser de quien los lleva encima: si alguien regala o saquea uno, deja de contar para el
+    // dueño anterior
+    public void claimWallets(UUID ownerUuid, String ownerName, Collection<String> walletUuids, int walletLevel) {
+        if (walletUuids.isEmpty()) return;
+        String marks = String.join(",", Collections.nCopies(walletUuids.size(), "?"));
+        String sql = "UPDATE player_backpacks SET owner_uuid = ?, owner_name = ? WHERE item_level = ? AND owner_uuid <> ? AND backpack_uuid IN (" + marks + ")";
+        try (Connection conn = getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, ownerUuid.toString());
+            stmt.setString(2, ownerName);
+            stmt.setInt(3, walletLevel);
+            stmt.setString(4, ownerUuid.toString());
+            int i = 5;
+            for (String uuid : walletUuids) stmt.setString(i++, uuid);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            plugin.getLogger().warning("No se pudo actualizar el dueño de los monederos de " + ownerName + ": " + e.getMessage());
+        }
+    }
+
     // Inserta la mochila o actualiza su contenido si ya existe
     public void saveBackpack(String backpackUuid, UUID ownerUuid, String ownerName, String itemName, int level, ItemStack[] items) throws SQLException {
         String contents = ItemSerializer.serialize(items);

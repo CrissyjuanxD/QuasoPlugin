@@ -179,20 +179,21 @@ public class KeepInventoryEffect implements CustomEffect, Listener {
         silenciados.remove(event.getPlayer().getUniqueId());
     }
 
+    // El efecto guardado solo se borra cuando se devuelve: si entra todavía muerto (se fue en la pantalla de muerte)
+    // queda guardado y se le da al revivir
     private void restaurar(Player player) {
-        PersistentDataContainer data = player.getPersistentDataContainer();
-
-        Integer duracion = data.get(duracionKey, PersistentDataType.INTEGER);
-        if (duracion == null) return;
-
-        Integer guardado = data.get(amplificadorKey, PersistentDataType.INTEGER);
-        final int amplificador = guardado == null ? 0 : guardado;
-
-        data.remove(duracionKey);
-        data.remove(amplificadorKey);
+        if (!player.getPersistentDataContainer().has(duracionKey, PersistentDataType.INTEGER)) return;
 
         Bukkit.getScheduler().runTaskLater(plugin, () -> {
             if (!player.isOnline() || player.isDead()) return;
+
+            PersistentDataContainer data = player.getPersistentDataContainer();
+            Integer duracion = data.get(duracionKey, PersistentDataType.INTEGER);
+            if (duracion == null) return;
+            Integer guardado = data.get(amplificadorKey, PersistentDataType.INTEGER);
+            int amplificador = guardado == null ? 0 : guardado;
+            data.remove(duracionKey);
+            data.remove(amplificadorKey);
 
             player.addPotionEffect(new PotionEffect(PotionEffectType.LUCK, duracion, amplificador, true, true, true));
         }, 1L);

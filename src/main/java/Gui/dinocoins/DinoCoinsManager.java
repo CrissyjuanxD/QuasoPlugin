@@ -78,7 +78,9 @@ public class DinoCoinsManager implements Listener {
         Set<String> carriedWallets = getCarriedWallets(player, false);
         Map<String, ItemStack[]> snapshot = functions.snapshotBackpacks();
         long version = balanceVersions.merge(playerId, 1L, Long::sum);
+        String playerName = player.getName();
         Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
+            dbManager.claimWallets(playerId, playerName, carriedWallets, EconomyItemsFunctions.WALLET_LEVEL);
             int[] totals = calculateTotals(playerId, carriedWallets, snapshot);
             synchronized (balanceVersions) {
                 if (balanceVersions.get(playerId) == version) {
@@ -150,98 +152,152 @@ public class DinoCoinsManager implements Listener {
 
     public boolean addPhysicalDinoCoins(Player player, int amount) {
         if (amount <= 0) return false;
-        int remaining = amount;
-        Set<String> targetUuids = new LinkedHashSet<>();
+        return change(player, amount, loadWallets(player, true));
+    }
 
-        targetUuids.addAll(getCarriedWallets(player, true));
-        // Prioridad 2: Monederos guardados en DB (en cofres)
-        for (DatabaseManager.BackpackInfo info : dbManager.getPlayerBackpacks(player.getUniqueId())) {
-            if (info.level == EconomyItemsFunctions.WALLET_LEVEL) {
-                targetUuids.add(info.uuid);
+    public boolean removePhysicalDinoCoins(Player player, int amount) {
+        if (amount <= 0) return false;
+        return change(player, -amount, loadWallets(player, false));
+    }
+
+    // /dinocoins add y remove: la base de datos se lee y se escribe fuera del hilo del server. done recibe true si se
+    // movió toda la cantidad
+    public void changeAsync(Player player, int delta, java.util.function.Consumer<Boolean> done) {
+        if (delta == 0) {
+            done.accept(false);
+            return;
+        }
+        Set<String> carried = getCarriedWallets(player, delta > 0);
+        UUID playerId = player.getUniqueId();
+        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
+            Map<String, ItemStack[]> stored = loadStored(playerId, carried, true);
+            Bukkit.getScheduler().runTask(plugin, () -> {
+                if (!player.isOnline()) {
+                    done.accept(false);
+                    return;
+                }
+                done.accept(change(player, delta, merge(carried, stored)));
+            });
+        });
+    }
+
+    // /dinocoins get sin consultar MySQL en el hilo del server
+    public void totalsAsync(Player player, java.util.function.Consumer<int[]> done) {
+        UUID playerId = player.getUniqueId();
+        Set<String> carried = getCarriedWallets(player, false);
+        Map<String, ItemStack[]> snapshot = functions.snapshotBackpacks();
+        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
+            int[] totals = calculateTotals(playerId, carried, snapshot);
+            Bukkit.getScheduler().runTask(plugin, () -> done.accept(totals));
+        });
+    }
+
+    // Los monederos del jugador, primero los que lleva y después los guardados en cofres. El valor es lo que hay
+    // adentro (null = nunca se guardó, está vacío). Uno que no se pudo leer de la base de datos no aparece: así no se
+    // guarda vacío por un error
+    private Map<String, ItemStack[]> loadWallets(Player player, boolean createIds) {
+        Set<String> carried = getCarriedWallets(player, createIds);
+        return merge(carried, loadStored(player.getUniqueId(), carried, false));
+    }
+
+    // skipLoaded: desde otro hilo no se mira la memoria (los inventarios abiertos son del hilo del server)
+    private Map<String, ItemStack[]> loadStored(UUID playerId, Set<String> carried, boolean skipLoaded) {
+        Set<String> uuids = new LinkedHashSet<>(carried);
+        for (DatabaseManager.BackpackInfo info : dbManager.getPlayerBackpacks(playerId)) {
+            if (info.level == EconomyItemsFunctions.WALLET_LEVEL) uuids.add(info.uuid);
+        }
+        Map<String, ItemStack[]> stored = new LinkedHashMap<>();
+        for (String uuid : uuids) {
+            ItemStack[] loaded = skipLoaded ? null : functions.getLoadedBackpackContents(uuid);
+            if (loaded != null) {
+                stored.put(uuid, loaded);
+                continue;
+            }
+            try {
+                stored.put(uuid, dbManager.loadBackpackContentsStrict(uuid));
+            } catch (java.sql.SQLException error) {
+                plugin.getLogger().severe("No se pudo leer el monedero " + uuid + ", no se toca: " + error.getMessage());
             }
         }
+        return stored;
+    }
 
-        for (String uuid : targetUuids) {
+    // Lo que está en memoria (abierto o en caché) siempre gana sobre lo leído antes de la base de datos
+    private Map<String, ItemStack[]> merge(Set<String> carried, Map<String, ItemStack[]> stored) {
+        Map<String, ItemStack[]> wallets = new LinkedHashMap<>();
+        for (Map.Entry<String, ItemStack[]> entry : stored.entrySet()) {
+            ItemStack[] loaded = functions.getLoadedBackpackContents(entry.getKey());
+            wallets.put(entry.getKey(), loaded != null ? loaded : entry.getValue());
+        }
+        return wallets;
+    }
+
+    // delta > 0 agrega DinoCoins (de a 64 por slot) y delta < 0 las saca; nunca toca las DinoFichas
+    private boolean change(Player player, int delta, Map<String, ItemStack[]> wallets) {
+        int remaining = Math.abs(delta);
+        Map<String, ItemStack[]> changed = new LinkedHashMap<>();
+        for (Map.Entry<String, ItemStack[]> entry : wallets.entrySet()) {
             if (remaining <= 0) break;
-
-            ItemStack[] contents = functions.getBackpackContents(uuid);
-            if (contents == null) contents = new ItemStack[EconomyItemsFunctions.WALLET_SIZE];
-
-            boolean changed = false;
-            for (int i = 0; i < contents.length; i++) {
-                if (remaining <= 0) break;
-                ItemStack c = contents[i];
-                if (c == null || c.getType() == Material.AIR) {
-                    int toAdd = Math.min(remaining, 64);
-                    ItemStack vithium = EconomyItems.createVithiumCoin();
-                    vithium.setAmount(toAdd);
-                    contents[i] = vithium;
-                    remaining -= toAdd;
-                    changed = true;
-                } else if (isDinoCoin(c) && c.getAmount() < 64) {
-                    int space = 64 - c.getAmount();
-                    int toAdd = Math.min(remaining, space);
-                    c.setAmount(c.getAmount() + toAdd);
-                    remaining -= toAdd;
-                    changed = true;
-                }
+            ItemStack[] contents = entry.getValue();
+            if (contents == null) {
+                if (delta < 0) continue;
+                contents = new ItemStack[EconomyItemsFunctions.WALLET_SIZE];
             }
-            if (changed) {
-                functions.updateBackpackContents(uuid, contents);
-                try { dbManager.saveBackpack(uuid, player.getUniqueId(), player.getName(), "Monedero", EconomyItemsFunctions.WALLET_LEVEL, contents); }
-                catch (java.sql.SQLException error) {
+            int before = remaining;
+            remaining = delta > 0 ? fill(contents, remaining) : take(contents, remaining);
+            if (remaining != before) changed.put(entry.getKey(), contents);
+        }
+        UUID playerId = player.getUniqueId();
+        String playerName = player.getName();
+        for (Map.Entry<String, ItemStack[]> entry : changed.entrySet()) functions.updateBackpackContents(entry.getKey(), entry.getValue());
+        Runnable save = () -> {
+            for (Map.Entry<String, ItemStack[]> entry : changed.entrySet()) {
+                try {
+                    dbManager.saveBackpack(entry.getKey(), playerId, playerName, "Monedero", EconomyItemsFunctions.WALLET_LEVEL, entry.getValue());
+                } catch (java.sql.SQLException error) {
                     plugin.getLogger().severe("Error guardando monedero: " + error.getMessage());
                 }
             }
+        };
+        if (!changed.isEmpty()) {
+            if (Bukkit.isPrimaryThread()) Bukkit.getScheduler().runTaskAsynchronously(plugin, save);
+            else save.run();
         }
         updatePlayerTotalAsync(player);
         return remaining == 0;
     }
 
-    public boolean removePhysicalDinoCoins(Player player, int amount) {
-        if (amount <= 0) return false;
-        int remaining = amount;
-        Set<String> targetUuids = new LinkedHashSet<>();
-
-        targetUuids.addAll(getCarriedWallets(player, false));
-        for (DatabaseManager.BackpackInfo info : dbManager.getPlayerBackpacks(player.getUniqueId())) {
-            if (info.level == EconomyItemsFunctions.WALLET_LEVEL) {
-                targetUuids.add(info.uuid);
+    private int fill(ItemStack[] contents, int remaining) {
+        for (int i = 0; i < contents.length && remaining > 0; i++) {
+            ItemStack c = contents[i];
+            if (c == null || c.getType() == Material.AIR) {
+                int toAdd = Math.min(remaining, 64);
+                ItemStack coin = EconomyItems.createVithiumCoin();
+                coin.setAmount(toAdd);
+                contents[i] = coin;
+                remaining -= toAdd;
+            } else if (isDinoCoin(c) && c.getAmount() < 64) {
+                int toAdd = Math.min(remaining, 64 - c.getAmount());
+                c.setAmount(c.getAmount() + toAdd);
+                remaining -= toAdd;
             }
         }
+        return remaining;
+    }
 
-        for (String uuid : targetUuids) {
-            if (remaining <= 0) break;
-
-            ItemStack[] contents = functions.getBackpackContents(uuid);
-            if (contents == null) continue;
-
-            boolean changed = false;
-            for (int i = 0; i < contents.length; i++) {
-                if (remaining <= 0) break;
-                ItemStack c = contents[i];
-                if (isDinoCoin(c)) {
-                    if (c.getAmount() <= remaining) {
-                        remaining -= c.getAmount();
-                        contents[i] = null;
-                        changed = true;
-                    } else {
-                        c.setAmount(c.getAmount() - remaining);
-                        remaining = 0;
-                        changed = true;
-                    }
-                }
-            }
-            if (changed) {
-                functions.updateBackpackContents(uuid, contents);
-                try { dbManager.saveBackpack(uuid, player.getUniqueId(), player.getName(), "Monedero", EconomyItemsFunctions.WALLET_LEVEL, contents); }
-                catch (java.sql.SQLException error) {
-                    plugin.getLogger().severe("Error guardando monedero: " + error.getMessage());
-                }
+    private int take(ItemStack[] contents, int remaining) {
+        for (int i = 0; i < contents.length && remaining > 0; i++) {
+            ItemStack c = contents[i];
+            if (!isDinoCoin(c)) continue;
+            if (c.getAmount() <= remaining) {
+                remaining -= c.getAmount();
+                contents[i] = null;
+            } else {
+                c.setAmount(c.getAmount() - remaining);
+                remaining = 0;
             }
         }
-        updatePlayerTotalAsync(player);
-        return remaining == 0;
+        return remaining;
     }
 
     private boolean isMonedero(ItemStack item) {

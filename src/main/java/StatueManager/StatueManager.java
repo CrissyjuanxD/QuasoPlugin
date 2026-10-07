@@ -286,7 +286,8 @@ public class StatueManager implements Listener {
                     PotionEffectType type = data.getEffectType();
                     int amp = data.getEffectAmplifier();
 
-                    if (type == null) continue;
+                    // Las estatuas viejas con Suerte, Wind Charged o Weaving darían Keep Inventory, Inmunidad o Corrupture
+                    if (type == null || EffectListener.ReservedEffects.isReserved(type)) continue;
 
                     for (Entity ent : stand.getNearbyEntities(radiusX, radiusY, radiusX)) {
                         if (ent instanceof Player) {
@@ -321,7 +322,7 @@ public class StatueManager implements Listener {
         if (data.isAntiGrief()) return;
 
         PotionEffectType type = data.getEffectType();
-        if (type == null) return;
+        if (type == null || EffectListener.ReservedEffects.isReserved(type)) return;
 
         double rX = data.getRadiusX();
         double rY = data.getRadiusY();

@@ -1,0 +1,31 @@
+# Sistema de Twitch del canal de Crosszy: vincular cuentas, kits de sub y VIP, roles y /fly
+#
+# Para dejarlo andando:
+#   1. Crea una app en https://dev.twitch.tv/console/apps
+#      (Categoría: Game Integration, Tipo de cliente: Público, URL de redirección: http://localhost)
+#   2. Pega su Client ID abajo y usa /twitchadmin recargar
+#   3. Con Crosszy presente: /twitchadmin canal conectar y que él abra el link con su cuenta de Twitch
+#   4. Los jugadores vinculan su cuenta con /twitch vincular y reclaman el kit con /twitch kit
+
+client_id: ""
+# Solo si la app se creó como "Confidencial". Con una app pública queda vacío
+client_secret: ""
+# Canal donde se miran las subs y los VIPs
+canal: "crosszy"
+
+# Nicks de Minecraft que pueden usar /twitchadmin. Para sumar a alguien agrega su nick y usa /twitchadmin recargar
+administradores:
+  - CrissyjuanxD
+  - Crosszy
+
+# Cada cuántos minutos se revisan las subs y los VIPs de los que vincularon su cuenta
+revision_minutos: 10
+
+# Días que la sub tiene que seguir activa para destrabar el kit del mes siguiente. Un mes de Twitch dura hasta
+# 31 días, así que con 32 nadie llega al segundo kit sin haber renovado. Solo cuentan los días que el server
+# estuvo prendido
+dias_por_mes: 32
+
+fly:
+  # Mundos donde no se puede usar /fly, además del End y la Warden Cave
+  mundos_bloqueados: []

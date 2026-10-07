@@ -29,7 +29,7 @@ import java.util.function.BiFunction;
 
 public class MissionHandler implements Listener {
     // Con 30 misiones completas pasa a DinoNugget+
-    private static final int MISSIONS_FOR_PLUS = 30;
+    public static final int MISSIONS_FOR_PLUS = 30;
     private static final NamespacedKey TOKEN_KEY = new NamespacedKey("quasoplugin", "ficha_mision");
 
     private static final List<BiFunction<JavaPlugin, MissionHandler, Mission>> MISSION_LIST = List.of(
@@ -498,8 +498,10 @@ public class MissionHandler implements Listener {
         String currentId = current != null ? current.getName() : null;
 
         TeamType target = null;
+        // DinoSub y DinoVip también pasan a DinoLeyenda; DinoNugget+ se lo devuelve Twitch cuando se les termina
         if (missionNumber == 100 && (currentId == null || currentId.equals(TeamType.Z_MIEMBRO.getId())
-                || currentId.equals(TeamType.Y_MIEMBRO.getId()))) {
+                || currentId.equals(TeamType.Y_MIEMBRO.getId()) || currentId.equals(TeamType.U_SUB.getId())
+                || currentId.equals(TeamType.V_VIP.getId()))) {
             target = TeamType.X_LEYENDA;
         } else if (completedCount >= MISSIONS_FOR_PLUS && (currentId == null || currentId.equals(TeamType.Z_MIEMBRO.getId()))) {
             target = TeamType.Y_MIEMBRO;

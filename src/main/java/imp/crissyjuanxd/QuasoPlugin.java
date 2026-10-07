@@ -70,6 +70,7 @@ import net.md_5.bungee.api.ChatColor;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import chat.chatgeneral;
+import Twitch.TwitchManager;
 
 import java.util.Objects;
 
@@ -86,6 +87,7 @@ public class QuasoPlugin extends JavaPlugin implements Listener {
 
     private DatabaseManager databaseManager;
     private TeamsHandler teamsHandler;
+    private TwitchManager twitchManager;
     private AutoAnnouncer autoAnnouncer;
     private MantenimientoHandler mantenimientoHandler;
     private MainScoreboard mainScoreboard;
@@ -215,6 +217,7 @@ public class QuasoPlugin extends JavaPlugin implements Listener {
         initInfestedCavesDimension();
         initEnchantmentSystem();
         initEndSystem();
+        twitchManager = new TwitchManager(this, missionHandler);
         bloodMoon.enable();
 
         getLogger().info("DinoNuggetsSMP habilitado completamente.");
@@ -227,6 +230,7 @@ public class QuasoPlugin extends JavaPlugin implements Listener {
                 ChatColor.translateAlternateColorCodes('&',
                         Prefix + "&aha sido deshabilitado!, &eVersion: " + Version));
 
+        if (twitchManager != null) twitchManager.shutdown();
         if (autoAnnouncer != null) autoAnnouncer.shutdown();
         if (mainScoreboard != null) mainScoreboard.shutdown();
         if (homesCmd != null) homesCmd.shutdown();

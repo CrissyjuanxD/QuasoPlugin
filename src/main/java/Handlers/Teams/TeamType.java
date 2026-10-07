@@ -22,6 +22,17 @@ public enum TeamType {
     T_SURVIVOR("TSurvivor", "#9455ED", "\uEB8A ", "\uEB8F ",
             org.bukkit.ChatColor.LIGHT_PURPLE, "04_TSurvivor"),
 
+    // Los pone el sistema de Twitch mientras la sub o el VIP del canal de Crosszy siguen activos
+    U_SUB("USub", "#B57BFF",
+            ChatColor.GRAY + "" + ChatColor.BOLD + "[" + ChatColor.of("#9146FF") + ChatColor.BOLD + "DinoSub" + ChatColor.GRAY + ChatColor.BOLD + "] ",
+            ChatColor.GRAY + "" + ChatColor.BOLD + "[" + ChatColor.of("#9146FF") + ChatColor.BOLD + "SUB" + ChatColor.GRAY + ChatColor.BOLD + "] ",
+            org.bukkit.ChatColor.DARK_PURPLE, "95_Sub"),
+
+    V_VIP("VVip", "#F58BE0",
+            ChatColor.GRAY + "" + ChatColor.BOLD + "[" + ChatColor.of("#E005B9") + ChatColor.BOLD + "DinoVip" + ChatColor.GRAY + ChatColor.BOLD + "] ",
+            ChatColor.GRAY + "" + ChatColor.BOLD + "[" + ChatColor.of("#E005B9") + ChatColor.BOLD + "VIP" + ChatColor.GRAY + ChatColor.BOLD + "] ",
+            org.bukkit.ChatColor.LIGHT_PURPLE, "96_Vip"),
+
     X_LEYENDA("XLeyenda", "#FFD166",
             ChatColor.GRAY + "" + ChatColor.BOLD + "[" + ChatColor.of("#FFD166") + ChatColor.BOLD + "DinoLeyenda" + ChatColor.GRAY + ChatColor.BOLD + "] ",
             ChatColor.GRAY + "" + ChatColor.BOLD + "[" + ChatColor.of("#FFD166") + ChatColor.BOLD + "DLY" + ChatColor.GRAY + ChatColor.BOLD + "] ",
@@ -82,6 +93,8 @@ public enum TeamType {
             case MOD -> "DinoNalgon";
             case T_HELPER -> "Helper";
             case T_SURVIVOR -> "Survivor";
+            case U_SUB -> "DinoSub";
+            case V_VIP -> "DinoVip";
             case X_LEYENDA -> "DinoLeyenda";
             case Y_MIEMBRO -> "DinoNugget+";
             case Z_MIEMBRO -> "DinoNugget";

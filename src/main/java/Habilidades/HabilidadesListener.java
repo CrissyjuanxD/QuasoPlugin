@@ -1,6 +1,7 @@
 package Habilidades;
 
 import Handlers.ActionBarHandler;
+import Twitch.TwitchFly;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.*;
 import org.bukkit.entity.Monster;
@@ -149,7 +150,8 @@ public class HabilidadesListener implements Listener {
                 protectNextLanding.remove(playerId);
             }
 
-            if (manager.hasHabilidad(playerId, HabilidadesType.AGILIDAD, 2)) {
+            // Con /fly el vuelo es de verdad: el doble salto no se mete
+            if (manager.hasHabilidad(playerId, HabilidadesType.AGILIDAD, 2) && !TwitchFly.isActive(player)) {
                 if (!player.getAllowFlight()) {
                     player.setAllowFlight(true);
                 }
@@ -171,6 +173,7 @@ public class HabilidadesListener implements Listener {
         UUID playerId = player.getUniqueId();
 
         if (player.getGameMode() == GameMode.CREATIVE || player.getGameMode() == GameMode.SPECTATOR) return;
+        if (TwitchFly.isActive(player)) return;
 
         event.setCancelled(true);
         player.setAllowFlight(false);

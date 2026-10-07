@@ -289,6 +289,16 @@ commands:
     usage: /mantenimiento <on|off>
     permission: viciont_hardcore3.mantenimiento
     permission-message: No tienes permiso para usar este comando.
+  twitch:
+    description: Vincula tu cuenta de Twitch y reclama el kit de sub o VIP del canal de Crosszy.
+    usage: /twitch [vincular|kit|desvincular]
+  twitchadmin:
+    description: Administra el sistema de Twitch (solo los nicks de twitch.yml).
+    usage: /twitchadmin <estado|canal|info|lista|historial|darkit|vincular|desvincular|revisar|fly|simular|kits|recargar>
+    aliases: [tadmin]
+  fly:
+    description: Activa o desactiva el vuelo (subs del canal y operadores).
+    usage: /fly
 
 depend: [EliteMobs]
 softdepend: [FastAsyncWorldEdit, WorldGuard, ViaVersion]

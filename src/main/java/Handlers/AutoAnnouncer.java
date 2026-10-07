@@ -11,10 +11,28 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
-import java.util.Arrays;
 import java.util.List;
 
 public class AutoAnnouncer implements CommandExecutor {
+
+    // Lo importante desde el día 1, en el orden en que se le va a ir necesitando a un jugador nuevo
+    public static final List<String> MENSAJES = List.of(
+            "Usa /misiones o el Libro de Misiones para ver la misión del día. Cada día se abre una nueva y algunas traen una misión extra.",
+            "Al completar una misión recibes una Ficha de Misión: llévala a la Estatua de Recompensas del spawn para abrir tu cofre con DinoCoins y objetos. Las misiones extra pagan directo a tu monedero.",
+            "Las DinoCoins se guardan en el Monedero, que se compra en el Mercado por 5 DinoCoins. Para comprar en la tienda o subir habilidades llévalas en el inventario.",
+            "Con el Libro de Habilidades subes Vitalidad, Resistencia y Agilidad. Cada nivel cuesta DinoCoins, experiencia y bloques; si lo pierdes, la Biblioteca lo vende por 1 DinoCoin.",
+            "Si mueres, tus cosas quedan en una tumba a tus pies. Los primeros 20 minutos solo tú puedes abrirla y después cualquiera durante 10 minutos. Usa /muertes para ver dónde quedaron.",
+            "Usa /trabajos para elegir uno de los 6 trabajos y ganar DinoCoins al subir de nivel. Entrar cuesta 5 DinoCoins, 10 niveles y 5 diamantes, y te puedes cambiar cada 24 horas sin perder tu nivel.",
+            "En las zonas de pesca, cuando algo pica vuelve a usar la caña justo cuando el marcador esté en el verde. Los premios especiales los compra la Pescadería.",
+            "Durante la BloodMoon los monstruos sueltan Fragmentos de BloodMoon. En la tienda de Cambios, 6 fragmentos valen 1 DinoCoin.",
+            "En el casino se juega con DinoFichas. En la tienda de Cambios 1 DinoCoin son 5 DinoFichas, y 6 DinoFichas vuelven a ser 1 DinoCoin.",
+            "Las raids están cambiadas: los raiders son Bombitas, desde la segunda oleada salen Iceologers y a veces llega una horda de corruptos.",
+            "/sethome <nombre> guarda una base (hasta 10), /home <nombre> te lleva y /delhome <nombre> la borra. /spawn y /tiendas te llevan al spawn y a las tiendas.",
+            "Usa /proteccion para recibir la guía con los comandos para proteger tu base.",
+            "La tienda del spawn va creciendo durante la temporada: salen items nuevos y lo que ya estaba sube un poco de precio. Lo más fuerte nunca se vende, sale de misiones, bosses y biomas.",
+            "Con 30 misiones completas pasas a DinoNugget+ y la misión 100 te da el rol DinoLeyenda.",
+            "Usa /twitch para vincular tu cuenta de Twitch: los subs y VIPs del canal reclaman su kit cada mes, y los subs pueden usar /fly en el Overworld y el Nether."
+    );
 
     private final JavaPlugin plugin;
     private final List<String> mensajes;
@@ -26,21 +44,13 @@ public class AutoAnnouncer implements CommandExecutor {
 
     public AutoAnnouncer(JavaPlugin plugin) {
         this.plugin = plugin;
-        this.mensajes = Arrays.asList(
-                "Para ganar ManuCoins, puedes derrotar bosses, completar misiones o probar suerte en el casino.",
-                "Usa el comando /misiones para ver las misiones activas. ¡Al completarlas obtendrás ManuCoins!",
-                "Usa los comandos /spawn o /tiendas para teletransportarte a la zona de spawn o tiendas.",
-                "Puedes usar /sethome <nombre> para establecer una base. Luego, usa /home <nombre> para teletransportarte a ella y /delhome <nombre> para eliminarla. El límite es de 10 bases.",
-                "Durante una BloodMoon, al eliminar mobs podrás obtener Fragmento de BloodMoon, las cuales podrás intercambiar por ManuCoins en la tienda.",
-                "Si mueres de forma normal, no perderás tu inventario. Sin embargo, si mueres en PvP, sí lo perderás y además soltarás 15 ManuCoins. (Un jugador solo puede soltar ManuCoins una vez cada 30 minutos).",
-                "Recuerda que puedes cambiar tu skin usando el comando /skin set <nick>."
-        );
+        this.mensajes = MENSAJES;
 
         // Inicia el loop automático normal
         startNormalLoop();
     }
 
-    // --- BUCLE NORMAL (Cada 8 min) ---
+    // --- BUCLE NORMAL (Cada 10 min) ---
     private void startNormalLoop() {
         if (mainTask != null) mainTask.cancel();
 
@@ -49,7 +59,7 @@ public class AutoAnnouncer implements CommandExecutor {
             public void run() {
                 enviarMensajeActual();
             }
-        }.runTaskTimer(plugin, 9600L, 9600L); // 8 minutos
+        }.runTaskTimer(plugin, 12000L, 12000L); // 10 minutos
     }
 
     // --- COMANDO /autoanuncio ---
@@ -65,7 +75,7 @@ public class AutoAnnouncer implements CommandExecutor {
             return true;
         }
 
-        sender.sendMessage(ChatColor.GREEN + "Iniciando ráfaga de anuncios (cada 30 seg). El timer de 8 minutos se pausó.");
+        sender.sendMessage(ChatColor.GREEN + "Iniciando ráfaga de anuncios (cada 30 seg). El timer de 10 minutos se pausó.");
 
         // Pausar timer normal
         if (mainTask != null) mainTask.cancel();
@@ -78,7 +88,7 @@ public class AutoAnnouncer implements CommandExecutor {
             public void run() {
                 if (indiceActual >= mensajes.size()) {
                     // Terminaron de enviarse todos
-                    sender.sendMessage(ChatColor.GREEN + "Ráfaga de anuncios completada. Retomando timer normal de 8 mins.");
+                    sender.sendMessage(ChatColor.GREEN + "Ráfaga de anuncios completada. Retomando timer normal de 10 mins.");
                     isBursting = false;
                     indiceActual = 0;
                     startNormalLoop(); // Retomar ciclo normal

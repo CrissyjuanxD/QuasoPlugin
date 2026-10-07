@@ -45,12 +45,12 @@ class AutoAnnouncerTest {
             bukkit.when(Bukkit::getScheduler).thenReturn(scheduler);
             bukkit.when(Bukkit::getOnlinePlayers).thenAnswer(call -> online);
             AutoAnnouncer announcer = new AutoAnnouncer(mock(JavaPlugin.class));
-            assertEquals(9600L, tasks.getFirst().period());
+            assertEquals(12000L, tasks.getFirst().period());
             for (int i = 0; i < 21; i++) tasks.getFirst().callback().run();
             Player player = mock(Player.class);
             online.add(player);
             assertDoesNotThrow(tasks.getFirst().callback()::run);
-            verify(player).sendMessage(contains("Para ganar ManuCoins, puedes derrotar bosses, completar misiones o probar suerte en el casino."));
+            verify(player).sendMessage(contains(AutoAnnouncer.MENSAJES.get(21 % AutoAnnouncer.MENSAJES.size())));
             for (int i = 0; i < 14; i++) tasks.getFirst().callback().run();
             verify(player, times(15)).sendMessage(anyString());
             announcer.shutdown();
@@ -73,16 +73,27 @@ class AutoAnnouncerTest {
             Scheduled burst = tasks.get(1);
             assertEquals(600L, burst.period());
             verify(tasks.getFirst().task()).cancel();
-            for (int i = 0; i < 7; i++) burst.callback().run();
-            verify(player, times(7)).sendMessage(anyString());
+            int tips = AutoAnnouncer.MENSAJES.size();
+            for (int i = 0; i < tips; i++) burst.callback().run();
+            verify(player, times(tips)).sendMessage(anyString());
             burst.callback().run();
             assertEquals(3, tasks.size());
-            assertEquals(9600L, tasks.get(2).period());
+            assertEquals(12000L, tasks.get(2).period());
             verify(scheduler).cancelTask(2);
             tasks.get(2).callback().run();
-            verify(player, times(8)).sendMessage(anyString());
+            verify(player, times(tips + 1)).sendMessage(anyString());
             announcer.shutdown();
             verify(tasks.get(2).task()).cancel();
+        }
+    }
+
+    @Test
+    void theTipsTalkAboutThisServerAndFitInTheChat() {
+        assertTrue(AutoAnnouncer.MENSAJES.size() >= 10);
+        for (String tip : AutoAnnouncer.MENSAJES) {
+            assertFalse(tip.contains("ManuCoins"), tip);
+            assertFalse(tip.contains("/skin"), tip);
+            assertTrue(tip.length() <= 256, tip);
         }
     }
 }

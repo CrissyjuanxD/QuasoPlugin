@@ -60,19 +60,20 @@ public class EnderCreeper extends EnderMobs implements Listener {
         return creeper;
     }
 
-    // Creeper cargado, invisible y rápido con explosión de radio 5
+    // Creeper cargado, invisible (se ven sus partículas) y rápido. Cargado dobla la explosión: radio 3 queda como la
+    // de un creeper cargado normal, que con armadura de Warden y Protección no mata de un golpe
     private void applyAttributes(Creeper creeper) {
         creeper.setCustomName(ChatColor.LIGHT_PURPLE + "" + ChatColor.BOLD + "Ender Creeper");
         creeper.setCustomNameVisible(false);
 
-        creeper.getAttribute(Attribute.MAX_HEALTH).setBaseValue(60);
-        creeper.setHealth(60);
+        creeper.getAttribute(Attribute.MAX_HEALTH).setBaseValue(40);
+        creeper.setHealth(40);
 
         creeper.setPowered(true);
         creeper.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, PotionEffect.INFINITE_DURATION, 0, false, false));
-        creeper.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, PotionEffect.INFINITE_DURATION, 1, false, false));
+        creeper.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, PotionEffect.INFINITE_DURATION, 0, false, false));
 
-        creeper.setExplosionRadius(5);
+        creeper.setExplosionRadius(3);
         creeper.getPersistentDataContainer().set(mobKey, PersistentDataType.BYTE, (byte) 1);
     }
 

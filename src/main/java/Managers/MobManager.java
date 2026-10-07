@@ -1,6 +1,7 @@
 package Managers;
 
 import Bosses.InfestedWardenBoss;
+import Bosses.ReyEnderBoss;
 import EndBiomes.BlackShulker;
 import EndBiomes.EnderInsect;
 import Bosses.QueenBeeHandler;
@@ -89,7 +90,7 @@ public class MobManager {
                 "guardianblaze", "guardiancorruptedskeleton", "corruptedinfernalspider",
                 "infestedbee", "estatuarecompensa", "corruptedbee", "infestedcreeper",
                 "infestedghast", "infestedskeleton", "infestedcavespider", "wardenzombie", "enderblaze",
-                "endercreeper", "enderspider", "infestedwarden", "enderinsect", "shulkernegro",
+                "endercreeper", "enderspider", "infestedwarden", "enderinsect", "shulkernegro", "reyender",
         };
         for (String mob : mobs) {
             registeredMobs.add(mob);
@@ -122,6 +123,8 @@ public class MobManager {
             case "infestedwarden": InfestedWardenBoss.spawn(plugin, location, "comando"); return true;
             case "enderinsect": EnderInsect.spawn(plugin, location); return true;
             case "shulkernegro": BlackShulker.spawn(plugin, location); return true;
+            // De prueba: la arena queda donde se spawnea
+            case "reyender": ReyEnderBoss.spawn(plugin, location); return true;
             default: return false;
         }
     }

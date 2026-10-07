@@ -147,8 +147,8 @@ public abstract class BaseBoss {
         double max = entity.getAttribute(org.bukkit.attribute.Attribute.MAX_HEALTH).getBaseValue();
         double hp = Math.max(0, entity.getHealth());
 
-        mainBar.setProgress(hp / max);
-        staticBar.setTitle(ChatColor.WHITE + "> " + (int) hp + " <");
+        mainBar.setProgress(Math.min(1.0, hp / max));
+        staticBar.setTitle(ChatColor.WHITE + "> " + (int) Math.ceil(hp * healthScale()) + " <");
     }
 
     private void cleanupBars() {
@@ -311,6 +311,12 @@ public abstract class BaseBoss {
     protected void returnToArena() {
         entity.teleport(spawnLocation);
         entity.getWorld().playSound(entity.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 3f, 0.8f);
+    }
+
+    // Para los boss con más vida de la que deja el server (1024): el mob tiene menos y recibe el daño dividido,
+    // así que la barra muestra la vida multiplicada
+    protected double healthScale() {
+        return 1;
     }
 
     // "a la" para la Abeja Reina, "al" para un boss masculino

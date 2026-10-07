@@ -15,7 +15,9 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class WardenArmor implements Listener {
 
@@ -103,6 +105,25 @@ public class WardenArmor implements Listener {
         item.setItemMeta(meta);
 
         return item;
+    }
+
+    // Peto de Warden Alado: el mismo peto pero planea como unas Elytras (EnderKing Pearl + peto + Elytras en la herrería)
+    public ItemStack createWingedWardenChestplate() {
+        ItemStack item = createWardenChestplate();
+        ItemMeta meta = item.getItemMeta();
+        meta.setDisplayName(ChatColor.of("#b55cff") + "" + ChatColor.BOLD + "Peto de Warden Alado");
+        List<String> lore = new ArrayList<>(meta.getLore());
+        lore.add(lore.size() - 1, ChatColor.of("#00cccc") + "■ " + ChatColor.LIGHT_PURPLE + ChatColor.BOLD + "Planea como unas Elytras");
+        meta.setLore(lore);
+        meta.setGlider(true);
+        meta.getPersistentDataContainer().set(items.EndItems.ITEM_KEY, PersistentDataType.STRING, "peto_warden_alado");
+        meta.setItemModel(NamespacedKey.minecraft("peto_warden_alado"));
+        item.setItemMeta(meta);
+        return item;
+    }
+
+    public static boolean isWinged(ItemStack item) {
+        return "peto_warden_alado".equals(items.EndItems.idOf(item));
     }
 
     public ItemStack createWardenLeggings() {

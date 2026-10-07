@@ -94,12 +94,12 @@ public class EnderSpider extends EnderMobs implements Listener {
         spider.setCustomName(ChatColor.LIGHT_PURPLE + "" + ChatColor.BOLD + "Ender Spider");
         spider.setCustomNameVisible(false);
 
-        spider.getAttribute(Attribute.MAX_HEALTH).setBaseValue(50);
-        spider.setHealth(50);
+        spider.getAttribute(Attribute.MAX_HEALTH).setBaseValue(40);
+        spider.setHealth(40);
         spider.getAttribute(Attribute.ATTACK_DAMAGE).setBaseValue(6.0);
-        spider.getAttribute(Attribute.FOLLOW_RANGE).setBaseValue(48);
+        spider.getAttribute(Attribute.FOLLOW_RANGE).setBaseValue(40);
 
-        spider.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, PotionEffect.INFINITE_DURATION, 1, false, false));
+        spider.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, PotionEffect.INFINITE_DURATION, 0, false, false));
         spider.addPotionEffect(new PotionEffect(PotionEffectType.RESISTANCE, PotionEffect.INFINITE_DURATION, 0, false, false));
 
         spider.getPersistentDataContainer().set(mobKey, PersistentDataType.BYTE, (byte) 1);

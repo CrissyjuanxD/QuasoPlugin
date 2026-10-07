@@ -87,9 +87,11 @@ public class ItemManager {
         "fragmento_profundo_gris", "lingote_profundo", "corazon_warden_boss",
         "baya_sculk", "fruta_abisal", "baya_luminosa",
         "cristal_celestita", "fragmento_astral", "esencia_marchita", "ojo_rey_ender",
+        "lingote_celestita", "plantilla_celestita", "enderking_pearl", "espada_celestita", "hacha_celestita",
+        "lanza_celestita", "pico_celestita", "pala_celestita", "azada_celestita",
         "mejora_casco_warden", "mejora_peto_warden", "mejora_pantalon_warden", "mejora_bota_warden",
 
-        "casco_warden", "peto_warden", "pantalon_warden", "bota_warden",
+        "casco_warden", "peto_warden", "pantalon_warden", "bota_warden", "peto_warden_alado",
 
         "chatarra", "manzana_podrida", "zanahoria_encantada",
         "pepitas_hierro_oxidadas", "pepitas_diamante",
@@ -212,6 +214,15 @@ public class ItemManager {
             case "fragmento_astral": item = EndItems.createAstralFragment(1); break;
             case "esencia_marchita": item = EndItems.createWitheredEssence(1); break;
             case "ojo_rey_ender": item = EndItems.createKingEye(); break;
+            case "lingote_celestita": item = EndItems.createCelestiteIngot(); break;
+            case "plantilla_celestita": item = EndItems.createCelestiteTemplate(); break;
+            case "enderking_pearl": item = EndItems.createEnderKingPearl(); break;
+            case "espada_celestita": item = EndItems.createTool(EndItems.Tool.ESPADA); break;
+            case "hacha_celestita": item = EndItems.createTool(EndItems.Tool.HACHA); break;
+            case "lanza_celestita": item = EndItems.createTool(EndItems.Tool.LANZA); break;
+            case "pico_celestita": item = EndItems.createTool(EndItems.Tool.PICO); break;
+            case "pala_celestita": item = EndItems.createTool(EndItems.Tool.PALA); break;
+            case "azada_celestita": item = EndItems.createTool(EndItems.Tool.AZADA); break;
             case "mejora_casco_warden": item = wardenUpgrades.createHelmetWardenUpgrade(); break;
             case "mejora_peto_warden": item = wardenUpgrades.createChestplateWardenUpgrade(); break;
             case "mejora_pantalon_warden": item = wardenUpgrades.createLeggingsWardenUpgrade(); break;
@@ -221,6 +232,7 @@ public class ItemManager {
             case "peto_warden": item = wardenArmor.createWardenChestplate(); break;
             case "pantalon_warden": item = wardenArmor.createWardenLeggings(); break;
             case "bota_warden": item = wardenArmor.createWardenBoots(); break;
+            case "peto_warden_alado": item = wardenArmor.createWingedWardenChestplate(); break;
 
             case "chatarra": item = FishingItems.createChatarra(); break;
             case "manzana_podrida": item = FishingItems.createManzanaPodrida(); break;

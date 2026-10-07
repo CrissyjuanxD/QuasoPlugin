@@ -45,7 +45,9 @@ class CatalogoTiendaTest {
                 "mejora_casco_warden", "mejora_peto_warden", "mejora_pantalon_warden", "mejora_bota_warden",
                 "mineral_crudo_cian", "mineral_crudo_verde", "mineral_crudo_morado", "mineral_crudo_gris",
                 "fragmento_profundo_cian", "fragmento_profundo_verde", "fragmento_profundo_morado", "fragmento_profundo_gris",
-                "lingote_profundo", "cristal_celestita");
+                "lingote_profundo", "cristal_celestita", "lingote_celestita", "plantilla_celestita", "enderking_pearl",
+                "espada_celestita", "hacha_celestita", "lanza_celestita", "pico_celestita", "pala_celestita",
+                "azada_celestita", "peto_warden_alado");
         for (CatalogoTienda.Tienda tienda : CatalogoTienda.tiendas()) {
             for (CatalogoTienda.Oferta oferta : tienda.ofertas()) {
                 assertFalse(prohibidos.contains(oferta.producto()), oferta.producto());

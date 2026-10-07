@@ -19,11 +19,13 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.Random;
 
-// Lo que suelta el End: Cristal de Celestita de los racimos de amatista (12%), Fragmento Astral de los mobs del End
-// (lo que va en la Plantilla de Celestita) y Esencia Marchita de los Shulkers Negros y los Wither Skeletons del Páramo
+// Lo que suelta el End: Cristal de Celestita de los racimos de amatista (12%, 18% con el pico de Celestita), Fragmento
+// Astral de los mobs del End (lo que va en la Plantilla de Celestita) y Esencia Marchita de los Shulkers Negros y los
+// Wither Skeletons del Páramo. Los mobs que invoca el Rey Ender no sueltan nada
 public class EndDrops implements Listener {
 
     private static final double CRYSTAL_CHANCE = 0.12;
+    private static final double PICKAXE_CRYSTAL_CHANCE = 0.18;
 
     private final Random random = new Random();
     private final NamespacedKey enderInsect;
@@ -31,6 +33,7 @@ public class EndDrops implements Listener {
     private final NamespacedKey enderBlaze;
     private final NamespacedKey enderCreeper;
     private final NamespacedKey enderSpider;
+    private final NamespacedKey minion;
 
     public EndDrops(JavaPlugin plugin) {
         this.enderInsect = new NamespacedKey(plugin, "ender_insect");
@@ -38,13 +41,16 @@ public class EndDrops implements Listener {
         this.enderBlaze = new NamespacedKey(plugin, "ender_blaze");
         this.enderCreeper = new NamespacedKey(plugin, "ender_creeper");
         this.enderSpider = new NamespacedKey(plugin, "ender_spider");
+        this.minion = new NamespacedKey(plugin, "rey_ender_minion");
     }
 
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
     public void onCluster(BlockBreakEvent e) {
         Block block = e.getBlock();
         if (block.getType() != Material.AMETHYST_CLUSTER || block.getWorld().getEnvironment() != World.Environment.THE_END) return;
-        if (e.getPlayer().getGameMode() == GameMode.CREATIVE || random.nextDouble() >= CRYSTAL_CHANCE) return;
+        boolean pickaxe = EndItems.toolById(EndItems.idOf(e.getPlayer().getInventory().getItemInMainHand())) == EndItems.Tool.PICO;
+        double chance = pickaxe ? PICKAXE_CRYSTAL_CHANCE : CRYSTAL_CHANCE;
+        if (e.getPlayer().getGameMode() == GameMode.CREATIVE || random.nextDouble() >= chance) return;
         block.getWorld().dropItemNaturally(block.getLocation().add(0.5, 0.5, 0.5), EndItems.createCelestiteCrystal(1));
     }
 
@@ -53,7 +59,7 @@ public class EndDrops implements Listener {
         LivingEntity entity = e.getEntity();
         if (entity.getWorld().getEnvironment() != World.Environment.THE_END) return;
         Player killer = entity.getKiller();
-        if (killer == null) return;
+        if (killer == null || has(entity, minion)) return;
 
         if (has(entity, blackShulker)) e.getDrops().add(EndItems.createWitheredEssence(1 + random.nextInt(2)));
         else if (entity.getType() == EntityType.WITHER_SKELETON && EndBiome.isParamo(entity.getLocation().getBlock().getBiome())

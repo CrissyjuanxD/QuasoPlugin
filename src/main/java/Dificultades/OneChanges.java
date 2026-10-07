@@ -46,9 +46,6 @@ public class OneChanges implements Listener, Change {
     private final CorruptedBee corruptedBee;
     private final Bombita bombitaSpawner;;
     private final Iceologer iceologerSpawner;
-    private final EnderBlaze enderBlaze;
-    private final EnderCreeper enderCreeper;
-    private final EnderSpider enderSpider;
 
     private final NamespacedKey uuidKey;
     private final NamespacedKey upgradeKey;
@@ -65,10 +62,6 @@ public class OneChanges implements Listener, Change {
         this.bombitaSpawner = new Bombita(plugin);
         this.iceologerSpawner = new Iceologer(plugin);
 
-        this.enderBlaze = new EnderBlaze(plugin);
-        this.enderCreeper = new EnderCreeper(plugin);
-        this.enderSpider = new EnderSpider(plugin);
-
         this.uuidKey = new NamespacedKey(plugin, "creator_uuid");
         this.upgradeKey = new NamespacedKey(plugin, "is_upgrade");
     }
@@ -80,7 +73,7 @@ public class OneChanges implements Listener, Change {
 
     @Override
     public String description() {
-        return "Día 1: mobs corruptos y del End, raids modificadas, BloodMoon, altar de la Abeja Floral y la carne corrupta";
+        return "Día 1: mobs corruptos, raids modificadas, BloodMoon, altar de la Abeja Floral y la carne corrupta";
     }
 
     @Override
@@ -88,7 +81,7 @@ public class OneChanges implements Listener, Change {
         return isApplied;
     }
 
-    // Activa todo lo del día 1: mobs corruptos y del End, la receta de la carne y la tarea de targets
+    // Activa todo lo del día 1: mobs corruptos, la receta de la carne y la tarea de targets
     @Override
     public void apply() {
         if (!isApplied) {
@@ -104,10 +97,6 @@ public class OneChanges implements Listener, Change {
             guardianCorruptedSkeleton.apply();
             corruptedInfernalSpider.apply();
             corruptedBee.apply();
-
-            enderBlaze.apply();
-            enderCreeper.apply();
-            enderSpider.apply();
         }
     }
 
@@ -130,10 +119,6 @@ public class OneChanges implements Listener, Change {
             guardianCorruptedSkeleton.revert();
             corruptedInfernalSpider.revert();
             corruptedBee.revert();
-
-            enderBlaze.revert();
-            enderCreeper.revert();
-            enderSpider.revert();
             HandlerList.unregisterAll(this);
 
             isApplied = false;

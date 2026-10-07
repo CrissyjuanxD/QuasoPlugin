@@ -9,6 +9,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.CrafterCraftEvent;
 import org.bukkit.event.inventory.FurnaceSmeltEvent;
 import org.bukkit.event.inventory.PrepareItemCraftEvent;
+import org.bukkit.event.inventory.PrepareSmithingEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Recipe;
@@ -16,7 +17,7 @@ import org.bukkit.inventory.Recipe;
 public class WardenCaveItemGuard implements Listener {
 
     // Los items de la Warden Cave y del End son cristales, sílex, tinte o cobre por debajo; así no se gastan en
-    // recetas vanilla. Las recetas del plugin (las de TwoChanges y el Ojo del Rey Ender) no se tocan
+    // recetas vanilla. Las recetas del plugin (las de TwoChanges y ThreeChanges) no se tocan
     @EventHandler
     public void onPrepareCraft(PrepareItemCraftEvent event) {
         if (!isVanilla(event.getRecipe())) return;
@@ -35,6 +36,18 @@ public class WardenCaveItemGuard implements Listener {
         for (ItemStack item : crafter.getInventory().getContents()) {
             if (isCustom(item)) {
                 event.setCancelled(true);
+                return;
+            }
+        }
+    }
+
+    // En la herrería tampoco: la Plantilla de Celestita no sirve de plantilla de Netherite en las recetas vanilla
+    @EventHandler
+    public void onPrepareSmithing(PrepareSmithingEvent event) {
+        if (!isVanilla(event.getInventory().getRecipe())) return;
+        for (ItemStack item : event.getInventory().getContents()) {
+            if (isCustom(item)) {
+                event.setResult(null);
                 return;
             }
         }

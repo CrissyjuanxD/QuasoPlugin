@@ -33,6 +33,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.util.Vector;
 
 import java.util.HashMap;
@@ -52,13 +53,19 @@ public class EnderInsect implements Listener {
     private final NamespacedKey key;
     private final NamespacedKey spitKey;
     private final Map<UUID, Long> nextShot = new HashMap<>();
+    private final BukkitTask task;
     private long tick = 0;
 
     public EnderInsect(JavaPlugin plugin) {
         this.plugin = plugin;
         this.key = new NamespacedKey(plugin, "ender_insect");
         this.spitKey = new NamespacedKey(plugin, "ender_insect_spit");
-        Bukkit.getScheduler().runTaskTimer(plugin, this::update, 20L, 10L);
+        this.task = Bukkit.getScheduler().runTaskTimer(plugin, this::update, 20L, 10L);
+    }
+
+    public void stop() {
+        task.cancel();
+        nextShot.clear();
     }
 
     public static Endermite spawn(JavaPlugin plugin, Location location) {

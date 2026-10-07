@@ -66,16 +66,16 @@ public class EnderBlaze extends EnderMobs implements Listener {
         blaze.setCustomName(ChatColor.LIGHT_PURPLE + "" + ChatColor.BOLD + "Ender Blaze");
         blaze.setCustomNameVisible(false);
 
-        blaze.getAttribute(Attribute.MAX_HEALTH).setBaseValue(60);
-        blaze.setHealth(60);
-        blaze.getAttribute(Attribute.FOLLOW_RANGE).setBaseValue(64);
+        blaze.getAttribute(Attribute.MAX_HEALTH).setBaseValue(50);
+        blaze.setHealth(50);
+        blaze.getAttribute(Attribute.FOLLOW_RANGE).setBaseValue(48);
 
-        blaze.addPotionEffect(new PotionEffect(PotionEffectType.RESISTANCE, PotionEffect.INFINITE_DURATION, 1, false, false));
+        blaze.addPotionEffect(new PotionEffect(PotionEffectType.RESISTANCE, PotionEffect.INFINITE_DURATION, 0, false, false));
 
         blaze.getPersistentDataContainer().set(mobKey, PersistentDataType.BYTE, (byte) 1);
     }
 
-    // Las bolas de fuego del Ender Blaze explotan más fuerte y dejan rastro de partículas
+    // Las bolas de fuego del Ender Blaze dejan rastro de partículas y explotan al pegar
     @EventHandler
     public void onFireballLaunch(ProjectileLaunchEvent event) {
         if (!(event.getEntity() instanceof Fireball fireball)) return;
@@ -84,7 +84,6 @@ public class EnderBlaze extends EnderMobs implements Listener {
 
         fireball.getPersistentDataContainer().set(mobKey, PersistentDataType.BYTE, (byte) 1);
         trackedFireballs.add(fireball.getUniqueId());
-        fireball.setYield(3.0f);
 
         new BukkitRunnable() {
             @Override
@@ -100,17 +99,20 @@ public class EnderBlaze extends EnderMobs implements Listener {
         }.runTaskTimer(plugin, 0L, 1L);
     }
 
+    // Las bolas chicas del blaze no explotan solas: se hace una explosión chica que no rompe bloques ni prende fuego
     @EventHandler
-    public void onFireballExplode(EntityExplodeEvent event) {
+    public void onFireballHit(ProjectileHitEvent event) {
         if (!(event.getEntity() instanceof Fireball fireball)) return;
         if (!trackedFireballs.contains(fireball.getUniqueId())) return;
 
         Location loc = fireball.getLocation();
         World world = fireball.getWorld();
+        Entity source = fireball.getShooter() instanceof Entity shooter ? shooter : fireball;
+        Bukkit.getScheduler().runTask(plugin, () -> world.createExplosion(loc, 1.2f, false, false, source));
 
         world.playSound(loc, Sound.ENTITY_GENERIC_EXPLODE, 2.0f, 0.7f);
         world.playSound(loc, Sound.ENTITY_ENDERMAN_TELEPORT, 1.5f, 0.5f);
-        world.spawnParticle(Particle.EXPLOSION_EMITTER, loc, 2, 0.5, 0.5, 0.5, 0);
+        world.spawnParticle(Particle.EXPLOSION, loc, 3, 0.5, 0.5, 0.5, 0);
         world.spawnParticle(Particle.PORTAL, loc, 60, 1.5, 1.5, 1.5, 0.3);
         world.spawnParticle(Particle.FLAME, loc, 30, 1, 1, 1, 0.1);
 

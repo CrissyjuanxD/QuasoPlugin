@@ -16,9 +16,7 @@ import EffectListener.CorruptureEffect;
 import EffectListener.CustomEffectManager;
 import EffectListener.EffectPreventionListener;
 import EndBiomes.BlackShulker;
-import EndBiomes.EndDrops;
 import EndBiomes.EndPopulator;
-import EndBiomes.EnderInsect;
 import Encantamientos.*;
 import Events.BuildBattle.BuildBattleCommand;
 import Events.BuildBattle.BuildBattleHandler;
@@ -717,16 +715,13 @@ public class QuasoPlugin extends JavaPlugin implements Listener {
     }
 
     // Los biomas nuevos del End (Bosque Prismático y Páramo Marchito) se ponen con un populator en las islas de afuera
-    // que se generen desde ahora; los chunks que ya existían no cambian
+    // que se generen desde ahora; los chunks que ya existían no cambian. Los mobs, drops y recetas del End van en la
+    // etapa "tres" (ThreeChanges)
     private void initEndSystem() {
         BlackShulker blackShulker = new BlackShulker(this);
         for (World world : Bukkit.getWorlds()) {
             if (world.getEnvironment() == World.Environment.THE_END) world.getPopulators().add(new EndPopulator(blackShulker));
         }
-        getServer().getPluginManager().registerEvents(blackShulker, this);
-        getServer().getPluginManager().registerEvents(new EnderInsect(this), this);
-        getServer().getPluginManager().registerEvents(new EndDrops(this), this);
-        EndItems.registerRecipes(this);
     }
 
     private void cleanupBossHandlers() {

@@ -2,6 +2,7 @@ package Handlers;
 
 import Dificultades.Change;
 import Dificultades.OneChanges;
+import Dificultades.ThreeChanges;
 import Dificultades.TwoChanges;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -27,6 +28,7 @@ public class ChangesHandler {
 
         register(new OneChanges(plugin));
         register(new TwoChanges(plugin));
+        register(new ThreeChanges(plugin));
 
         boolean firstRun = !file.exists();
         for (String id : loadActive()) {
@@ -44,7 +46,7 @@ public class ChangesHandler {
         return changes.values();
     }
 
-    // Acepta el nombre del cambio (uno, dos) o su número (1, 2)
+    // Acepta el nombre del cambio (uno, dos, tres) o su número (1, 2, 3)
     public Change find(String name) {
         Change byId = changes.get(name.toLowerCase(Locale.ROOT));
         if (byId != null) return byId;

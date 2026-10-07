@@ -1,32 +1,64 @@
 package items;
 
+import com.google.common.collect.Multimap;
 import net.md_5.bungee.api.ChatColor;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
+import org.bukkit.attribute.Attribute;
+import org.bukkit.attribute.AttributeModifier;
+import org.bukkit.inventory.EquipmentSlot;
+import org.bukkit.inventory.EquipmentSlotGroup;
 import org.bukkit.inventory.ItemRarity;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.RecipeChoice;
-import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
-import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 // Items del End: Cristal de Celestita (racimos de las geodas del Bosque Prismático), Fragmento Astral (mobs del End),
-// Esencia Marchita (shulkers negros y wither skeletons del Páramo) y el Ojo del Rey Ender que se craftea con los tres
+// Esencia Marchita (shulkers negros y wither skeletons del Páramo), el Ojo del Rey Ender que se craftea con los tres,
+// el Lingote y la Plantilla de Celestita, las 6 herramientas de Celestita y la EnderKing Pearl del Rey Ender.
+// Las recetas están en ThreeChanges
 public final class EndItems {
 
     // La misma PDC "custom_item" que leen las misiones (MissionUtils.customId)
     public static final NamespacedKey ITEM_KEY = new NamespacedKey("quasoplugin", "custom_item");
-    private static final NamespacedKey KING_EYE_RECIPE = new NamespacedKey("quasoplugin", "ojo_rey_ender");
+    private static final NamespacedKey DAMAGE_KEY = new NamespacedKey("quasoplugin", "celestita_dano");
+
+    private static final String CELESTE = "#8fd3ff";
+
+    // Las herramientas de Celestita: la de Netherite con 1 de daño más. Las armas le pegan 50% más al Rey Ender
+    public enum Tool {
+        ESPADA("espada_celestita", "Espada de Celestita", Material.NETHERITE_SWORD, true),
+        HACHA("hacha_celestita", "Hacha de Celestita", Material.NETHERITE_AXE, true),
+        LANZA("lanza_celestita", "Lanza de Celestita", Material.NETHERITE_SPEAR, true),
+        PICO("pico_celestita", "Pico de Celestita", Material.NETHERITE_PICKAXE, false),
+        PALA("pala_celestita", "Pala de Celestita", Material.NETHERITE_SHOVEL, false),
+        AZADA("azada_celestita", "Azada de Celestita", Material.NETHERITE_HOE, false);
+
+        public final String id;
+        public final String name;
+        public final Material base;
+        public final boolean weapon;
+
+        Tool(String id, String name, Material base, boolean weapon) {
+            this.id = id;
+            this.name = name;
+            this.base = base;
+            this.weapon = weapon;
+        }
+    }
+
+    private static final Set<String> MATERIALS = Set.of("cristal_celestita", "fragmento_astral", "esencia_marchita",
+            "ojo_rey_ender", "lingote_celestita", "plantilla_celestita", "enderking_pearl");
 
     private EndItems() {}
 
     public static ItemStack createCelestiteCrystal(int amount) {
-        return item(Material.PRISMARINE_CRYSTALS, amount, "cristal_celestita", "#8fd3ff", "Cristal de Celestita", ItemRarity.RARE,
+        return item(Material.PRISMARINE_CRYSTALS, amount, "cristal_celestita", CELESTE, "Cristal de Celestita", ItemRarity.RARE,
                 "Sale de los racimos de amatista", "de las geodas del Bosque Prismático.");
     }
 
@@ -42,7 +74,66 @@ public final class EndItems {
 
     public static ItemStack createKingEye() {
         return item(Material.ENDER_EYE, 1, "ojo_rey_ender", "#d36bff", "Ojo del Rey Ender", ItemRarity.EPIC,
-                "Sirve para invocar al Rey Ender.", "No se puede tirar ni poner en un portal.");
+                "Úsalo en el altar de un Santuario", "Marchito para invocar al Rey Ender.");
+    }
+
+    public static ItemStack createCelestiteIngot() {
+        return item(Material.COPPER_INGOT, 1, "lingote_celestita", CELESTE, "Lingote de Celestita", ItemRarity.RARE,
+                "Mejora las herramientas de Netherite", "junto con la Plantilla de Celestita.");
+    }
+
+    public static ItemStack createCelestiteTemplate() {
+        return item(Material.NETHERITE_UPGRADE_SMITHING_TEMPLATE, 1, "plantilla_celestita", CELESTE, "Plantilla de Celestita",
+                ItemRarity.EPIC, "En la mesa de herrería: plantilla,", "herramienta de Netherite y", "1 Lingote de Celestita.");
+    }
+
+    public static ItemStack createEnderKingPearl() {
+        return item(Material.HEART_OF_THE_SEA, 1, "enderking_pearl", "#b55cff", "EnderKing Pearl", ItemRarity.EPIC,
+                "La suelta el Rey Ender.", "En la mesa de herrería, con el Peto", "de Warden y unas Elytras, hace el", "Peto de Warden Alado.");
+    }
+
+    // La herramienta de Netherite con su daño de siempre +1 (se cambia el modificador base para que el tooltip lo sume)
+    public static ItemStack createTool(Tool tool) {
+        ItemStack item = new ItemStack(tool.base);
+        ItemMeta meta = item.getItemMeta();
+        meta.setDisplayName(ChatColor.of(CELESTE) + "" + ChatColor.BOLD + tool.name);
+        meta.getPersistentDataContainer().set(ITEM_KEY, PersistentDataType.STRING, tool.id);
+        meta.setRarity(ItemRarity.EPIC);
+        meta.setItemModel(NamespacedKey.minecraft(tool.id));
+
+        Multimap<Attribute, AttributeModifier> defaults = tool.base.getDefaultAttributeModifiers(EquipmentSlot.HAND);
+        boolean raised = false;
+        for (Map.Entry<Attribute, AttributeModifier> entry : defaults.entries()) {
+            AttributeModifier modifier = entry.getValue();
+            if (entry.getKey().equals(Attribute.ATTACK_DAMAGE) && !raised) {
+                modifier = new AttributeModifier(modifier.getKey(), modifier.getAmount() + 1, modifier.getOperation(), modifier.getSlotGroup());
+                raised = true;
+            }
+            meta.addAttributeModifier(entry.getKey(), modifier);
+        }
+        if (!raised) {
+            meta.addAttributeModifier(Attribute.ATTACK_DAMAGE, new AttributeModifier(DAMAGE_KEY, 1,
+                    AttributeModifier.Operation.ADD_NUMBER, EquipmentSlotGroup.MAINHAND));
+        }
+
+        List<String> lore = new ArrayList<>();
+        lore.add("");
+        lore.add(ChatColor.of("#5fa8d3") + "Forjada con los cristales del End.");
+        lore.add("");
+        lore.add(ChatColor.of(CELESTE) + "■ " + ChatColor.AQUA + "+1 de daño sobre Netherite");
+        if (tool.weapon) lore.add(ChatColor.of(CELESTE) + "■ " + ChatColor.LIGHT_PURPLE + "+50% de daño al Rey Ender");
+        if (tool == Tool.PICO) lore.add(ChatColor.of(CELESTE) + "■ " + ChatColor.LIGHT_PURPLE + "18% de Cristal en los racimos");
+        meta.setLore(lore);
+        item.setItemMeta(meta);
+        return item;
+    }
+
+    public static Tool toolById(String id) {
+        if (id == null) return null;
+        for (Tool tool : Tool.values()) {
+            if (tool.id.equals(id)) return tool;
+        }
+        return null;
     }
 
     private static ItemStack item(Material type, int amount, String id, String color, String name, ItemRarity rarity, String... lines) {
@@ -64,21 +155,17 @@ public final class EndItems {
         return item.getItemMeta().getPersistentDataContainer().get(ITEM_KEY, PersistentDataType.STRING);
     }
 
+    // Los materiales del End (no las herramientas): no entran en recetas vanilla
     public static boolean isEndItem(ItemStack item) {
-        String id = idOf(item);
-        return "cristal_celestita".equals(id) || "fragmento_astral".equals(id) || "esencia_marchita".equals(id) || "ojo_rey_ender".equals(id);
+        return isMaterial(idOf(item));
     }
 
-    // Ojo del Rey Ender: un ojo de ender rodeado de 4 Esencias Marchitas, 2 Cristales de Celestita y 2 Fragmentos
-    // Astrales, así hace falta ir a los dos biomas nuevos y pelear con los mobs del End
-    public static void registerRecipes(JavaPlugin plugin) {
-        if (Bukkit.getRecipe(KING_EYE_RECIPE) != null) return;
-        ShapedRecipe recipe = new ShapedRecipe(KING_EYE_RECIPE, createKingEye());
-        recipe.shape("EAE", "COC", "EAE");
-        recipe.setIngredient('E', new RecipeChoice.ExactChoice(createWitheredEssence(1)));
-        recipe.setIngredient('A', new RecipeChoice.ExactChoice(createAstralFragment(1)));
-        recipe.setIngredient('C', new RecipeChoice.ExactChoice(createCelestiteCrystal(1)));
-        recipe.setIngredient('O', Material.ENDER_EYE);
-        Bukkit.addRecipe(recipe);
+    public static boolean isMaterial(String id) {
+        return id != null && MATERIALS.contains(id);
+    }
+
+    public static boolean isCelestiteWeapon(ItemStack item) {
+        Tool tool = toolById(idOf(item));
+        return tool != null && tool.weapon;
     }
 }

@@ -57,7 +57,7 @@ public class WardenCaveItemGuard implements Listener {
     }
 
     private static boolean isCustom(ItemStack item) {
-        return WardenCaveItems.isWardenCaveItem(item) || EndItems.isEndItem(item);
+        return WardenCaveItems.isWardenCaveItem(item) || EndItems.isEndItem(item) || items.tienda.ItemsTienda.isItem(item);
     }
 
     private boolean isVanilla(Recipe recipe) {

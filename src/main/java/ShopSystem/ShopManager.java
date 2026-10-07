@@ -6,6 +6,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.attribute.Attribute;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.EntityType;
@@ -49,7 +50,7 @@ public class ShopManager {
     }
 
     // Aldeano quieto e invulnerable con 10 tradeos vacíos, identificado con un id en su PDC
-    public void spawnShop(String name, Location location, Villager.Type type, Villager.Profession profession) {
+    public Villager spawnShop(String name, Location location, Villager.Type type, Villager.Profession profession) {
         Villager villager = (Villager) location.getWorld().spawnEntity(location, EntityType.VILLAGER);
         String shopId = UUID.randomUUID().toString();
         String coloredName = ChatColor.translateAlternateColorCodes('&', name);
@@ -71,6 +72,7 @@ public class ShopManager {
 
         initializeEmptyTrades(villager);
         saveShopTrades(shopId, villager.getRecipes());
+        return villager;
     }
 
     private void initializeEmptyTrades(Villager villager) {
@@ -236,6 +238,69 @@ public class ShopManager {
         FileConfiguration config = YamlConfiguration.loadConfiguration(tradesFile);
         config.set("shops." + shopId, null);
         try { config.save(tradesFile); } catch (IOException e) {}
+    }
+
+    // ---------------------------------------------------------------- Catálogo por secciones (/tienda)
+
+    public int getSeccion() {
+        return Math.max(1, YamlConfiguration.loadConfiguration(tradesFile).getInt("seccion", 1));
+    }
+
+    public void setSeccion(int seccion) {
+        FileConfiguration config = YamlConfiguration.loadConfiguration(tradesFile);
+        config.set("seccion", seccion);
+        try { config.save(tradesFile); } catch (IOException e) { plugin.getLogger().severe("Error guardando la sección de la tienda: " + e.getMessage()); }
+    }
+
+    // Qué tienda del catálogo es cada aldeano (shopId -> catálogo)
+    public Map<String, String> getCatalogos() {
+        FileConfiguration config = YamlConfiguration.loadConfiguration(tradesFile);
+        Map<String, String> catalogos = new LinkedHashMap<>();
+        ConfigurationSection shops = config.getConfigurationSection("shops");
+        if (shops == null) return catalogos;
+        for (String shopId : shops.getKeys(false)) {
+            String catalogo = shops.getString(shopId + ".catalogo");
+            if (catalogo != null) catalogos.put(shopId, catalogo);
+        }
+        return catalogos;
+    }
+
+    public void setCatalogo(String shopId, String catalogo) {
+        FileConfiguration config = YamlConfiguration.loadConfiguration(tradesFile);
+        config.set("shops." + shopId + ".catalogo", catalogo);
+        try { config.save(tradesFile); } catch (IOException e) { plugin.getLogger().severe("Error guardando el catálogo: " + e.getMessage()); }
+    }
+
+    // Escribe los 10 tradeos que le tocan a ese aldeano en esa sección y, si está cargado, se los pone
+    public void aplicarCatalogo(String shopId, CatalogoTienda.Tienda tienda, int seccion) {
+        List<MerchantRecipe> recipes = new ArrayList<>();
+        for (int i = 0; i < 10; i++) {
+            CatalogoTienda.Oferta oferta = i < tienda.ofertas().size() ? tienda.ofertas().get(i) : null;
+            MerchantRecipe recipe = oferta != null && CatalogoTienda.abierta(oferta, seccion) ? tradeo(oferta, seccion) : null;
+            if (recipe == null) {
+                recipe = new MerchantRecipe(createEmptyTradeItem(), 9999);
+                recipe.addIngredient(createEmptyTradeItem());
+            }
+            recipes.add(recipe);
+        }
+        saveShopTrades(shopId, recipes);
+        Villager villager = getVillagerById(shopId);
+        if (villager != null) villager.setRecipes(recipes);
+    }
+
+    // Precio de más de 64 DinoCoins: un stack en el primer lugar y el resto en el segundo
+    private MerchantRecipe tradeo(CatalogoTienda.Oferta oferta, int seccion) {
+        ItemStack producto = CustomItemRegistry.getCustomItem(oferta.producto(), oferta.cantidadProducto());
+        int precio = CatalogoTienda.precio(oferta, seccion);
+        ItemStack pago = CustomItemRegistry.getCustomItem(oferta.pago(), Math.min(64, precio));
+        if (producto == null || pago == null) {
+            plugin.getLogger().warning("Catálogo de la tienda: no existe el item " + (producto == null ? oferta.producto() : oferta.pago()));
+            return null;
+        }
+        MerchantRecipe recipe = new MerchantRecipe(producto, 9999);
+        recipe.addIngredient(pago);
+        if (precio > 64) recipe.addIngredient(CustomItemRegistry.getCustomItem(oferta.pago(), precio - 64));
+        return recipe;
     }
 
     public Villager getVillagerById(String shopId) {

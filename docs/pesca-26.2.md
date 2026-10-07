@@ -30,28 +30,23 @@
 
 Tope: 60 premios especiales por jugador al día. Después solo sale pesca normal.
 
-| Premio | Rareza | Tabla normal | Tabla de suerte | Precio sugerido |
+| Premio | Rareza | Tabla normal | Tabla de suerte | La Pescadería paga 1 DinoCoin por |
 |---|---|---|---|---|
-| Chatarra | Común | 30% | 16% | 10 → 1 DinoCoin |
-| Manzana Podrida | Común | 25% | 14% | 10 → 1 DinoCoin |
-| Zanahoria Encantada | Poco común | 15% | 18% | 5 → 1 DinoCoin |
-| Pepitas de Hierro Oxidadas | Poco común | 12% | 16% | 5 → 1 DinoCoin |
-| Pepitas de Diamante | Raro | 8% | 14% | 1 → 1 DinoCoin |
-| Fragmentos de Ámbar | Raro | 5% | 10% | 1 → 2 DinoCoins |
-| Fósiles Pequeños | Épico | 3% | 7% | 1 → 4 DinoCoins |
-| Lingote de Platino | Épico | 2% | 5% | 1 → 6 DinoCoins |
+| Chatarra | Común | 30% | 16% | 64 |
+| Manzana Podrida | Común | 25% | 14% | 48 |
+| Zanahoria Encantada | Poco común | 15% | 18% | 24 |
+| Pepitas de Hierro Oxidadas | Poco común | 12% | 16% | 16 |
+| Pepitas de Diamante | Raro | 8% | 14% | 8 |
+| Fragmentos de Ámbar | Raro | 5% | 10% | 4 |
+| Fósiles Pequeños | Épico | 3% | 7% | 2 |
+| Lingote de Platino | Épico | 2% | 5% | 1 |
 
-Con esos precios, un premio de la tabla normal vale unas 0,53 DinoCoins y uno
-de la tabla de suerte unas 1,02. Con el tope de 60 al día, la pesca da como
-máximo unas 46 DinoCoins diarias (mitad verdes y mitad naranjas) y unas 61 si
-todo sale verde.
+Los precios son los de la Pescadería del catálogo (`/tienda`, ver `ShopSystem/CatalogoTienda.java`). Así, un premio
+de la tabla normal vale unas 0,08 DinoCoins y uno de la tabla de suerte unas 0,15. Con el tope de 60 al día, la pesca
+da de 5 a 9 DinoCoins diarias según cuántos verdes se acierten: lo que pedía el itinerario (unas 5), con un poco más
+para el que juega bien.
 
-Con el sistema anterior, el máximo era de unas 32 diarias (siempre tabla
-normal). Las misiones dan de 5 a 60 DinoCoins y un trabajo completo da unas
-1.000 en 100 niveles.
-
-Los precios reales están en `tradeos.yml` del servidor. Para bajar lo que da la
-pesca sin tocar la tienda, se baja `FishingLoot.TOPE_DIARIO`.
+Para bajar lo que da la pesca sin tocar la tienda, se baja `FishingLoot.TOPE_DIARIO`.
 
 Los épicos se anuncian a todo el server. Cada premio especial deja una línea en
 el chat con lo que lleva el jugador ese día.

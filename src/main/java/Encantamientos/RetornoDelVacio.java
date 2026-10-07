@@ -32,7 +32,7 @@ public class RetornoDelVacio implements Listener {
 
     private static final long COOLDOWN_MS = 5 * 60 * 1000;
 
-    private final Map<UUID, Location> lastGround = new HashMap<>();
+    private static final Map<UUID, Location> lastGround = new HashMap<>();
     private final Map<UUID, Long> lastUse = new HashMap<>();
     private final Map<UUID, Long> lastWarning = new HashMap<>();
 
@@ -48,6 +48,12 @@ public class RetornoDelVacio implements Listener {
             Block below = player.getLocation().subtract(0, 0.1, 0).getBlock();
             if (below.getType().isSolid()) lastGround.put(player.getUniqueId(), player.getLocation());
         }
+    }
+
+    // El último suelo firme que pisó en el End (también lo usa la Pluma del Vacío)
+    public static Location ultimoSuelo(Player player) {
+        Location location = lastGround.get(player.getUniqueId());
+        return location == null ? null : location.clone();
     }
 
     // Va antes que el truco del tótem en el vacío del End (OneChanges); si lo salva, ese ya no hace nada

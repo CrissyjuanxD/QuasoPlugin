@@ -7,6 +7,7 @@ import Habilidades.HabilidadesBook;
 import imp.crissyjuanxd.QuasoPlugin;
 import items.*;
 import items.IceBow.IceBowItem;
+import items.tienda.ItemsTienda;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -63,40 +64,50 @@ public class ItemManager {
         cargarNombresDeItems();
     }
 
+    // Los items que se pueden dar con /giveqp (además de los de la tienda y los libros de encantamientos)
+    private static final String[] CLAVES = {
+        "doubletotem", "corrupted_steak", "corrupted_golden_apple", "libro_habilidades",
+        "dinocoins", "dinofichas", "monedero", "blood_fragment", "mochila_nivel_1", "mochila_nivel_2",
+        "mochila_nivel_3", "mochila_nivel_4", "mochila_nivel_5", "enderbag", "gancho",
+        "panic_apple", "artefacto_nivel_1", "artefacto_nivel_2", "misiones", "icetotem",
+        "flytotem", "excavator_pickaxe", "potion_resistance_2", "splash_resistance_3",
+        "potion_slow_falling", "splash_regeneration_3", "potion_haste_3", "potion_haste_2",
+        "splash_absorption_10", "frasco_de_velocidad", "amulet_bloodmoon", "amuleto_inmortalidad",
+        "life_campfire", "fuel_campfire", "special_totem", "cristal_hielo", "arco_hielo",
+        "happy_ghast_enchant", "happy_ghast_enchant_2", "perla_infinita", "retorno_warden", "tarta_calabaza_mejorada", "bar_tequila", "bar_margarita",
+        "bar_mezcal", "bar_pulque", "bar_cerveza", "bar_ron", "bar_vodka", "bar_whisky",
+        "bar_sake", "bar_ginebra", "bar_azulito", "bar_michelada", "manzana_vida", "pluma_levitacion", "pluma_levitacion_mejorada",
+        "keep_inventory_liquido", "estatua_protectora", "amuleto_ultima_esperanza",
+        "corrupted_spider_eye", "bloque_oro_apilado", "arco_hielo_jugador",
+
+        "amuleto_invisiblidad", "arco_nivel1", "arco_nivel2", "arco_nivel3", "alma_infested_skeleton",
+        "alma_infested_ghast", "alma_infested_creeper", "alma_infested_cave_spider", "energia_warden",
+        "mineral_crudo_cian", "mineral_crudo_verde", "mineral_crudo_morado", "mineral_crudo_gris",
+        "fragmento_profundo_cian", "fragmento_profundo_verde", "fragmento_profundo_morado",
+        "fragmento_profundo_gris", "lingote_profundo", "corazon_warden_boss",
+        "baya_sculk", "fruta_abisal", "baya_luminosa",
+        "cristal_celestita", "fragmento_astral", "esencia_marchita", "ojo_rey_ender",
+        "mejora_casco_warden", "mejora_peto_warden", "mejora_pantalon_warden", "mejora_bota_warden",
+
+        "casco_warden", "peto_warden", "pantalon_warden", "bota_warden",
+
+        "chatarra", "manzana_podrida", "zanahoria_encantada",
+        "pepitas_hierro_oxidadas", "pepitas_diamante",
+        "fragmentos_ambar", "fosiles_pequenos", "lingote_platino"
+    };
+
+    public static List<String> claves() {
+        List<String> claves = new ArrayList<>(List.of(CLAVES));
+        claves.addAll(ItemsTienda.claves());
+        claves.addAll(QuasoEnchant.commandNames());
+        return claves;
+    }
+
     private void cargarNombresDeItems() {
-        String[] items = {
-                "doubletotem", "corrupted_steak", "corrupted_golden_apple", "libro_habilidades",
-                "dinocoins", "dinofichas", "monedero", "blood_fragment", "mochila_nivel_1", "mochila_nivel_2",
-                "mochila_nivel_3", "mochila_nivel_4", "mochila_nivel_5", "enderbag", "gancho",
-                "panic_apple", "artefacto_nivel_1", "artefacto_nivel_2", "misiones", "icetotem",
-                "flytotem", "excavator_pickaxe", "potion_resistance_2", "splash_resistance_3",
-                "potion_slow_falling", "splash_regeneration_3", "potion_haste_3", "potion_haste_2",
-                "splash_absorption_10", "frasco_de_velocidad", "amulet_bloodmoon", "amuleto_inmortalidad",
-                "life_campfire", "fuel_campfire", "special_totem", "cristal_hielo", "arco_hielo",
-                "happy_ghast_enchant", "happy_ghast_enchant_2", "perla_infinita", "retorno_warden", "tarta_calabaza_mejorada", "bar_tequila", "bar_margarita",
-                "bar_mezcal", "bar_pulque", "bar_cerveza", "bar_ron", "bar_vodka", "bar_whisky",
-                "bar_sake", "bar_ginebra", "bar_azulito", "bar_michelada", "manzana_vida", "pluma_levitacion", "pluma_levitacion_mejorada",
-                "keep_inventory_liquido", "estatua_protectora", "amuleto_ultima_esperanza",
-                "corrupted_spider_eye", "bloque_oro_apilado", "arco_hielo_jugador",
-
-                "amuleto_invisiblidad", "arco_nivel1", "arco_nivel2", "arco_nivel3", "alma_infested_skeleton",
-                "alma_infested_ghast", "alma_infested_creeper", "alma_infested_cave_spider", "energia_warden",
-                "mineral_crudo_cian", "mineral_crudo_verde", "mineral_crudo_morado", "mineral_crudo_gris",
-                "fragmento_profundo_cian", "fragmento_profundo_verde", "fragmento_profundo_morado",
-                "fragmento_profundo_gris", "lingote_profundo", "corazon_warden_boss",
-                "baya_sculk", "fruta_abisal", "baya_luminosa",
-                "cristal_celestita", "fragmento_astral", "esencia_marchita", "ojo_rey_ender",
-                "mejora_casco_warden", "mejora_peto_warden", "mejora_pantalon_warden", "mejora_bota_warden",
-
-                "casco_warden", "peto_warden", "pantalon_warden", "bota_warden",
-
-                "chatarra", "manzana_podrida", "zanahoria_encantada",
-                "pepitas_hierro_oxidadas", "pepitas_diamante",
-                "fragmentos_ambar", "fosiles_pequenos", "lingote_platino"
-        };
-        for (String item : items) {
+        for (String item : CLAVES) {
             registeredItems.add(item);
         }
+        registeredItems.addAll(ItemsTienda.claves());
         registeredItems.addAll(QuasoEnchant.commandNames());
     }
 
@@ -107,6 +118,8 @@ public class ItemManager {
     // Crea cualquier item custom del plugin por su nombre (lo usan /giveqp, el casino y las tiendas)
     public ItemStack getItem(String itemName, int cantidad, Player target, int usosEspeciales) {
         ItemStack item = null;
+
+        if (ItemsTienda.existe(itemName.toLowerCase())) return ItemsTienda.crear(itemName.toLowerCase(), cantidad);
 
         switch (itemName.toLowerCase()) {
             case "doubletotem": item = doubleLifeTotem.createDoubleLifeTotem(); break;

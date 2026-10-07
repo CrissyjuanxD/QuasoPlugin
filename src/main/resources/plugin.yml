@@ -204,6 +204,11 @@ commands:
     usage: /trade <item> <cantidad>
     permission: viciont_hardcore3.command.trade
     permission-message: No tienes permiso para usar este comando.
+  tienda:
+    description: Carga el catálogo de la tienda por secciones (días 1, 20, 30, 40, 50 y 100)
+    usage: /tienda <dia|seccion|crear|asignar|precios|info>
+    permission: quasoplugin.tienda.admin
+    permission-message: No tienes permiso para usar este comando.
   removeshop:
     description: Elimina un aldeano de la ShopSystem
     usage: /removeshop

@@ -140,7 +140,10 @@ public class ShopListeners implements Listener {
         if (hasRequiredItems(player, ing1, ing2)) {
             executeTransaction(player, ing1, ing2);
 
-            if (items.EconomyItems.isMaterialMochila(result.getType())) {
+            // Solo las mochilas y el monedero (2020 a 2025) se crean de nuevo para que cada uno tenga su UUID; los
+            // demás items de eco (almas, energía, el amuleto) se dan tal cual
+            if (items.EconomyItems.isMaterialMochila(result.getType()) && result.hasItemMeta() && result.getItemMeta().hasCustomModelData()
+                    && result.getItemMeta().getCustomModelData() >= 2020 && result.getItemMeta().getCustomModelData() <= 2025) {
                 int amountToGive = result.getAmount();
                 int customModelData = result.getItemMeta().getCustomModelData();
 

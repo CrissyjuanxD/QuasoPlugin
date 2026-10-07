@@ -356,6 +356,9 @@ public class QuasoPlugin extends JavaPlugin implements Listener {
         Bukkit.getPluginManager().registerEvents(wardenArmor, this);
         Bukkit.getPluginManager().registerEvents(new InfinitePearl(), this);
         Bukkit.getPluginManager().registerEvents(new WardenReturnItem(), this);
+        items.tienda.EfectosTienda efectosTienda = new items.tienda.EfectosTienda(this);
+        Bukkit.getPluginManager().registerEvents(efectosTienda, this);
+        Bukkit.getPluginManager().registerEvents(new items.tienda.UsoItemsTienda(this, efectosTienda), this);
 
         getCommand("mochilas").setExecutor(new MochilaCommand(economyItemsFunctions));
         getCommand("delmochilas").setExecutor(new MochilaCommand(economyItemsFunctions));
@@ -605,6 +608,9 @@ public class QuasoPlugin extends JavaPlugin implements Listener {
         getCommand("removeshop").setExecutor(shopCommands);
         getCommand("trade").setExecutor(shopCommands);
         getCommand("trade").setTabCompleter(shopCommands);
+        TiendaCommand tiendaCommand = new TiendaCommand(shopManager);
+        getCommand("tienda").setExecutor(tiendaCommand);
+        getCommand("tienda").setTabCompleter(tiendaCommand);
     }
 
     private void initMobsAndBossesSystem() {

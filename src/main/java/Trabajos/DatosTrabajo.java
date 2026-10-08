@@ -15,10 +15,6 @@ final class DatosTrabajo {
     final Map<Trabajo, Double> xp = new EnumMap<>(Trabajo.class);
     boolean sucio;
 
-    // Ventana de una hora para el tope de XP
-    long inicioHora;
-    double xpEnLaHora;
-
     int nivel(Trabajo trabajo) {
         return niveles.getOrDefault(trabajo, 0);
     }

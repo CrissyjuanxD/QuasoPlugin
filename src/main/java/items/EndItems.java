@@ -30,25 +30,29 @@ public final class EndItems {
 
     private static final String CELESTE = "#8fd3ff";
 
-    // Las herramientas de Celestita: la de Netherite con 1 de daño más. Las armas le pegan 50% más al Rey Ender
+    // Las herramientas de Celestita: la de Netherite con 1 de daño más, y la espada con 12 (4 más). La espada le pega
+    // el doble a los mobs del End y al Rey Ender; el hacha y la lanza, 50% más al Rey Ender
     public enum Tool {
-        ESPADA("espada_celestita", "Espada de Celestita", Material.NETHERITE_SWORD, true),
-        HACHA("hacha_celestita", "Hacha de Celestita", Material.NETHERITE_AXE, true),
-        LANZA("lanza_celestita", "Lanza de Celestita", Material.NETHERITE_SPEAR, true),
-        PICO("pico_celestita", "Pico de Celestita", Material.NETHERITE_PICKAXE, false),
-        PALA("pala_celestita", "Pala de Celestita", Material.NETHERITE_SHOVEL, false),
-        AZADA("azada_celestita", "Azada de Celestita", Material.NETHERITE_HOE, false);
+        ESPADA("espada_celestita", "Espada de Celestita", Material.NETHERITE_SWORD, true, 4),
+        HACHA("hacha_celestita", "Hacha de Celestita", Material.NETHERITE_AXE, true, 1),
+        LANZA("lanza_celestita", "Lanza de Celestita", Material.NETHERITE_SPEAR, true, 1),
+        PICO("pico_celestita", "Pico de Celestita", Material.NETHERITE_PICKAXE, false, 1),
+        PALA("pala_celestita", "Pala de Celestita", Material.NETHERITE_SHOVEL, false, 1),
+        AZADA("azada_celestita", "Azada de Celestita", Material.NETHERITE_HOE, false, 1);
 
         public final String id;
         public final String name;
         public final Material base;
         public final boolean weapon;
+        // Daño de más sobre la de Netherite
+        public final int extra;
 
-        Tool(String id, String name, Material base, boolean weapon) {
+        Tool(String id, String name, Material base, boolean weapon, int extra) {
             this.id = id;
             this.name = name;
             this.base = base;
             this.weapon = weapon;
+            this.extra = extra;
         }
     }
 
@@ -92,7 +96,8 @@ public final class EndItems {
                 "La suelta el Rey Ender.", "En la mesa de herrería, con el Peto", "de Warden y unas Elytras, hace el", "Peto de Warden Alado.");
     }
 
-    // La herramienta de Netherite con su daño de siempre +1 (se cambia el modificador base para que el tooltip lo sume)
+    // La herramienta de Netherite con su daño de siempre más el extra (se cambia el modificador base para que el tooltip
+    // lo sume)
     public static ItemStack createTool(Tool tool) {
         ItemStack item = new ItemStack(tool.base);
         ItemMeta meta = item.getItemMeta();
@@ -106,13 +111,13 @@ public final class EndItems {
         for (Map.Entry<Attribute, AttributeModifier> entry : defaults.entries()) {
             AttributeModifier modifier = entry.getValue();
             if (entry.getKey().equals(Attribute.ATTACK_DAMAGE) && !raised) {
-                modifier = new AttributeModifier(modifier.getKey(), modifier.getAmount() + 1, modifier.getOperation(), modifier.getSlotGroup());
+                modifier = new AttributeModifier(modifier.getKey(), modifier.getAmount() + tool.extra, modifier.getOperation(), modifier.getSlotGroup());
                 raised = true;
             }
             meta.addAttributeModifier(entry.getKey(), modifier);
         }
         if (!raised) {
-            meta.addAttributeModifier(Attribute.ATTACK_DAMAGE, new AttributeModifier(DAMAGE_KEY, 1,
+            meta.addAttributeModifier(Attribute.ATTACK_DAMAGE, new AttributeModifier(DAMAGE_KEY, tool.extra,
                     AttributeModifier.Operation.ADD_NUMBER, EquipmentSlotGroup.MAINHAND));
         }
 
@@ -120,8 +125,13 @@ public final class EndItems {
         lore.add("");
         lore.add(ChatColor.of("#5fa8d3") + "Forjada con los cristales del End.");
         lore.add("");
-        lore.add(ChatColor.of(CELESTE) + "■ " + ChatColor.AQUA + "+1 de daño sobre Netherite");
-        if (tool.weapon) lore.add(ChatColor.of(CELESTE) + "■ " + ChatColor.LIGHT_PURPLE + "+50% de daño al Rey Ender");
+        lore.add(ChatColor.of(CELESTE) + "■ " + ChatColor.AQUA + "+" + tool.extra + " de daño sobre Netherite");
+        if (tool == Tool.ESPADA) {
+            lore.add(ChatColor.of(CELESTE) + "■ " + ChatColor.LIGHT_PURPLE + "Doble de daño a los mobs del End");
+            lore.add(ChatColor.of(CELESTE) + "■ " + ChatColor.LIGHT_PURPLE + "Doble de daño al Rey Ender");
+        } else if (tool.weapon) {
+            lore.add(ChatColor.of(CELESTE) + "■ " + ChatColor.LIGHT_PURPLE + "+50% de daño al Rey Ender");
+        }
         if (tool == Tool.PICO) lore.add(ChatColor.of(CELESTE) + "■ " + ChatColor.LIGHT_PURPLE + "18% de Cristal en los racimos");
         meta.setLore(lore);
         item.setItemMeta(meta);
@@ -162,6 +172,10 @@ public final class EndItems {
 
     public static boolean isMaterial(String id) {
         return id != null && MATERIALS.contains(id);
+    }
+
+    public static boolean isCelestiteSword(ItemStack item) {
+        return toolById(idOf(item)) == Tool.ESPADA;
     }
 
     public static boolean isCelestiteWeapon(ItemStack item) {

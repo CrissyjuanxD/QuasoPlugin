@@ -4,10 +4,6 @@ package Trabajos;
 // XP por hora: el nivel 10 sale en ~1 hora y media, el 30 en ~15, el 50 en ~45 y el 100 en ~200 horas
 public final class TrabajoNiveles {
 
-    // Después de 1.500 XP en una hora, lo que sigue rinde la cuarta parte (para que las granjas no lo regalen)
-    public static final double TOPE_POR_HORA = 1500;
-    public static final double RINDE_PASADO_EL_TOPE = 0.25;
-
     private TrabajoNiveles() {}
 
     // XP para pasar del nivel anterior a este (nivel 1 = 45 XP, nivel 50 = 1.823 XP, nivel 100 = 4.016 XP)
@@ -16,22 +12,22 @@ public final class TrabajoNiveles {
         return (int) Math.round(25 + 20 * Math.pow(nivel, 1.15));
     }
 
-    // DinoCoins por subir de nivel según lo difícil que es: 1 hasta el 20, 2 hasta el 40... y 5 del 81 al 100
+    // DinoCoins por subir de nivel según lo difícil que es: 2 hasta el 20, 3 hasta el 40... y 6 del 81 al 100
     public static int monedasPorNivel(int nivel) {
         if (nivel <= 0) return 0;
-        return Math.min(5, (nivel - 1) / 20 + 1);
+        return Math.min(6, (nivel - 1) / 20 + 2);
     }
 
-    // Cada 5 niveles un bonus que crece con el nivel: 8 en el 5, 30 en el 50 y 55 en el 100
+    // Cada 5 niveles un bonus que crece con el nivel: 13 en el 5, 40 en el 50 y 70 en el 100
     public static int bonus(int nivel) {
         if (nivel <= 0 || nivel % 5 != 0) return 0;
-        return (int) Math.round(5 + nivel / 2.0);
+        return (int) Math.round(10 + nivel * 0.6);
     }
 
     // Puntos de experiencia de Minecraft al subir (más en los niveles de bonus)
     public static int experiencia(int nivel) {
-        int puntos = 20 + 5 * nivel;
-        if (nivel % 5 == 0) puntos += 10 * nivel;
+        int puntos = 30 + 6 * nivel;
+        if (nivel % 5 == 0) puntos += 12 * nivel;
         return puntos;
     }
 

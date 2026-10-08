@@ -1,5 +1,6 @@
 package Habilidades;
 
+import Gui.Invisible;
 import items.EconomyItems;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
@@ -25,6 +26,10 @@ public class HabilidadesGUI implements Listener {
 
     // El fondo es una textura del resource pack que se dibuja con estos caracteres del título (igual que misiones)
     static final String TITULO = "㈁㈁" + ChatColor.WHITE + "㈅";
+
+    // Los slots que antes tenían tintes morados, magentas y negros
+    static final int[] SEPARADORES = {0, 8, 45, 53, 1, 2, 3, 4, 5, 6, 7, 9, 17, 18, 26, 27, 35, 36, 44,
+            19, 20, 21, 22, 23, 24, 25, 37, 38, 39, 40, 41, 42, 43};
 
     private final JavaPlugin plugin;
     private final HabilidadesManager manager;
@@ -66,24 +71,11 @@ public class HabilidadesGUI implements Listener {
         player.playSound(player.getLocation(), Sound.ITEM_BOOK_PAGE_TURN, 1.0f, 1.0f);
     }
 
+    // Los separadores no se ven (modelo del aire) porque el árbol lo dibuja la textura del menú
     private void fillGUIWithPanels(Inventory gui, int page) {
-        ItemStack purpleDye = createPanel(Material.PURPLE_DYE, " ");
-        ItemStack magentaDye = createPanel(Material.MAGENTA_DYE, " ");
-        ItemStack blackDye = createPanel(Material.BLACK_DYE, " ");
-
-        int[] purpleSlots = {0, 8, 45, 53};
-        for (int slot : purpleSlots) {
-            gui.setItem(slot, purpleDye);
-        }
-
-        int[] magentaSlots = {1, 2, 3, 4, 5, 6, 7, 9, 17, 18, 26, 27, 35, 36, 44};
-        for (int slot : magentaSlots) {
-            gui.setItem(slot, magentaDye);
-        }
-
-        int[] blackSlots = {19, 20, 21, 22, 23, 24, 25, 37, 38, 39, 40, 41, 42, 43};
-        for (int slot : blackSlots) {
-            gui.setItem(slot, blackDye);
+        ItemStack separador = Invisible.relleno();
+        for (int slot : SEPARADORES) {
+            gui.setItem(slot, separador);
         }
 
         ItemStack nextSkill = createPanel(Material.IRON_NUGGET, ChatColor.GRAY + "Siguiente Habilidad");

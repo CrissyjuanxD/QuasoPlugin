@@ -31,3 +31,19 @@ bloques con cuevas, y arriba sigue el bioma con sus crestas, árboles y decoraci
 Solo cuenta a los jugadores que están dentro de la caverna de la ciudad. A los que están arriba en el terreno (o minando
 el techo) no los persigue, no se tepea hasta ellos y no se enoja con ellos aunque hagan ruido; si alguien sube, se olvida
 de él.
+
+## Warden Gun
+
+`items/WardenGun.java`. Se da con `/giveqp <jugador> warden_gun`; la soltará el Ultra Warden cuando esté hecho.
+
+- Click derecho: carga 0,6 segundos (sonido de carga del Warden) y dispara un sonic boom.
+- 10 de daño a los mobs, 6 a los jefes y 5 a los jugadores. Como el del Warden, atraviesa la armadura.
+- Alcance de 16 bloques, se corta en la primera pared y pega a 3 como mucho en línea, con un empuje chico y Lentitud I
+  por 3 segundos.
+- Recarga de 5 segundos. Se ve en el item (la recarga es solo de la Warden Gun, no de los demás echo shards). No gasta
+  Energía de Warden: el límite es la recarga.
+- No le pega al que dispara, a sus mascotas ni a los soportes de armadura. Con un cofre o una puerta delante los abre
+  normal; agachado dispara.
+- Cuenta para las misiones 63 (mobs con la Warden Gun) y 92 (equipo legendario).
+- Por debajo es un echo shard que no se apila y no entra en recetas vanilla. Falta el modelo `minecraft:warden_gun`
+  en el resource pack (CustomModelData 713).

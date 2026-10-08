@@ -65,9 +65,6 @@ final class TrabajosCommand implements CommandExecutor, TabCompleter {
                 int bonus = TrabajoNiveles.proximoBonus(nivel);
                 if (bonus > 0) player.sendMessage(CAFE + "  Próximo bonus: " + BLANCO + "nivel " + bonus + GRIS + " (+" + TrabajoNiveles.bonus(bonus) + " DinoCoins)");
             }
-            double hora = System.currentTimeMillis() - datos.inicioHora >= 60 * 60 * 1000L ? 0 : datos.xpEnLaHora;
-            player.sendMessage(CAFE + "  XP esta hora: " + BLANCO + numero(hora) + GRIS + "/" + numero(TrabajoNiveles.TOPE_POR_HORA)
-                    + (hora >= TrabajoNiveles.TOPE_POR_HORA ? ROSA + " (rinde 25%)" : ""));
             long espera = manager.esperaRestante(datos);
             player.sendMessage(CAFE + "  Cambio de trabajo: " + (espera > 0 ? ROSA + "en " + tiempo(espera) : SALVIA + "disponible"));
         }
@@ -109,8 +106,6 @@ final class TrabajosCommand implements CommandExecutor, TabCompleter {
                     + tiempo(System.currentTimeMillis() - datos.desde) + ")");
             long espera = manager.esperaRestante(datos);
             sender.sendMessage(CAFE + "  Cambio de trabajo: " + (espera > 0 ? ROSA + "en " + tiempo(espera) : SALVIA + "disponible"));
-            double hora = System.currentTimeMillis() - datos.inicioHora >= 60 * 60 * 1000L ? 0 : datos.xpEnLaHora;
-            sender.sendMessage(CAFE + "  XP esta hora: " + BLANCO + numero(hora) + GRIS + "/" + numero(TrabajoNiveles.TOPE_POR_HORA));
         }
         int monedasTotal = 0;
         int nivelesTotal = 0;

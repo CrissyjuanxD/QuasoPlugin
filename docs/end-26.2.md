@@ -104,16 +104,18 @@ TNT, así no se encadenan.
 | Herramienta de Celestita | Herrería: plantilla, herramienta de Netherite y 1 Lingote de Celestita |
 | Peto de Warden Alado | Herrería: EnderKing Pearl, Peto de Warden y unas Elytras |
 
-Herramientas: espada, hacha, lanza, pico, pala y azada. Tienen 1 de daño más que las de Netherite y se quedan los
-encantamientos. Las tres armas le pegan 50% más al Rey Ender. La herrería no mejora items custom (sí el Peto de
-Warden para el alado).
+Herramientas: espada, hacha, lanza, pico, pala y azada. Tienen 1 de daño más que las de Netherite (la espada 4 más:
+12 de daño) y se quedan los encantamientos. La espada le pega el doble a todos los mobs del End (los que están en el End
+y los endermans, endermites y shulkers de cualquier lado) y al Rey Ender; el hacha y la lanza le pegan 50% más al Rey
+Ender. El doble funciona también con las espadas que ya estaban hechas (se reconoce por el id), pero esas se quedan con
+su daño de 9 y su descripción vieja. La herrería no mejora items custom (sí el Peto de Warden para el alado).
 
 ## Rey Ender
 
 - Se invoca con el Ojo del Rey Ender: clic derecho a la vara del End del centro de un Santuario Marchito (la vara sobre
   las dos obsidianas llorosas, en la plataforma de obsidiana). El ojo se gasta y a los 5 segundos sale el boss.
-- 7000 de vida. El server no deja pasar de 1024, así que el mob tiene 1000 y recibe todo el daño dividido entre 7; la
-  barra muestra la vida de 7000.
+- 5000 de vida. El server no deja pasar de 1024, así que el mob tiene 1000 y recibe todo el daño dividido entre 5; la
+  barra muestra la vida de 5000.
 - Es un enderman 1,7 veces más grande. No se tepea solo, las flechas sí le pegan, no recibe daño de caída ni de sus
   invocados, y si cae al vacío vuelve al altar.
 - Hace de 1 a 3 ataques cuerpo a cuerpo y después un especial. Con menos del 35% de vida ataca más seguido.
@@ -129,7 +131,7 @@ Warden para el alado).
 | Especial | Agujero Negro | Atrae 3 segundos a todos a 18 bloques y explota: 44 de daño a 6 bloques y Oscuridad |
 | Especial | Ejército del End | Invoca Ender Spiders, un Ender Blaze y Ender Insects (hasta 4 vivos, no sueltan nada) |
 | Especial | Grieta Dimensional | Cambia de lugar con el jugador más lejano (Náusea y Oscuridad) y golpea el suelo |
-| Regeneración | Trono del Vacío | Al bajar del 66% y del 33%: flota sobre el altar y 4 cristales lo curan 12 de vida por segundo cada uno, hasta 30 s. Recibe la mitad de daño hasta que se rompan (un golpe o una flecha cada uno) |
+| Regeneración | Trono del Vacío | Al bajar del 66% y del 33%: flota sobre el altar y 4 cristales lo curan 9 de vida por segundo cada uno, hasta 30 s. Recibe la mitad de daño hasta que se rompan (un golpe o una flecha cada uno) |
 
 Suelta la EnderKing Pearl y 3000 de experiencia; las DinoCoins (25 la primera vez, después 5, una vez al día) las da
 `BossRewards`. Para probarlo: `/spawnqp reyender` (la arena queda donde se spawnea).
@@ -137,5 +139,5 @@ Suelta la EnderKing Pearl y 3000 de experiencia; las DinoCoins (25 la primera ve
 ## Modelos que faltan en el resource pack
 
 `lingote_celestita`, `plantilla_celestita`, `enderking_pearl`, `espada_celestita`, `hacha_celestita`,
-`lanza_celestita`, `pico_celestita`, `pala_celestita`, `azada_celestita` y `peto_warden_alado` (todos como
+`lanza_celestita`, `pico_celestita`, `pala_celestita`, `azada_celestita`, `peto_warden_alado` y `warden_gun` (todos como
 `minecraft:<id>`, igual que el resto de los items custom).

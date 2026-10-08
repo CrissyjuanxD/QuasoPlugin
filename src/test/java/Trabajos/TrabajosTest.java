@@ -18,15 +18,16 @@ class TrabajosTest {
         assertEquals(45, TrabajoNiveles.xpParaNivel(1));
         assertTrue(TrabajoNiveles.xpParaNivel(100) > TrabajoNiveles.xpParaNivel(50));
 
-        assertEquals(1, TrabajoNiveles.monedasPorNivel(1));
-        assertEquals(1, TrabajoNiveles.monedasPorNivel(20));
-        assertEquals(2, TrabajoNiveles.monedasPorNivel(21));
-        assertEquals(5, TrabajoNiveles.monedasPorNivel(100));
+        assertEquals(2, TrabajoNiveles.monedasPorNivel(1));
+        assertEquals(2, TrabajoNiveles.monedasPorNivel(20));
+        assertEquals(3, TrabajoNiveles.monedasPorNivel(21));
+        assertEquals(6, TrabajoNiveles.monedasPorNivel(100));
 
         assertEquals(0, TrabajoNiveles.bonus(4));
-        assertEquals(8, TrabajoNiveles.bonus(5));
-        assertEquals(30, TrabajoNiveles.bonus(50));
-        assertEquals(55, TrabajoNiveles.bonus(100));
+        assertEquals(13, TrabajoNiveles.bonus(5));
+        assertEquals(40, TrabajoNiveles.bonus(50));
+        assertEquals(70, TrabajoNiveles.bonus(100));
+        assertEquals(1830, TrabajoNiveles.experiencia(100));
 
         assertEquals(5, TrabajoNiveles.proximoBonus(0));
         assertEquals(10, TrabajoNiveles.proximoBonus(5));
@@ -34,7 +35,7 @@ class TrabajosTest {
 
         int total = 0;
         for (int nivel = 1; nivel <= Trabajo.NIVEL_MAXIMO; nivel++) total += TrabajoNiveles.monedasTotales(nivel);
-        assertTrue(total > 800 && total < 1100, "Un trabajo completo paga " + total + " DinoCoins");
+        assertTrue(total > 1150 && total < 1350, "Un trabajo completo paga " + total + " DinoCoins");
     }
 
     @Test

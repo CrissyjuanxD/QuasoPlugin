@@ -28,7 +28,8 @@ Todos van como el de misiones: `㈁㈁` (el espacio negativo de siempre) y despu
 
 Usan el item model `minecraft:air`, que trae el juego, así que no necesitan nada en el resource pack. El relleno además
 oculta el tooltip. Están en el menú de misiones (las dos filas de arriba y los slots sin misión), en el de trabajos
-(todo lo que no es un trabajo o la guía) y en `/menu`.
+(todo lo que no es un trabajo o la guía), en `/menu` y en el árbol de habilidades (los 33 slots que antes tenían tintes
+morados, magentas y negros; las pepitas de hierro entre niveles y las flechas de página siguen igual).
 
 ## Libro de Habilidades
 

@@ -91,7 +91,7 @@ public class ItemManager {
         "lanza_celestita", "pico_celestita", "pala_celestita", "azada_celestita",
         "mejora_casco_warden", "mejora_peto_warden", "mejora_pantalon_warden", "mejora_bota_warden",
 
-        "casco_warden", "peto_warden", "pantalon_warden", "bota_warden", "peto_warden_alado",
+        "casco_warden", "peto_warden", "pantalon_warden", "bota_warden", "peto_warden_alado", "warden_gun",
 
         "chatarra", "manzana_podrida", "zanahoria_encantada",
         "pepitas_hierro_oxidadas", "pepitas_diamante",
@@ -233,6 +233,7 @@ public class ItemManager {
             case "pantalon_warden": item = wardenArmor.createWardenLeggings(); break;
             case "bota_warden": item = wardenArmor.createWardenBoots(); break;
             case "peto_warden_alado": item = wardenArmor.createWingedWardenChestplate(); break;
+            case "warden_gun": item = WardenGun.create(); break;
 
             case "chatarra": item = FishingItems.createChatarra(); break;
             case "manzana_podrida": item = FishingItems.createManzanaPodrida(); break;

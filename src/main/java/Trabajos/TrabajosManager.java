@@ -194,32 +194,12 @@ public final class TrabajosManager implements Listener {
 
     // ---------------------------------------------------------------- Experiencia y niveles
 
-    // Solo suma si es el trabajo actual. Pasadas las 1.500 XP de la hora, lo que sigue rinde la cuarta parte
-    void ganarXp(Player player, Trabajo trabajo, double cantidad) {
+    // Solo suma si es el trabajo actual (no hay tope: se puede farmear siempre)
+    void ganarXp(Player player, Trabajo trabajo, double ganado) {
         DatosTrabajo d = datos.get(player.getUniqueId());
-        if (d == null || d.activo != trabajo || cantidad <= 0) return;
+        if (d == null || d.activo != trabajo || ganado <= 0) return;
         int nivel = d.nivel(trabajo);
         if (nivel >= Trabajo.NIVEL_MAXIMO) return;
-
-        long ahora = System.currentTimeMillis();
-        if (ahora - d.inicioHora >= 60 * 60 * 1000L) {
-            d.inicioHora = ahora;
-            d.xpEnLaHora = 0;
-        }
-        double ganado;
-        if (d.xpEnLaHora >= TrabajoNiveles.TOPE_POR_HORA) {
-            ganado = cantidad * TrabajoNiveles.RINDE_PASADO_EL_TOPE;
-        } else if (d.xpEnLaHora + cantidad > TrabajoNiveles.TOPE_POR_HORA) {
-            double dentro = TrabajoNiveles.TOPE_POR_HORA - d.xpEnLaHora;
-            ganado = dentro + (cantidad - dentro) * TrabajoNiveles.RINDE_PASADO_EL_TOPE;
-        } else {
-            ganado = cantidad;
-        }
-        if (d.xpEnLaHora < TrabajoNiveles.TOPE_POR_HORA && d.xpEnLaHora + cantidad >= TrabajoNiveles.TOPE_POR_HORA) {
-            player.sendMessage(TrabajosTexto.PREFIJO + TrabajosTexto.GRIS + "Llegaste a las " + TrabajosTexto.numero(TrabajoNiveles.TOPE_POR_HORA)
-                    + " XP de esta hora: lo que ganes hasta que pase rinde la cuarta parte. ¡Descansa un rato!");
-        }
-        d.xpEnLaHora += cantidad;
 
         double xp = d.xp(trabajo) + ganado;
         while (nivel < Trabajo.NIVEL_MAXIMO && xp >= TrabajoNiveles.xpParaNivel(nivel + 1)) {
@@ -475,17 +455,11 @@ public final class TrabajosManager implements Listener {
         return true;
     }
 
-    // XP de admin: no cuenta para el tope por hora
+    // XP de admin para el trabajo actual
     boolean darXpAdmin(Player player, double cantidad) {
         DatosTrabajo d = datos.get(player.getUniqueId());
         if (d == null || d.activo == null) return false;
-        double hora = d.xpEnLaHora;
-        long inicio = d.inicioHora;
-        d.xpEnLaHora = 0;
-        d.inicioHora = System.currentTimeMillis();
         ganarXp(player, d.activo, cantidad);
-        d.xpEnLaHora = hora;
-        d.inicioHora = inicio;
         return true;
     }
 }

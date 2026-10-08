@@ -113,8 +113,8 @@ final class TrabajosGuia {
                             + GRIS + " · " + CREMA + "Los bloques que pones no dan XP al romperlos.\n"
                             + GRIS + " · " + CREMA + "Los mobs de spawner no cuentan.\n"
                             + GRIS + " · " + CREMA + "Si estás AFK (5 minutos sin moverte) no ganas XP.\n"
-                            + GRIS + " · " + CREMA + "Solo cuenta en supervivencia.\n"
-                            + GRIS + " · " + CREMA + "Pasadas " + numero(TrabajoNiveles.TOPE_POR_HORA) + " XP en una hora, lo que sigue rinde la cuarta parte.");
+                            + GRIS + " · " + CREMA + "Solo cuenta en supervivencia.",
+                    SALVIA + "No hay tope de XP: " + CREMA + "puedes trabajar todo lo que quieras.");
             case COMANDOS -> List.of(
                     BLANCO + "/menu" + GRIS + " · " + CREMA + "El menú principal; Trabajos abre este menú.\n"
                             + BLANCO + "/trabajos" + GRIS + " · " + CREMA + "Abre el menú.\n"

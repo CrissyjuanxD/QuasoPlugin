@@ -31,6 +31,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.entity.ShulkerBullet;
 import org.bukkit.entity.Trident;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.HandlerList;
@@ -64,24 +65,26 @@ import java.util.UUID;
 // Rey Ender: el boss más fuerte del server (día 55). Se invoca con el Ojo del Rey Ender en el altar de un Santuario
 // Marchito (ReyEnderAltar). Pelea como el Infested Warden: de 1 a 3 ataques cuerpo a cuerpo y después uno de sus 6
 // especiales, y al bajar del 66% y del 33% de vida se regenera con 4 cristales que hay que romper.
-// Tiene 7000 de vida: el server no deja pasar de 1024, así que el mob tiene 1000 y todo el daño que recibe se divide
-// entre 7. Las armas de Celestita le pegan 50% más. El daño está pensado para la armadura de Warden con Protección IV
+// Tiene 5000 de vida: el server no deja pasar de 1024, así que el mob tiene 1000 y todo el daño que recibe se divide
+// entre 5. La Espada de Celestita le pega el doble y el hacha y la lanza 50% más. El daño está pensado para la armadura
+// de Warden con Protección IV
 public class ReyEnderBoss extends BaseBoss implements Listener {
 
     public static final String BOSS_ID = "rey_ender";
     public static final Map<UUID, ReyEnderBoss> ACTIVE_BOSSES = new HashMap<>();
 
-    public static final double HEALTH = 7000;
+    public static final double HEALTH = 5000;
     private static final double REAL_HEALTH = 1000;
     private static final double SCALE = HEALTH / REAL_HEALTH;
     private static final double ATTACK_DAMAGE = 26;
     private static final double CELESTITE_BONUS = 1.5;
+    private static final double SWORD_BONUS = 2;
     private static final double SIZE = 1.7;
     private static final int MAX_MINIONS = 4;
     private static final double[] REGEN_AT = {0.66, 0.33};
     private static final int REGEN_TICKS = 600;
-    // Vida por segundo que cura cada cristal (en la vida de 7000)
-    private static final double REGEN_PER_CRYSTAL = 12;
+    // Vida por segundo que cura cada cristal (en la vida de 5000)
+    private static final double REGEN_PER_CRYSTAL = 9;
     private static final String TITLE = ChatColor.of("#B55CFF") + "" + ChatColor.BOLD + "Rey Ender";
 
     private static final Particle.DustOptions VOID_DUST = new Particle.DustOptions(Color.fromRGB(0x8A2BE2), 1.6f);
@@ -967,8 +970,8 @@ public class ReyEnderBoss extends BaseBoss implements Listener {
 
     // ---------------------------------------------------------------- Eventos
 
-    // El daño que recibe se divide entre 7 (su vida es de 7000). Las armas de Celestita pegan 50% más y mientras se
-    // regenera recibe la mitad. No se cae, no se ahoga y lo que invoca no le pega
+    // El daño que recibe se divide entre 5 (su vida es de 5000). La Espada de Celestita pega el doble, el hacha y la
+    // lanza 50% más y mientras se regenera recibe la mitad. No se cae, no se ahoga y lo que invoca no le pega
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onKingDamage(EntityDamageEvent event) {
         if (!event.getEntity().equals(king)) return;
@@ -991,9 +994,7 @@ public class ReyEnderBoss extends BaseBoss implements Listener {
             Player attacker = attacker(damager);
             if (attacker != null) {
                 addAttacker(attacker);
-                if (damager.equals(attacker) && EndItems.isCelestiteWeapon(attacker.getInventory().getItemInMainHand())) {
-                    damage *= CELESTITE_BONUS;
-                }
+                if (damager.equals(attacker)) damage *= weaponBonus(attacker.getInventory().getItemInMainHand());
             } else if (minions.contains(damager.getUniqueId()) || damager instanceof ShulkerBullet || isMinionShot(damager)) {
                 event.setCancelled(true);
                 return;
@@ -1001,6 +1002,11 @@ public class ReyEnderBoss extends BaseBoss implements Listener {
         }
         if (regenerating) damage *= 0.5;
         event.setDamage(damage / SCALE);
+    }
+
+    private static double weaponBonus(ItemStack hand) {
+        if (EndItems.isCelestiteSword(hand)) return SWORD_BONUS;
+        return EndItems.isCelestiteWeapon(hand) ? CELESTITE_BONUS : 1;
     }
 
     private boolean isMinionShot(Entity damager) {

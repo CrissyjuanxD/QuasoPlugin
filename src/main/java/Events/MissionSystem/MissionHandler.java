@@ -674,6 +674,18 @@ public class MissionHandler implements Listener {
 
     public Set<Integer> getActiveMissions() { return globalActiveMissions; }
 
+    // Las misiones que completó un jugador conectado según lo que hay en memoria (null si no está cargado); la web lo
+    // usa para no esperar al guardado en la base de datos
+    public Set<Integer> completadasEnMemoria(UUID uuid) {
+        Map<Integer, MissionData> data = playerCache.get(uuid);
+        if (data == null) return null;
+        Set<Integer> completadas = new TreeSet<>();
+        for (Map.Entry<Integer, MissionData> entry : data.entrySet()) {
+            if (entry.getValue() != null && entry.getValue().isCompleted()) completadas.add(entry.getKey());
+        }
+        return completadas;
+    }
+
     public boolean isMissionActive(Player player, int missionId) {
         return globalActiveMissions.contains(missionId);
     }

@@ -69,6 +69,11 @@ public abstract class BaseMission implements Mission, Listener {
     // Los 2 objetos de la recompensa (cada uno puede ser varios stacks); las DinoCoins y la XP las pone MissionRewards
     protected abstract List<List<ItemStack>> rewardItems();
 
+    // Los grupos de la recompensa tal cual (la web arma el cofre con ellos)
+    public List<List<ItemStack>> itemsRecompensa() {
+        return rewardItems();
+    }
+
     @Override public String getName() { return name; }
     @Override public String getDescription() { return description; }
     @Override public int getMissionNumber() { return number; }

@@ -402,6 +402,13 @@ public class Homes implements CommandExecutor, TabCompleter, Listener {
     }
 
     // Si el jugador tenía el formato viejo (un solo home) lo pasa a 'base'
+    // Cuántas homes tiene guardadas un jugador (lo muestra la web)
+    public int contarHomes(String nombre) {
+        String path = "Homes." + nombre;
+        if (homesConfig.isConfigurationSection(path)) return homesConfig.getConfigurationSection(path).getKeys(false).size();
+        return homesConfig.isString(path) ? 1 : 0;
+    }
+
     private Set<String> getPlayerHomes(Player player) {
         String path = "Homes." + player.getName();
 

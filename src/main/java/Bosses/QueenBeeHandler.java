@@ -35,10 +35,10 @@ public class QueenBeeHandler extends BaseBoss implements Listener {
     public static final Map<UUID, QueenBeeHandler> ACTIVE_BOSSES = new HashMap<>();
 
     /** Vida total del boss. */
-    public static final double MAX_HP = 600.0;
+    public static final double MAX_HP = 1500.0;
 
     /** Vida a la que puede empezar la fase de regeneracion. */
-    private static final double REGEN_TRIGGER_HP = 200.0;
+    private static final double REGEN_TRIGGER_HP = 650.0;
 
     /** Musica de la pelea. Suena en el centro de la arena, categoria RECORDS. */
     private static final String MUSICA_BOSS = "minecraft:custom.abeja_floral_music";

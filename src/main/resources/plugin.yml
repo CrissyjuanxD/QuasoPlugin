@@ -107,6 +107,11 @@ commands:
   menu:
     description: Abre el menú principal (misiones, trabajos, habilidades, protecciones y homes)
     usage: /menu
+  web:
+    description: Conexión del servidor con la web (estado, subir datos y catálogo)
+    usage: /web [estado|subir|catalogo|recargar]
+    permission: quasoplugin.web
+    permission-message: No tienes permiso para usar este comando.
   mobcap:
     description: Comando principal para gestionar MobCap
     usage: /mobcap <info|setbase|doble|triple|normal|habilitar|deshabilitar|reset|reload|mob>
@@ -296,6 +301,9 @@ depend: [EliteMobs]
 softdepend: [FastAsyncWorldEdit, WorldGuard, ViaVersion]
 
 permissions:
+  quasoplugin.web:
+    default: op
+    description: Permite ver y forzar la conexión con la web (/web).
   bloodmoon.bloodmoon:
     default: true
     description: Permite usar el comando BloodMoon.

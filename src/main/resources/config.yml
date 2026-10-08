@@ -18,3 +18,15 @@ main-scoreboard:
 
 mantenimiento:
   activo: false
+
+# Conexión con la web de Croissants: sube el estado del server, los jugadores y el catálogo (items, misiones,
+# crafteos, trabajos, habilidades y mobs) a un repositorio de GitHub que la web lee en vivo.
+# El token es un fine-grained token con permiso "Contents: Read and write" SOLO en ese repositorio.
+web:
+  activado: false
+  repositorio: "CrissyjuanxD/Croissants-Live"
+  rama: "main"
+  token: ""
+  ntfy: "croissants-quaso-7f3k9w2m"
+  segundos-estado: 15
+  minutos-jugadores: 2

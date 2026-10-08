@@ -105,6 +105,7 @@ public class QuasoPlugin extends JavaPlugin implements Listener {
     private ChatBubbleManager chatBubbleManager;
 
     private MobManager mobManager;
+    private Web.WebSync webSync;
     private ItemManager itemManager;
 
     private FishingZoneManager fishingZoneManager;
@@ -221,6 +222,7 @@ public class QuasoPlugin extends JavaPlugin implements Listener {
         twitchManager = new TwitchManager(this, missionHandler);
         trabajosManager = new TrabajosManager(this, databaseManager, dinoCoinsManager);
         initMenu();
+        initWeb();
         bloodMoon.enable();
 
         getLogger().info("DinoNuggetsSMP habilitado completamente.");
@@ -229,6 +231,7 @@ public class QuasoPlugin extends JavaPlugin implements Listener {
     // Guarda los datos y apaga los sistemas que tienen tareas o entidades activas
     @Override
     public void onDisable() {
+        if (webSync != null) webSync.shutdown();
         Bukkit.getConsoleSender().sendMessage(
                 ChatColor.translateAlternateColorCodes('&',
                         Prefix + "&aha sido deshabilitado!, &eVersion: " + Version));
@@ -278,6 +281,17 @@ public class QuasoPlugin extends JavaPlugin implements Listener {
         Handlers.ToastHandler.cleanupToasts();
 
         shuttingDown = true;
+    }
+
+    // La conexión con la web: sube el estado del server, los jugadores y el catálogo al repositorio de datos (/web)
+    private void initWeb() {
+        webSync = new Web.WebSync(this, () -> itemManager, () -> missionHandler, () -> changesHandler,
+                () -> habilidadesManager, () -> homesCmd, () -> databaseManager);
+        PluginCommand webCommand = getCommand("web");
+        if (webCommand != null) {
+            webCommand.setExecutor(webSync);
+            webCommand.setTabCompleter(webSync);
+        }
     }
 
     private void logStartup() {

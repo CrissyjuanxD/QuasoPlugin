@@ -183,12 +183,20 @@ public class OneChanges implements Listener, Change {
             return;
         }
 
-        ShapedRecipe customRecipe = new ShapedRecipe(key, corruptedSteak());
+        plugin.getServer().addRecipe(corruptedSteakRecipe());
+    }
+
+    private ShapedRecipe corruptedSteakRecipe() {
+        ShapedRecipe customRecipe = new ShapedRecipe(new NamespacedKey(plugin, "corrupted_steak"), corruptedSteak());
         customRecipe.shape(" F ", "FSF", " F ");
         customRecipe.setIngredient('F', Material.ROTTEN_FLESH);
         customRecipe.setIngredient('S', Material.COOKED_BEEF);
+        return customRecipe;
+    }
 
-        plugin.getServer().addRecipe(customRecipe);
+    @Override
+    public List<org.bukkit.inventory.Recipe> recetas() {
+        return List.of(corruptedSteakRecipe());
     }
 
 

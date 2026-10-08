@@ -127,6 +127,18 @@ public class DatabaseManager {
         }
     }
 
+    // Para consultas de solo lectura de otros sistemas (la web): abre una conexión, la usa y la cierra
+    @FunctionalInterface
+    public interface Consulta<T> {
+        T con(Connection conn) throws SQLException;
+    }
+
+    public <T> T consultar(Consulta<T> consulta) throws SQLException {
+        try (Connection conn = getConnection()) {
+            return consulta.con(conn);
+        }
+    }
+
     public void closeConnection() {
     }
 

@@ -44,6 +44,8 @@ public class ThreeChanges implements Listener, Change {
     private final WardenArmor armor;
     private final List<Listener> listeners = new ArrayList<>();
     private final List<NamespacedKey> recipeKeys = new ArrayList<>();
+    // Mientras no es null, addRecipe solo junta las recetas (para la web) en vez de registrarlas
+    private List<Recipe> recolectando;
     private EnderInsect enderInsect;
 
     public ThreeChanges(JavaPlugin plugin) {
@@ -178,7 +180,23 @@ public class ThreeChanges implements Listener, Change {
         return new NamespacedKey(plugin, id);
     }
 
+    @Override
+    public List<Recipe> recetas() {
+        List<Recipe> lista = new ArrayList<>();
+        recolectando = lista;
+        try {
+            registerRecipes();
+        } finally {
+            recolectando = null;
+        }
+        return lista;
+    }
+
     private void addRecipe(Recipe recipe) {
+        if (recolectando != null) {
+            recolectando.add(recipe);
+            return;
+        }
         NamespacedKey key = ((Keyed) recipe).getKey();
         if (Bukkit.getRecipe(key) == null) Bukkit.addRecipe(recipe, true);
         recipeKeys.add(key);

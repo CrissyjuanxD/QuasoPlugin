@@ -225,61 +225,15 @@ public class HabilidadesGUI implements Listener {
 
     private List<String> getHabilidadDescription(HabilidadesType type, int level) {
         List<String> desc = new ArrayList<>();
-        switch (type) {
-            case VITALIDAD:
-                if (level <= 4) {
-                    desc.add(ChatColor.GRAY + "Otorga +2.5 Corazones permanentes.");
-                } else {
-                    desc.add(ChatColor.GRAY + "Otorga +4 Corazones permanentes.");
-                }
-                break;
-            case AGILIDAD:
-                switch (level) {
-                    case 1: desc.add(ChatColor.GRAY + "Haste I infinito."); break;
-                    case 2: desc.add(ChatColor.GRAY + "Doble Salto y Gracia del Delfín II infinito."); break;
-                    case 3: desc.add(ChatColor.GRAY + "Velocidad I infinito."); break;
-                    case 4: desc.add(ChatColor.GRAY + "Triple Salto."); break;
-                    case 5: desc.add(ChatColor.GRAY + "Fuerza I infinita."); break;
-                    case 6: desc.add(ChatColor.GRAY + "Salto Alto I infinito."); break;
-                    case 7: desc.add(ChatColor.GRAY + "Velocidad II infinita."); break;
-                    case 8: desc.add(ChatColor.GRAY + "Cuádruple Salto."); break;
-                }
-                break;
-            case RESISTENCIA:
-                switch (level) {
-                    case 1: desc.add(ChatColor.GRAY + "8% prob. bloquear daño directo de proyectiles."); break;
-                    case 2: desc.add(ChatColor.GRAY + "8% prob. bloquear daño directo de monstruos."); break;
-                    case 3: desc.add(ChatColor.GRAY + "8% prob. bloquear cualquier daño."); break;
-                    case 4: desc.add(ChatColor.GRAY + "Resistencia I infinita."); break;
-                    case 5: desc.add(ChatColor.GRAY + "14% prob. bloquear daño directo de proyectiles."); break;
-                    case 6: desc.add(ChatColor.GRAY + "14% prob. bloquear daño directo de monstruos."); break;
-                    case 7: desc.add(ChatColor.GRAY + "14% prob. bloquear cualquier daño."); break;
-                    case 8: desc.add(ChatColor.GRAY + "Resistencia II infinita."); break;
-                }
-                break;
-        }
+        desc.add(ChatColor.GRAY + type.descripcion(level));
         return desc;
     }
 
     private void addCostLore(List<String> lore, int level) {
-        int xp = 0;
-        String item = "";
-        int coins = 0;
-
-        switch(level) {
-            case 1: xp = 30; item = "12 Bloques de Oro"; coins = 5; break;
-            case 2: xp = 40; item = "15 Bloques de Diamante"; coins = 10; break;
-            case 3: xp = 50; item = "32 Bloques de Esmeralda"; coins = 15; break;
-            case 4: xp = 60; item = "3 Bloques de Netherite"; coins = 20; break;
-            case 5: xp = 70; item = "30 Bloques de Oro"; coins = 10; break;
-            case 6: xp = 80; item = "40 Bloques de Diamante"; coins = 20; break;
-            case 7: xp = 90; item = "64 Bloques de Esmeralda"; coins = 30; break;
-            case 8: xp = 100; item = "6 Bloques de Netherite"; coins = 40; break;
-        }
-
-        lore.add(ChatColor.of("#C77DFF") + "• " + xp + " Niveles de XP");
-        lore.add(ChatColor.of("#C77DFF") + "• " + item);
-        lore.add(ChatColor.of("#C77DFF") + "• " + coins + " DinoCoins");
+        HabilidadesType.Costo costo = HabilidadesType.costo(level);
+        lore.add(ChatColor.of("#C77DFF") + "• " + costo.xp() + " Niveles de XP");
+        lore.add(ChatColor.of("#C77DFF") + "• " + costo.cantidad() + " " + costo.nombre());
+        lore.add(ChatColor.of("#C77DFF") + "• " + costo.dinocoins() + " DinoCoins");
     }
 
     @EventHandler
@@ -341,21 +295,11 @@ public class HabilidadesGUI implements Listener {
             return;
         }
 
-        int xpCost = 0;
-        Material matCost = null;
-        int matAmount = 0;
-        int coinCost = 0;
-
-        switch(level) {
-            case 1: xpCost = 30; matCost = Material.GOLD_BLOCK; matAmount = 12; coinCost = 5; break;
-            case 2: xpCost = 40; matCost = Material.DIAMOND_BLOCK; matAmount = 15; coinCost = 10; break;
-            case 3: xpCost = 50; matCost = Material.EMERALD_BLOCK; matAmount = 32; coinCost = 15; break;
-            case 4: xpCost = 60; matCost = Material.NETHERITE_BLOCK; matAmount = 3; coinCost = 20; break;
-            case 5: xpCost = 70; matCost = Material.GOLD_BLOCK; matAmount = 30; coinCost = 10; break;
-            case 6: xpCost = 80; matCost = Material.DIAMOND_BLOCK; matAmount = 40; coinCost = 20; break;
-            case 7: xpCost = 90; matCost = Material.EMERALD_BLOCK; matAmount = 64; coinCost = 30; break;
-            case 8: xpCost = 100; matCost = Material.NETHERITE_BLOCK; matAmount = 6; coinCost = 40; break;
-        }
+        HabilidadesType.Costo costo = HabilidadesType.costo(level);
+        int xpCost = costo.xp();
+        Material matCost = costo.bloque();
+        int matAmount = costo.cantidad();
+        int coinCost = costo.dinocoins();
 
         if (player.getLevel() < xpCost) {
             player.sendMessage(ChatColor.RED + "No tienes suficiente experiencia.");

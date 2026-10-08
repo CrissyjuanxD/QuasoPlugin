@@ -104,6 +104,13 @@ public final class TrabajosManager implements Listener {
         return datos == null ? -1 : datos.nivel(trabajo);
     }
 
+    // Trabajo actual, nivel y XP de un jugador conectado tal como están en memoria (null si no está cargado); lo usa la web
+    public static DatabaseManager.JobsData datosWeb(java.util.UUID uuid) {
+        TrabajosManager manager = instance;
+        DatosTrabajo datos = manager == null ? null : manager.datos.get(uuid);
+        return datos == null ? null : datos.copia();
+    }
+
     DatosTrabajo datos(Player player) {
         return datos.get(player.getUniqueId());
     }

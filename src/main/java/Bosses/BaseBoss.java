@@ -166,10 +166,15 @@ public abstract class BaseBoss {
         );
     }
 
+    // Si un jugador en esa posición cuenta como parte de la pelea; cada boss puede achicar su arena
+    protected boolean inArena(Location loc) {
+        return areaZone.isInside(loc);
+    }
+
     // Mete o saca a los jugadores de las bossbars según entren o salgan de la arena
     private void updatePlayers() {
         for (Player player : Bukkit.getOnlinePlayers()) {
-            boolean inside = areaZone.isInside(player.getLocation());
+            boolean inside = inArena(player.getLocation());
             boolean already = currentPlayers.contains(player.getUniqueId());
 
             if (inside && !already) {
@@ -189,7 +194,7 @@ public abstract class BaseBoss {
 
     private void detectInitialPlayers() {
         for (Player p : entity.getWorld().getPlayers()) {
-            if (areaZone.isInside(p.getLocation())) {
+            if (inArena(p.getLocation())) {
                 currentPlayers.add(p.getUniqueId());
                 mainBar.addPlayer(p);
                 staticBar.addPlayer(p);
@@ -232,7 +237,7 @@ public abstract class BaseBoss {
             Player p = Bukkit.getPlayer(id);
             if (p == null) continue;
 
-            boolean inside = areaZone.isInside(p.getLocation());
+            boolean inside = inArena(p.getLocation());
 
             if (inside && !p.hasMetadata("DEBUG_ARENA_INSIDE")) {
                 p.setMetadata("DEBUG_ARENA_INSIDE", new org.bukkit.metadata.FixedMetadataValue(plugin, true));

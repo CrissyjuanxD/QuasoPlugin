@@ -144,7 +144,8 @@ class QueenBeeHandlerTest {
 
         new QueenBeeHandler(plugin, bee);
 
-        assertEquals(600.0, attribute.getValue());
-        verify(bee).setHealth(300.0);
+        // Queda con la vida nueva y el mismo porcentaje que tenía (la mitad)
+        assertEquals(QueenBeeHandler.MAX_HP, attribute.getValue());
+        verify(bee).setHealth(QueenBeeHandler.MAX_HP / 2);
     }
 }

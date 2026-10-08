@@ -15,8 +15,8 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Stream;
 
-// El datapack del plugin: los biomas de la Warden Cave y del End, la lista de biomas donde sale la Ancient City y
-// los encantamientos y la capa visual de BloodMoon. Es uno solo para todo el plugin
+// El datapack del plugin: los biomas de la Warden Cave y del End, la lista de biomas donde sale la Ancient City, las
+// piezas de las End Cities, los encantamientos y la capa visual de BloodMoon. Es uno solo para todo el plugin
 public final class QuasoDatapack {
 
     private static final String NAME = "QuasoPlugin";
@@ -39,11 +39,19 @@ public final class QuasoDatapack {
             "data/quaso/enchantment/retorno_del_vacio.json"
     };
 
+    // Las piezas de las End Cities (las de Better End Cities de IchPhilipp, reemplazan a las vanilla)
+    private static final String[] END_CITY = {
+            "base_floor", "base_roof", "bridge_end", "bridge_gentle_stairs", "bridge_piece", "bridge_steep_stairs",
+            "fat_tower_base", "fat_tower_middle", "fat_tower_top", "second_floor_1", "second_floor_2", "second_roof",
+            "ship", "third_floor_1", "third_floor_2", "third_roof", "tower_base", "tower_floor", "tower_piece", "tower_top"
+    };
+
     private QuasoDatapack() {}
 
-    private static List<String> files() {
+    static List<String> files() {
         List<String> files = new ArrayList<>(Arrays.asList(BASE_FILES));
         for (EndBiome biome : EndBiome.values()) files.add("data/quaso/worldgen/biome/" + biome.key().getKey() + ".json");
+        for (String piece : END_CITY) files.add("data/minecraft/structure/end_city/" + piece + ".nbt");
         return files;
     }
 

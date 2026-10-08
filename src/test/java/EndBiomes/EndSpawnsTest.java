@@ -30,8 +30,29 @@ class EndSpawnsTest {
         assertTrue(prismatic.get(EndSpawns.Mob.ENDER_SPIDER) > prismatic.get(EndSpawns.Mob.ENDER_BLAZE));
 
         Map<EndSpawns.Mob, Integer> paramo = table(EndBiomeMap.Zone.MARCHITO);
-        assertEquals(71, paramo.get(EndSpawns.Mob.NINGUNO));
+        assertEquals(59, paramo.get(EndSpawns.Mob.NINGUNO));
         assertEquals(5, paramo.get(EndSpawns.Mob.SHULKER_NEGRO));
+        assertEquals(12, paramo.get(EndSpawns.Mob.WITHER_SKELETON));
+
+        // Los Picos Helados son decorativos: salen los mismos mobs que en el End de siempre
+        assertEquals(vanilla, table(EndBiomeMap.Zone.HIELO));
+    }
+
+    @Test
+    void witherSkeletonsOnlyReplaceEndermenInTheWasteland() {
+        for (EndBiomeMap.Zone zone : EndBiomeMap.Zone.values()) {
+            if (zone != EndBiomeMap.Zone.MARCHITO) assertNull(table(zone).get(EndSpawns.Mob.WITHER_SKELETON), zone.name());
+        }
+    }
+
+    @Test
+    void regionsAreSplitBetweenVanillaAndTheThreeBiomes() {
+        Map<EndBiomeMap.Zone, Integer> count = new EnumMap<>(EndBiomeMap.Zone.class);
+        for (int roll = 0; roll < 100; roll++) count.merge(EndBiomeMap.zoneForRoll(roll), 1, Integer::sum);
+        assertEquals(26, count.get(EndBiomeMap.Zone.VANILLA));
+        assertEquals(27, count.get(EndBiomeMap.Zone.PRISMATICO));
+        assertEquals(27, count.get(EndBiomeMap.Zone.MARCHITO));
+        assertEquals(20, count.get(EndBiomeMap.Zone.HIELO));
     }
 
     @Test

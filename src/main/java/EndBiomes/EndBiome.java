@@ -5,8 +5,8 @@ import io.papermc.paper.registry.RegistryKey;
 import org.bukkit.NamespacedKey;
 import org.bukkit.block.Biome;
 
-// Los biomas nuevos del End (vienen en el datapack). El Bosque Prismático tiene una variante por color: el juego tiñe
-// las hojas con el color del bioma, así cada mancha del bosque tiene sus pinos de un color
+// Los biomas nuevos del End (vienen en el datapack). El Bosque Prismático tiene una variante por color: cada mancha del
+// bosque tiene más árboles de su color. Los Picos Helados son solo decorativos
 public enum EndBiome {
     PRISMATICO_ROSA("bosque_prismatico_rosa"),
     PRISMATICO_VERDE("bosque_prismatico_verde"),
@@ -14,7 +14,8 @@ public enum EndBiome {
     PRISMATICO_AMARILLO("bosque_prismatico_amarillo"),
     PRISMATICO_ROJO("bosque_prismatico_rojo"),
     PRISMATICO_MORADO("bosque_prismatico_morado"),
-    PARAMO_MARCHITO("paramo_marchito");
+    PARAMO_MARCHITO("paramo_marchito"),
+    PICOS_HELADOS("picos_helados");
 
     public static final EndBiome[] PRISMATIC = {
             PRISMATICO_ROSA, PRISMATICO_VERDE, PRISMATICO_NARANJA, PRISMATICO_AMARILLO, PRISMATICO_ROJO, PRISMATICO_MORADO};
@@ -42,5 +43,9 @@ public enum EndBiome {
 
     public static boolean isParamo(Biome biome) {
         return biome != null && biome.getKey().equals(PARAMO_MARCHITO.key);
+    }
+
+    public static boolean isHielo(Biome biome) {
+        return biome != null && biome.getKey().equals(PICOS_HELADOS.key);
     }
 }

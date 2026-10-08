@@ -1,6 +1,7 @@
 package Bosses;
 
 import Dificultades.CustomMobs.WardenZombie;
+import InfestedCaves.WardenGenerator;
 import io.papermc.paper.event.entity.WardenAngerChangeEvent;
 import items.WardenCaveItems;
 import net.md_5.bungee.api.ChatColor;
@@ -90,6 +91,8 @@ public class InfestedWardenBoss extends BaseBoss implements Listener {
     private int meleeBeforeSpecial = 2;
     private UUID focus;
     private int focusUntil = 0;
+    // Si el boss está en la caverna de una Ancient City (se calcula la primera vez que se usa)
+    private Boolean enCiudad;
 
     // Si el warden ya era boss (chunk recargado) recupera el centro de la arena de su PDC
     public InfestedWardenBoss(JavaPlugin plugin, Warden warden) {
@@ -199,6 +202,20 @@ public class InfestedWardenBoss extends BaseBoss implements Listener {
         return AreaZone.Shape.CIRCULAR;
     }
 
+    // Solo cuentan los que están dentro de la caverna de la ciudad: a los que están arriba en el terreno (farmeando
+    // o minando sobre el techo) no los persigue ni se tepea hasta ellos. Si se invocó fuera de una ciudad (/spawnqp en
+    // otro lado) vale toda la arena
+    @Override
+    protected boolean inArena(Location loc) {
+        if (!super.inArena(loc)) return false;
+        if (enCiudad == null) {
+            Location s = spawnLocation;
+            enCiudad = s.getWorld().getName().equals(imp.crissyjuanxd.QuasoPlugin.WORLD_NAME)
+                    && WardenGenerator.inCityCavern(s.getWorld().getSeed(), s.getX(), s.getY(), s.getZ());
+        }
+        return !enCiudad || WardenGenerator.inCityCavern(loc.getWorld().getSeed(), loc.getX(), loc.getY(), loc.getZ());
+    }
+
     @Override
     protected void onStart() {
         meleeBeforeSpecial = random.nextInt(3) + 1;
@@ -218,6 +235,10 @@ public class InfestedWardenBoss extends BaseBoss implements Listener {
                     if (p.equals(target)) warden.setAnger(p, 150);
                     else warden.clearAnger(p);
                 }
+            }
+            // Al que se fue de la caverna (subió al terreno o salió de la ciudad) se le olvida
+            for (Player p : warden.getWorld().getPlayers()) {
+                if (!currentPlayers.contains(p.getUniqueId()) && warden.getAnger(p) > 0) warden.clearAnger(p);
             }
         }
 
@@ -843,7 +864,9 @@ public class InfestedWardenBoss extends BaseBoss implements Listener {
 
     @EventHandler(ignoreCancelled = true)
     public void onAnger(WardenAngerChangeEvent event) {
-        if (event.getEntity().equals(warden) && !(event.getTarget() instanceof Player)) event.setCancelled(true);
+        if (!event.getEntity().equals(warden) || event.getNewAnger() <= event.getOldAnger()) return;
+        // Tampoco se enoja con los de arriba de la ciudad (sus vibraciones llegan igual por la roca)
+        if (!(event.getTarget() instanceof Player player) || !inArena(player.getLocation())) event.setCancelled(true);
     }
 
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)

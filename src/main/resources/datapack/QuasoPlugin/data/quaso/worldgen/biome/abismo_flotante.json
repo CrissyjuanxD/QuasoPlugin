@@ -3,7 +3,8 @@
   "temperature": 0.5,
   "downfall": 0.0,
   "effects": {
-    "water_color": "#6a4fa0"
+    "water_color": "#6a4fa0",
+    "foliage_color": "#a35ee8"
   },
   "attributes": {
     "minecraft:visual/sky_color": "#5e2f8a",
@@ -46,7 +47,7 @@
     "monster": [
       {
         "type": "minecraft:ghast",
-        "weight": 60,
+        "weight": 20,
         "minCount": 1,
         "maxCount": 1
       },

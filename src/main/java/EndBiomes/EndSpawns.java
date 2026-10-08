@@ -9,6 +9,7 @@ import org.bukkit.World;
 import org.bukkit.block.Biome;
 import org.bukkit.entity.Enderman;
 import org.bukkit.entity.Shulker;
+import org.bukkit.entity.WitherSkeleton;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -22,7 +23,7 @@ import java.util.concurrent.ThreadLocalRandom;
 // así la mobcap sigue contando igual (como los ghasts del Abismo en TwoChanges)
 public class EndSpawns implements Listener {
 
-    public enum Mob { NINGUNO, ENDER_BLAZE, ENDER_CREEPER, ENDER_SPIDER, SHULKER_NEGRO }
+    public enum Mob { NINGUNO, ENDER_BLAZE, ENDER_CREEPER, ENDER_SPIDER, SHULKER_NEGRO, WITHER_SKELETON }
 
     // La isla del dragón queda vanilla
     private static final int MAIN_ISLAND = 500;
@@ -41,14 +42,15 @@ public class EndSpawns implements Listener {
         this.blackShulker = blackShulker;
     }
 
-    // Qué sale en lugar del enderman según la zona y una tirada de 0 a 99: 25% en el End de siempre, 20% en el Bosque
-    // Prismático (que ya tiene los Ender Insects) y 29% en el Páramo, que además tiene Shulkers Negros sueltos
+    // Qué sale en lugar del enderman según la zona y una tirada de 0 a 99: 25% en el End de siempre y en los Picos
+    // Helados, 20% en el Bosque Prismático (que ya tiene los Ender Insects) y 41% en el Páramo, que además tiene
+    // Shulkers Negros sueltos y Wither Skeletons (los del datapack casi no salían)
     public static Mob reemplazo(EndBiomeMap.Zone zone, int roll) {
         return switch (zone) {
-            case VANILLA -> roll < 9 ? Mob.ENDER_BLAZE : roll < 18 ? Mob.ENDER_SPIDER : roll < 25 ? Mob.ENDER_CREEPER : Mob.NINGUNO;
+            case VANILLA, HIELO -> roll < 9 ? Mob.ENDER_BLAZE : roll < 18 ? Mob.ENDER_SPIDER : roll < 25 ? Mob.ENDER_CREEPER : Mob.NINGUNO;
             case PRISMATICO -> roll < 9 ? Mob.ENDER_SPIDER : roll < 15 ? Mob.ENDER_CREEPER : roll < 20 ? Mob.ENDER_BLAZE : Mob.NINGUNO;
             case MARCHITO -> roll < 10 ? Mob.ENDER_BLAZE : roll < 17 ? Mob.ENDER_CREEPER : roll < 24 ? Mob.ENDER_SPIDER
-                    : roll < 29 ? Mob.SHULKER_NEGRO : Mob.NINGUNO;
+                    : roll < 29 ? Mob.SHULKER_NEGRO : roll < 41 ? Mob.WITHER_SKELETON : Mob.NINGUNO;
         };
     }
 
@@ -67,6 +69,7 @@ public class EndSpawns implements Listener {
     private static EndBiomeMap.Zone zone(Biome biome) {
         if (EndBiome.isParamo(biome)) return EndBiomeMap.Zone.MARCHITO;
         if (EndBiome.isPrismatic(biome)) return EndBiomeMap.Zone.PRISMATICO;
+        if (EndBiome.isHielo(biome)) return EndBiomeMap.Zone.HIELO;
         return EndBiomeMap.Zone.VANILLA;
     }
 
@@ -84,6 +87,7 @@ public class EndSpawns implements Listener {
                 shulker.setPersistent(false);
                 shulker.setRemoveWhenFarAway(true);
             }
+            case WITHER_SKELETON -> loc.getWorld().spawn(loc, WitherSkeleton.class);
             default -> { }
         }
     }

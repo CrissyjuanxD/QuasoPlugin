@@ -1,0 +1,74 @@
+{
+  "has_precipitation": false,
+  "temperature": -0.5,
+  "temperature_modifier": "frozen",
+  "downfall": 0.4,
+  "effects": {
+    "water_color": "#3d57d6",
+    "grass_color": "#ffffff",
+    "foliage_color": "#ffffff",
+    "dry_foliage_color": "#e6f4ff"
+  },
+  "attributes": {
+    "minecraft:visual/sky_color": "#a8dcff",
+    "minecraft:visual/fog_color": "#bfe6ff",
+    "minecraft:visual/water_fog_color": "#050533",
+    "minecraft:visual/fog_start_distance": 20.0,
+    "minecraft:visual/fog_end_distance": 170.0,
+    "minecraft:visual/sky_fog_end_distance": 130.0,
+    "minecraft:visual/sky_light_color": "#cfeaff",
+    "minecraft:visual/ambient_particles": [
+      {
+        "particle": {
+          "type": "minecraft:white_ash"
+        },
+        "probability": 0.005
+      }
+    ]
+  },
+  "carvers": [],
+  "features": [],
+  "spawn_costs": {
+    "minecraft:enderman": {
+      "energy_budget": 1.0,
+      "charge": 0.6
+    },
+    "minecraft:skeleton": {
+      "energy_budget": 1.0,
+      "charge": 0.6
+    },
+    "minecraft:silverfish": {
+      "energy_budget": 1.0,
+      "charge": 0.6
+    }
+  },
+  "spawners": {
+    "ambient": [],
+    "axolotls": [],
+    "creature": [],
+    "misc": [],
+    "monster": [
+      {
+        "type": "minecraft:enderman",
+        "weight": 60,
+        "minCount": 4,
+        "maxCount": 4
+      },
+      {
+        "type": "minecraft:skeleton",
+        "weight": 40,
+        "minCount": 4,
+        "maxCount": 4
+      },
+      {
+        "type": "minecraft:silverfish",
+        "weight": 10,
+        "minCount": 2,
+        "maxCount": 2
+      }
+    ],
+    "underground_water_creature": [],
+    "water_ambient": [],
+    "water_creature": []
+  }
+}

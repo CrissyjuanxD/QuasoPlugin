@@ -3,16 +3,77 @@
 Todo lo del End se prende con `/changes activar tres` (día 35). Los biomas nuevos se generan siempre (populator), pero
 los mobs, las drops, las recetas y el altar del Rey Ender son de la etapa tres (`Dificultades/ThreeChanges.java`).
 
+## Biomas
+
+Las islas de afuera (a más de 1100 bloques del centro) se reparten en regiones de unos 450 bloques
+(`EndBiomes/EndBiomeMap.java`): 26% End de siempre, 27% Bosque Prismático, 27% Páramo Marchito y 20% Picos Helados.
+Solo cambian los chunks que se generen desde ahora; lo que ya estaba generado queda como estaba (puede quedar un borde
+donde se juntan).
+
+- **Bosque Prismático**: árboles de colores como el bioma colorido de Stellarity (hechos de cero, no copiados): árbol
+  grande con ramas y bolas de copa, pino en punta y árbol gigante de 2x2. La copa es de lana con vidrio del mismo color
+  (el verde de azalea y el rosa de cerezo), así casi no hay hojas que tiren partículas. Cada mancha del bosque tiene más
+  árboles de su color, pero salen de todos. Los rojos tienen vides colgando, los blancos varas del End y los grandes
+  faroles con cadena. En el suelo: pasto, flores, pétalos, raíces, brotes de amatista (no dan Celestita), rocas de
+  diorita y las geodas de siempre. Las partículas de luciérnagas bajaron a un quinto y los arbustos de luciérnagas casi
+  no salen (daban 15 FPS).
+- **Páramo Marchito**: igual que antes. Los Wither Skeletons del datapack casi no salían: ahora el 12% de los endermans
+  que spawnean ahí sale como Wither Skeleton (etapa tres).
+- **Picos Helados** (decorativo): nieve con líneas de hielo y manchas peladas de end stone, dunas, picos de hielo
+  compacto con vetas de hielo azul, carámbanos debajo de las islas y bolsones de nieve polvo. Salen endermans,
+  esqueletos y lepismas como en Stellarity. Niebla celeste pastel.
+
+Las islas chicas que el juego pone desde el chunk de al lado quedaban mitad end stone y mitad bioma: cuando un chunk
+nuevo termina de generarse se le pasa al suelo del bioma lo que quedó (`EndIslandFix`).
+
+En el End el fuego no se esparce ni quema bloques (`EndFire`): las bolas de fuego de los blazes ya no prenden el bosque.
+Con mechero se puede prender, pero se queda en ese bloque.
+
+El cielo del End no toma el color del bioma porque el juego dibuja la textura del cielo del End encima; la niebla sí
+cambia. Para que el cielo tome el color habría que cambiar el tipo de cielo de todo el End (se pierde la textura del End
+en todos lados), así que se dejó como está.
+
+## Ender Dragon
+
+Cuando se entra al End no está el dragón: hay que invocarlo poniendo los 4 cristales del End en los costados del portal
+de salida, como para revivirlo en vanilla (`EndBiomes/EndDragon.java`). Mientras no haya dragón, los 4 lugares brillan.
+
+- El dragón que el juego crea solo se cancela y la pelea queda como "dragón muerto, nunca matado", así el primero que
+  se invoque da el huevo y los 12000 de experiencia. Hasta matar al primero el portal de salida está apagado (como en
+  vanilla): hay que llevar los 4 cristales.
+- El ritual es el de vanilla (las torres se rearman con sus cristales) con una animación de partículas de colores
+  encima: anillos que se cierran hacia el portal cada vez más rápido, espirales en los cristales, una columna de luz,
+  arcos y estallidos en cada torre, una hélice doble que sube hasta donde aparece el dragón y una esfera que se cierra.
+  Cuando sale: explosión de colores, título para los que están en el End y aviso en el chat.
+- Si el End ya se había visitado y el dragón que puso el juego sigue vivo, al prender el server se saca.
+
+## Isla del dragón
+
+Se decora una sola vez al prender el server (`EndIslaPrincipal`; si se regenera el End, poner `end.isla_principal` y
+`end.plaza` en 0 en config.yml):
+
+- Suelo con vetas de basalto y basalto liso, manchas de obsidiana y obsidiana llorosa y lomitas de end stone.
+- Las 10 torres son las del juego (así el ritual las sigue rearmando), con la base ensanchada de obsidiana, obsidiana
+  llorosa y blackstone y vetas de obsidiana llorosa.
+- Alrededor del portal, una plaza redonda: ladrillos de blackstone, anillo de obsidiana con obsidiana llorosa en los 8
+  puntos, un anillo de vidrio de colores, marcos de pizarra detrás de los 4 lugares de los cristales y 4 obeliscos con
+  una vara del End arriba.
+
+## End Cities
+
+Las piezas son las de Better End Cities de IchPhilipp (el zip que se subió), en el datapack como
+`data/minecraft/structure/end_city`. Reemplazan a las vanilla en las ciudades que se generen desde ahora.
+
 ## Spawns
 
 En las islas de afuera (a más de 500 bloques del centro) el juego spawnea endermans. Parte de ellos se cambian ahí
 mismo por un mob del End, uno por uno, así la mobcap cuenta igual (`EndBiomes/EndSpawns.java`).
 
-| Zona | Ender Blaze | Ender Spider | Ender Creeper | Shulker Negro | Sigue enderman |
-|---|---|---|---|---|---|
-| End de siempre | 9% | 9% | 7% | – | 75% |
-| Bosque Prismático | 5% | 9% | 6% | – | 80% |
-| Páramo Marchito | 10% | 7% | 7% | 5% | 71% |
+| Zona | Ender Blaze | Ender Spider | Ender Creeper | Shulker Negro | Wither Skeleton | Sigue enderman |
+|---|---|---|---|---|---|---|
+| End de siempre y Picos Helados | 9% | 9% | 7% | – | – | 75% |
+| Bosque Prismático | 5% | 9% | 6% | – | – | 80% |
+| Páramo Marchito | 10% | 7% | 7% | 5% | 12% | 59% |
 
 En el Bosque Prismático los endermites (peso 8, antes 5) salen como Ender Insects. Los Shulkers Negros de los
 santuarios y agujas no desaparecen; los que salen sueltos en el Páramo sí, como cualquier mob.

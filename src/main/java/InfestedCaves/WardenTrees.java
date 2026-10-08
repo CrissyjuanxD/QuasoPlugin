@@ -107,34 +107,76 @@ public final class WardenTrees {
         }
     }
 
-    // Abismo Flotante: tronco de obsidiana llorosa con ramas de amatista y froglights perlados
+    // Abismo Flotante: árbol de cerezo torcido con raíces de obsidiana llorosa, una copa ancha de hojas que el bioma
+    // tiñe de morado con pétalos de cerezo, y froglights perlados colgando debajo como frutas (como el de la Caverna
+    // Sculk; se rompen en Frutas Abisales)
     static void crystal(LimitedRegion region, Random r, int x, int y, int z) {
-        int height = 3 + r.nextInt(3);
+        int height = 5 + r.nextInt(3);
         if (!hasSpace(region, x, y, z, height + 3)) return;
 
-        BlockData trunk = Material.CRYING_OBSIDIAN.createBlockData();
-        for (int i = 0; i < height; i++) set(region, x, y + i, z, trunk);
-        int top = y + height - 1;
-
-        int branches = 3 + r.nextInt(2);
-        for (int b = 0; b < branches; b++) {
-            BlockFace dir = HORIZONTAL[r.nextInt(HORIZONTAL.length)];
-            int length = 2 + r.nextInt(2);
-            int bx = x, by = top, bz = z;
-            for (int s = 0; s < length; s++) {
-                bx += dir.getModX();
-                bz += dir.getModZ();
-                if (s % 2 == 0) by++;
-                set(region, bx, by, bz, Material.AMETHYST_BLOCK.createBlockData());
+        // Tronco que se inclina un bloque hacia un lado en la mitad
+        BlockFace lean = HORIZONTAL[r.nextInt(HORIZONTAL.length)];
+        int tx = x, tz = z;
+        for (int i = 0; i < height; i++) {
+            if (i == height / 2) {
+                tx += lean.getModX();
+                tz += lean.getModZ();
             }
-            set(region, bx, by + 1, bz, Material.PEARLESCENT_FROGLIGHT.createBlockData());
-            if (r.nextBoolean()) {
-                AmethystCluster cluster = (AmethystCluster) Material.AMETHYST_CLUSTER.createBlockData();
-                cluster.setFacing(BlockFace.UP);
-                set(region, bx, by + 2, bz, cluster);
+            set(region, tx, y + i, tz, log(Material.CHERRY_LOG, Axis.Y));
+        }
+        for (BlockFace face : HORIZONTAL) {
+            int roll = r.nextInt(4);
+            if (roll == 0) continue;
+            set(region, x + face.getModX(), y, z + face.getModZ(), roll == 1
+                    ? Material.CRYING_OBSIDIAN.createBlockData() : Material.CHERRY_WOOD.createBlockData());
+        }
+
+        // Dos o tres ramas cortas que suben hacia los lados y ensanchan la copa
+        int top = y + height;
+        for (int b = 0, branches = 2 + r.nextInt(2); b < branches; b++) {
+            BlockFace dir = HORIZONTAL[r.nextInt(HORIZONTAL.length)];
+            Axis axis = dir.getModX() != 0 ? Axis.X : Axis.Z;
+            int by = top - 2;
+            for (int s = 1; s <= 2; s++) set(region, tx + dir.getModX() * s, by + (s - 1), tz + dir.getModZ() * s, log(Material.CHERRY_LOG, axis));
+        }
+
+        // Copa aplastada y ancha, con el borde deshilachado
+        int radius = 3 + r.nextInt(2);
+        for (int dx = -radius; dx <= radius; dx++) {
+            for (int dz = -radius; dz <= radius; dz++) {
+                for (int dy = -1; dy <= 2; dy++) {
+                    double shape = (dx * dx + dz * dz) / (double) (radius * radius) + (dy - 0.5) * (dy - 0.5) / 3.2;
+                    if (shape > 1.0 || (shape > 0.72 && r.nextInt(3) == 0)) continue;
+                    BlockData block = leaves(r.nextInt(100) < 22 ? Material.CHERRY_LEAVES : Material.OAK_LEAVES);
+                    set(region, tx + dx, top + dy, tz + dz, block);
+                }
             }
         }
-        set(region, x, top + 1, z, Material.PEARLESCENT_FROGLIGHT.createBlockData());
+
+        // Frutas: froglights perlados colgando de la parte de abajo de la copa
+        int fruits = 2 + r.nextInt(3);
+        for (int i = 0, tries = 0; i < fruits && tries < 24; tries++) {
+            int fx = tx + r.nextInt(radius * 2 + 1) - radius;
+            int fz = tz + r.nextInt(radius * 2 + 1) - radius;
+            for (int fy = top - 2; fy <= top; fy++) {
+                if (!canPlace(region, fx, fy, fz)) continue;
+                if (!region.isInRegion(fx, fy + 1, fz) || !Tag.LEAVES.isTagged(region.getType(fx, fy + 1, fz))) continue;
+                set(region, fx, fy, fz, Material.PEARLESCENT_FROGLIGHT.createBlockData());
+                i++;
+                break;
+            }
+        }
+
+        // Unos cristales de amatista al pie, como si salieran de las raíces
+        for (int i = 0; i < 2; i++) {
+            BlockFace face = HORIZONTAL[r.nextInt(HORIZONTAL.length)];
+            int cx = x + face.getModX() * 2;
+            int cz = z + face.getModZ() * 2;
+            if (!region.isInRegion(cx, y - 1, cz) || !region.getType(cx, y - 1, cz).isSolid()) continue;
+            AmethystCluster cluster = (AmethystCluster) Material.AMETHYST_CLUSTER.createBlockData();
+            cluster.setFacing(BlockFace.UP);
+            set(region, cx, y, cz, cluster);
+        }
     }
 
     // Ruinas de Ceniza: árbol seco de basalto con hojas de pale oak y musgo colgando

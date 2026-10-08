@@ -89,6 +89,7 @@ public class QuasoPlugin extends JavaPlugin implements Listener {
     private TwitchManager twitchManager;
     private TrabajosManager trabajosManager;
     private AutoAnnouncer autoAnnouncer;
+    private EndBiomes.EndDragon endDragon;
     private MantenimientoHandler mantenimientoHandler;
     private MainScoreboard mainScoreboard;
     private Homes homesCmd;
@@ -239,6 +240,7 @@ public class QuasoPlugin extends JavaPlugin implements Listener {
         if (twitchManager != null) twitchManager.shutdown();
         if (trabajosManager != null) trabajosManager.shutdown();
         if (autoAnnouncer != null) autoAnnouncer.shutdown();
+        if (endDragon != null) endDragon.stop();
         if (mainScoreboard != null) mainScoreboard.shutdown();
         if (homesCmd != null) homesCmd.shutdown();
         if (amuletBloodM != null) amuletBloodM.shutdown();
@@ -739,14 +741,25 @@ public class QuasoPlugin extends JavaPlugin implements Listener {
         }
     }
 
-    // Los biomas nuevos del End (Bosque Prismático y Páramo Marchito) se ponen con un populator en las islas de afuera
-    // que se generen desde ahora; los chunks que ya existían no cambian. Los mobs, drops y recetas del End van en la
-    // etapa "tres" (ThreeChanges)
+    // Los biomas nuevos del End (Bosque Prismático, Páramo Marchito y Picos Helados) se ponen con un populator en las
+    // islas de afuera que se generen desde ahora; los chunks que ya existían no cambian. En el End el fuego no se
+    // esparce, la isla del dragón se decora una vez y el dragón hay que invocarlo con los cristales. Los mobs, drops y
+    // recetas del End van en la etapa "tres" (ThreeChanges)
     private void initEndSystem() {
         BlackShulker blackShulker = new BlackShulker(this);
         for (World world : Bukkit.getWorlds()) {
             if (world.getEnvironment() == World.Environment.THE_END) world.getPopulators().add(new EndPopulator(blackShulker));
         }
+        Bukkit.getPluginManager().registerEvents(new EndBiomes.EndIslandFix(), this);
+        Bukkit.getPluginManager().registerEvents(new EndBiomes.EndFire(), this);
+
+        EndBiomes.EndIslaPrincipal isla = new EndBiomes.EndIslaPrincipal(this);
+        for (World world : Bukkit.getWorlds()) {
+            if (world.getEnvironment() == World.Environment.THE_END) isla.decorar(world);
+        }
+        endDragon = new EndBiomes.EndDragon(this, isla);
+        Bukkit.getPluginManager().registerEvents(endDragon, this);
+        endDragon.start();
     }
 
     private void cleanupBossHandlers() {

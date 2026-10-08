@@ -52,7 +52,10 @@ public class TwoChanges implements Listener, Change {
 
     private static final int BLAST_TIME = 4800;
     private static final double MINING_ZOMBIE_CHANCE = 0.15;
-    private static final int GHAST_REPLACE_CHANCE = 60;
+    private static final int GHAST_REPLACE_CHANCE = 25;
+    // Si ya hay estos ghasts cerca no se cambian más zombies (en el cielo abierto del Abismo se veían demasiados)
+    private static final int GHAST_NEARBY_MAX = 3;
+    private static final double GHAST_NEARBY_RADIUS = 48;
 
     private final JavaPlugin plugin;
     private final Random random = new Random();
@@ -261,12 +264,13 @@ public class TwoChanges implements Listener, Change {
                 == WardenBiome.ABISMO_FLOTANTE;
     }
 
-    // El ghast vanilla casi nunca pasa su chequeo de spawn (1 de cada 20), así que en el Abismo salían pocos. Parte de
-    // los zombies que spawnean ahí se cambian por un Infested Ghast unos bloques más arriba, uno por uno, así la
-    // mobcap sigue contando igual
+    // El ghast vanilla casi nunca pasa su chequeo de spawn (1 de cada 20), así que en el Abismo salían pocos. Uno de
+    // cada 4 zombies que spawnean ahí se cambia por un Infested Ghast unos bloques más arriba, uno por uno (así la
+    // mobcap sigue contando igual), mientras no haya ya 3 ghasts cerca
     private void replaceWithGhast(Zombie zombie) {
         if (!zombie.isValid() || zombie.isDead()) return;
         Location base = zombie.getLocation();
+        if (base.getWorld().getNearbyEntitiesByType(Ghast.class, base, GHAST_NEARBY_RADIUS).size() >= GHAST_NEARBY_MAX) return;
         for (int up = 6; up <= 18; up += 3) {
             Location spot = base.clone().add(0, up, 0);
             if (!openAir(spot)) continue;

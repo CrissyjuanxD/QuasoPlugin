@@ -133,6 +133,23 @@ final class EndStructures {
         void place(int x, int y, int z);
     }
 
+    // Roca de diorita y calcita medio enterrada en el pasto del Bosque Prismático
+    static void rock(LimitedRegion region, Random r, int x, int y, int z) {
+        int radius = 1 + r.nextInt(2);
+        for (int dx = -radius - 1; dx <= radius + 1; dx++) {
+            for (int dz = -radius - 1; dz <= radius + 1; dz++) {
+                for (int dy = -1; dy <= radius; dy++) {
+                    double d = dx * dx + dz * dz + dy * dy * 1.6;
+                    if (d > radius * radius + 1 + r.nextDouble() * 1.5) continue;
+                    if (!region.isInRegion(x + dx, y + dy, z + dz)) continue;
+                    Material current = region.getType(x + dx, y + dy, z + dz);
+                    if (!current.isAir() && !isGround(current) && current.isSolid()) continue;
+                    region.setType(x + dx, y + dy, z + dz, r.nextInt(5) == 0 ? Material.CALCITE : Material.DIORITE);
+                }
+            }
+        }
+    }
+
     // Lugar parejo: el suelo de alrededor está a la misma altura (±1) y hay aire arriba
     private static boolean flat(LimitedRegion region, int x, int y, int z, int radius) {
         for (int dx = -radius; dx <= radius; dx++) {

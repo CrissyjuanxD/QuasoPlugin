@@ -33,7 +33,9 @@ public class WardenGenerator extends ChunkGenerator {
 
     private static final int WATER_LEVEL = -38;
     private static final int LAVA_LEVEL = -48;
-    private static final int ORE_CHANCE = 900;
+    // 1 veta cada tantos bloques de roca, por bioma (Sculk, Pantano, Abismo, Ruinas): las islas del Abismo tienen
+    // poca roca, así que ahí sale el doble
+    private static final int[] ORE_CHANCE = {900, 900, 450, 650};
     private static final double FLUID_CORE = 0.9;
     private static final double FLUID_RIM = 0.2;
     private static final int FLUID_CITY_MARGIN = 12;
@@ -65,7 +67,7 @@ public class WardenGenerator extends ChunkGenerator {
             Material.AMETHYST_BLOCK, Material.MAGMA_BLOCK);
 
     private final JavaPlugin plugin;
-    private volatile Noises noises;
+    private static volatile Noises noises;
     private volatile BiomeProvider biomeProvider;
 
     public WardenGenerator(JavaPlugin plugin) {
@@ -200,9 +202,10 @@ public class WardenGenerator extends ChunkGenerator {
                 Column c = columns[col];
                 if (c.spawnInfluence >= 0.1) continue;
                 Material ore = c.biome.ore();
+                int chance = ORE_CHANCE[c.biome.ordinal()];
                 for (int y = MIN_Y + 3; y <= columnTop[col] - 3; y++) {
                     if (inCityCavern(c, city, y)) continue;
-                    if (ORE_HOST.contains(chunk.getType(x, y, z)) && random.nextInt(ORE_CHANCE) == 0) {
+                    if (ORE_HOST.contains(chunk.getType(x, y, z)) && random.nextInt(chance) == 0) {
                         vein(chunk, random, x, y, z, ore);
                     }
                 }
@@ -218,6 +221,7 @@ public class WardenGenerator extends ChunkGenerator {
         double cityInfluence;
         double cityRoof;
         double cityTop;
+        double cityHills;
         boolean voidFloor;
         boolean floats;
         final double[] floor = new double[4];
@@ -241,6 +245,7 @@ public class WardenGenerator extends ChunkGenerator {
         if (c.cityInfluence > 0) {
             c.cityRoof = cityRoof(n, city, x, z);
             c.cityTop = c.cityRoof + 13 + n.crustVariation.noise(x * 1.7, z * 1.7, 0.5, 0.5, true) * 3;
+            c.cityHills = c.cityTop + cityHills(n, x, z);
         }
         c.voidFloor = c.w[ABYSS] > 0.6 && c.spawnInfluence <= 0 && c.cityInfluence <= 0;
         // Las islas del Abismo flotan a propósito, no se borran
@@ -339,16 +344,34 @@ public class WardenGenerator extends ChunkGenerator {
 
     // Caverna de la Ancient City: piso firme abajo de las piezas, cúpula irregular (alta en el centro y bajando hacia
     // los bordes) y arriba una capa de roca de 10 a 16 bloques pegada a las paredes, así la ciudad queda bajo tierra
-    // como en el deep dark y no quedan pedazos de terreno flotando sobre ella. Arriba de esa capa sigue el bioma
+    // como en el deep dark y no quedan pedazos de terreno flotando sobre ella. Sobre esa capa van lomas con cuevas
+    // (si no, quedaba una meseta plana) y después sigue el bioma con sus crestas
     private double cityCarve(AncientCityLocator.CityInfo city, Column c, int y, double s) {
         double influence = c.cityInfluence;
         if (y <= city.minY()) return s + (1.2 - s) * influence;
         if (y <= c.cityRoof) return s + (-1.2 - s) * influence;
         if (y <= c.cityTop) return s + (1.2 - s) * influence;
+        if (y <= c.cityHills) return s + (Math.min(1.2, s + 0.5) - s) * influence;
         return s;
     }
 
-    private double cityRoof(Noises n, AncientCityLocator.CityInfo city, int x, int z) {
+    // Alto de las lomas sobre el techo de la ciudad: de 0 a unos 28 bloques, con valles y cerros redondeados
+    private static double cityHills(Noises n, int x, int z) {
+        double h = n.cityHills.noise(x, z, 0.5, 0.5, true);
+        return 26 * smooth(-0.35, 0.5, h) + 3 * n.crustVariation.noise(x * 2.3, z * 2.3, 0.5, 0.5, true);
+    }
+
+    // Si esa posición está dentro de la caverna de una Ancient City (del piso al techo en cúpula). El Infested Warden
+    // solo cuenta a los jugadores que están ahí, no a los que están arriba en el terreno
+    public static boolean inCityCavern(long seed, double x, double y, double z) {
+        int bx = (int) Math.floor(x);
+        int bz = (int) Math.floor(z);
+        AncientCityLocator.CityInfo city = AncientCityLocator.findCityNear(seed, bx, bz);
+        if (city == null || AncientCityLocator.computeInfluence(city, bx, bz) <= 0.3) return false;
+        return y >= city.minY() - 2 && y <= cityRoof(noises(seed), city, bx, bz) + 1;
+    }
+
+    private static double cityRoof(Noises n, AncientCityLocator.CityInfo city, int x, int z) {
         double d = Math.hypot(x - city.centerX, z - city.centerZ) / AncientCityLocator.CLEAR_RADIUS;
         return city.maxY() + 16 * (1 - Math.min(1, d * d)) + n.crustVariation.noise(x, z, 0.5, 0.5, true) * 5;
     }
@@ -767,10 +790,10 @@ public class WardenGenerator extends ChunkGenerator {
         return t * t * (3 - 2 * t);
     }
 
-    private Noises noises(long seed) {
+    private static Noises noises(long seed) {
         Noises current = noises;
         if (current == null || current.seed != seed) {
-            synchronized (this) {
+            synchronized (WardenGenerator.class) {
                 current = noises;
                 if (current == null || current.seed != seed) {
                     current = new Noises(seed);
@@ -796,6 +819,7 @@ public class WardenGenerator extends ChunkGenerator {
         final SimplexOctaveGenerator obsidian;
         final SimplexOctaveGenerator spires;
         final SimplexOctaveGenerator crustVariation;
+        final SimplexOctaveGenerator cityHills;
         final org.bukkit.util.noise.SimplexNoiseGenerator[] ridgedOctaves = new org.bukkit.util.noise.SimplexNoiseGenerator[4];
 
         Noises(long seed) {
@@ -813,6 +837,7 @@ public class WardenGenerator extends ChunkGenerator {
             obsidian = octaves(new Random(seed + 35), 2, 1.0 / 40);
             spires = octaves(new Random(seed + 12), 2, 1.0 / 16);
             crustVariation = octaves(new Random(seed + 16), 2, 1.0 / 28);
+            cityHills = octaves(new Random(seed + 37), 3, 1.0 / 45);
             for (int i = 0; i < ridgedOctaves.length; i++) {
                 ridgedOctaves[i] = new org.bukkit.util.noise.SimplexNoiseGenerator(new Random(seed + 20 + i));
             }

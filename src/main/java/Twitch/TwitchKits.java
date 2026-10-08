@@ -20,16 +20,17 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-// Los kits del canal. Sub: mes 1 hierro con Protección II y 25 DinoCoins, mes 2 diamante con Protección III y 40,
-// desde el mes 3 Netherite con Protección IV y 64; todos con manzanas de oro, carne corrupta, tarta de calabaza
-// mejorada y una mochila. VIP: 15 DinoCoins, manzanas, tarta y Mochila Nivel 1
+// Los kits del canal. Sub: mes 1 hierro con Protección II y 25 DinoCoins, mes 2 diamante con Protección III, arco
+// (Infinidad y Poder II), espada con Filo II y 40, desde el mes 3 Netherite con Protección IV, arco (Infinidad y
+// Poder III), espada de Netherite con Filo IV y 64; todos con manzanas encantadas y de oro, carne corrupta, tarta de
+// calabaza mejorada y una mochila. VIP: 15 DinoCoins, manzanas encantadas y de oro, tarta y Mochila Nivel 1
 final class TwitchKits {
 
     enum Kit {
-        SUB_1("sub1", "Kit de Sub · Mes 1", "#B57BFF", 25, "IRON", 2, 8, 16, 8, 1),
-        SUB_2("sub2", "Kit de Sub · Mes 2", "#9146FF", 40, "DIAMOND", 3, 12, 24, 12, 2),
-        SUB_3("sub3", "Kit de Sub · Mes 3+", "#6A1BE0", 64, "NETHERITE", 4, 16, 32, 16, 3),
-        VIP("vip", "Kit VIP", "#E005B9", 15, null, 0, 4, 0, 8, 1);
+        SUB_1("sub1", "Kit de Sub · Mes 1", "#B57BFF", 25, "IRON", 2, 4, 8, 15, 15, null, 0, 0, 1),
+        SUB_2("sub2", "Kit de Sub · Mes 2", "#9146FF", 40, "DIAMOND", 3, 7, 20, 25, 25, "DIAMOND_SWORD", 2, 2, 2),
+        SUB_3("sub3", "Kit de Sub · Mes 3+", "#6A1BE0", 64, "NETHERITE", 4, 10, 32, 35, 35, "NETHERITE_SWORD", 4, 3, 3),
+        VIP("vip", "Kit VIP", "#E005B9", 15, null, 0, 2, 6, 0, 12, null, 0, 0, 1);
 
         final String id;
         final String title;
@@ -37,21 +38,31 @@ final class TwitchKits {
         final int coins;
         final String armor;
         final int protection;
+        final int enchantedApples;
         final int apples;
         final int steak;
         final int pie;
+        final String sword;
+        final int sharpness;
+        // Nivel de Poder del arco con Infinidad (0 = sin arco)
+        final int bowPower;
         final int backpack;
 
-        Kit(String id, String title, String color, int coins, String armor, int protection, int apples, int steak, int pie, int backpack) {
+        Kit(String id, String title, String color, int coins, String armor, int protection, int enchantedApples, int apples,
+            int steak, int pie, String sword, int sharpness, int bowPower, int backpack) {
             this.id = id;
             this.title = title;
             this.color = color;
             this.coins = coins;
             this.armor = armor;
             this.protection = protection;
+            this.enchantedApples = enchantedApples;
             this.apples = apples;
             this.steak = steak;
             this.pie = pie;
+            this.sword = sword;
+            this.sharpness = sharpness;
+            this.bowPower = bowPower;
             this.backpack = backpack;
         }
 
@@ -76,20 +87,22 @@ final class TwitchKits {
         return Kit.SUB_3;
     }
 
-    // Cofre de 27: la armadura arriba, las DinoCoins en el centro y la comida y la mochila alrededor
+    // Cofre de 27: la armadura arriba, las DinoCoins en el centro con la comida a los lados y abajo la espada, la
+    // mochila y el arco (con 1 flecha, que Infinidad la necesita para disparar)
     static ItemStack[] contents(Kit kit) {
         ItemStack[] slots = new ItemStack[27];
         if (kit.armor != null) {
             String[] pieces = {"_HELMET", "_CHESTPLATE", "_LEGGINGS", "_BOOTS"};
             int[] armorSlots = {1, 3, 5, 7};
             for (int i = 0; i < pieces.length; i++) {
-                slots[armorSlots[i]] = armor(Material.valueOf(kit.armor + pieces[i]), kit.protection);
+                slots[armorSlots[i]] = enchanted(Material.valueOf(kit.armor + pieces[i]), Enchantment.PROTECTION, kit.protection);
             }
         }
+        slots[10] = new ItemStack(Material.ENCHANTED_GOLDEN_APPLE, kit.enchantedApples);
+        slots[11] = new ItemStack(Material.GOLDEN_APPLE, kit.apples);
         ItemStack coins = EconomyItems.createVithiumCoin();
         coins.setAmount(kit.coins);
         slots[13] = coins;
-        slots[11] = new ItemStack(Material.GOLDEN_APPLE, kit.apples);
         if (kit.steak > 0) {
             ItemStack steak = OneChanges.corruptedSteak();
             steak.setAmount(kit.steak);
@@ -97,8 +110,15 @@ final class TwitchKits {
         }
         ItemStack pie = OneChanges.improvedPumpkinPie();
         pie.setAmount(kit.pie);
-        slots[kit.steak > 0 ? 21 : 15] = pie;
-        slots[kit.steak > 0 ? 23 : 22] = backpack(kit.backpack);
+        slots[kit.steak > 0 ? 16 : 15] = pie;
+        if (kit.sword != null) slots[20] = enchanted(Material.valueOf(kit.sword), Enchantment.SHARPNESS, kit.sharpness);
+        slots[22] = backpack(kit.backpack);
+        if (kit.bowPower > 0) {
+            ItemStack bow = enchanted(Material.BOW, Enchantment.POWER, kit.bowPower);
+            bow.addUnsafeEnchantment(Enchantment.INFINITY, 1);
+            slots[24] = bow;
+            slots[25] = new ItemStack(Material.ARROW);
+        }
         return slots;
     }
 
@@ -130,9 +150,9 @@ final class TwitchKits {
         player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, SoundCategory.PLAYERS, 0.6f, 1.4f);
     }
 
-    private static ItemStack armor(Material type, int protection) {
+    private static ItemStack enchanted(Material type, Enchantment enchantment, int level) {
         ItemStack item = new ItemStack(type);
-        item.addUnsafeEnchantment(Enchantment.PROTECTION, protection);
+        item.addUnsafeEnchantment(enchantment, level);
         return item;
     }
 

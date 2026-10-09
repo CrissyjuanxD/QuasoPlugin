@@ -37,12 +37,23 @@ El Peto de Warden Alado puesto se sigue viendo como el peto de Netherite (la tex
 | Incienso Ahuyentador | `incienso_ahuyentador` | Cuenco de barro con dos varitas encendidas y humo |
 | Elixir del Minero / Ígneo | `elixir_minero` / `elixir_igneo` | Frasco vanilla con el líquido azul con chispas doradas / naranja con una llamita |
 | Galleta de la Fortuna | `galleta_fortuna` | Galleta doblada con el papelito asomando |
-| Papeles de los trabajos | `trabajo_guerrero`, `trabajo_mineria`, `trabajo_lenador`, `trabajo_constructor`, `trabajo_granjero`, `trabajo_pescador` | Medallón del color del trabajo con su símbolo: espada, pico, hacha, martillo, trigo y pez |
 | Chatarra | `chatarra` | Engranaje oxidado, un clavo y una chapa doblada |
 | Manzana Podrida | `manzana_podrida` | Manzana vanilla marrón con manchas y moho |
 | Zanahoria Encantada | `zanahoria_encantada` | Zanahoria azul con brillos |
 | Fósiles Pequeños | `fosiles_pequenos` | Amonita en un trozo de piedra |
 | Monedero | `monedero` | Monedero rosa con el broche dorado y una moneda |
+
+## Lote 3 (Version #42): trabajos y habilidades
+
+Los papeles de los trabajos (`trabajo_guerrero`, `trabajo_mineria`, `trabajo_lenador`, `trabajo_constructor`,
+`trabajo_granjero` y `trabajo_pescador`) son la herramienta de cada uno a tamaño completo, con el mango envuelto en el
+color del trabajo y un detalle abajo: espada con guarda dorada, pico con un diamante, hacha con un tronco, martillo con
+un ladrillo, azada con una espiga de trigo y caña con un pez en el anzuelo.
+
+El árbol de habilidades usa `minecraft:habilidad_<rama>_<1|2>_<on|off>`: corazón para Vitalidad, bota alada para
+Agilidad y escudo para Resistencia. `on` es a color (ya lo tienes) y `off` en gris (todavía no). Los niveles 1 a 4 usan
+el `1` y los 5 a 8 el `2`, que tiene el borde dorado y más brillos. El número del nivel lo muestra la cantidad del item
+(nivel 3 = 3 items en el slot), así no hace falta una textura por nivel. Ya no tienen el brillo de encantamiento.
 
 ## Mochilas (opción)
 

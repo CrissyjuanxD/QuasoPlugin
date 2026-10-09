@@ -5,6 +5,7 @@ import items.EconomyItems;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.Sound;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
@@ -159,7 +160,8 @@ public class HabilidadesGUI implements Listener {
                 mat = Material.PAPER;
         }
 
-        ItemStack item = new ItemStack(mat);
+        // La cantidad muestra el nivel; la textura se ve encendida si ya lo tiene y apagada si no
+        ItemStack item = new ItemStack(mat, level);
         ItemMeta meta = item.getItemMeta();
 
         if (meta != null) {
@@ -168,17 +170,18 @@ public class HabilidadesGUI implements Listener {
 
             List<String> lore = getLore(type, level, isUnlocked, canUnlock);
             meta.setLore(lore);
-
-            if (isUnlocked) {
-                meta.addEnchant(Enchantment.UNBREAKING, 1, true);
-                meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
-            }
+            meta.setItemModel(NamespacedKey.minecraft(modelo(type, level, isUnlocked)));
 
             meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
 
             item.setItemMeta(meta);
         }
         return item;
+    }
+
+    // minecraft:habilidad_<rama>_<1 o 2>_<on u off>: los niveles 1 a 4 usan el 1 y los 5 a 8 el 2 (con borde dorado)
+    static String modelo(HabilidadesType type, int level, boolean isUnlocked) {
+        return "habilidad_" + type.name().toLowerCase() + "_" + (level <= 4 ? 1 : 2) + "_" + (isUnlocked ? "on" : "off");
     }
 
     private String getDisplayName(HabilidadesType type, int level, boolean isUnlocked) {

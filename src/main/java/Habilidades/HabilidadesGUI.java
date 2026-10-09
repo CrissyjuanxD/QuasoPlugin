@@ -160,8 +160,8 @@ public class HabilidadesGUI implements Listener {
                 mat = Material.PAPER;
         }
 
-        // La cantidad muestra el nivel; la textura se ve encendida si ya lo tiene y apagada si no
-        ItemStack item = new ItemStack(mat, level);
+        // La textura se ve encendida si ya lo tiene y apagada si no, con el nivel escrito (N1 a N8)
+        ItemStack item = new ItemStack(mat);
         ItemMeta meta = item.getItemMeta();
 
         if (meta != null) {
@@ -179,9 +179,9 @@ public class HabilidadesGUI implements Listener {
         return item;
     }
 
-    // minecraft:habilidad_<rama>_<1 o 2>_<on u off>: los niveles 1 a 4 usan el 1 y los 5 a 8 el 2 (con borde dorado)
+    // minecraft:habilidad_<rama>_<nivel>_<on u off>: una textura por nivel con la placa N1 a N8
     static String modelo(HabilidadesType type, int level, boolean isUnlocked) {
-        return "habilidad_" + type.name().toLowerCase() + "_" + (level <= 4 ? 1 : 2) + "_" + (isUnlocked ? "on" : "off");
+        return "habilidad_" + type.name().toLowerCase() + "_" + level + "_" + (isUnlocked ? "on" : "off");
     }
 
     private String getDisplayName(HabilidadesType type, int level, boolean isUnlocked) {

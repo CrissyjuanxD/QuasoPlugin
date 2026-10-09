@@ -43,17 +43,24 @@ El Peto de Warden Alado puesto se sigue viendo como el peto de Netherite (la tex
 | Fósiles Pequeños | `fosiles_pequenos` | Amonita en un trozo de piedra |
 | Monedero | `monedero` | Monedero rosa con el broche dorado y una moneda |
 
-## Lote 3 (Version #42): trabajos y habilidades
+## Lote 3 (Version #42 y #43): trabajos y habilidades
 
-Los papeles de los trabajos (`trabajo_guerrero`, `trabajo_mineria`, `trabajo_lenador`, `trabajo_constructor`,
-`trabajo_granjero` y `trabajo_pescador`) son la herramienta de cada uno a tamaño completo, con el mango envuelto en el
-color del trabajo y un detalle abajo: espada con guarda dorada, pico con un diamante, hacha con un tronco, martillo con
-un ladrillo, azada con una espiga de trigo y caña con un pez en el anzuelo.
+Los papeles de los trabajos son la herramienta de cada uno, cada una con su propio material y un detalle abajo:
 
-El árbol de habilidades usa `minecraft:habilidad_<rama>_<1|2>_<on|off>`: corazón para Vitalidad, bota alada para
-Agilidad y escudo para Resistencia. `on` es a color (ya lo tienes) y `off` en gris (todavía no). Los niveles 1 a 4 usan
-el `1` y los 5 a 8 el `2`, que tiene el borde dorado y más brillos. El número del nivel lo muestra la cantidad del item
-(nivel 3 = 3 items en el slot), así no hace falta una textura por nivel. Ya no tienen el brillo de encantamiento.
+| Trabajo | ID | Herramienta |
+|---|---|---|
+| Guerrero | `trabajo_guerrero` | Espada de rubí con guarda dorada y mango de cuero |
+| Minería | `trabajo_mineria` | Pico de cobalto con remache dorado y una gema rosa |
+| Leñador | `trabajo_lenador` | Hacha de cobre con mango de abedul y una hoja |
+| Constructor | `trabajo_constructor` | Martillo de latón con mango rojo y un ladrillo |
+| Granjero | `trabajo_granjero` | Azada de esmeralda con una espiga de trigo |
+| Pescador | `trabajo_pescador` | Caña aguamarina con anzuelo dorado y un pez naranja |
+
+El árbol de habilidades usa `minecraft:habilidad_<rama>_<nivel>_<on|off>` (48 texturas): corazón para Vitalidad,
+doble flecha para arriba (como el efecto de Salto Alto) para Agilidad y escudo de acero con borde dorado y chevrón
+morado (como el efecto de Resistencia) para Resistencia. Cada una lleva abajo a la derecha una placa con el nivel
+escrito (N1 a N8); del N5 al N8 la placa tiene borde dorado. `on` es a color (ya lo tienes) y `off` en gris (todavía
+no). Ya no tienen el brillo de encantamiento.
 
 ## Mochilas (opción)
 

@@ -24,7 +24,36 @@ Las herramientas de celestita usan `item/handheld` (se agarran como las de vanil
 de vanilla: plana en el inventario y con el modelo `item/spear_in_hand` en la mano, las dos con la misma textura.
 El Peto de Warden Alado puesto se sigue viendo como el peto de Netherite (la textura es solo la del item).
 
+## Lote 2 (Version #41): lo que se ve del día 1 al 19
+
+| Item | ID | Estilo |
+|---|---|---|
+| Imán de Botín | `iman_botin` | Imán de herradura rojo con puntas de metal y chispas |
+| Red Atrapa-Animales | `red_animales` | Bolsa de red de soga con el cordón arriba |
+| Abono Concentrado | `abono_concentrado` | Polvo de hueso verde |
+| Brújula del Explorador | `brujula_explorador` | Brújula de bronce con la cara azul (no gira, es fija) |
+| Ración de Viaje | `racion_viaje` | Pan atado con dos cordeles |
+| Bomba de Humo | `bomba_humo` | Bomba gris con la mecha prendida y humo |
+| Incienso Ahuyentador | `incienso_ahuyentador` | Cuenco de barro con dos varitas encendidas y humo |
+| Elixir del Minero / Ígneo | `elixir_minero` / `elixir_igneo` | Frasco vanilla con el líquido azul con chispas doradas / naranja con una llamita |
+| Galleta de la Fortuna | `galleta_fortuna` | Galleta doblada con el papelito asomando |
+| Papeles de los trabajos | `trabajo_guerrero`, `trabajo_mineria`, `trabajo_lenador`, `trabajo_constructor`, `trabajo_granjero`, `trabajo_pescador` | Medallón del color del trabajo con su símbolo: espada, pico, hacha, martillo, trigo y pez |
+| Chatarra | `chatarra` | Engranaje oxidado, un clavo y una chapa doblada |
+| Manzana Podrida | `manzana_podrida` | Manzana vanilla marrón con manchas y moho |
+| Zanahoria Encantada | `zanahoria_encantada` | Zanahoria azul con brillos |
+| Fósiles Pequeños | `fosiles_pequenos` | Amonita en un trozo de piedra |
+| Monedero | `monedero` | Monedero rosa con el broche dorado y una moneda |
+
+## Mochilas (opción)
+
+Están en `resourcepack/opciones/mochilas/` (`mochila_nivel_1` a `mochila_nivel_5`), fuera de `assets`, porque las
+mochilas usan los modelos vanilla de los bundles (`minecraft:lime_bundle`, `blue_bundle`, `orange_bundle`,
+`red_bundle` y `purple_bundle`). Si se usan con esos nombres también cambian los bundles normales de esos colores;
+para que no pase, el plugin tendría que pasar a usar `minecraft:mochila_nivel_<n>`. Cada nivel suma algo: el 3 tiene
+ribete dorado, el 4 una gema roja y el 5 hebilla de diamante, gema morada y brillitos.
+
 ## Pendientes
 
 Los minerales y materiales van al final: `cristal_celestita`, `lingote_celestita`, `fragmento_astral`,
-`esencia_marchita` y `plantilla_celestita`. Faltan también los demás items de la tienda y los papeles de los trabajos.
+`esencia_marchita`, `plantilla_celestita`, `pepitas_hierro_oxidadas`, `pepitas_diamante`, `fragmentos_ambar` y
+`lingote_platino`. Faltan también los items de la tienda de los días 20 y 30 que no están arriba.

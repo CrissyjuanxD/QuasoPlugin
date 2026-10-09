@@ -45,5 +45,5 @@ de él.
 - No le pega al que dispara, a sus mascotas ni a los soportes de armadura. Con un cofre o una puerta delante los abre
   normal; agachado dispara.
 - Cuenta para las misiones 63 (mobs con la Warden Gun) y 92 (equipo legendario).
-- Por debajo es un echo shard que no se apila y no entra en recetas vanilla. Falta el modelo `minecraft:warden_gun`
-  en el resource pack (CustomModelData 713).
+- Por debajo es un echo shard que no se apila y no entra en recetas vanilla. Su textura está en `resourcepack/`
+  (`minecraft:warden_gun`, CustomModelData 713).

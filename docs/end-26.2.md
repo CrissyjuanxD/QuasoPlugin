@@ -138,6 +138,7 @@ Suelta la EnderKing Pearl y 3000 de experiencia; las DinoCoins (25 la primera ve
 
 ## Modelos que faltan en el resource pack
 
-`lingote_celestita`, `plantilla_celestita`, `enderking_pearl`, `espada_celestita`, `hacha_celestita`,
-`lanza_celestita`, `pico_celestita`, `pala_celestita`, `azada_celestita`, `peto_warden_alado` y `warden_gun` (todos como
-`minecraft:<id>`, igual que el resto de los items custom).
+Las herramientas de celestita, `enderking_pearl`, `ojo_rey_ender`, `peto_warden_alado` y `warden_gun` ya tienen
+textura en `resourcepack/` (ver `docs/texturas-26.2.md`). Faltan `lingote_celestita`, `plantilla_celestita`,
+`cristal_celestita`, `fragmento_astral` y `esencia_marchita` (todos como `minecraft:<id>`, igual que el resto de los
+items custom).

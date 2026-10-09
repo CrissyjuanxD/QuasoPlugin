@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "minecraft:item/enderking_pearl"
+    "layer0": "minecraft:item/custom/enderking_pearl"
   }
 }

@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "minecraft:item/ojo_rey_ender"
+    "layer0": "minecraft:item/custom/ojo_rey_ender"
   }
 }

@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "minecraft:item/elixir_igneo"
+    "layer0": "minecraft:item/custom/elixir_igneo"
   }
 }

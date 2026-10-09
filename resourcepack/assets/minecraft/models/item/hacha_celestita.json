@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/handheld",
   "textures": {
-    "layer0": "minecraft:item/hacha_celestita"
+    "layer0": "minecraft:item/custom/hacha_celestita"
   }
 }

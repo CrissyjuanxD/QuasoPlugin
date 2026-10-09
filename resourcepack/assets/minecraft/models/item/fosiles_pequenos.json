@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "minecraft:item/fosiles_pequenos"
+    "layer0": "minecraft:item/custom/fosiles_pequenos"
   }
 }

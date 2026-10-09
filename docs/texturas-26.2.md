@@ -1,7 +1,7 @@
 # Texturas de items (26.2)
 
 Las texturas están en `resourcepack/` con la misma estructura que el resource pack, así que se copia `assets` encima
-del pack y listo. Cada item lleva su textura (`textures/item/<id>.png`), su definición (`items/<id>.json`) y su modelo
+del pack y listo. Cada item lleva su textura (`textures/item/custom/<id>.png`), su definición (`items/<id>.json`) y su modelo
 (`models/item/<id>.json`). Todas son de 16x16 y planas (sin modelos 3D) para que el paso a Bedrock sea fácil.
 `resourcepack/preview/` tiene una imagen con cada lote en grande.
 

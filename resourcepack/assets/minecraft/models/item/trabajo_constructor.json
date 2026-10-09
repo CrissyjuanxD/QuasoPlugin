@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "minecraft:item/trabajo_constructor"
+    "layer0": "minecraft:item/custom/trabajo_constructor"
   }
 }

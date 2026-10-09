@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "minecraft:item/galleta_fortuna"
+    "layer0": "minecraft:item/custom/galleta_fortuna"
   }
 }

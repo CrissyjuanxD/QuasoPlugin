@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "minecraft:item/bomba_humo"
+    "layer0": "minecraft:item/custom/bomba_humo"
   }
 }

@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "minecraft:item/trabajo_pescador"
+    "layer0": "minecraft:item/custom/trabajo_pescador"
   }
 }

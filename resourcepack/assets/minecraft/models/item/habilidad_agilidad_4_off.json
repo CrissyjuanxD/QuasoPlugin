@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "minecraft:item/habilidad_agilidad_4_off"
+    "layer0": "minecraft:item/custom/habilidad_agilidad_4_off"
   }
 }

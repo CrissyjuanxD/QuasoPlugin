@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "minecraft:item/brujula_explorador"
+    "layer0": "minecraft:item/custom/brujula_explorador"
   }
 }

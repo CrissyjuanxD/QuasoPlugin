@@ -1,6 +1,6 @@
 {
   "model": {
     "type": "minecraft:model",
-    "model": "minecraft:item/ojo_rey_ender"
+    "model": "minecraft:item/custom/ojo_rey_ender"
   }
 }

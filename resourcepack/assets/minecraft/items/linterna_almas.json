@@ -1,6 +1,6 @@
 {
   "model": {
     "type": "minecraft:model",
-    "model": "minecraft:item/linterna_almas"
+    "model": "minecraft:item/custom/linterna_almas"
   }
 }

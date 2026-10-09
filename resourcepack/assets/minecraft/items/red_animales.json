@@ -1,6 +1,6 @@
 {
   "model": {
     "type": "minecraft:model",
-    "model": "minecraft:item/red_animales"
+    "model": "minecraft:item/custom/red_animales"
   }
 }

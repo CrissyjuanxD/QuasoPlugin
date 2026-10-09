@@ -1,6 +1,6 @@
 {
   "model": {
     "type": "minecraft:model",
-    "model": "minecraft:item/manzana_podrida"
+    "model": "minecraft:item/custom/manzana_podrida"
   }
 }

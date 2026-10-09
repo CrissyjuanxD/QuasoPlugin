@@ -1,6 +1,6 @@
 {
   "model": {
     "type": "minecraft:model",
-    "model": "minecraft:item/habilidad_agilidad_5_off"
+    "model": "minecraft:item/custom/habilidad_agilidad_5_off"
   }
 }

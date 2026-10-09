@@ -1,6 +1,6 @@
 {
   "model": {
     "type": "minecraft:model",
-    "model": "minecraft:item/pala_celestita"
+    "model": "minecraft:item/custom/pala_celestita"
   }
 }

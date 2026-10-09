@@ -1,6 +1,6 @@
 {
   "model": {
     "type": "minecraft:model",
-    "model": "minecraft:item/bengala_sculk"
+    "model": "minecraft:item/custom/bengala_sculk"
   }
 }

@@ -1,6 +1,6 @@
 {
   "model": {
     "type": "minecraft:model",
-    "model": "minecraft:item/trabajo_constructor"
+    "model": "minecraft:item/custom/trabajo_constructor"
   }
 }

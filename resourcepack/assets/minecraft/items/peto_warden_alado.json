@@ -1,6 +1,6 @@
 {
   "model": {
     "type": "minecraft:model",
-    "model": "minecraft:item/peto_warden_alado"
+    "model": "minecraft:item/custom/peto_warden_alado"
   }
 }

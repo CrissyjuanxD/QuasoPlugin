@@ -1,6 +1,6 @@
 {
   "model": {
     "type": "minecraft:model",
-    "model": "minecraft:item/polvo_silencioso"
+    "model": "minecraft:item/custom/polvo_silencioso"
   }
 }

@@ -1,6 +1,6 @@
 {
   "model": {
     "type": "minecraft:model",
-    "model": "minecraft:item/granada_sonica"
+    "model": "minecraft:item/custom/granada_sonica"
   }
 }

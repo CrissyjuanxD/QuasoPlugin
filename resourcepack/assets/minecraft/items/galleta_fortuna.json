@@ -1,6 +1,6 @@
 {
   "model": {
     "type": "minecraft:model",
-    "model": "minecraft:item/galleta_fortuna"
+    "model": "minecraft:item/custom/galleta_fortuna"
   }
 }

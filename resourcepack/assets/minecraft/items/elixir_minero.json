@@ -1,6 +1,6 @@
 {
   "model": {
     "type": "minecraft:model",
-    "model": "minecraft:item/elixir_minero"
+    "model": "minecraft:item/custom/elixir_minero"
   }
 }

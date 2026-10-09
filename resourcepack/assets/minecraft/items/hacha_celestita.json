@@ -1,6 +1,6 @@
 {
   "model": {
     "type": "minecraft:model",
-    "model": "minecraft:item/hacha_celestita"
+    "model": "minecraft:item/custom/hacha_celestita"
   }
 }

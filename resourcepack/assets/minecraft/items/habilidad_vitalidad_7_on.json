@@ -1,6 +1,6 @@
 {
   "model": {
     "type": "minecraft:model",
-    "model": "minecraft:item/habilidad_vitalidad_7_on"
+    "model": "minecraft:item/custom/habilidad_vitalidad_7_on"
   }
 }

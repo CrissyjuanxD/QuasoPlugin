@@ -1,6 +1,6 @@
 {
   "model": {
     "type": "minecraft:model",
-    "model": "minecraft:item/iman_botin"
+    "model": "minecraft:item/custom/iman_botin"
   }
 }

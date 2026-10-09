@@ -1,6 +1,6 @@
 {
   "model": {
     "type": "minecraft:model",
-    "model": "minecraft:item/cristal_eco"
+    "model": "minecraft:item/custom/cristal_eco"
   }
 }

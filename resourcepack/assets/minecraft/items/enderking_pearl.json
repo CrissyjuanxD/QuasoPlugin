@@ -1,6 +1,6 @@
 {
   "model": {
     "type": "minecraft:model",
-    "model": "minecraft:item/enderking_pearl"
+    "model": "minecraft:item/custom/enderking_pearl"
   }
 }

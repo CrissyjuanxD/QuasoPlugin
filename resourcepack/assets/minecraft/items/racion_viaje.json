@@ -1,6 +1,6 @@
 {
   "model": {
     "type": "minecraft:model",
-    "model": "minecraft:item/racion_viaje"
+    "model": "minecraft:item/custom/racion_viaje"
   }
 }

@@ -1,6 +1,6 @@
 {
   "model": {
     "type": "minecraft:model",
-    "model": "minecraft:item/azada_celestita"
+    "model": "minecraft:item/custom/azada_celestita"
   }
 }

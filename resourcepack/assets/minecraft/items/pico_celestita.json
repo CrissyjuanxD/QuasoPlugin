@@ -1,6 +1,6 @@
 {
   "model": {
     "type": "minecraft:model",
-    "model": "minecraft:item/pico_celestita"
+    "model": "minecraft:item/custom/pico_celestita"
   }
 }

@@ -1,6 +1,6 @@
 {
   "model": {
     "type": "minecraft:model",
-    "model": "minecraft:item/abono_concentrado"
+    "model": "minecraft:item/custom/abono_concentrado"
   }
 }

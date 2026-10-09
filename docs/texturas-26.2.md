@@ -62,13 +62,12 @@ morado (como el efecto de Resistencia) para Resistencia. Cada una lleva abajo a 
 escrito (N1 a N8); del N5 al N8 la placa tiene borde dorado. `on` es a color (ya lo tienes) y `off` en gris (todavía
 no). Ya no tienen el brillo de encantamiento.
 
-## Mochilas (opción)
+## Mochilas
 
-Están en `resourcepack/opciones/mochilas/` (`mochila_nivel_1` a `mochila_nivel_5`), fuera de `assets`, porque las
-mochilas usan los modelos vanilla de los bundles (`minecraft:lime_bundle`, `blue_bundle`, `orange_bundle`,
-`red_bundle` y `purple_bundle`). Si se usan con esos nombres también cambian los bundles normales de esos colores;
-para que no pase, el plugin tendría que pasar a usar `minecraft:mochila_nivel_<n>`. Cada nivel suma algo: el 3 tiene
-ribete dorado, el 4 una gema roja y el 5 hebilla de diamante, gema morada y brillitos.
+Están en `textures/item/custom/` como `mochila_nivel_1` a `mochila_nivel_5`, con su `items/` y su modelo. El plugin
+todavía usa los modelos vanilla de los bundles (`minecraft:lime_bundle`, etc.), así que para verlas hay que pasar las
+mochilas a `minecraft:mochila_nivel_<n>`. Cada nivel suma algo: el 3 tiene ribete dorado, el 4 una gema roja y el 5
+hebilla de diamante, gema morada y brillitos.
 
 ## Pendientes
 

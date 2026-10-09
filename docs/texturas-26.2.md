@@ -57,7 +57,7 @@ Los papeles de los trabajos son la herramienta de cada uno, cada una con su prop
 | Pescador | `trabajo_pescador` | Caña aguamarina con anzuelo dorado y un pez naranja |
 
 El árbol de habilidades usa `minecraft:habilidad_<rama>_<nivel>_<on|off>` (48 texturas): corazón para Vitalidad,
-doble flecha para arriba (como el efecto de Salto Alto) para Agilidad y escudo de acero con borde dorado y chevrón
+dos chevrones para arriba con estela (como el efecto de Salto Alto) para Agilidad y escudo de acero con borde dorado y chevrón
 morado (como el efecto de Resistencia) para Resistencia. Cada una lleva abajo a la derecha una placa con el nivel
 escrito (N1 a N8); del N5 al N8 la placa tiene borde dorado. `on` es a color (ya lo tienes) y `off` en gris (todavía
 no). Ya no tienen el brillo de encantamiento.

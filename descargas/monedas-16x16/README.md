@@ -20,16 +20,18 @@ Se utiliza la misma estructura que en `resourcepack/`: definiciones en `items`, 
 | --- | --- | --- | --- |
 | DinoCoins | `minecraft:dinocoins` | [items/dinocoins.json](assets/minecraft/items/dinocoins.json) | `item/custom/dinocoins` |
 | DinoFicha | `minecraft:dinofichas` | [items/dinofichas.json](assets/minecraft/items/dinofichas.json) | `item/custom/dinofichas` |
-| Ficha de misión | `minecraft:popped_chorus_fruit` | [items/popped_chorus_fruit.json](assets/minecraft/items/popped_chorus_fruit.json) | `item/custom/ficha_mision` |
+| Ficha de misión | `minecraft:ficha_mision` | [items/ficha_mision.json](assets/minecraft/items/ficha_mision.json) | `item/custom/ficha_mision` |
 
-La definición de la ficha de misión se llama **`popped_chorus_fruit.json`** porque ese es el `item_model` que asigna actualmente `MissionHandler`. Su modelo y su PNG se llaman **`ficha_mision`**. Como ese identificador también es vanilla, este pack cambia igualmente el aspecto de las frutas de chorus cocinadas normales. Para separar ambos aspectos habría que cambiar el identificador que usa el plugin.
+La ficha de misión utiliza **`minecraft:ficha_mision`** en el plugin. Su definición, modelo y textura se llaman **`ficha_mision`**.
+
+Si instalaste el ZIP anterior, elimina `assets/minecraft/items/popped_chorus_fruit.json` de tu pack. Actualiza también el plugin para que las fichas nuevas reciban el identificador `ficha_mision`; las fichas ya entregadas conservan el modelo anterior y deben recrearse para mostrar esta textura.
 
 ```text
 assets/minecraft/
 ├── items/
 │   ├── dinocoins.json
 │   ├── dinofichas.json
-│   └── popped_chorus_fruit.json
+│   └── ficha_mision.json
 ├── models/item/custom/
 │   ├── dinocoins.json
 │   ├── dinofichas.json

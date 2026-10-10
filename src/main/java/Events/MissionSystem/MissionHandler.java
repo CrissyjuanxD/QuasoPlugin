@@ -590,7 +590,7 @@ public class MissionHandler implements Listener {
 
         meta.setDisplayName(ChatColor.GOLD + "Ficha de Misión " + tag(missionNumber));
         meta.getPersistentDataContainer().set(TOKEN_KEY, PersistentDataType.INTEGER, missionNumber);
-        meta.setItemModel(NamespacedKey.minecraft("popped_chorus_fruit"));
+        meta.setItemModel(NamespacedKey.minecraft("ficha_mision"));
         meta.addEnchant(Enchantment.UNBREAKING, 1, true);
         meta.addItemFlags(org.bukkit.inventory.ItemFlag.HIDE_ENCHANTS);
 

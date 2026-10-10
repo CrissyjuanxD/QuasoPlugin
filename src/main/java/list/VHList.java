@@ -10,6 +10,11 @@ import org.bukkit.scoreboard.*;
 
 public class VHList extends BukkitRunnable {
 
+    private static final ChatColor DECORATION_PURPLE = ChatColor.of("#572a8c");
+    private static final ChatColor DECORATION_BLUE = ChatColor.of("#3b69aa");
+    private static final ChatColor DECORATION_LIGHT_BLUE = ChatColor.of("#4d8be0");
+    private static final ChatColor STUDIO_COLOR = ChatColor.of("#7f3bd2");
+
     private final JavaPlugin plugin;
     private boolean showCreator = true;
 
@@ -37,21 +42,21 @@ public class VHList extends BukkitRunnable {
         int online = Bukkit.getOnlinePlayers().size();
         int ping = player.getPing();
 
-        String separator = ChatColor.DARK_GRAY + "●" + ChatColor.GRAY + ChatColor.BOLD + "" + ChatColor.STRIKETHROUGH + "                 " +
-                ChatColor.BLUE + ChatColor.BOLD + ChatColor.STRIKETHROUGH + "                 " +
-                ChatColor.GRAY + ChatColor.BOLD + ChatColor.STRIKETHROUGH + "                 " + ChatColor.DARK_GRAY + "●\n";
+        String separator = DECORATION_PURPLE + "●" + ChatColor.BOLD + ChatColor.STRIKETHROUGH + "                 " +
+                DECORATION_BLUE + ChatColor.BOLD + ChatColor.STRIKETHROUGH + "                 " +
+                DECORATION_LIGHT_BLUE + ChatColor.BOLD + ChatColor.STRIKETHROUGH + "                 " + DECORATION_LIGHT_BLUE + "●\n";
 
         String header = separator +
                 ChatColor.GRAY + " \n" +
-                ChatColor.RED + "" + ChatColor.BOLD + "      \uD83E\uDD50" + ChatColor.GOLD + ChatColor.BOLD + " CROISSANTS " + ChatColor.RED + ChatColor.BOLD + "\uD83E\uDD50     \n" +
+                DECORATION_PURPLE + "" + ChatColor.BOLD + "      \uD83E\uDD50" + DECORATION_LIGHT_BLUE + ChatColor.BOLD + " CROISSANTS " + DECORATION_BLUE + ChatColor.BOLD + "\uD83E\uDD50     \n" +
                 ChatColor.GRAY + " \n" +
-                ChatColor.of("#facc15") + "📊 ONLINE: " + ChatColor.WHITE + online + ChatColor.DARK_GRAY + "  |  " +
-                ChatColor.of("#4ade80") + "📶 PING: " + ChatColor.WHITE + ping + " ms\n" +
+                DECORATION_BLUE + "📊 ONLINE: " + ChatColor.WHITE + online + DECORATION_PURPLE + "  |  " +
+                DECORATION_LIGHT_BLUE + "📶 PING: " + ChatColor.WHITE + ping + " ms\n" +
                 ChatColor.GRAY + " \n";
 
-        String footer = " \n" + ChatColor.WHITE + "" + ChatColor.BOLD + "Organizado por: " + ChatColor.YELLOW + "Crosszy" + " \n" +
+        String footer = " \n" + ChatColor.WHITE + "" + ChatColor.BOLD + "Organizado por: " + DECORATION_LIGHT_BLUE + "Crosszy" + " \n" +
                 ChatColor.GRAY + " \n" +
-                ChatColor.GRAY + "Programado por @CrissyjuanxD\n" +
+                ChatColor.GRAY + "Programado por " + STUDIO_COLOR + "@Viciont Studios\n" +
                 ChatColor.GRAY + " \n" +
                 separator.replace("\n", "");
 

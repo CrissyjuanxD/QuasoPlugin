@@ -116,7 +116,7 @@ public class EconomyItems {
         meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
         makeUnstackable(meta);
 
-        meta.setItemModel(NamespacedKey.minecraft("lime_bundle"));
+        meta.setItemModel(NamespacedKey.minecraft("mochila_nivel_1"));
         item.setItemMeta(meta);
         return item;
     }
@@ -141,7 +141,7 @@ public class EconomyItems {
         meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
         makeUnstackable(meta);
 
-        meta.setItemModel(NamespacedKey.minecraft("blue_bundle"));
+        meta.setItemModel(NamespacedKey.minecraft("mochila_nivel_2"));
         item.setItemMeta(meta);
         return item;
     }
@@ -166,7 +166,7 @@ public class EconomyItems {
         meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
         makeUnstackable(meta);
 
-        meta.setItemModel(NamespacedKey.minecraft("orange_bundle"));
+        meta.setItemModel(NamespacedKey.minecraft("mochila_nivel_3"));
         item.setItemMeta(meta);
         return item;
     }
@@ -191,7 +191,7 @@ public class EconomyItems {
         meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
         makeUnstackable(meta);
 
-        meta.setItemModel(NamespacedKey.minecraft("red_bundle"));
+        meta.setItemModel(NamespacedKey.minecraft("mochila_nivel_4"));
         item.setItemMeta(meta);
         return item;
     }
@@ -216,7 +216,7 @@ public class EconomyItems {
         meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
         makeUnstackable(meta);
 
-        meta.setItemModel(NamespacedKey.minecraft("purple_bundle"));
+        meta.setItemModel(NamespacedKey.minecraft("mochila_nivel_5"));
         item.setItemMeta(meta);
         return item;
     }

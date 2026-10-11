@@ -11,7 +11,6 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.Sound;
 import org.bukkit.SoundCategory;
 import org.bukkit.command.CommandSender;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -588,11 +587,11 @@ public class MissionHandler implements Listener {
         ItemStack token = new ItemStack(Material.POPPED_CHORUS_FRUIT);
         ItemMeta meta = token.getItemMeta();
 
-        meta.setDisplayName(ChatColor.GOLD + "Ficha de Misión " + tag(missionNumber));
+        meta.setDisplayName(ChatColor.of(items.EconomyItems.MISSION_TOKEN_COLOR) + "Ficha de Misión "
+                + ChatColor.of("#ffc183") + ChatColor.stripColor(tag(missionNumber)));
         meta.getPersistentDataContainer().set(TOKEN_KEY, PersistentDataType.INTEGER, missionNumber);
         meta.setItemModel(NamespacedKey.minecraft("ficha_mision"));
-        meta.addEnchant(Enchantment.UNBREAKING, 1, true);
-        meta.addItemFlags(org.bukkit.inventory.ItemFlag.HIDE_ENCHANTS);
+        meta.setEnchantmentGlintOverride(false);
 
         List<String> lore = new ArrayList<>();
         lore.add("");

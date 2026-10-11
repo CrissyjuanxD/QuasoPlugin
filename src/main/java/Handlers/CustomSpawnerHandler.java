@@ -1,5 +1,7 @@
 package Handlers;
 
+import Managers.MobManager;
+
 import Bosses.QueenBeeHandler;
 import Dificultades.CustomMobs.*;
 import org.bukkit.*;
@@ -690,12 +692,12 @@ public class CustomSpawnerHandler implements Listener {
     }
 
     private void spawnCustomMob(String mobType, Location location) {
-        switch (mobType.toLowerCase()) {
-            case "bombita": bombitaSpawner.spawnBombita(location); break;
+        switch (MobManager.normalizeId(mobType)) {
+            case "creeperfloral": bombitaSpawner.spawnBombita(location); break;
             case "iceologer": iceologerSpawner.spawnIceologer(location); break;
-            case "corruptedzombie": corruptedZombieSpawner.spawnCorruptedZombie(location); break;
-            case "corruptedspider": corruptedSpider.spawnCorruptedSpider(location); break;
-            case "queenbee": QueenBeeHandler.spawn(plugin, location); break;
+            case "zombiefloral": corruptedZombieSpawner.spawnCorruptedZombie(location); break;
+            case "spiderfloral": corruptedSpider.spawnCorruptedSpider(location); break;
+            case "abejafloral": QueenBeeHandler.spawn(plugin, location); break;
             case "infestedbee": infestedBeeHandler.spawnInfestedBee(location); break;
             case "guardianblaze": guardianBlaze.spawnGuardianBlaze(location); break;
             case "guardiancorruptedskeleton": guardianCorruptedSkeleton.spawnGuardianCorruptedSkeleton(location); break;
@@ -707,13 +709,13 @@ public class CustomSpawnerHandler implements Listener {
 
     // Mob vanilla que se muestra dentro del spawner para cada mob custom
     private EntityType getBaseEntityType(String mobType) {
-        switch (mobType.toLowerCase()) {
-            case "bombita": case "corruptedcreeper": case "infernalcreeper": case "endercreeper": case "darkcreeper": return EntityType.CREEPER;
+        switch (MobManager.normalizeId(mobType)) {
+            case "creeperfloral": case "corruptedcreeper": case "infernalcreeper": case "endercreeper": case "darkcreeper": return EntityType.CREEPER;
             case "iceologer": return EntityType.ILLUSIONER;
-            case "corruptedzombie": return EntityType.ZOMBIE;
-            case "corruptedspider": case "corruptedinfernalspider": return EntityType.SPIDER;
+            case "zombiefloral": return EntityType.ZOMBIE;
+            case "spiderfloral": case "corruptedinfernalspider": return EntityType.SPIDER;
             case "toxicspider": return EntityType.CAVE_SPIDER;
-            case "queenbee": case "hellishbee": case "infestedbee": case "corruptedbee": return EntityType.BEE;
+            case "abejafloral": case "hellishbee": case "infestedbee": case "corruptedbee": return EntityType.BEE;
             case "guardianblaze": return EntityType.BLAZE;
             case "guardiancorruptedskeleton": return EntityType.WITHER_SKELETON;
             case "corruptedskeleton": case "darkskeleton": return EntityType.SKELETON;
@@ -735,12 +737,12 @@ public class CustomSpawnerHandler implements Listener {
     }
 
     private String getCustomMobName(String mobType) {
-        switch (mobType.toLowerCase()) {
-            case "bombita": return "Bombita";
+        switch (MobManager.normalizeId(mobType)) {
+            case "creeperfloral": return "Creeper Floral";
             case "iceologer": return "Iceologer";
-            case "corruptedzombie": return "Zombie Floral";
-            case "corruptedspider": return "Spider Floral";
-            case "queenbee": return "Abeja Floral";
+            case "zombiefloral": return "Zombie Floral";
+            case "spiderfloral": return "Spider Floral";
+            case "abejafloral": return "Abeja Floral";
             case "hellishbee": return "Abeja Infernal";
             case "infestedbee": return "Infested Bee";
             case "guardianblaze": return "Guardian Blaze";

@@ -1,5 +1,7 @@
 package Commands;
 
+import Managers.MobManager;
+
 import Dificultades.CustomMobs.*;
 import org.bukkit.Bukkit;
 import net.md_5.bungee.api.ChatColor;
@@ -65,7 +67,7 @@ public class GiveSpawnerCommand implements CommandExecutor, TabCompleter {
                 }
             }
         } else {
-            mobType = args[0].toLowerCase();
+            mobType = MobManager.normalizeId(args[0]);
 
             if (args.length > 1) {
                 target = Bukkit.getPlayer(args[1]);
@@ -129,9 +131,9 @@ public class GiveSpawnerCommand implements CommandExecutor, TabCompleter {
             customModelData = 1000;
 
             switch (mobType) {
-                case "bombita":
-                    displayName = ChatColor.RED + "" + ChatColor.BOLD + "Spawner de Bombita";
-                    description = "Genera Bombitas explosivas";
+                case "creeperfloral":
+                    displayName = ChatColor.RED + "" + ChatColor.BOLD + "Spawner de Creeper Floral";
+                    description = "Genera Creepers Florales explosivos";
                     customModelData = 1001;
                     break;
                 case "iceologer":
@@ -139,18 +141,18 @@ public class GiveSpawnerCommand implements CommandExecutor, TabCompleter {
                     description = "Genera Iceologers con ataques de hielo";
                     customModelData = 1002;
                     break;
-                case "corruptedzombie":
+                case "zombiefloral":
                     displayName = ChatColor.LIGHT_PURPLE + "" + ChatColor.BOLD + "Spawner de Zombie Floral";
                     description = "Genera Zombies Florales";
                     customModelData = 1003;
                     break;
-                case "corruptedspider":
+                case "spiderfloral":
                     displayName = ChatColor.YELLOW + "" + ChatColor.BOLD + "Spawner de Spider Floral";
                     description = "Genera Spiders Florales";
                     customModelData = 1004;
                     break;
-                case "queenbee":
-                    displayName = ChatColor.GOLD + "" + ChatColor.BOLD + "Spawner de Queen Bee";
+                case "abejafloral":
+                    displayName = ChatColor.GOLD + "" + ChatColor.BOLD + "Spawner de Abeja Floral";
                     description = "Genera la poderosa Abeja Floral";
                     customModelData = 1005;
                     break;
@@ -359,11 +361,11 @@ public class GiveSpawnerCommand implements CommandExecutor, TabCompleter {
 
         if (args.length == 1) {
             suggestions.add("vanilla");
-            suggestions.add("bombita");
+            suggestions.add("creeperfloral");
             suggestions.add("iceologer");
-            suggestions.add("corruptedzombie");
-            suggestions.add("corruptedspider");
-            suggestions.add("queenbee");
+            suggestions.add("zombiefloral");
+            suggestions.add("spiderfloral");
+            suggestions.add("abejafloral");
             suggestions.add("hellishbee");
             suggestions.add("infestedbee");
             suggestions.add("guardianblaze");

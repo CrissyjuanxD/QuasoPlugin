@@ -92,8 +92,8 @@ commands:
     permission: viciont_hardcore3.command.addtiempo
     permission-message: No tienes permiso para usar este comando.
   giveqp:
-    description: Da un item especial del plugin a un jugador.
-    usage: /giveqp <item> [cantidad] [jugador]
+    description: Abre el catálogo o da un item especial del plugin a un jugador.
+    usage: /giveqp [item] [cantidad] [jugador]
     permission: viciont_hardcore3.command.givevct
     permission-message: No tienes permiso para usar este comando.
   missions:
@@ -301,6 +301,9 @@ depend: [EliteMobs]
 softdepend: [FastAsyncWorldEdit, WorldGuard, ViaVersion]
 
 permissions:
+  viciont_hardcore3.command.givevct:
+    default: op
+    description: Permite entregar items y usar el catálogo de /giveqp.
   quasoplugin.web:
     default: op
     description: Permite ver y forzar la conexión con la web (/web).

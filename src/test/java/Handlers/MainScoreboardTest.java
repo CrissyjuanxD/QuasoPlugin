@@ -131,12 +131,13 @@ class MainScoreboardTest {
         assertEquals("\uE903 Misiones: 12/100", line(7));
         assertEquals("\uE904 DinoCoins: 320", line(5));
         assertEquals("\uE905 Trabajo: Ninguno", line(3));
-        assertEquals("\uE906 croissant.holy.gg", line(1));
+        assertEquals("croissant.holy.gg", line(1).strip());
+        assertTrue(line(1).startsWith(" "), "La IP debe tener margen para quedar centrada");
         assertTrue(entries.get("ZMiembro").contains("Crosszy"));
         config.set("main-scoreboard.titulo", "\uE950");
         config.set("main-scoreboard.iconos.usuario", "\uE951");
         scoreboard.run();
-        verify(objective).setDisplayName("\uE950");
+        verify(objective).setDisplayName("§f\uE950");
         assertEquals("\uE951 Usuario: Crosszy", line(11));
         originalMembers.clear();
         scoreboard.run();

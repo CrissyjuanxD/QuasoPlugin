@@ -20,7 +20,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.concurrent.ThreadLocalRandom;
 
-// Cambio extra (día 14, entre el uno y el dos): el Zombie Floral, la Spider Floral y las Bombitas salen solos en el
+// Cambio extra (día 14, entre el uno y el dos): el Zombie Floral, la Spider Floral y las Creepers Florales salen solos en el
 // Overworld. Lo que hacen lo pone el cambio uno (sus listeners están desde el día 1); acá solo se convierten
 public class ExtraChanges implements Listener, Change {
 
@@ -51,7 +51,7 @@ public class ExtraChanges implements Listener, Change {
 
     @Override
     public String description() {
-        return "Día 14: Zombie Floral, Spider Floral y Bombitas spawnean solos en el Overworld";
+        return "Día 14: Zombie Floral, Spider Floral y Creepers Florales spawnean solos en el Overworld";
     }
 
     @Override

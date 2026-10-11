@@ -1,6 +1,7 @@
 package Commands;
 
 import Managers.ItemManager;
+import Gui.ItemCatalog;
 import imp.crissyjuanxd.QuasoPlugin;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -18,18 +19,25 @@ public class ItemsCommands implements CommandExecutor, TabCompleter {
 
     private final QuasoPlugin plugin;
     private final ItemManager itemManager;
+    private final ItemCatalog catalog;
 
     public ItemsCommands(QuasoPlugin plugin, ItemManager itemManager) {
         this.plugin = plugin;
         this.itemManager = itemManager;
+        this.catalog = new ItemCatalog(plugin, itemManager);
         plugin.getCommand("giveqp").setExecutor(this);
         plugin.getCommand("giveqp").setTabCompleter(this);
     }
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+        if (!sender.hasPermission(ItemCatalog.PERMISSION)) {
+            sender.sendMessage("§cNo tienes permiso para usar este comando.");
+            return true;
+        }
         if (args.length == 0) {
-            sender.sendMessage("§cUso: /giveqp <item> [cantidad] [jugador]");
+            if (sender instanceof Player player) catalog.open(player);
+            else sender.sendMessage("§cUso: /giveqp <item> [cantidad] [jugador]");
             return true;
         }
 

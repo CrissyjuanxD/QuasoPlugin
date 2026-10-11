@@ -18,6 +18,9 @@ import java.util.List;
 import java.util.UUID;
 
 public class EconomyItems {
+    public static final String DINOCOINS_COLOR = "#6fa2e7";
+    public static final String DINOFICHAS_COLOR = "#dfb56b";
+    public static final String MISSION_TOKEN_COLOR = "#ec9052";
 
     private static void makeUnstackable(ItemMeta meta) {
         NamespacedKey unstackableKey = new NamespacedKey("is_manu", "unstackable_id");
@@ -28,7 +31,7 @@ public class EconomyItems {
         ItemStack item = new ItemStack(Material.SUNFLOWER);
         ItemMeta meta = item.getItemMeta();
 
-        meta.setDisplayName(ChatColor.of("#FFCC80") + "DinoCoins " + ChatColor.GRAY + "۞");
+        meta.setDisplayName(ChatColor.of(DINOCOINS_COLOR) + "DinoCoins " + ChatColor.of("#3f2163") + "۞");
         meta.setCustomModelData(2000);
 
         List<String> lore = new ArrayList<>();
@@ -40,8 +43,7 @@ public class EconomyItems {
         lore.add(ChatColor.GRAY + "Solo se puede almacenar en un monedero.");
         meta.setLore(lore);
         meta.setRarity(ItemRarity.EPIC);
-        meta.addEnchant(Enchantment.UNBREAKING, 1, true);
-        meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+        meta.setEnchantmentGlintOverride(false);
 
         meta.setItemModel(NamespacedKey.minecraft("dinocoins"));
         item.setItemMeta(meta);
@@ -52,7 +54,7 @@ public class EconomyItems {
         ItemStack item = new ItemStack(Material.GOLD_NUGGET);
         ItemMeta meta = item.getItemMeta();
 
-        meta.setDisplayName(ChatColor.of("#3a86b6") + "DinoFichas " + ChatColor.GRAY + "۞");
+        meta.setDisplayName(ChatColor.of(DINOFICHAS_COLOR) + "DinoFichas " + ChatColor.of("#99714f") + "۞");
         meta.setCustomModelData(2010);
 
         List<String> lore = new ArrayList<>();
@@ -64,8 +66,7 @@ public class EconomyItems {
         lore.add(ChatColor.GRAY + "Solo se puede almacenar en un monedero.");
         meta.setLore(lore);
         meta.setRarity(ItemRarity.EPIC);
-        meta.addEnchant(Enchantment.UNBREAKING, 1, true);
-        meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+        meta.setEnchantmentGlintOverride(false);
 
         meta.setItemModel(NamespacedKey.minecraft("dinofichas"));
         item.setItemMeta(meta);

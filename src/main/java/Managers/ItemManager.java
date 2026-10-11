@@ -78,7 +78,7 @@ public class ItemManager {
         "bar_mezcal", "bar_pulque", "bar_cerveza", "bar_ron", "bar_vodka", "bar_whisky",
         "bar_sake", "bar_ginebra", "bar_azulito", "bar_michelada", "manzana_vida", "pluma_levitacion", "pluma_levitacion_mejorada",
         "keep_inventory_liquido", "estatua_protectora", "amuleto_ultima_esperanza",
-        "corrupted_spider_eye", "bloque_oro_apilado", "arco_hielo_jugador",
+        "carne_podrida_floral", "ojo_arana_floral", "polvora_floral", "bloque_oro_apilado", "arco_hielo_jugador",
 
         "amuleto_invisiblidad", "arco_nivel1", "arco_nivel2", "arco_nivel3", "alma_infested_skeleton",
         "alma_infested_ghast", "alma_infested_creeper", "alma_infested_cave_spider", "energia_warden",
@@ -184,7 +184,9 @@ public class ItemManager {
             case "keep_inventory_liquido": item = keepInventoryLiquido.createKeepInventoryLiquido(); break;
             case "estatua_protectora": item = estatuaProtectora.createEstatuaProtectora(); break;
             case "amuleto_ultima_esperanza": item = amuletoUltimaEsperanza.createAmuleto(); break;
-            case "corrupted_spider_eye": item = CorruptedMobItems.createCorruptedSpiderEye(); break;
+            case "corrupted_meat", "carne_podrida_floral": item = FloralMobItems.createFlesh(); break;
+            case "corrupted_spider_eye", "ojo_arana_floral": item = FloralMobItems.createEye(); break;
+            case "polvora_floral": item = FloralMobItems.createGunpowder(); break;
             case "bloque_oro_apilado": item = CorruptedGoldenApple.createApilateGoldBlock(); break;
             case "arco_hielo_jugador": item = iceBowItem.createPlayerIceBow(); break;
 

@@ -3,7 +3,6 @@ package Dificultades.CustomMobs;
 import Dificultades.Features.MobSoundManager;
 import com.destroystokyo.paper.event.entity.EntityAddToWorldEvent;
 import com.destroystokyo.paper.event.entity.EntityRemoveFromWorldEvent;
-import items.CorruptedMobItems;
 import org.bukkit.*;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.*;
@@ -238,7 +237,7 @@ public class CorruptedZombies implements Listener {
         }
     }
 
-    // 30% de soltar carne corrupta
+    // El drop floral se gestiona una sola vez en FloralMobDrops.
     @EventHandler
     public void onZombieDeath(EntityDeathEvent event) {
         if (event.getEntity() instanceof Zombie zombie && isCorrupted(zombie)) {
@@ -247,9 +246,6 @@ public class CorruptedZombies implements Listener {
             activeZombies.remove(zombie.getUniqueId());
             ParticulasFlorales.estallido(zombie.getLocation().add(0, 1, 0));
 
-            if (Math.random() <= 0.30) {
-                zombie.getWorld().dropItemNaturally(zombie.getLocation(), CorruptedMobItems.createCorruptedMeet());
-            }
         }
     }
 }

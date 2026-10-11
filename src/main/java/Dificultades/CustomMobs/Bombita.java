@@ -6,8 +6,6 @@ import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityExplodeEvent;
-import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
@@ -55,7 +53,7 @@ public class Bombita implements Listener {
 
     // Creeper chiquito y rápido que explota casi al instante con radio 2
     private void applyBombitaAttributes(Creeper creeper) {
-        creeper.setCustomName(ChatColor.RED + "" + ChatColor.BOLD + "Bombita");
+        creeper.setCustomName(net.md_5.bungee.api.ChatColor.of("#ef94b6") + "§lCreeper Floral");
         creeper.setCustomNameVisible(false);
         creeper.getAttribute(Attribute.FOLLOW_RANGE).setBaseValue(32);
         creeper.setExplosionRadius(2);

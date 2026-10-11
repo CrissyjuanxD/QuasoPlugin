@@ -86,7 +86,7 @@ public class MobManager {
 
     private void cargarNombresDeMobs() {
         String[] mobs = {
-                "bombita", "iceologer", "corruptedzombie", "corruptedspider", "queenbee",
+                "creeperfloral", "iceologer", "zombiefloral", "spiderfloral", "abejafloral",
                 "guardianblaze", "guardiancorruptedskeleton", "corruptedinfernalspider",
                 "infestedbee", "estatuarecompensa", "corruptedbee", "infestedcreeper",
                 "infestedghast", "infestedskeleton", "infestedcavespider", "wardenzombie", "enderblaze",
@@ -97,14 +97,25 @@ public class MobManager {
         }
     }
 
+    /** Nombres públicos actuales; los IDs guardados en spawners antiguos siguen funcionando. */
+    public static String normalizeId(String id) {
+        return switch (id.toLowerCase(java.util.Locale.ROOT)) {
+            case "bombita" -> "creeperfloral";
+            case "corruptedzombie" -> "zombiefloral";
+            case "corruptedspider", "aranafloral", "arañafloral" -> "spiderfloral";
+            case "queenbee" -> "abejafloral";
+            default -> id.toLowerCase(java.util.Locale.ROOT);
+        };
+    }
+
     // Spawnea cualquier mob custom por su nombre (lo usa /spawnqp)
     public boolean spawnMob(String mobType, Location location, Player targetPlayer, String variantArgs) {
-        switch (mobType.toLowerCase()) {
-            case "bombita": bombitaSpawner.spawnBombita(location); return true;
+        switch (MobManager.normalizeId(mobType)) {
+            case "creeperfloral": bombitaSpawner.spawnBombita(location); return true;
             case "iceologer": iceologerSpawner.spawnIceologer(location); return true;
-            case "corruptedzombie": corruptedZombieSpawner.spawnCorruptedZombie(location); return true;
-            case "corruptedspider": corruptedSpider.spawnCorruptedSpider(location); return true;
-            case "queenbee": QueenBeeHandler.spawn(plugin, location); return true;
+            case "zombiefloral": corruptedZombieSpawner.spawnCorruptedZombie(location); return true;
+            case "spiderfloral": corruptedSpider.spawnCorruptedSpider(location); return true;
+            case "abejafloral": QueenBeeHandler.spawn(plugin, location); return true;
             case "guardianblaze": guardianBlaze.spawnGuardianBlaze(location); return true;
             case "guardiancorruptedskeleton": guardianCorruptedSkeleton.spawnGuardianCorruptedSkeleton(location); return true;
             case "corruptedinfernalspider": corruptedInfernalSpider.spawnCorruptedInfernalSpider(location); return true;
@@ -156,12 +167,12 @@ public class MobManager {
     public record InfoMob(String id, String nombre, String color, String etapa, String vida, String donde, String texto, String huevo) {}
 
     private static final List<InfoMob> INFO_MOBS = List.of(
-            new InfoMob("corruptedzombie", "Zombie Floral", "#FF8CC6", "uno", "20", "Raids · solo desde el día 14",
-                    "Dispara una wind charge con estela floral que da veneno y debilidad. Tiene fuerza, velocidad y 30% de soltar Carne Corrupta.", "zombie_spawn_egg"),
-            new InfoMob("corruptedspider", "Spider Floral", "#F6C945", "uno", "16", "Raids · sola desde el día 14",
-                    "Araña con velocidad y fuerza permanentes. Si te pega y no te cubres con el escudo, te deja una telaraña en los pies.", "spider_spawn_egg"),
-            new InfoMob("bombita", "Bombita", "#FF5555", "uno", "20", "Raids · sola desde el día 14",
-                    "Creeper chiquito y rápido que explota casi al instante. Las Bombitas no se dañan entre ellas.", "creeper_spawn_egg"),
+            new InfoMob("zombiefloral", "Zombie Floral", "#FF8CC6", "uno", "20", "Raids · solo desde el día 14",
+                    "Dispara una wind charge con estela floral que da veneno y debilidad. Tiene fuerza, velocidad y 30% de soltar Carne Podrida Floral.", "zombie_spawn_egg"),
+            new InfoMob("spiderfloral", "Spider Floral", "#F6C945", "uno", "16", "Raids · sola desde el día 14",
+                    "Araña con velocidad y fuerza permanentes. Si te pega y no te cubres con el escudo, te deja una telaraña en los pies. Tiene un 30% de soltar Ojo de Araña Floral.", "spider_spawn_egg"),
+            new InfoMob("creeperfloral", "Creeper Floral", "#ef94b6", "uno", "20", "Raids · solo desde el día 14",
+                    "Creeper chiquito y rápido que explota casi al instante. Los Creepers Florales no se dañan entre ellos. Tiene un 30% de soltar Pólvora Floral.", "creeper_spawn_egg"),
             new InfoMob("iceologer", "Iceologer", "#55FFFF", "uno", "48", "Raids, desde la 2ª oleada",
                     "Usa su arco de hielo, colmillos de hielo, una esfera que te congela y una lluvia de bloques de hielo. Sus vex son Ángeles de Hielo. Suelta un Cristal de Hielo y 10% el arco.", "evoker_spawn_egg"),
             new InfoMob("corruptedbee", "Corrupted Bee", "#AA00AA", "uno", "15", "Dungeon de la Abeja Floral",

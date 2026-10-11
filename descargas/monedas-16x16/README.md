@@ -2,7 +2,7 @@
 
 [Descargar PNG y JSON en ZIP](https://github.com/CrissyjuanxD/QuasoPlugin/raw/refs/heads/26.2/descargas/monedas-16x16/texturas_monedas_16x16.zip)
 
-También disponibles en esta sección de descargas: [Zombie Floral y Araña Floral — modelos, texturas y reglas CEM](../mobs-florales/).
+También disponibles en esta sección de descargas: [Zombie, Araña y Creeper Floral — modelos, animaciones y texturas de sus drops](../mobs-florales/).
 
 ![Vista ampliada sobre fondo claro](vista_previa_16x16.png)
 

@@ -200,6 +200,8 @@ public class QuasoPlugin extends JavaPlugin implements Listener {
         initTiempoSystem();
         itemandmobManager();
         initItemsSystem();
+        getServer().getPluginManager().registerEvents(new items.CurrencyAppearance(), this);
+        Bukkit.getOnlinePlayers().forEach(player -> items.CurrencyAppearance.refresh(player.getInventory()));
         initMissionSystem();
         initChatTeamsAndFirstJoinSystem();
         initAltarSystem();
@@ -641,6 +643,9 @@ public class QuasoPlugin extends JavaPlugin implements Listener {
     }
 
     private void initMobsAndBossesSystem() {
+        Dificultades.CustomMobs.FloralMobDrops floralDrops = new Dificultades.CustomMobs.FloralMobDrops(this);
+        getServer().getPluginManager().registerEvents(floralDrops, this);
+        Bukkit.getWorlds().forEach(world -> world.getEntities().forEach(floralDrops::refreshName));
         corruptedZombies = new CorruptedZombies(this);
         customBoat = new CustomBoat(this);
         corruptedinfernalSpider = new CorruptedInfernalSpider(this);

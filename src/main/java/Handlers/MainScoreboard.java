@@ -1,6 +1,8 @@
 package Handlers;
 
 import Trabajos.TrabajosManager;
+import items.EconomyItems;
+import org.bukkit.map.MinecraftFont;
 import Events.MissionSystem.MissionHandler;
 import Handlers.Teams.TeamType;
 import Gui.dinocoins.DinoCoinsManager;
@@ -81,11 +83,11 @@ public class MainScoreboard extends BukkitRunnable implements Listener {
         Objective objective = scoreboard.getObjective("QuasoBoard");
         if (objective == null) {
             objective = scoreboard.registerNewObjective("QuasoBoard", Criteria.DUMMY,
-                    plugin.getConfig().getString("main-scoreboard.titulo", "\uE900"));
+                    title());
             objective.setDisplaySlot(DisplaySlot.SIDEBAR);
             objective.numberFormat(NumberFormat.blank());
         }
-        objective.setDisplayName(plugin.getConfig().getString("main-scoreboard.titulo", "\uE900"));
+        objective.setDisplayName(title());
         objective.setDisplaySlot(DisplaySlot.SIDEBAR);
 
         // Extraer rango
@@ -103,21 +105,50 @@ public class MainScoreboard extends BukkitRunnable implements Listener {
 
         // Setear las líneas del scoreboard (de mayor a menor)
         setLine(scoreboard, objective, 12, ChatColor.GRAY + " ");
-        setLine(scoreboard, objective, 11, ChatColor.of("#1180c4") + icon("usuario", "\uE901") + ChatColor.WHITE + "Usuario: " + ChatColor.of("#189adf") + player.getName());
-        setLine(scoreboard, objective, 10, ChatColor.GRAY + "  ");
-        setLine(scoreboard, objective, 9, ChatColor.of("#d99b2e") + icon("rango", "\uE902") + ChatColor.WHITE + "Rango: " + rankColor + rankName);
-        setLine(scoreboard, objective, 8, ChatColor.GRAY + "   ");
-        setLine(scoreboard, objective, 7, ChatColor.of("#dbc44f") + icon("misiones", "\uE903") + ChatColor.WHITE + "Misiones: " + missionsProgress(player));
-        setLine(scoreboard, objective, 6, ChatColor.GRAY + "    ");
-        setLine(scoreboard, objective, 5, ChatColor.of("#2fae60") + icon("dinocoins", "\uE904") + ChatColor.WHITE + "DinoCoins: " + ChatColor.of("#4ade80") + dinoCoinsManager.getCachedDinoCoins(player.getUniqueId()));
-        setLine(scoreboard, objective, 4, ChatColor.GRAY + "     ");
-        setLine(scoreboard, objective, 3, ChatColor.of("#a8505f") + icon("trabajo", "\uE905") + ChatColor.WHITE + "Trabajo: " + TrabajosManager.lineaScoreboard(player));
-        setLine(scoreboard, objective, 2, ChatColor.GRAY + "      ");
-        setLine(scoreboard, objective, 1, ChatColor.of("#fdfd96") + icon("ip", "\uE906") + "croissant.holy.gg");
+        String lilac = ChatColor.of("#c6a5e8").toString();
+        String blue = ChatColor.of("#a9c8ef").toString();
+        java.util.List<String> content = java.util.List.of(
+                icon("usuario", "\uE901") + lilac + "Usuario: " + ChatColor.of("#6fa2e7") + player.getName(),
+                icon("rango", "\uE902") + blue + "Rango: " + rankColor + rankName,
+                icon("misiones", "\uE903") + lilac + "Misiones: " + missionsProgress(player),
+                icon("dinocoins", "\uE904") + blue + "DinoCoins: " + ChatColor.of(EconomyItems.DINOCOINS_COLOR)
+                        + dinoCoinsManager.getCachedDinoCoins(player.getUniqueId()),
+                icon("trabajo", "\uE905") + lilac + "Trabajo: " + TrabajosManager.lineaScoreboard(player));
+        for (int i = 0; i < content.size(); i++) {
+            setLine(scoreboard, objective, 11 - i * 2, content.get(i));
+            setLine(scoreboard, objective, 10 - i * 2, ChatColor.GRAY + " ".repeat(i + 2));
+        }
+        String address = "croissant.holy.gg";
+        int width = Math.max(textWidth(title()), content.stream().mapToInt(this::textWidth).max().orElse(0));
+        // Cada espacio ocupa 4 píxeles: la mitad del margen va delante de la IP.
+        int spaces = Math.max(0, (width - textWidth(address)) / 8);
+        setLine(scoreboard, objective, 1, " ".repeat(spaces) + ChatColor.of("#7f3bd2") + address);
+    }
+
+    private String title() {
+        return ChatColor.WHITE + ChatColor.stripColor(plugin.getConfig().getString("main-scoreboard.titulo", "\uE900"));
     }
 
     private String icon(String name, String fallback) {
-        return plugin.getConfig().getString("main-scoreboard.iconos." + name, fallback) + " ";
+        return ChatColor.WHITE + ChatColor.stripColor(plugin.getConfig().getString("main-scoreboard.iconos." + name, fallback)) + " ";
+    }
+
+    private int textWidth(String text) {
+        int width = 0;
+        boolean bold = false;
+        for (int i = 0; i < text.length(); i++) {
+            char c = text.charAt(i);
+            if (c == '§' && i + 1 < text.length()) {
+                char format = Character.toLowerCase(text.charAt(++i));
+                if (format == 'l') bold = true;
+                else if ("0123456789abcdefrx".indexOf(format) >= 0) bold = false;
+                continue;
+            }
+            var glyph = MinecraftFont.Font.getChar(c);
+            int glyphWidth = glyph == null ? 8 : glyph.getWidth() + 1;
+            width += glyphWidth + (bold && c != ' ' ? 1 : 0);
+        }
+        return Math.max(0, width - 1);
     }
 
     private void addConfigDefaults() {
@@ -127,8 +158,7 @@ public class MainScoreboard extends BukkitRunnable implements Listener {
                 "main-scoreboard.iconos.rango", "\uE902",
                 "main-scoreboard.iconos.misiones", "\uE903",
                 "main-scoreboard.iconos.dinocoins", "\uE904",
-                "main-scoreboard.iconos.trabajo", "\uE905",
-                "main-scoreboard.iconos.ip", "\uE906");
+                "main-scoreboard.iconos.trabajo", "\uE905");
         boolean changed = false;
         for (var entry : defaults.entrySet()) {
             if (!plugin.getConfig().contains(entry.getKey(), true)) {

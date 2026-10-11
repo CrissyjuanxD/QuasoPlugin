@@ -14,7 +14,6 @@ main-scoreboard:
     misiones: "\uE903"
     dinocoins: "\uE904"
     trabajo: "\uE905"
-    ip: "\uE906"
 
 mantenimiento:
   activo: false

@@ -35,7 +35,7 @@ public class SpawnMobs implements CommandExecutor, TabCompleter {
             return true;
         }
 
-        String mobType = args[0].toLowerCase();
+        String mobType = MobManager.normalizeId(args[0]);
         Location location = null;
         Player targetPlayer = null;
         String variantArg = null;

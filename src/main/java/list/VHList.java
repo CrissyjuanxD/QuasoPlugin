@@ -48,7 +48,7 @@ public class VHList extends BukkitRunnable {
 
         String header = separator +
                 ChatColor.GRAY + " \n" +
-                DECORATION_PURPLE + "" + ChatColor.BOLD + "      \uD83E\uDD50" + DECORATION_LIGHT_BLUE + ChatColor.BOLD + " CROISSANTS " + DECORATION_BLUE + ChatColor.BOLD + "\uD83E\uDD50     \n" +
+                ChatColor.WHITE + "\uE906\n" +
                 ChatColor.GRAY + " \n" +
                 DECORATION_BLUE + "📊 ONLINE: " + ChatColor.WHITE + online + DECORATION_PURPLE + "  |  " +
                 DECORATION_LIGHT_BLUE + "📶 PING: " + ChatColor.WHITE + ping + " ms\n" +

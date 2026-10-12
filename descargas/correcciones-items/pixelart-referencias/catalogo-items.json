@@ -1,0 +1,2536 @@
+{
+  "scope": "Modelos de item usados por QuasoPlugin, rama 26.2",
+  "included": [
+    {
+      "item_model": "minecraft:abono_concentrado",
+      "item_definition": "assets/minecraft/items/abono_concentrado.json",
+      "texture": "assets/minecraft/textures/item/custom/abono_concentrado.png",
+      "origin": "itemsyahechos.rar",
+      "java_sources": [
+        "src/main/java/items/tienda/ItemsTienda.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:algodon_azucar",
+      "item_definition": "assets/minecraft/items/algodon_azucar.json",
+      "texture": "assets/minecraft/textures/item/custom/algodon_azucar.png",
+      "origin": "Nueva textura de este lote",
+      "java_sources": [
+        "src/main/java/items/ItemsPartyRecolect.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:alma_infested_cave_spider",
+      "item_definition": "assets/minecraft/items/alma_infested_cave_spider.json",
+      "texture": "assets/minecraft/textures/item/custom/alma_infested_cave_spider.png",
+      "origin": "Nueva textura de este lote",
+      "java_sources": [
+        "src/main/java/items/InfestedSoulsItems.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:alma_infested_creeper",
+      "item_definition": "assets/minecraft/items/alma_infested_creeper.json",
+      "texture": "assets/minecraft/textures/item/custom/alma_infested_creeper.png",
+      "origin": "Nueva textura de este lote",
+      "java_sources": [
+        "src/main/java/items/InfestedSoulsItems.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:alma_infested_ghast",
+      "item_definition": "assets/minecraft/items/alma_infested_ghast.json",
+      "texture": "assets/minecraft/textures/item/custom/alma_infested_ghast.png",
+      "origin": "Nueva textura de este lote",
+      "java_sources": [
+        "src/main/java/items/InfestedSoulsItems.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:alma_infested_skeleton",
+      "item_definition": "assets/minecraft/items/alma_infested_skeleton.json",
+      "texture": "assets/minecraft/textures/item/custom/alma_infested_skeleton.png",
+      "origin": "Nueva textura de este lote",
+      "java_sources": [
+        "src/main/java/items/InfestedSoulsItems.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:amulet_bloodmoon",
+      "item_definition": "assets/minecraft/items/amulet_bloodmoon.json",
+      "texture": "assets/minecraft/textures/item/custom/amulet_bloodmoon.png",
+      "origin": "Lote anterior (#57)",
+      "java_sources": [
+        "src/main/java/items/AmuletBloodM.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:amuleto_esperanza",
+      "item_definition": "assets/minecraft/items/amuleto_esperanza.json",
+      "texture": "assets/minecraft/textures/item/custom/amuleto_esperanza.png",
+      "origin": "itemsyahechos.rar",
+      "java_sources": [
+        "src/main/java/items/AmuletoUltimaEsperanza.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:amuleto_invisibilidad",
+      "item_definition": "assets/minecraft/items/amuleto_invisibilidad.json",
+      "texture": "assets/minecraft/textures/item/custom/amuleto_invisibilidad.png",
+      "origin": "Nueva textura de este lote",
+      "java_sources": [
+        "src/main/java/items/AmuletInvisibility.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:antidoto",
+      "item_definition": "assets/minecraft/items/antidoto.json",
+      "texture": "assets/minecraft/textures/item/custom/antidoto.png",
+      "origin": "Nueva textura de este lote",
+      "java_sources": [
+        "src/main/java/items/tienda/ItemsTienda.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:arco_hielo",
+      "item_definition": "assets/minecraft/items/arco_hielo.json",
+      "texture": "assets/minecraft/textures/item/custom/arco_hielo.png",
+      "origin": "Lote anterior (#57)",
+      "java_sources": [
+        "src/main/java/items/IceBow/IceBowItem.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:arco_nivel1",
+      "item_definition": "assets/minecraft/items/arco_nivel1.json",
+      "texture": "assets/minecraft/textures/item/custom/arco_nivel1.png",
+      "origin": "Nueva textura de este lote",
+      "java_sources": [
+        "src/main/java/items/ExplosiveBow.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:arco_nivel2",
+      "item_definition": "assets/minecraft/items/arco_nivel2.json",
+      "texture": "assets/minecraft/textures/item/custom/arco_nivel2.png",
+      "origin": "Nueva textura de este lote",
+      "java_sources": [
+        "src/main/java/items/ExplosiveBow.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:arco_nivel3",
+      "item_definition": "assets/minecraft/items/arco_nivel3.json",
+      "texture": "assets/minecraft/textures/item/custom/arco_nivel3.png",
+      "origin": "Nueva textura de este lote",
+      "java_sources": [
+        "src/main/java/items/ExplosiveBow.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:azada_celestita",
+      "item_definition": "assets/minecraft/items/azada_celestita.json",
+      "texture": "assets/minecraft/textures/item/custom/azada_celestita.png",
+      "origin": "Lote anterior (#57)",
+      "java_sources": [
+        "src/main/java/items/EndItems.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:bar_azulito",
+      "item_definition": "assets/minecraft/items/bar_azulito.json",
+      "texture": "assets/minecraft/textures/item/custom/bar_azulito.png",
+      "origin": "Nueva textura de este lote",
+      "java_sources": [
+        "src/main/java/items/CustomPotions.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:bar_cerveza",
+      "item_definition": "assets/minecraft/items/bar_cerveza.json",
+      "texture": "assets/minecraft/textures/item/custom/bar_cerveza.png",
+      "origin": "Nueva textura de este lote",
+      "java_sources": [
+        "src/main/java/items/CustomPotions.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:bar_ginebra",
+      "item_definition": "assets/minecraft/items/bar_ginebra.json",
+      "texture": "assets/minecraft/textures/item/custom/bar_ginebra.png",
+      "origin": "Nueva textura de este lote",
+      "java_sources": [
+        "src/main/java/items/CustomPotions.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:bar_margarita",
+      "item_definition": "assets/minecraft/items/bar_margarita.json",
+      "texture": "assets/minecraft/textures/item/custom/bar_margarita.png",
+      "origin": "Nueva textura de este lote",
+      "java_sources": [
+        "src/main/java/items/CustomPotions.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:bar_mezcal",
+      "item_definition": "assets/minecraft/items/bar_mezcal.json",
+      "texture": "assets/minecraft/textures/item/custom/bar_mezcal.png",
+      "origin": "Nueva textura de este lote",
+      "java_sources": [
+        "src/main/java/items/CustomPotions.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:bar_michelada",
+      "item_definition": "assets/minecraft/items/bar_michelada.json",
+      "texture": "assets/minecraft/textures/item/custom/bar_michelada.png",
+      "origin": "Nueva textura de este lote",
+      "java_sources": [
+        "src/main/java/items/CustomPotions.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:bar_pulque",
+      "item_definition": "assets/minecraft/items/bar_pulque.json",
+      "texture": "assets/minecraft/textures/item/custom/bar_pulque.png",
+      "origin": "Nueva textura de este lote",
+      "java_sources": [
+        "src/main/java/items/CustomPotions.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:bar_ron",
+      "item_definition": "assets/minecraft/items/bar_ron.json",
+      "texture": "assets/minecraft/textures/item/custom/bar_ron.png",
+      "origin": "Nueva textura de este lote",
+      "java_sources": [
+        "src/main/java/items/CustomPotions.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:bar_sake",
+      "item_definition": "assets/minecraft/items/bar_sake.json",
+      "texture": "assets/minecraft/textures/item/custom/bar_sake.png",
+      "origin": "Nueva textura de este lote",
+      "java_sources": [
+        "src/main/java/items/CustomPotions.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:bar_tequila",
+      "item_definition": "assets/minecraft/items/bar_tequila.json",
+      "texture": "assets/minecraft/textures/item/custom/bar_tequila.png",
+      "origin": "Nueva textura de este lote",
+      "java_sources": [
+        "src/main/java/items/CustomPotions.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:bar_vodka",
+      "item_definition": "assets/minecraft/items/bar_vodka.json",
+      "texture": "assets/minecraft/textures/item/custom/bar_vodka.png",
+      "origin": "Nueva textura de este lote",
+      "java_sources": [
+        "src/main/java/items/CustomPotions.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:bar_whisky",
+      "item_definition": "assets/minecraft/items/bar_whisky.json",
+      "texture": "assets/minecraft/textures/item/custom/bar_whisky.png",
+      "origin": "Nueva textura de este lote",
+      "java_sources": [
+        "src/main/java/items/CustomPotions.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:barco_custom",
+      "item_definition": "assets/minecraft/items/barco_custom.json",
+      "texture": "assets/minecraft/textures/item/custom/barco_custom.png",
+      "origin": "Nueva textura de este lote",
+      "java_sources": [
+        "src/main/java/Dificultades/CustomMobs/CustomBoat.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:baya_luminosa",
+      "item_definition": "assets/minecraft/items/baya_luminosa.json",
+      "texture": "assets/minecraft/textures/item/custom/baya_luminosa.png",
+      "origin": "Nueva textura de este lote",
+      "java_sources": [
+        "src/main/java/items/WardenCaveItems.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:baya_sculk",
+      "item_definition": "assets/minecraft/items/baya_sculk.json",
+      "texture": "assets/minecraft/textures/item/custom/baya_sculk.png",
+      "origin": "Nueva textura de este lote",
+      "java_sources": [
+        "src/main/java/items/WardenCaveItems.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:bengala_sculk",
+      "item_definition": "assets/minecraft/items/bengala_sculk.json",
+      "texture": "assets/minecraft/textures/item/custom/bengala_sculk.png",
+      "origin": "itemsyahechos.rar",
+      "java_sources": [
+        "src/main/java/items/tienda/ItemsTienda.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:blood_fragment",
+      "item_definition": "assets/minecraft/items/blood_fragment.json",
+      "texture": "assets/minecraft/textures/item/custom/blood_fragment.png",
+      "origin": "Lote anterior (#57)",
+      "java_sources": [
+        "src/main/java/items/EconomyItems.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:bloque_oro_apilado",
+      "item_definition": "assets/minecraft/items/bloque_oro_apilado.json",
+      "texture": "assets/minecraft/textures/item/custom/bloque_oro_apilado.png",
+      "origin": "Nueva textura de este lote",
+      "java_sources": [
+        "src/main/java/items/CorruptedGoldenApple.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:bomba_humo",
+      "item_definition": "assets/minecraft/items/bomba_humo.json",
+      "texture": "assets/minecraft/textures/item/custom/bomba_humo.png",
+      "origin": "itemsyahechos.rar",
+      "java_sources": [
+        "src/main/java/items/tienda/ItemsTienda.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:bota_warden",
+      "item_definition": "assets/minecraft/items/bota_warden.json",
+      "texture": "assets/minecraft/textures/item/custom/bota_warden.png",
+      "origin": "Nueva textura de este lote",
+      "java_sources": [
+        "src/main/java/Armors/WardenArmor.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:botiquin",
+      "item_definition": "assets/minecraft/items/botiquin.json",
+      "texture": "assets/minecraft/textures/item/custom/botiquin.png",
+      "origin": "Nueva textura de este lote",
+      "java_sources": [
+        "src/main/java/items/tienda/ItemsTienda.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:brujula_explorador",
+      "item_definition": "assets/minecraft/items/brujula_explorador.json",
+      "texture": "assets/minecraft/textures/item/custom/brujula_explorador.png",
+      "origin": "itemsyahechos.rar",
+      "java_sources": [
+        "src/main/java/items/tienda/ItemsTienda.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:caja_misteriosa",
+      "item_definition": "assets/minecraft/items/caja_misteriosa.json",
+      "texture": "assets/minecraft/textures/item/custom/caja_misteriosa.png",
+      "origin": "Nueva textura de este lote",
+      "java_sources": [
+        "src/main/java/items/tienda/ItemsTienda.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:caldo_profundo",
+      "item_definition": "assets/minecraft/items/caldo_profundo.json",
+      "texture": "assets/minecraft/textures/item/custom/caldo_profundo.png",
+      "origin": "Nueva textura de este lote",
+      "java_sources": [
+        "src/main/java/items/tienda/ItemsTienda.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:caramelo",
+      "item_definition": "assets/minecraft/items/caramelo.json",
+      "texture": "assets/minecraft/textures/item/custom/caramelo.png",
+      "origin": "Nueva textura de este lote",
+      "java_sources": [
+        "src/main/java/items/ItemsPartyRecolect.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:carne_podrida_floral",
+      "item_definition": "assets/minecraft/items/carne_podrida_floral.json",
+      "texture": "assets/minecraft/textures/item/custom/carne_podrida_floral.png",
+      "origin": "itemsyahechos.rar",
+      "java_sources": [
+        "src/main/java/items/FloralMobItems.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:carta_5000",
+      "item_definition": "assets/minecraft/items/carta_5000.json",
+      "texture": "assets/minecraft/textures/item/custom/carta_5000.png",
+      "origin": "Nueva textura de este lote",
+      "java_sources": [
+        "src/main/java/Casino/BlackJack.java"
+      ],
+      "card": "A♠"
+    },
+    {
+      "item_model": "minecraft:carta_5001",
+      "item_definition": "assets/minecraft/items/carta_5001.json",
+      "texture": "assets/minecraft/textures/item/custom/carta_5001.png",
+      "origin": "Nueva textura de este lote",
+      "java_sources": [
+        "src/main/java/Casino/BlackJack.java"
+      ],
+      "card": "2♠"
+    },
+    {
+      "item_model": "minecraft:carta_5002",
+      "item_definition": "assets/minecraft/items/carta_5002.json",
+      "texture": "assets/minecraft/textures/item/custom/carta_5002.png",
+      "origin": "Nueva textura de este lote",
+      "java_sources": [
+        "src/main/java/Casino/BlackJack.java"
+      ],
+      "card": "3♠"
+    },
+    {
+      "item_model": "minecraft:carta_5003",
+      "item_definition": "assets/minecraft/items/carta_5003.json",
+      "texture": "assets/minecraft/textures/item/custom/carta_5003.png",
+      "origin": "Nueva textura de este lote",
+      "java_sources": [
+        "src/main/java/Casino/BlackJack.java"
+      ],
+      "card": "4♠"
+    },
+    {
+      "item_model": "minecraft:carta_5004",
+      "item_definition": "assets/minecraft/items/carta_5004.json",
+      "texture": "assets/minecraft/textures/item/custom/carta_5004.png",
+      "origin": "Nueva textura de este lote",
+      "java_sources": [
+        "src/main/java/Casino/BlackJack.java"
+      ],
+      "card": "5♠"
+    },
+    {
+      "item_model": "minecraft:carta_5005",
+      "item_definition": "assets/minecraft/items/carta_5005.json",
+      "texture": "assets/minecraft/textures/item/custom/carta_5005.png",
+      "origin": "Nueva textura de este lote",
+      "java_sources": [
+        "src/main/java/Casino/BlackJack.java"
+      ],
+      "card": "6♠"
+    },
+    {
+      "item_model": "minecraft:carta_5006",
+      "item_definition": "assets/minecraft/items/carta_5006.json",
+      "texture": "assets/minecraft/textures/item/custom/carta_5006.png",
+      "origin": "Nueva textura de este lote",
+      "java_sources": [
+        "src/main/java/Casino/BlackJack.java"
+      ],
+      "card": "7♠"
+    },
+    {
+      "item_model": "minecraft:carta_5007",
+      "item_definition": "assets/minecraft/items/carta_5007.json",
+      "texture": "assets/minecraft/textures/item/custom/carta_5007.png",
+      "origin": "Nueva textura de este lote",
+      "java_sources": [
+        "src/main/java/Casino/BlackJack.java"
+      ],
+      "card": "8♠"
+    },
+    {
+      "item_model": "minecraft:carta_5008",
+      "item_definition": "assets/minecraft/items/carta_5008.json",
+      "texture": "assets/minecraft/textures/item/custom/carta_5008.png",
+      "origin": "Nueva textura de este lote",
+      "java_sources": [
+        "src/main/java/Casino/BlackJack.java"
+      ],
+      "card": "9♠"
+    },
+    {
+      "item_model": "minecraft:carta_5009",
+      "item_definition": "assets/minecraft/items/carta_5009.json",
+      "texture": "assets/minecraft/textures/item/custom/carta_5009.png",
+      "origin": "Nueva textura de este lote",
+      "java_sources": [
+        "src/main/java/Casino/BlackJack.java"
+      ],
+      "card": "10♠"
+    },
+    {
+      "item_model": "minecraft:carta_5010",
+      "item_definition": "assets/minecraft/items/carta_5010.json",
+      "texture": "assets/minecraft/textures/item/custom/carta_5010.png",
+      "origin": "Nueva textura de este lote",
+      "java_sources": [
+        "src/main/java/Casino/BlackJack.java"
+      ],
+      "card": "J♠"
+    },
+    {
+      "item_model": "minecraft:carta_5011",
+      "item_definition": "assets/minecraft/items/carta_5011.json",
+      "texture": "assets/minecraft/textures/item/custom/carta_5011.png",
+      "origin": "Nueva textura de este lote",
+      "java_sources": [
+        "src/main/java/Casino/BlackJack.java"
+      ],
+      "card": "Q♠"
+    },
+    {
+      "item_model": "minecraft:carta_5012",
+      "item_definition": "assets/minecraft/items/carta_5012.json",
+      "texture": "assets/minecraft/textures/item/custom/carta_5012.png",
+      "origin": "Nueva textura de este lote",
+      "java_sources": [
+        "src/main/java/Casino/BlackJack.java"
+      ],
+      "card": "K♠"
+    },
+    {
+      "item_model": "minecraft:carta_5013",
+      "item_definition": "assets/minecraft/items/carta_5013.json",
+      "texture": "assets/minecraft/textures/item/custom/carta_5013.png",
+      "origin": "Nueva textura de este lote",
+      "java_sources": [
+        "src/main/java/Casino/BlackJack.java"
+      ],
+      "card": "A♥"
+    },
+    {
+      "item_model": "minecraft:carta_5014",
+      "item_definition": "assets/minecraft/items/carta_5014.json",
+      "texture": "assets/minecraft/textures/item/custom/carta_5014.png",
+      "origin": "Nueva textura de este lote",
+      "java_sources": [
+        "src/main/java/Casino/BlackJack.java"
+      ],
+      "card": "2♥"
+    },
+    {
+      "item_model": "minecraft:carta_5015",
+      "item_definition": "assets/minecraft/items/carta_5015.json",
+      "texture": "assets/minecraft/textures/item/custom/carta_5015.png",
+      "origin": "Nueva textura de este lote",
+      "java_sources": [
+        "src/main/java/Casino/BlackJack.java"
+      ],
+      "card": "3♥"
+    },
+    {
+      "item_model": "minecraft:carta_5016",
+      "item_definition": "assets/minecraft/items/carta_5016.json",
+      "texture": "assets/minecraft/textures/item/custom/carta_5016.png",
+      "origin": "Nueva textura de este lote",
+      "java_sources": [
+        "src/main/java/Casino/BlackJack.java"
+      ],
+      "card": "4♥"
+    },
+    {
+      "item_model": "minecraft:carta_5017",
+      "item_definition": "assets/minecraft/items/carta_5017.json",
+      "texture": "assets/minecraft/textures/item/custom/carta_5017.png",
+      "origin": "Nueva textura de este lote",
+      "java_sources": [
+        "src/main/java/Casino/BlackJack.java"
+      ],
+      "card": "5♥"
+    },
+    {
+      "item_model": "minecraft:carta_5018",
+      "item_definition": "assets/minecraft/items/carta_5018.json",
+      "texture": "assets/minecraft/textures/item/custom/carta_5018.png",
+      "origin": "Nueva textura de este lote",
+      "java_sources": [
+        "src/main/java/Casino/BlackJack.java"
+      ],
+      "card": "6♥"
+    },
+    {
+      "item_model": "minecraft:carta_5019",
+      "item_definition": "assets/minecraft/items/carta_5019.json",
+      "texture": "assets/minecraft/textures/item/custom/carta_5019.png",
+      "origin": "Nueva textura de este lote",
+      "java_sources": [
+        "src/main/java/Casino/BlackJack.java"
+      ],
+      "card": "7♥"
+    },
+    {
+      "item_model": "minecraft:carta_5020",
+      "item_definition": "assets/minecraft/items/carta_5020.json",
+      "texture": "assets/minecraft/textures/item/custom/carta_5020.png",
+      "origin": "Nueva textura de este lote",
+      "java_sources": [
+        "src/main/java/Casino/BlackJack.java"
+      ],
+      "card": "8♥"
+    },
+    {
+      "item_model": "minecraft:carta_5021",
+      "item_definition": "assets/minecraft/items/carta_5021.json",
+      "texture": "assets/minecraft/textures/item/custom/carta_5021.png",
+      "origin": "Nueva textura de este lote",
+      "java_sources": [
+        "src/main/java/Casino/BlackJack.java"
+      ],
+      "card": "9♥"
+    },
+    {
+      "item_model": "minecraft:carta_5022",
+      "item_definition": "assets/minecraft/items/carta_5022.json",
+      "texture": "assets/minecraft/textures/item/custom/carta_5022.png",
+      "origin": "Nueva textura de este lote",
+      "java_sources": [
+        "src/main/java/Casino/BlackJack.java"
+      ],
+      "card": "10♥"
+    },
+    {
+      "item_model": "minecraft:carta_5023",
+      "item_definition": "assets/minecraft/items/carta_5023.json",
+      "texture": "assets/minecraft/textures/item/custom/carta_5023.png",
+      "origin": "Nueva textura de este lote",
+      "java_sources": [
+        "src/main/java/Casino/BlackJack.java"
+      ],
+      "card": "J♥"
+    },
+    {
+      "item_model": "minecraft:carta_5024",
+      "item_definition": "assets/minecraft/items/carta_5024.json",
+      "texture": "assets/minecraft/textures/item/custom/carta_5024.png",
+      "origin": "Nueva textura de este lote",
+      "java_sources": [
+        "src/main/java/Casino/BlackJack.java"
+      ],
+      "card": "Q♥"
+    },
+    {
+      "item_model": "minecraft:carta_5025",
+      "item_definition": "assets/minecraft/items/carta_5025.json",
+      "texture": "assets/minecraft/textures/item/custom/carta_5025.png",
+      "origin": "Nueva textura de este lote",
+      "java_sources": [
+        "src/main/java/Casino/BlackJack.java"
+      ],
+      "card": "K♥"
+    },
+    {
+      "item_model": "minecraft:carta_5026",
+      "item_definition": "assets/minecraft/items/carta_5026.json",
+      "texture": "assets/minecraft/textures/item/custom/carta_5026.png",
+      "origin": "Nueva textura de este lote",
+      "java_sources": [
+        "src/main/java/Casino/BlackJack.java"
+      ],
+      "card": "A♦"
+    },
+    {
+      "item_model": "minecraft:carta_5027",
+      "item_definition": "assets/minecraft/items/carta_5027.json",
+      "texture": "assets/minecraft/textures/item/custom/carta_5027.png",
+      "origin": "Nueva textura de este lote",
+      "java_sources": [
+        "src/main/java/Casino/BlackJack.java"
+      ],
+      "card": "2♦"
+    },
+    {
+      "item_model": "minecraft:carta_5028",
+      "item_definition": "assets/minecraft/items/carta_5028.json",
+      "texture": "assets/minecraft/textures/item/custom/carta_5028.png",
+      "origin": "Nueva textura de este lote",
+      "java_sources": [
+        "src/main/java/Casino/BlackJack.java"
+      ],
+      "card": "3♦"
+    },
+    {
+      "item_model": "minecraft:carta_5029",
+      "item_definition": "assets/minecraft/items/carta_5029.json",
+      "texture": "assets/minecraft/textures/item/custom/carta_5029.png",
+      "origin": "Nueva textura de este lote",
+      "java_sources": [
+        "src/main/java/Casino/BlackJack.java"
+      ],
+      "card": "4♦"
+    },
+    {
+      "item_model": "minecraft:carta_5030",
+      "item_definition": "assets/minecraft/items/carta_5030.json",
+      "texture": "assets/minecraft/textures/item/custom/carta_5030.png",
+      "origin": "Nueva textura de este lote",
+      "java_sources": [
+        "src/main/java/Casino/BlackJack.java"
+      ],
+      "card": "5♦"
+    },
+    {
+      "item_model": "minecraft:carta_5031",
+      "item_definition": "assets/minecraft/items/carta_5031.json",
+      "texture": "assets/minecraft/textures/item/custom/carta_5031.png",
+      "origin": "Nueva textura de este lote",
+      "java_sources": [
+        "src/main/java/Casino/BlackJack.java"
+      ],
+      "card": "6♦"
+    },
+    {
+      "item_model": "minecraft:carta_5032",
+      "item_definition": "assets/minecraft/items/carta_5032.json",
+      "texture": "assets/minecraft/textures/item/custom/carta_5032.png",
+      "origin": "Nueva textura de este lote",
+      "java_sources": [
+        "src/main/java/Casino/BlackJack.java"
+      ],
+      "card": "7♦"
+    },
+    {
+      "item_model": "minecraft:carta_5033",
+      "item_definition": "assets/minecraft/items/carta_5033.json",
+      "texture": "assets/minecraft/textures/item/custom/carta_5033.png",
+      "origin": "Nueva textura de este lote",
+      "java_sources": [
+        "src/main/java/Casino/BlackJack.java"
+      ],
+      "card": "8♦"
+    },
+    {
+      "item_model": "minecraft:carta_5034",
+      "item_definition": "assets/minecraft/items/carta_5034.json",
+      "texture": "assets/minecraft/textures/item/custom/carta_5034.png",
+      "origin": "Nueva textura de este lote",
+      "java_sources": [
+        "src/main/java/Casino/BlackJack.java"
+      ],
+      "card": "9♦"
+    },
+    {
+      "item_model": "minecraft:carta_5035",
+      "item_definition": "assets/minecraft/items/carta_5035.json",
+      "texture": "assets/minecraft/textures/item/custom/carta_5035.png",
+      "origin": "Nueva textura de este lote",
+      "java_sources": [
+        "src/main/java/Casino/BlackJack.java"
+      ],
+      "card": "10♦"
+    },
+    {
+      "item_model": "minecraft:carta_5036",
+      "item_definition": "assets/minecraft/items/carta_5036.json",
+      "texture": "assets/minecraft/textures/item/custom/carta_5036.png",
+      "origin": "Nueva textura de este lote",
+      "java_sources": [
+        "src/main/java/Casino/BlackJack.java"
+      ],
+      "card": "J♦"
+    },
+    {
+      "item_model": "minecraft:carta_5037",
+      "item_definition": "assets/minecraft/items/carta_5037.json",
+      "texture": "assets/minecraft/textures/item/custom/carta_5037.png",
+      "origin": "Nueva textura de este lote",
+      "java_sources": [
+        "src/main/java/Casino/BlackJack.java"
+      ],
+      "card": "Q♦"
+    },
+    {
+      "item_model": "minecraft:carta_5038",
+      "item_definition": "assets/minecraft/items/carta_5038.json",
+      "texture": "assets/minecraft/textures/item/custom/carta_5038.png",
+      "origin": "Nueva textura de este lote",
+      "java_sources": [
+        "src/main/java/Casino/BlackJack.java"
+      ],
+      "card": "K♦"
+    },
+    {
+      "item_model": "minecraft:carta_5039",
+      "item_definition": "assets/minecraft/items/carta_5039.json",
+      "texture": "assets/minecraft/textures/item/custom/carta_5039.png",
+      "origin": "Nueva textura de este lote",
+      "java_sources": [
+        "src/main/java/Casino/BlackJack.java"
+      ],
+      "card": "A♣"
+    },
+    {
+      "item_model": "minecraft:carta_5040",
+      "item_definition": "assets/minecraft/items/carta_5040.json",
+      "texture": "assets/minecraft/textures/item/custom/carta_5040.png",
+      "origin": "Nueva textura de este lote",
+      "java_sources": [
+        "src/main/java/Casino/BlackJack.java"
+      ],
+      "card": "2♣"
+    },
+    {
+      "item_model": "minecraft:carta_5041",
+      "item_definition": "assets/minecraft/items/carta_5041.json",
+      "texture": "assets/minecraft/textures/item/custom/carta_5041.png",
+      "origin": "Nueva textura de este lote",
+      "java_sources": [
+        "src/main/java/Casino/BlackJack.java"
+      ],
+      "card": "3♣"
+    },
+    {
+      "item_model": "minecraft:carta_5042",
+      "item_definition": "assets/minecraft/items/carta_5042.json",
+      "texture": "assets/minecraft/textures/item/custom/carta_5042.png",
+      "origin": "Nueva textura de este lote",
+      "java_sources": [
+        "src/main/java/Casino/BlackJack.java"
+      ],
+      "card": "4♣"
+    },
+    {
+      "item_model": "minecraft:carta_5043",
+      "item_definition": "assets/minecraft/items/carta_5043.json",
+      "texture": "assets/minecraft/textures/item/custom/carta_5043.png",
+      "origin": "Nueva textura de este lote",
+      "java_sources": [
+        "src/main/java/Casino/BlackJack.java"
+      ],
+      "card": "5♣"
+    },
+    {
+      "item_model": "minecraft:carta_5044",
+      "item_definition": "assets/minecraft/items/carta_5044.json",
+      "texture": "assets/minecraft/textures/item/custom/carta_5044.png",
+      "origin": "Nueva textura de este lote",
+      "java_sources": [
+        "src/main/java/Casino/BlackJack.java"
+      ],
+      "card": "6♣"
+    },
+    {
+      "item_model": "minecraft:carta_5045",
+      "item_definition": "assets/minecraft/items/carta_5045.json",
+      "texture": "assets/minecraft/textures/item/custom/carta_5045.png",
+      "origin": "Nueva textura de este lote",
+      "java_sources": [
+        "src/main/java/Casino/BlackJack.java"
+      ],
+      "card": "7♣"
+    },
+    {
+      "item_model": "minecraft:carta_5046",
+      "item_definition": "assets/minecraft/items/carta_5046.json",
+      "texture": "assets/minecraft/textures/item/custom/carta_5046.png",
+      "origin": "Nueva textura de este lote",
+      "java_sources": [
+        "src/main/java/Casino/BlackJack.java"
+      ],
+      "card": "8♣"
+    },
+    {
+      "item_model": "minecraft:carta_5047",
+      "item_definition": "assets/minecraft/items/carta_5047.json",
+      "texture": "assets/minecraft/textures/item/custom/carta_5047.png",
+      "origin": "Nueva textura de este lote",
+      "java_sources": [
+        "src/main/java/Casino/BlackJack.java"
+      ],
+      "card": "9♣"
+    },
+    {
+      "item_model": "minecraft:carta_5048",
+      "item_definition": "assets/minecraft/items/carta_5048.json",
+      "texture": "assets/minecraft/textures/item/custom/carta_5048.png",
+      "origin": "Nueva textura de este lote",
+      "java_sources": [
+        "src/main/java/Casino/BlackJack.java"
+      ],
+      "card": "10♣"
+    },
+    {
+      "item_model": "minecraft:carta_5049",
+      "item_definition": "assets/minecraft/items/carta_5049.json",
+      "texture": "assets/minecraft/textures/item/custom/carta_5049.png",
+      "origin": "Nueva textura de este lote",
+      "java_sources": [
+        "src/main/java/Casino/BlackJack.java"
+      ],
+      "card": "J♣"
+    },
+    {
+      "item_model": "minecraft:carta_5050",
+      "item_definition": "assets/minecraft/items/carta_5050.json",
+      "texture": "assets/minecraft/textures/item/custom/carta_5050.png",
+      "origin": "Nueva textura de este lote",
+      "java_sources": [
+        "src/main/java/Casino/BlackJack.java"
+      ],
+      "card": "Q♣"
+    },
+    {
+      "item_model": "minecraft:carta_5051",
+      "item_definition": "assets/minecraft/items/carta_5051.json",
+      "texture": "assets/minecraft/textures/item/custom/carta_5051.png",
+      "origin": "Nueva textura de este lote",
+      "java_sources": [
+        "src/main/java/Casino/BlackJack.java"
+      ],
+      "card": "K♣"
+    },
+    {
+      "item_model": "minecraft:carta_oculta",
+      "item_definition": "assets/minecraft/items/carta_oculta.json",
+      "texture": "assets/minecraft/textures/item/custom/carta_oculta.png",
+      "origin": "Nueva textura de este lote",
+      "java_sources": [
+        "src/main/java/Casino/BlackJack.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:casco_warden",
+      "item_definition": "assets/minecraft/items/casco_warden.json",
+      "texture": "assets/minecraft/textures/item/custom/casco_warden.png",
+      "origin": "Nueva textura de este lote",
+      "java_sources": [
+        "src/main/java/Armors/WardenArmor.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:casino_cerrar",
+      "item_definition": "assets/minecraft/items/casino_cerrar.json",
+      "texture": "assets/minecraft/textures/item/custom/casino_cerrar.png",
+      "origin": "Nueva textura de este lote",
+      "java_sources": [
+        "src/main/java/Casino/SlotMachine.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:casino_fondo",
+      "item_definition": "assets/minecraft/items/casino_fondo.json",
+      "texture": "assets/minecraft/textures/item/custom/casino_fondo.png",
+      "origin": "Nueva textura de este lote",
+      "java_sources": [
+        "src/main/java/Casino/SlotMachine.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:casino_girar",
+      "item_definition": "assets/minecraft/items/casino_girar.json",
+      "texture": "assets/minecraft/textures/item/custom/casino_girar.png",
+      "origin": "Nueva textura de este lote",
+      "java_sources": [
+        "src/main/java/Casino/SlotMachine.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:casino_linea_derecha",
+      "item_definition": "assets/minecraft/items/casino_linea_derecha.json",
+      "texture": "assets/minecraft/textures/item/custom/casino_linea_derecha.png",
+      "origin": "Nueva textura de este lote",
+      "java_sources": [
+        "src/main/java/Casino/SlotMachine.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:casino_linea_izquierda",
+      "item_definition": "assets/minecraft/items/casino_linea_izquierda.json",
+      "texture": "assets/minecraft/textures/item/custom/casino_linea_izquierda.png",
+      "origin": "Nueva textura de este lote",
+      "java_sources": [
+        "src/main/java/Casino/SlotMachine.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:chatarra",
+      "item_definition": "assets/minecraft/items/chatarra.json",
+      "texture": "assets/minecraft/textures/item/custom/chatarra.png",
+      "origin": "itemsyahechos.rar",
+      "java_sources": [
+        "src/main/java/items/FishingItems.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:combustible_barco",
+      "item_definition": "assets/minecraft/items/combustible_barco.json",
+      "texture": "assets/minecraft/textures/item/custom/combustible_barco.png",
+      "origin": "Nueva textura de este lote",
+      "java_sources": [
+        "src/main/java/Dificultades/CustomMobs/CustomBoat.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:corazon_warden_boss",
+      "item_definition": "assets/minecraft/items/corazon_warden_boss.json",
+      "texture": "assets/minecraft/textures/item/custom/corazon_warden_boss.png",
+      "origin": "Nueva textura de este lote",
+      "java_sources": [
+        "src/main/java/items/WardenCaveItems.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:corrupted_golden_apple",
+      "item_definition": "assets/minecraft/items/corrupted_golden_apple.json",
+      "texture": "assets/minecraft/textures/item/custom/corrupted_golden_apple.png",
+      "origin": "Lote anterior (#57)",
+      "java_sources": [
+        "src/main/java/items/CorruptedGoldenApple.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:corrupted_steak",
+      "item_definition": "assets/minecraft/items/corrupted_steak.json",
+      "texture": "assets/minecraft/textures/item/custom/corrupted_steak.png",
+      "origin": "Lote anterior (#57)",
+      "java_sources": [
+        "src/main/java/Dificultades/OneChanges.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:cristal_celestita",
+      "item_definition": "assets/minecraft/items/cristal_celestita.json",
+      "texture": "assets/minecraft/textures/item/custom/cristal_celestita.png",
+      "origin": "Nueva textura de este lote",
+      "java_sources": [
+        "src/main/java/items/EndItems.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:cristal_eco",
+      "item_definition": "assets/minecraft/items/cristal_eco.json",
+      "texture": "assets/minecraft/textures/item/custom/cristal_eco.png",
+      "origin": "itemsyahechos.rar",
+      "java_sources": [
+        "src/main/java/items/tienda/ItemsTienda.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:cristal_hielo",
+      "item_definition": "assets/minecraft/items/cristal_hielo.json",
+      "texture": "assets/minecraft/textures/item/custom/cristal_hielo.png",
+      "origin": "Lote anterior (#57)",
+      "java_sources": [
+        "src/main/java/items/ItemsTotems.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:dinocoins",
+      "item_definition": "assets/minecraft/items/dinocoins.json",
+      "texture": "assets/minecraft/textures/item/custom/dinocoins.png",
+      "origin": "itemsyahechos.rar",
+      "java_sources": [
+        "src/main/java/items/EconomyItems.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:dinofichas",
+      "item_definition": "assets/minecraft/items/dinofichas.json",
+      "texture": "assets/minecraft/textures/item/custom/dinofichas.png",
+      "origin": "itemsyahechos.rar",
+      "java_sources": [
+        "src/main/java/items/EconomyItems.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:elixir_abisal",
+      "item_definition": "assets/minecraft/items/elixir_abisal.json",
+      "texture": "assets/minecraft/textures/item/custom/elixir_abisal.png",
+      "origin": "Nueva textura de este lote",
+      "java_sources": [
+        "src/main/java/items/tienda/ItemsTienda.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:elixir_agilidad",
+      "item_definition": "assets/minecraft/items/elixir_agilidad.json",
+      "texture": "assets/minecraft/textures/item/custom/elixir_agilidad.png",
+      "origin": "Nueva textura de este lote",
+      "java_sources": [
+        "src/main/java/items/tienda/ItemsTienda.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:elixir_coloso",
+      "item_definition": "assets/minecraft/items/elixir_coloso.json",
+      "texture": "assets/minecraft/textures/item/custom/elixir_coloso.png",
+      "origin": "Nueva textura de este lote",
+      "java_sources": [
+        "src/main/java/items/tienda/ItemsTienda.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:elixir_furia",
+      "item_definition": "assets/minecraft/items/elixir_furia.json",
+      "texture": "assets/minecraft/textures/item/custom/elixir_furia.png",
+      "origin": "Nueva textura de este lote",
+      "java_sources": [
+        "src/main/java/items/tienda/ItemsTienda.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:elixir_igneo",
+      "item_definition": "assets/minecraft/items/elixir_igneo.json",
+      "texture": "assets/minecraft/textures/item/custom/elixir_igneo.png",
+      "origin": "itemsyahechos.rar",
+      "java_sources": [
+        "src/main/java/items/tienda/ItemsTienda.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:elixir_minero",
+      "item_definition": "assets/minecraft/items/elixir_minero.json",
+      "texture": "assets/minecraft/textures/item/custom/elixir_minero.png",
+      "origin": "itemsyahechos.rar",
+      "java_sources": [
+        "src/main/java/items/tienda/ItemsTienda.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:ender_bag",
+      "item_definition": "assets/minecraft/items/ender_bag.json",
+      "texture": "assets/minecraft/textures/item/custom/ender_bag.png",
+      "origin": "itemsyahechos.rar",
+      "java_sources": [
+        "src/main/java/items/EconomyItems.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:enderking_pearl",
+      "item_definition": "assets/minecraft/items/enderking_pearl.json",
+      "texture": "assets/minecraft/textures/item/custom/enderking_pearl.png",
+      "origin": "itemsyahechos.rar",
+      "java_sources": [
+        "src/main/java/items/EndItems.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:energia_warden",
+      "item_definition": "assets/minecraft/items/energia_warden.json",
+      "texture": "assets/minecraft/textures/item/custom/energia_warden.png",
+      "origin": "Nueva textura de este lote",
+      "java_sources": [
+        "src/main/java/items/WardenCaveItems.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:esencia_marchita",
+      "item_definition": "assets/minecraft/items/esencia_marchita.json",
+      "texture": "assets/minecraft/textures/item/custom/esencia_marchita.png",
+      "origin": "Nueva textura de este lote",
+      "java_sources": [
+        "src/main/java/items/EndItems.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:espada_celestita",
+      "item_definition": "assets/minecraft/items/espada_celestita.json",
+      "texture": "assets/minecraft/textures/item/custom/espada_celestita.png",
+      "origin": "Lote anterior (#57)",
+      "java_sources": [
+        "src/main/java/items/EndItems.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:estandarte_guerra",
+      "item_definition": "assets/minecraft/items/estandarte_guerra.json",
+      "texture": "assets/minecraft/textures/item/custom/estandarte_guerra.png",
+      "origin": "Nueva textura de este lote",
+      "java_sources": [
+        "src/main/java/items/tienda/ItemsTienda.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:excavator_pickaxe",
+      "item_definition": "assets/minecraft/items/excavator_pickaxe.json",
+      "texture": "assets/minecraft/textures/item/custom/excavator_pickaxe.png",
+      "origin": "Lote anterior (#57)",
+      "java_sources": [
+        "src/main/java/items/excavatorItem.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:ficha_mision",
+      "item_definition": "assets/minecraft/items/ficha_mision.json",
+      "texture": "assets/minecraft/textures/item/custom/ficha_mision.png",
+      "origin": "itemsyahechos.rar",
+      "java_sources": [
+        "src/main/java/Events/MissionSystem/MissionHandler.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:flytotem",
+      "item_definition": "assets/minecraft/items/flytotem.json",
+      "texture": "assets/minecraft/textures/item/custom/flytotem.png",
+      "origin": "Lote anterior (#57)",
+      "java_sources": [
+        "src/main/java/items/EconomyFlyTotem.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:fosiles_pequenos",
+      "item_definition": "assets/minecraft/items/fosiles_pequenos.json",
+      "texture": "assets/minecraft/textures/item/custom/fosiles_pequenos.png",
+      "origin": "itemsyahechos.rar",
+      "java_sources": [
+        "src/main/java/items/FishingItems.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:fragmento_astral",
+      "item_definition": "assets/minecraft/items/fragmento_astral.json",
+      "texture": "assets/minecraft/textures/item/custom/fragmento_astral.png",
+      "origin": "Nueva textura de este lote",
+      "java_sources": [
+        "src/main/java/items/EndItems.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:fragmento_profundo_cian",
+      "item_definition": "assets/minecraft/items/fragmento_profundo_cian.json",
+      "texture": "assets/minecraft/textures/item/custom/fragmento_profundo_cian.png",
+      "origin": "Nueva textura de este lote",
+      "java_sources": [
+        "src/main/java/items/WardenCaveItems.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:fragmento_profundo_gris",
+      "item_definition": "assets/minecraft/items/fragmento_profundo_gris.json",
+      "texture": "assets/minecraft/textures/item/custom/fragmento_profundo_gris.png",
+      "origin": "Nueva textura de este lote",
+      "java_sources": [
+        "src/main/java/items/WardenCaveItems.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:fragmento_profundo_morado",
+      "item_definition": "assets/minecraft/items/fragmento_profundo_morado.json",
+      "texture": "assets/minecraft/textures/item/custom/fragmento_profundo_morado.png",
+      "origin": "Nueva textura de este lote",
+      "java_sources": [
+        "src/main/java/items/WardenCaveItems.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:fragmento_profundo_verde",
+      "item_definition": "assets/minecraft/items/fragmento_profundo_verde.json",
+      "texture": "assets/minecraft/textures/item/custom/fragmento_profundo_verde.png",
+      "origin": "Nueva textura de este lote",
+      "java_sources": [
+        "src/main/java/items/WardenCaveItems.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:fragmentos_ambar",
+      "item_definition": "assets/minecraft/items/fragmentos_ambar.json",
+      "texture": "assets/minecraft/textures/item/custom/fragmentos_ambar.png",
+      "origin": "Nueva textura de este lote",
+      "java_sources": [
+        "src/main/java/items/FishingItems.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:frasco_de_velocidad",
+      "item_definition": "assets/minecraft/items/frasco_de_velocidad.json",
+      "texture": "assets/minecraft/textures/item/custom/frasco_de_velocidad.png",
+      "origin": "Lote anterior (#57)",
+      "java_sources": [
+        "src/main/java/items/CustomPotions.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:frasco_sabiduria",
+      "item_definition": "assets/minecraft/items/frasco_sabiduria.json",
+      "texture": "assets/minecraft/textures/item/custom/frasco_sabiduria.png",
+      "origin": "Nueva textura de este lote",
+      "java_sources": [
+        "src/main/java/items/tienda/ItemsTienda.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:fruta_abisal",
+      "item_definition": "assets/minecraft/items/fruta_abisal.json",
+      "texture": "assets/minecraft/textures/item/custom/fruta_abisal.png",
+      "origin": "Nueva textura de este lote",
+      "java_sources": [
+        "src/main/java/items/WardenCaveItems.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:fuel_campfire",
+      "item_definition": "assets/minecraft/items/fuel_campfire.json",
+      "texture": "assets/minecraft/textures/item/custom/fuel_campfire.png",
+      "origin": "Lote anterior (#57)",
+      "java_sources": [
+        "src/main/java/items/LifeCampfire.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:galleta_fortuna",
+      "item_definition": "assets/minecraft/items/galleta_fortuna.json",
+      "texture": "assets/minecraft/textures/item/custom/galleta_fortuna.png",
+      "origin": "itemsyahechos.rar",
+      "java_sources": [
+        "src/main/java/items/tienda/ItemsTienda.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:gancho",
+      "item_definition": "assets/minecraft/items/gancho.json",
+      "texture": "assets/minecraft/textures/item/custom/gancho_2d.png",
+      "origin": "itemsyahechos.rar",
+      "java_sources": [
+        "src/main/java/items/EconomyItems.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:granada_sonica",
+      "item_definition": "assets/minecraft/items/granada_sonica.json",
+      "texture": "assets/minecraft/textures/item/custom/granada_sonica.png",
+      "origin": "itemsyahechos.rar",
+      "java_sources": [
+        "src/main/java/items/tienda/ItemsTienda.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:habilidad_agilidad_1_off",
+      "item_definition": "assets/minecraft/items/habilidad_agilidad_1_off.json",
+      "texture": "assets/minecraft/textures/item/custom/habilidad_agilidad_1_off.png",
+      "origin": "itemsyahechos.rar",
+      "java_sources": [
+        "src/main/java/Habilidades/HabilidadesGUI.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:habilidad_agilidad_1_on",
+      "item_definition": "assets/minecraft/items/habilidad_agilidad_1_on.json",
+      "texture": "assets/minecraft/textures/item/custom/habilidad_agilidad_1_on.png",
+      "origin": "itemsyahechos.rar",
+      "java_sources": [
+        "src/main/java/Habilidades/HabilidadesGUI.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:habilidad_agilidad_2_off",
+      "item_definition": "assets/minecraft/items/habilidad_agilidad_2_off.json",
+      "texture": "assets/minecraft/textures/item/custom/habilidad_agilidad_2_off.png",
+      "origin": "itemsyahechos.rar",
+      "java_sources": [
+        "src/main/java/Habilidades/HabilidadesGUI.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:habilidad_agilidad_2_on",
+      "item_definition": "assets/minecraft/items/habilidad_agilidad_2_on.json",
+      "texture": "assets/minecraft/textures/item/custom/habilidad_agilidad_2_on.png",
+      "origin": "itemsyahechos.rar",
+      "java_sources": [
+        "src/main/java/Habilidades/HabilidadesGUI.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:habilidad_agilidad_3_off",
+      "item_definition": "assets/minecraft/items/habilidad_agilidad_3_off.json",
+      "texture": "assets/minecraft/textures/item/custom/habilidad_agilidad_3_off.png",
+      "origin": "itemsyahechos.rar",
+      "java_sources": [
+        "src/main/java/Habilidades/HabilidadesGUI.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:habilidad_agilidad_3_on",
+      "item_definition": "assets/minecraft/items/habilidad_agilidad_3_on.json",
+      "texture": "assets/minecraft/textures/item/custom/habilidad_agilidad_3_on.png",
+      "origin": "itemsyahechos.rar",
+      "java_sources": [
+        "src/main/java/Habilidades/HabilidadesGUI.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:habilidad_agilidad_4_off",
+      "item_definition": "assets/minecraft/items/habilidad_agilidad_4_off.json",
+      "texture": "assets/minecraft/textures/item/custom/habilidad_agilidad_4_off.png",
+      "origin": "itemsyahechos.rar",
+      "java_sources": [
+        "src/main/java/Habilidades/HabilidadesGUI.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:habilidad_agilidad_4_on",
+      "item_definition": "assets/minecraft/items/habilidad_agilidad_4_on.json",
+      "texture": "assets/minecraft/textures/item/custom/habilidad_agilidad_4_on.png",
+      "origin": "itemsyahechos.rar",
+      "java_sources": [
+        "src/main/java/Habilidades/HabilidadesGUI.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:habilidad_agilidad_5_off",
+      "item_definition": "assets/minecraft/items/habilidad_agilidad_5_off.json",
+      "texture": "assets/minecraft/textures/item/custom/habilidad_agilidad_5_off.png",
+      "origin": "itemsyahechos.rar",
+      "java_sources": [
+        "src/main/java/Habilidades/HabilidadesGUI.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:habilidad_agilidad_5_on",
+      "item_definition": "assets/minecraft/items/habilidad_agilidad_5_on.json",
+      "texture": "assets/minecraft/textures/item/custom/habilidad_agilidad_5_on.png",
+      "origin": "itemsyahechos.rar",
+      "java_sources": [
+        "src/main/java/Habilidades/HabilidadesGUI.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:habilidad_agilidad_6_off",
+      "item_definition": "assets/minecraft/items/habilidad_agilidad_6_off.json",
+      "texture": "assets/minecraft/textures/item/custom/habilidad_agilidad_6_off.png",
+      "origin": "itemsyahechos.rar",
+      "java_sources": [
+        "src/main/java/Habilidades/HabilidadesGUI.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:habilidad_agilidad_6_on",
+      "item_definition": "assets/minecraft/items/habilidad_agilidad_6_on.json",
+      "texture": "assets/minecraft/textures/item/custom/habilidad_agilidad_6_on.png",
+      "origin": "itemsyahechos.rar",
+      "java_sources": [
+        "src/main/java/Habilidades/HabilidadesGUI.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:habilidad_agilidad_7_off",
+      "item_definition": "assets/minecraft/items/habilidad_agilidad_7_off.json",
+      "texture": "assets/minecraft/textures/item/custom/habilidad_agilidad_7_off.png",
+      "origin": "itemsyahechos.rar",
+      "java_sources": [
+        "src/main/java/Habilidades/HabilidadesGUI.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:habilidad_agilidad_7_on",
+      "item_definition": "assets/minecraft/items/habilidad_agilidad_7_on.json",
+      "texture": "assets/minecraft/textures/item/custom/habilidad_agilidad_7_on.png",
+      "origin": "itemsyahechos.rar",
+      "java_sources": [
+        "src/main/java/Habilidades/HabilidadesGUI.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:habilidad_agilidad_8_off",
+      "item_definition": "assets/minecraft/items/habilidad_agilidad_8_off.json",
+      "texture": "assets/minecraft/textures/item/custom/habilidad_agilidad_8_off.png",
+      "origin": "itemsyahechos.rar",
+      "java_sources": [
+        "src/main/java/Habilidades/HabilidadesGUI.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:habilidad_agilidad_8_on",
+      "item_definition": "assets/minecraft/items/habilidad_agilidad_8_on.json",
+      "texture": "assets/minecraft/textures/item/custom/habilidad_agilidad_8_on.png",
+      "origin": "itemsyahechos.rar",
+      "java_sources": [
+        "src/main/java/Habilidades/HabilidadesGUI.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:habilidad_resistencia_1_off",
+      "item_definition": "assets/minecraft/items/habilidad_resistencia_1_off.json",
+      "texture": "assets/minecraft/textures/item/custom/habilidad_resistencia_1_off.png",
+      "origin": "itemsyahechos.rar",
+      "java_sources": [
+        "src/main/java/Habilidades/HabilidadesGUI.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:habilidad_resistencia_1_on",
+      "item_definition": "assets/minecraft/items/habilidad_resistencia_1_on.json",
+      "texture": "assets/minecraft/textures/item/custom/habilidad_resistencia_1_on.png",
+      "origin": "itemsyahechos.rar",
+      "java_sources": [
+        "src/main/java/Habilidades/HabilidadesGUI.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:habilidad_resistencia_2_off",
+      "item_definition": "assets/minecraft/items/habilidad_resistencia_2_off.json",
+      "texture": "assets/minecraft/textures/item/custom/habilidad_resistencia_2_off.png",
+      "origin": "itemsyahechos.rar",
+      "java_sources": [
+        "src/main/java/Habilidades/HabilidadesGUI.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:habilidad_resistencia_2_on",
+      "item_definition": "assets/minecraft/items/habilidad_resistencia_2_on.json",
+      "texture": "assets/minecraft/textures/item/custom/habilidad_resistencia_2_on.png",
+      "origin": "itemsyahechos.rar",
+      "java_sources": [
+        "src/main/java/Habilidades/HabilidadesGUI.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:habilidad_resistencia_3_off",
+      "item_definition": "assets/minecraft/items/habilidad_resistencia_3_off.json",
+      "texture": "assets/minecraft/textures/item/custom/habilidad_resistencia_3_off.png",
+      "origin": "itemsyahechos.rar",
+      "java_sources": [
+        "src/main/java/Habilidades/HabilidadesGUI.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:habilidad_resistencia_3_on",
+      "item_definition": "assets/minecraft/items/habilidad_resistencia_3_on.json",
+      "texture": "assets/minecraft/textures/item/custom/habilidad_resistencia_3_on.png",
+      "origin": "itemsyahechos.rar",
+      "java_sources": [
+        "src/main/java/Habilidades/HabilidadesGUI.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:habilidad_resistencia_4_off",
+      "item_definition": "assets/minecraft/items/habilidad_resistencia_4_off.json",
+      "texture": "assets/minecraft/textures/item/custom/habilidad_resistencia_4_off.png",
+      "origin": "itemsyahechos.rar",
+      "java_sources": [
+        "src/main/java/Habilidades/HabilidadesGUI.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:habilidad_resistencia_4_on",
+      "item_definition": "assets/minecraft/items/habilidad_resistencia_4_on.json",
+      "texture": "assets/minecraft/textures/item/custom/habilidad_resistencia_4_on.png",
+      "origin": "itemsyahechos.rar",
+      "java_sources": [
+        "src/main/java/Habilidades/HabilidadesGUI.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:habilidad_resistencia_5_off",
+      "item_definition": "assets/minecraft/items/habilidad_resistencia_5_off.json",
+      "texture": "assets/minecraft/textures/item/custom/habilidad_resistencia_5_off.png",
+      "origin": "itemsyahechos.rar",
+      "java_sources": [
+        "src/main/java/Habilidades/HabilidadesGUI.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:habilidad_resistencia_5_on",
+      "item_definition": "assets/minecraft/items/habilidad_resistencia_5_on.json",
+      "texture": "assets/minecraft/textures/item/custom/habilidad_resistencia_5_on.png",
+      "origin": "itemsyahechos.rar",
+      "java_sources": [
+        "src/main/java/Habilidades/HabilidadesGUI.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:habilidad_resistencia_6_off",
+      "item_definition": "assets/minecraft/items/habilidad_resistencia_6_off.json",
+      "texture": "assets/minecraft/textures/item/custom/habilidad_resistencia_6_off.png",
+      "origin": "itemsyahechos.rar",
+      "java_sources": [
+        "src/main/java/Habilidades/HabilidadesGUI.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:habilidad_resistencia_6_on",
+      "item_definition": "assets/minecraft/items/habilidad_resistencia_6_on.json",
+      "texture": "assets/minecraft/textures/item/custom/habilidad_resistencia_6_on.png",
+      "origin": "itemsyahechos.rar",
+      "java_sources": [
+        "src/main/java/Habilidades/HabilidadesGUI.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:habilidad_resistencia_7_off",
+      "item_definition": "assets/minecraft/items/habilidad_resistencia_7_off.json",
+      "texture": "assets/minecraft/textures/item/custom/habilidad_resistencia_7_off.png",
+      "origin": "itemsyahechos.rar",
+      "java_sources": [
+        "src/main/java/Habilidades/HabilidadesGUI.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:habilidad_resistencia_7_on",
+      "item_definition": "assets/minecraft/items/habilidad_resistencia_7_on.json",
+      "texture": "assets/minecraft/textures/item/custom/habilidad_resistencia_7_on.png",
+      "origin": "itemsyahechos.rar",
+      "java_sources": [
+        "src/main/java/Habilidades/HabilidadesGUI.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:habilidad_resistencia_8_off",
+      "item_definition": "assets/minecraft/items/habilidad_resistencia_8_off.json",
+      "texture": "assets/minecraft/textures/item/custom/habilidad_resistencia_8_off.png",
+      "origin": "itemsyahechos.rar",
+      "java_sources": [
+        "src/main/java/Habilidades/HabilidadesGUI.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:habilidad_resistencia_8_on",
+      "item_definition": "assets/minecraft/items/habilidad_resistencia_8_on.json",
+      "texture": "assets/minecraft/textures/item/custom/habilidad_resistencia_8_on.png",
+      "origin": "itemsyahechos.rar",
+      "java_sources": [
+        "src/main/java/Habilidades/HabilidadesGUI.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:habilidad_vitalidad_1_off",
+      "item_definition": "assets/minecraft/items/habilidad_vitalidad_1_off.json",
+      "texture": "assets/minecraft/textures/item/custom/habilidad_vitalidad_1_off.png",
+      "origin": "itemsyahechos.rar",
+      "java_sources": [
+        "src/main/java/Habilidades/HabilidadesGUI.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:habilidad_vitalidad_1_on",
+      "item_definition": "assets/minecraft/items/habilidad_vitalidad_1_on.json",
+      "texture": "assets/minecraft/textures/item/custom/habilidad_vitalidad_1_on.png",
+      "origin": "itemsyahechos.rar",
+      "java_sources": [
+        "src/main/java/Habilidades/HabilidadesGUI.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:habilidad_vitalidad_2_off",
+      "item_definition": "assets/minecraft/items/habilidad_vitalidad_2_off.json",
+      "texture": "assets/minecraft/textures/item/custom/habilidad_vitalidad_2_off.png",
+      "origin": "itemsyahechos.rar",
+      "java_sources": [
+        "src/main/java/Habilidades/HabilidadesGUI.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:habilidad_vitalidad_2_on",
+      "item_definition": "assets/minecraft/items/habilidad_vitalidad_2_on.json",
+      "texture": "assets/minecraft/textures/item/custom/habilidad_vitalidad_2_on.png",
+      "origin": "itemsyahechos.rar",
+      "java_sources": [
+        "src/main/java/Habilidades/HabilidadesGUI.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:habilidad_vitalidad_3_off",
+      "item_definition": "assets/minecraft/items/habilidad_vitalidad_3_off.json",
+      "texture": "assets/minecraft/textures/item/custom/habilidad_vitalidad_3_off.png",
+      "origin": "itemsyahechos.rar",
+      "java_sources": [
+        "src/main/java/Habilidades/HabilidadesGUI.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:habilidad_vitalidad_3_on",
+      "item_definition": "assets/minecraft/items/habilidad_vitalidad_3_on.json",
+      "texture": "assets/minecraft/textures/item/custom/habilidad_vitalidad_3_on.png",
+      "origin": "itemsyahechos.rar",
+      "java_sources": [
+        "src/main/java/Habilidades/HabilidadesGUI.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:habilidad_vitalidad_4_off",
+      "item_definition": "assets/minecraft/items/habilidad_vitalidad_4_off.json",
+      "texture": "assets/minecraft/textures/item/custom/habilidad_vitalidad_4_off.png",
+      "origin": "itemsyahechos.rar",
+      "java_sources": [
+        "src/main/java/Habilidades/HabilidadesGUI.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:habilidad_vitalidad_4_on",
+      "item_definition": "assets/minecraft/items/habilidad_vitalidad_4_on.json",
+      "texture": "assets/minecraft/textures/item/custom/habilidad_vitalidad_4_on.png",
+      "origin": "itemsyahechos.rar",
+      "java_sources": [
+        "src/main/java/Habilidades/HabilidadesGUI.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:habilidad_vitalidad_5_off",
+      "item_definition": "assets/minecraft/items/habilidad_vitalidad_5_off.json",
+      "texture": "assets/minecraft/textures/item/custom/habilidad_vitalidad_5_off.png",
+      "origin": "itemsyahechos.rar",
+      "java_sources": [
+        "src/main/java/Habilidades/HabilidadesGUI.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:habilidad_vitalidad_5_on",
+      "item_definition": "assets/minecraft/items/habilidad_vitalidad_5_on.json",
+      "texture": "assets/minecraft/textures/item/custom/habilidad_vitalidad_5_on.png",
+      "origin": "itemsyahechos.rar",
+      "java_sources": [
+        "src/main/java/Habilidades/HabilidadesGUI.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:habilidad_vitalidad_6_off",
+      "item_definition": "assets/minecraft/items/habilidad_vitalidad_6_off.json",
+      "texture": "assets/minecraft/textures/item/custom/habilidad_vitalidad_6_off.png",
+      "origin": "itemsyahechos.rar",
+      "java_sources": [
+        "src/main/java/Habilidades/HabilidadesGUI.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:habilidad_vitalidad_6_on",
+      "item_definition": "assets/minecraft/items/habilidad_vitalidad_6_on.json",
+      "texture": "assets/minecraft/textures/item/custom/habilidad_vitalidad_6_on.png",
+      "origin": "itemsyahechos.rar",
+      "java_sources": [
+        "src/main/java/Habilidades/HabilidadesGUI.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:habilidad_vitalidad_7_off",
+      "item_definition": "assets/minecraft/items/habilidad_vitalidad_7_off.json",
+      "texture": "assets/minecraft/textures/item/custom/habilidad_vitalidad_7_off.png",
+      "origin": "itemsyahechos.rar",
+      "java_sources": [
+        "src/main/java/Habilidades/HabilidadesGUI.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:habilidad_vitalidad_7_on",
+      "item_definition": "assets/minecraft/items/habilidad_vitalidad_7_on.json",
+      "texture": "assets/minecraft/textures/item/custom/habilidad_vitalidad_7_on.png",
+      "origin": "itemsyahechos.rar",
+      "java_sources": [
+        "src/main/java/Habilidades/HabilidadesGUI.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:habilidad_vitalidad_8_off",
+      "item_definition": "assets/minecraft/items/habilidad_vitalidad_8_off.json",
+      "texture": "assets/minecraft/textures/item/custom/habilidad_vitalidad_8_off.png",
+      "origin": "itemsyahechos.rar",
+      "java_sources": [
+        "src/main/java/Habilidades/HabilidadesGUI.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:habilidad_vitalidad_8_on",
+      "item_definition": "assets/minecraft/items/habilidad_vitalidad_8_on.json",
+      "texture": "assets/minecraft/textures/item/custom/habilidad_vitalidad_8_on.png",
+      "origin": "itemsyahechos.rar",
+      "java_sources": [
+        "src/main/java/Habilidades/HabilidadesGUI.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:hacha_celestita",
+      "item_definition": "assets/minecraft/items/hacha_celestita.json",
+      "texture": "assets/minecraft/textures/item/custom/hacha_celestita.png",
+      "origin": "Lote anterior (#57)",
+      "java_sources": [
+        "src/main/java/items/EndItems.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:happy_ghast_enchant",
+      "item_definition": "assets/minecraft/items/happy_ghast_enchant.json",
+      "texture": "assets/minecraft/textures/item/custom/happy_ghast_enchant.png",
+      "origin": "Lote anterior (#57)",
+      "java_sources": [
+        "src/main/java/items/HappyGhastEnchant.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:icetotem",
+      "item_definition": "assets/minecraft/items/icetotem.json",
+      "texture": "assets/minecraft/textures/item/custom/icetotem.png",
+      "origin": "Lote anterior (#57)",
+      "java_sources": [
+        "src/main/java/items/EconomyIceTotem.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:iman_botin",
+      "item_definition": "assets/minecraft/items/iman_botin.json",
+      "texture": "assets/minecraft/textures/item/custom/iman_botin.png",
+      "origin": "itemsyahechos.rar",
+      "java_sources": [
+        "src/main/java/items/tienda/ItemsTienda.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:immunity",
+      "item_definition": "assets/minecraft/items/immunity.json",
+      "texture": "assets/minecraft/textures/item/custom/immunity.png",
+      "origin": "itemsyahechos.rar",
+      "java_sources": [
+        "src/main/java/items/AmuletInmortal.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:incienso_ahuyentador",
+      "item_definition": "assets/minecraft/items/incienso_ahuyentador.json",
+      "texture": "assets/minecraft/textures/item/custom/incienso_ahuyentador.png",
+      "origin": "itemsyahechos.rar",
+      "java_sources": [
+        "src/main/java/items/tienda/ItemsTienda.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:keep_inv_liquido",
+      "item_definition": "assets/minecraft/items/keep_inv_liquido.json",
+      "texture": "assets/minecraft/textures/item/custom/keep_inv_liquido.png",
+      "origin": "itemsyahechos.rar",
+      "java_sources": [
+        "src/main/java/items/KeepInventoryLiquido.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:lanza_celestita",
+      "item_definition": "assets/minecraft/items/lanza_celestita.json",
+      "texture": "assets/minecraft/textures/item/custom/lanza_celestita.png",
+      "origin": "Lote anterior (#57)",
+      "java_sources": [
+        "src/main/java/items/EndItems.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:libro_anclaje",
+      "item_definition": "assets/minecraft/items/libro_anclaje.json",
+      "texture": "assets/minecraft/textures/item/custom/libro_anclaje.png",
+      "origin": "Nueva textura de este lote",
+      "java_sources": [
+        "src/main/java/Encantamientos/QuasoEnchant.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:libro_habilidades",
+      "item_definition": "assets/minecraft/items/libro_habilidades.json",
+      "texture": "assets/minecraft/textures/item/custom/libro_habilidades.png",
+      "origin": "Lote anterior (#57)",
+      "java_sources": [
+        "src/main/java/Habilidades/HabilidadesBook.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:libro_paso_igneo",
+      "item_definition": "assets/minecraft/items/libro_paso_igneo.json",
+      "texture": "assets/minecraft/textures/item/custom/libro_paso_igneo.png",
+      "origin": "Nueva textura de este lote",
+      "java_sources": [
+        "src/main/java/Encantamientos/QuasoEnchant.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:libro_purificacion",
+      "item_definition": "assets/minecraft/items/libro_purificacion.json",
+      "texture": "assets/minecraft/textures/item/custom/libro_purificacion.png",
+      "origin": "Nueva textura de este lote",
+      "java_sources": [
+        "src/main/java/Encantamientos/QuasoEnchant.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:libro_retorno_del_vacio",
+      "item_definition": "assets/minecraft/items/libro_retorno_del_vacio.json",
+      "texture": "assets/minecraft/textures/item/custom/libro_retorno_del_vacio.png",
+      "origin": "Nueva textura de este lote",
+      "java_sources": [
+        "src/main/java/Encantamientos/QuasoEnchant.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:libro_vision_abisal",
+      "item_definition": "assets/minecraft/items/libro_vision_abisal.json",
+      "texture": "assets/minecraft/textures/item/custom/libro_vision_abisal.png",
+      "origin": "Nueva textura de este lote",
+      "java_sources": [
+        "src/main/java/Encantamientos/QuasoEnchant.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:life_campfire",
+      "item_definition": "assets/minecraft/items/life_campfire.json",
+      "texture": "assets/minecraft/textures/item/custom/life_campfire.png",
+      "origin": "Lote anterior (#57)",
+      "java_sources": [
+        "src/main/java/items/LifeCampfire.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:lingote_celestita",
+      "item_definition": "assets/minecraft/items/lingote_celestita.json",
+      "texture": "assets/minecraft/textures/item/custom/lingote_celestita.png",
+      "origin": "Nueva textura de este lote",
+      "java_sources": [
+        "src/main/java/items/EndItems.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:lingote_platino",
+      "item_definition": "assets/minecraft/items/lingote_platino.json",
+      "texture": "assets/minecraft/textures/item/custom/lingote_platino.png",
+      "origin": "Nueva textura de este lote",
+      "java_sources": [
+        "src/main/java/items/FishingItems.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:lingote_profundo",
+      "item_definition": "assets/minecraft/items/lingote_profundo.json",
+      "texture": "assets/minecraft/textures/item/custom/lingote_profundo.png",
+      "origin": "Nueva textura de este lote",
+      "java_sources": [
+        "src/main/java/items/WardenCaveItems.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:linterna_almas",
+      "item_definition": "assets/minecraft/items/linterna_almas.json",
+      "texture": "assets/minecraft/textures/item/custom/linterna_almas.png",
+      "origin": "itemsyahechos.rar",
+      "java_sources": [
+        "src/main/java/items/tienda/ItemsTienda.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:logro_borde",
+      "item_definition": "assets/minecraft/items/logro_borde.json",
+      "texture": "assets/minecraft/textures/item/custom/logro_borde.png",
+      "origin": "Nueva textura de este lote",
+      "java_sources": [
+        "src/main/java/Events/AchievementParty/AchievementGUI.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:logro_completado",
+      "item_definition": "assets/minecraft/items/logro_completado.json",
+      "texture": "assets/minecraft/textures/item/custom/logro_completado.png",
+      "origin": "Nueva textura de este lote",
+      "java_sources": [
+        "src/main/java/Events/AchievementParty/AchievementGUI.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:logro_pendiente",
+      "item_definition": "assets/minecraft/items/logro_pendiente.json",
+      "texture": "assets/minecraft/textures/item/custom/logro_pendiente.png",
+      "origin": "Nueva textura de este lote",
+      "java_sources": [
+        "src/main/java/Events/AchievementParty/AchievementGUI.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:manzana_podrida",
+      "item_definition": "assets/minecraft/items/manzana_podrida.json",
+      "texture": "assets/minecraft/textures/item/custom/manzana_podrida.png",
+      "origin": "itemsyahechos.rar",
+      "java_sources": [
+        "src/main/java/items/FishingItems.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:manzana_vida",
+      "item_definition": "assets/minecraft/items/manzana_vida.json",
+      "texture": "assets/minecraft/textures/item/custom/manzana_vida.png",
+      "origin": "itemsyahechos.rar",
+      "java_sources": [
+        "src/main/java/items/ItemsEventos.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:mejora_bota_warden",
+      "item_definition": "assets/minecraft/items/mejora_bota_warden.json",
+      "texture": "assets/minecraft/textures/item/custom/mejora_bota_warden.png",
+      "origin": "Nueva textura de este lote",
+      "java_sources": [
+        "src/main/java/items/WardenUpgrades.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:mejora_casco_warden",
+      "item_definition": "assets/minecraft/items/mejora_casco_warden.json",
+      "texture": "assets/minecraft/textures/item/custom/mejora_casco_warden.png",
+      "origin": "Nueva textura de este lote",
+      "java_sources": [
+        "src/main/java/items/WardenUpgrades.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:mejora_pantalon_warden",
+      "item_definition": "assets/minecraft/items/mejora_pantalon_warden.json",
+      "texture": "assets/minecraft/textures/item/custom/mejora_pantalon_warden.png",
+      "origin": "Nueva textura de este lote",
+      "java_sources": [
+        "src/main/java/items/WardenUpgrades.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:mejora_peto_warden",
+      "item_definition": "assets/minecraft/items/mejora_peto_warden.json",
+      "texture": "assets/minecraft/textures/item/custom/mejora_peto_warden.png",
+      "origin": "Nueva textura de este lote",
+      "java_sources": [
+        "src/main/java/items/WardenUpgrades.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:mineral_crudo_cian",
+      "item_definition": "assets/minecraft/items/mineral_crudo_cian.json",
+      "texture": "assets/minecraft/textures/item/custom/mineral_crudo_cian.png",
+      "origin": "Nueva textura de este lote",
+      "java_sources": [
+        "src/main/java/items/WardenCaveItems.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:mineral_crudo_gris",
+      "item_definition": "assets/minecraft/items/mineral_crudo_gris.json",
+      "texture": "assets/minecraft/textures/item/custom/mineral_crudo_gris.png",
+      "origin": "Nueva textura de este lote",
+      "java_sources": [
+        "src/main/java/items/WardenCaveItems.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:mineral_crudo_morado",
+      "item_definition": "assets/minecraft/items/mineral_crudo_morado.json",
+      "texture": "assets/minecraft/textures/item/custom/mineral_crudo_morado.png",
+      "origin": "Nueva textura de este lote",
+      "java_sources": [
+        "src/main/java/items/WardenCaveItems.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:mineral_crudo_verde",
+      "item_definition": "assets/minecraft/items/mineral_crudo_verde.json",
+      "texture": "assets/minecraft/textures/item/custom/mineral_crudo_verde.png",
+      "origin": "Nueva textura de este lote",
+      "java_sources": [
+        "src/main/java/items/WardenCaveItems.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:mochila_nivel_1",
+      "item_definition": "assets/minecraft/items/mochila_nivel_1.json",
+      "texture": "assets/minecraft/textures/item/custom/mochila_nivel_1.png",
+      "origin": "itemsyahechos.rar",
+      "java_sources": [
+        "src/main/java/items/EconomyItems.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:mochila_nivel_2",
+      "item_definition": "assets/minecraft/items/mochila_nivel_2.json",
+      "texture": "assets/minecraft/textures/item/custom/mochila_nivel_2.png",
+      "origin": "itemsyahechos.rar",
+      "java_sources": [
+        "src/main/java/items/EconomyItems.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:mochila_nivel_3",
+      "item_definition": "assets/minecraft/items/mochila_nivel_3.json",
+      "texture": "assets/minecraft/textures/item/custom/mochila_nivel_3.png",
+      "origin": "itemsyahechos.rar",
+      "java_sources": [
+        "src/main/java/items/EconomyItems.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:mochila_nivel_4",
+      "item_definition": "assets/minecraft/items/mochila_nivel_4.json",
+      "texture": "assets/minecraft/textures/item/custom/mochila_nivel_4.png",
+      "origin": "itemsyahechos.rar",
+      "java_sources": [
+        "src/main/java/items/EconomyItems.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:mochila_nivel_5",
+      "item_definition": "assets/minecraft/items/mochila_nivel_5.json",
+      "texture": "assets/minecraft/textures/item/custom/mochila_nivel_5.png",
+      "origin": "itemsyahechos.rar",
+      "java_sources": [
+        "src/main/java/items/EconomyItems.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:monedero",
+      "item_definition": "assets/minecraft/items/monedero.json",
+      "texture": "assets/minecraft/textures/item/custom/monedero.png",
+      "origin": "itemsyahechos.rar",
+      "java_sources": [
+        "src/main/java/items/EconomyItems.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:ojo_arana_floral",
+      "item_definition": "assets/minecraft/items/ojo_arana_floral.json",
+      "texture": "assets/minecraft/textures/item/custom/ojo_arana_floral.png",
+      "origin": "itemsyahechos.rar",
+      "java_sources": [
+        "src/main/java/items/FloralMobItems.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:ojo_rey_ender",
+      "item_definition": "assets/minecraft/items/ojo_rey_ender.json",
+      "texture": "assets/minecraft/textures/item/custom/ojo_rey_ender.png",
+      "origin": "itemsyahechos.rar",
+      "java_sources": [
+        "src/main/java/items/EndItems.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:pala_celestita",
+      "item_definition": "assets/minecraft/items/pala_celestita.json",
+      "texture": "assets/minecraft/textures/item/custom/pala_celestita.png",
+      "origin": "Lote anterior (#57)",
+      "java_sources": [
+        "src/main/java/items/EndItems.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:panic_apple",
+      "item_definition": "assets/minecraft/items/panic_apple.json",
+      "texture": "assets/minecraft/textures/item/custom/panic_apple.png",
+      "origin": "Lote anterior (#57)",
+      "java_sources": [
+        "src/main/java/items/EconomyItems.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:pantalon_warden",
+      "item_definition": "assets/minecraft/items/pantalon_warden.json",
+      "texture": "assets/minecraft/textures/item/custom/pantalon_warden.png",
+      "origin": "Nueva textura de este lote",
+      "java_sources": [
+        "src/main/java/Armors/WardenArmor.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:pepitas_diamante",
+      "item_definition": "assets/minecraft/items/pepitas_diamante.json",
+      "texture": "assets/minecraft/textures/item/custom/pepitas_diamante.png",
+      "origin": "Nueva textura de este lote",
+      "java_sources": [
+        "src/main/java/items/FishingItems.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:pepitas_hierro_oxidadas",
+      "item_definition": "assets/minecraft/items/pepitas_hierro_oxidadas.json",
+      "texture": "assets/minecraft/textures/item/custom/pepitas_hierro_oxidadas.png",
+      "origin": "Nueva textura de este lote",
+      "java_sources": [
+        "src/main/java/items/FishingItems.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:perla_infinita",
+      "item_definition": "assets/minecraft/items/perla_infinita.json",
+      "texture": "assets/minecraft/textures/item/custom/perla_infinita.png",
+      "origin": "Lote anterior (#57)",
+      "java_sources": [
+        "src/main/java/items/InfinitePearl.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:peto_warden",
+      "item_definition": "assets/minecraft/items/peto_warden.json",
+      "texture": "assets/minecraft/textures/item/custom/peto_warden.png",
+      "origin": "Nueva textura de este lote",
+      "java_sources": [
+        "src/main/java/Armors/WardenArmor.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:peto_warden_alado",
+      "item_definition": "assets/minecraft/items/peto_warden_alado.json",
+      "texture": "assets/minecraft/textures/item/custom/peto_warden_alado.png",
+      "origin": "itemsyahechos.rar",
+      "java_sources": [
+        "src/main/java/Armors/WardenArmor.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:pico_celestita",
+      "item_definition": "assets/minecraft/items/pico_celestita.json",
+      "texture": "assets/minecraft/textures/item/custom/pico_celestita.png",
+      "origin": "Lote anterior (#57)",
+      "java_sources": [
+        "src/main/java/items/EndItems.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:piruleta",
+      "item_definition": "assets/minecraft/items/piruleta.json",
+      "texture": "assets/minecraft/textures/item/custom/piruleta.png",
+      "origin": "Nueva textura de este lote",
+      "java_sources": [
+        "src/main/java/items/ItemsPartyRecolect.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:plantilla_celestita",
+      "item_definition": "assets/minecraft/items/plantilla_celestita.json",
+      "texture": "assets/minecraft/textures/item/custom/plantilla_celestita.png",
+      "origin": "Nueva textura de este lote",
+      "java_sources": [
+        "src/main/java/items/EndItems.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:pluma_levi",
+      "item_definition": "assets/minecraft/items/pluma_levi.json",
+      "texture": "assets/minecraft/textures/item/custom/pluma_levi.png",
+      "origin": "itemsyahechos.rar",
+      "java_sources": [
+        "src/main/java/items/ItemsEventos.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:pluma_levi_mejorada",
+      "item_definition": "assets/minecraft/items/pluma_levi_mejorada.json",
+      "texture": "assets/minecraft/textures/item/custom/pluma_levi_mejorada.png",
+      "origin": "itemsyahechos.rar",
+      "java_sources": [
+        "src/main/java/items/ItemsEventos.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:pluma_vacio",
+      "item_definition": "assets/minecraft/items/pluma_vacio.json",
+      "texture": "assets/minecraft/textures/item/custom/pluma_vacio.png",
+      "origin": "Nueva textura de este lote",
+      "java_sources": [
+        "src/main/java/items/tienda/ItemsTienda.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:polvo_silencioso",
+      "item_definition": "assets/minecraft/items/polvo_silencioso.json",
+      "texture": "assets/minecraft/textures/item/custom/polvo_silencioso.png",
+      "origin": "itemsyahechos.rar",
+      "java_sources": [
+        "src/main/java/items/tienda/ItemsTienda.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:polvora_floral",
+      "item_definition": "assets/minecraft/items/polvora_floral.json",
+      "texture": "assets/minecraft/textures/item/custom/polvora_floral.png",
+      "origin": "itemsyahechos.rar",
+      "java_sources": [
+        "src/main/java/items/FloralMobItems.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:potion_haste_2",
+      "item_definition": "assets/minecraft/items/potion_haste_2.json",
+      "texture": "assets/minecraft/textures/item/custom/potion_haste_2.png",
+      "origin": "Lote anterior (#57)",
+      "java_sources": [
+        "src/main/java/items/CustomPotions.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:potion_haste_3",
+      "item_definition": "assets/minecraft/items/potion_haste_3.json",
+      "texture": "assets/minecraft/textures/item/custom/potion_haste_3.png",
+      "origin": "Lote anterior (#57)",
+      "java_sources": [
+        "src/main/java/items/CustomPotions.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:potion_resistance_2",
+      "item_definition": "assets/minecraft/items/potion_resistance_2.json",
+      "texture": "assets/minecraft/textures/item/custom/potion_resistance_2.png",
+      "origin": "Lote anterior (#57)",
+      "java_sources": [
+        "src/main/java/items/CustomPotions.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:potion_slow_falling",
+      "item_definition": "assets/minecraft/items/potion_slow_falling.json",
+      "texture": "assets/minecraft/textures/item/custom/potion_slow_falling.png",
+      "origin": "Lote anterior (#57)",
+      "java_sources": [
+        "src/main/java/items/CustomPotions.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:propulsor_estelar",
+      "item_definition": "assets/minecraft/items/propulsor_estelar.json",
+      "texture": "assets/minecraft/textures/item/custom/propulsor_estelar.png",
+      "origin": "Nueva textura de este lote",
+      "java_sources": [
+        "src/main/java/items/tienda/ItemsTienda.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:quaso_ticket",
+      "item_definition": "assets/minecraft/items/quaso_ticket.json",
+      "texture": "assets/minecraft/textures/item/custom/quaso_ticket.png",
+      "origin": "Nueva textura de este lote",
+      "java_sources": [
+        "src/main/java/Events/Skybattle/EventoHandler.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:racion_viaje",
+      "item_definition": "assets/minecraft/items/racion_viaje.json",
+      "texture": "assets/minecraft/textures/item/custom/racion_viaje.png",
+      "origin": "itemsyahechos.rar",
+      "java_sources": [
+        "src/main/java/items/tienda/ItemsTienda.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:radar_minerales",
+      "item_definition": "assets/minecraft/items/radar_minerales.json",
+      "texture": "assets/minecraft/textures/item/custom/radar_minerales.png",
+      "origin": "Nueva textura de este lote",
+      "java_sources": [
+        "src/main/java/items/tienda/ItemsTienda.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:red_animales",
+      "item_definition": "assets/minecraft/items/red_animales.json",
+      "texture": "assets/minecraft/textures/item/custom/red_animales.png",
+      "origin": "itemsyahechos.rar",
+      "java_sources": [
+        "src/main/java/items/tienda/ItemsTienda.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:rep_hierro",
+      "item_definition": "assets/minecraft/items/rep_hierro.json",
+      "texture": "assets/minecraft/textures/item/custom/rep_hierro.png",
+      "origin": "itemsyahechos.rar",
+      "java_sources": [
+        "src/main/java/items/EconomyItems.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:rep_oro",
+      "item_definition": "assets/minecraft/items/rep_oro.json",
+      "texture": "assets/minecraft/textures/item/custom/rep_oro.png",
+      "origin": "itemsyahechos.rar",
+      "java_sources": [
+        "src/main/java/items/EconomyItems.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:soda",
+      "item_definition": "assets/minecraft/items/soda.json",
+      "texture": "assets/minecraft/textures/item/custom/soda.png",
+      "origin": "Nueva textura de este lote",
+      "java_sources": [
+        "src/main/java/items/ItemsPartyRecolect.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:spawner_custom",
+      "item_definition": "assets/minecraft/items/spawner_custom.json",
+      "texture": "assets/minecraft/textures/item/custom/spawner_custom.png",
+      "origin": "Nueva textura de este lote",
+      "java_sources": [
+        "src/main/java/Commands/GiveSpawnerCommand.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:special_totem",
+      "item_definition": "assets/minecraft/items/special_totem.json",
+      "texture": "assets/minecraft/textures/item/custom/special_totem.png",
+      "origin": "Lote anterior (#57)",
+      "java_sources": [
+        "src/main/java/items/ItemsTotems.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:splash_absorption_10",
+      "item_definition": "assets/minecraft/items/splash_absorption_10.json",
+      "texture": "assets/minecraft/textures/item/custom/splash_absorption_10.png",
+      "origin": "Lote anterior (#57)",
+      "java_sources": [
+        "src/main/java/items/CustomPotions.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:splash_regeneration_3",
+      "item_definition": "assets/minecraft/items/splash_regeneration_3.json",
+      "texture": "assets/minecraft/textures/item/custom/splash_regeneration_3.png",
+      "origin": "Lote anterior (#57)",
+      "java_sources": [
+        "src/main/java/items/CustomPotions.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:splash_resistance_3",
+      "item_definition": "assets/minecraft/items/splash_resistance_3.json",
+      "texture": "assets/minecraft/textures/item/custom/splash_resistance_3.png",
+      "origin": "Lote anterior (#57)",
+      "java_sources": [
+        "src/main/java/items/CustomPotions.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:statue_effect",
+      "item_definition": "assets/minecraft/items/statue_effect.json",
+      "texture": "assets/minecraft/textures/item/custom/statue_effect.png",
+      "origin": "Nueva textura de este lote",
+      "java_sources": [
+        "src/main/java/StatueManager/StatueCommand.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:talisman_botin",
+      "item_definition": "assets/minecraft/items/talisman_botin.json",
+      "texture": "assets/minecraft/textures/item/custom/talisman_botin.png",
+      "origin": "Nueva textura de este lote",
+      "java_sources": [
+        "src/main/java/items/tienda/ItemsTienda.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:tarta_calabaza_mejorada",
+      "item_definition": "assets/minecraft/items/tarta_calabaza_mejorada.json",
+      "texture": "assets/minecraft/textures/item/custom/tarta_calabaza_mejorada.png",
+      "origin": "Nueva textura de este lote",
+      "java_sources": [
+        "src/main/java/Dificultades/OneChanges.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:tonico_antilevitacion",
+      "item_definition": "assets/minecraft/items/tonico_antilevitacion.json",
+      "texture": "assets/minecraft/textures/item/custom/tonico_antilevitacion.png",
+      "origin": "Nueva textura de este lote",
+      "java_sources": [
+        "src/main/java/items/tienda/ItemsTienda.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:totem_doble1",
+      "item_definition": "assets/minecraft/items/totem_doble1.json",
+      "texture": "assets/minecraft/textures/item/custom/totem_doble1.png",
+      "origin": "itemsyahechos.rar",
+      "java_sources": [
+        "src/main/java/items/DoubleLifeTotem.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:totem_doble2",
+      "item_definition": "assets/minecraft/items/totem_doble2.json",
+      "texture": "assets/minecraft/textures/item/custom/totem_doble2.png",
+      "origin": "itemsyahechos.rar",
+      "java_sources": [
+        "src/main/java/items/DoubleLifeTotem.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:trabajo_constructor",
+      "item_definition": "assets/minecraft/items/trabajo_constructor.json",
+      "texture": "assets/minecraft/textures/item/custom/trabajo_constructor.png",
+      "origin": "itemsyahechos.rar",
+      "java_sources": [
+        "src/main/java/Trabajos/TrabajosGUI.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:trabajo_granjero",
+      "item_definition": "assets/minecraft/items/trabajo_granjero.json",
+      "texture": "assets/minecraft/textures/item/custom/trabajo_granjero.png",
+      "origin": "itemsyahechos.rar",
+      "java_sources": [
+        "src/main/java/Trabajos/TrabajosGUI.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:trabajo_guerrero",
+      "item_definition": "assets/minecraft/items/trabajo_guerrero.json",
+      "texture": "assets/minecraft/textures/item/custom/trabajo_guerrero.png",
+      "origin": "itemsyahechos.rar",
+      "java_sources": [
+        "src/main/java/Trabajos/TrabajosGUI.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:trabajo_lenador",
+      "item_definition": "assets/minecraft/items/trabajo_lenador.json",
+      "texture": "assets/minecraft/textures/item/custom/trabajo_lenador.png",
+      "origin": "itemsyahechos.rar",
+      "java_sources": [
+        "src/main/java/Trabajos/TrabajosGUI.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:trabajo_mineria",
+      "item_definition": "assets/minecraft/items/trabajo_mineria.json",
+      "texture": "assets/minecraft/textures/item/custom/trabajo_mineria.png",
+      "origin": "itemsyahechos.rar",
+      "java_sources": [
+        "src/main/java/Trabajos/TrabajosGUI.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:trabajo_pescador",
+      "item_definition": "assets/minecraft/items/trabajo_pescador.json",
+      "texture": "assets/minecraft/textures/item/custom/trabajo_pescador.png",
+      "origin": "itemsyahechos.rar",
+      "java_sources": [
+        "src/main/java/Trabajos/TrabajosGUI.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:warden_gun",
+      "item_definition": "assets/minecraft/items/warden_gun.json",
+      "texture": "assets/minecraft/textures/item/custom/warden_gun.png",
+      "origin": "Corrección de orientación (#56)",
+      "java_sources": [
+        "src/main/java/items/WardenGun.java"
+      ]
+    },
+    {
+      "item_model": "minecraft:zanahoria_encantada",
+      "item_definition": "assets/minecraft/items/zanahoria_encantada.json",
+      "texture": "assets/minecraft/textures/item/custom/zanahoria_encantada.png",
+      "origin": "itemsyahechos.rar",
+      "java_sources": [
+        "src/main/java/items/FishingItems.java"
+      ]
+    }
+  ],
+  "external_preserved": [
+    {
+      "item_model": "minecraft:statue_pr",
+      "reason": "El usuario conserva su modelo 3D y su atlas de 256×256; no se incluyen archivos que lo reemplacen."
+    }
+  ],
+  "vanilla_unchanged": [
+    "minecraft:air",
+    "minecraft:guster_banner_pattern",
+    "minecraft:lime_banner",
+    "minecraft:map",
+    "minecraft:recovery_compass"
+  ]
+}

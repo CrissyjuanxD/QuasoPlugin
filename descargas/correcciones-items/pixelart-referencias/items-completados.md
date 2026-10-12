@@ -2,6 +2,8 @@
 
 **274 identificadores incluidos · 143 texturas nuevas · 131 texturas anteriores conservadas.**
 
+**Revisión #59:** se corrigen tres lingotes, cuatro mejoras Warden, cuatro almas, el fragmento astral, la Baya Regenerativa y las 13 picas. Son 26 PNG revisados; los nombres de modelo se mantienen. `baya_luminosa` corresponde ahora al nombre visible **Baya Regenerativa**. [Ver correcciones](vista_correcciones_59.png).
+
 Los nombres son exactamente los de `ItemMeta#setItemModel` en la rama 26.2. También se resolvieron los nombres generados por nivel, profesión, estado de habilidad, color de mineral y carta.
 
 `minecraft:statue_pr` se conserva en tu pack como modelo 3D y queda fuera de esta carpeta. `air`, `map`, `recovery_compass`, `lime_banner` y `guster_banner_pattern` usan los modelos de Minecraft y no se reemplazan.

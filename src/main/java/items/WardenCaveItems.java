@@ -211,7 +211,7 @@ public class WardenCaveItems {
     }
 
     // Frutas de los árboles de la Warden Cave (las suelta WardenFruits): Baya Sculk de los froglights verdes,
-    // Fruta Abisal de los perlados y Baya Luminosa de las enredaderas del Pantano
+    // Fruta Abisal de los perlados y Baya Regenerativa de las enredaderas del Pantano
     public static ItemStack createSculkBerry(int amount) {
         return fruit(Material.SWEET_BERRIES, amount, "baya_sculk", "#3ad4d4", "Baya Sculk",
                 "Visión nocturna por 3 minutos.", "Crece en los árboles de la Caverna Sculk.");
@@ -223,7 +223,7 @@ public class WardenCaveItems {
     }
 
     public static ItemStack createGlowBerry(int amount) {
-        return fruit(Material.GLOW_BERRIES, amount, "baya_luminosa", "#5fd16a", "Baya Luminosa",
+        return fruit(Material.GLOW_BERRIES, amount, "baya_luminosa", "#ed6b78", "Baya Regenerativa",
                 "Regeneración II por 5 segundos.", "Cuelga de los árboles del Pantano Profundo.");
     }
 

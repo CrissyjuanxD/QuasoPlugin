@@ -8,6 +8,19 @@ Se completaron **143 identificadores que no tenían textura**: 82 items y materi
 
 **Tu estatua protectora `minecraft:statue_pr` conserva su modelo 3D.** No se incluye su atlas ni ningún JSON o PNG que lo reemplace. El otro item, `statue_effect`, sí tiene su propio icono de inventario.
 
+## Correcciones de la versión #59
+
+![Lingotes, mejoras, almas, fragmento, baya y picas corregidos](vista_correcciones_59.png)
+
+- Los tres lingotes conservan exactamente la silueta y los ocho grupos de sombreado del lingote de hierro vanilla, con sus paletas propias.
+- Las cuatro mejoras Warden tienen simetría horizontal exacta en el marco y el símbolo de armadura.
+- Las almas utilizan rostros de 8×8 basados en sus mobs vanilla, con colores adaptados al contorno de alma.
+- El fragmento astral es una esquirla alargada con facetas y extremo roto.
+- La **Baya Regenerativa** es roja. Su nombre visible también cambia en el plugin y en la misión 128. Conserva `baya_luminosa` como identificador de item, textura y dato persistente para mantener la compatibilidad.
+- Las 13 cartas de picas tienen un símbolo más ancho, con punta superior, dos lóbulos inferiores, tallo y base. Los otros palos se conservan.
+
+Los minerales crudos de colores permanecen intactos. Todas las texturas corregidas siguen siendo de 16×16.
+
 ## Nuevas texturas
 
 ![Materiales, armadura, mejoras, almas y consumibles](vista_nuevos_materiales.png)
@@ -52,7 +65,7 @@ La armadura Warden de este lote son iconos de inventario: no sustituye las textu
 3. Conserva tu `pack.mcmeta`, tu modelo 3D de `statue_pr` y los demás archivos de tu pack.
 4. Recarga con **F3 + T**. Si distribuyes el pack desde el servidor, actualiza su ZIP y su hash.
 
-Esta carpeta es un complemento para tu pack de **26.2**, no un pack autónomo. El cambio solo añade recursos descargables: no modifica el código Java ni los comandos. `gancho` apunta a tu textura `gancho_2d`; `ficha_mision` y las cinco mochilas mantienen sus identificadores actuales.
+Esta carpeta es un complemento para tu pack de **26.2**, no un pack autónomo. Las texturas se instalan en el pack; para ver el nuevo nombre de la Baya Regenerativa en items recién creados y en la misión 128, utiliza también el plugin compilado con la revisión #59. Los comandos mantienen sus identificadores actuales. `gancho` apunta a tu textura `gancho_2d`; `ficha_mision` y las cinco mochilas mantienen sus nombres de modelo.
 
 ## Verificación
 

@@ -26,7 +26,8 @@
       "origin": "Nueva textura de este lote",
       "java_sources": [
         "src/main/java/items/InfestedSoulsItems.java"
-      ]
+      ],
+      "revision_59": "Rostro vanilla de 8×8 con paleta de alma."
     },
     {
       "item_model": "minecraft:alma_infested_creeper",
@@ -35,7 +36,8 @@
       "origin": "Nueva textura de este lote",
       "java_sources": [
         "src/main/java/items/InfestedSoulsItems.java"
-      ]
+      ],
+      "revision_59": "Rostro vanilla de 8×8 con paleta de alma."
     },
     {
       "item_model": "minecraft:alma_infested_ghast",
@@ -44,7 +46,8 @@
       "origin": "Nueva textura de este lote",
       "java_sources": [
         "src/main/java/items/InfestedSoulsItems.java"
-      ]
+      ],
+      "revision_59": "Rostro vanilla de 8×8 con paleta de alma."
     },
     {
       "item_model": "minecraft:alma_infested_skeleton",
@@ -53,7 +56,8 @@
       "origin": "Nueva textura de este lote",
       "java_sources": [
         "src/main/java/items/InfestedSoulsItems.java"
-      ]
+      ],
+      "revision_59": "Rostro vanilla de 8×8 con paleta de alma."
     },
     {
       "item_model": "minecraft:amulet_bloodmoon",
@@ -260,7 +264,9 @@
       "origin": "Nueva textura de este lote",
       "java_sources": [
         "src/main/java/items/WardenCaveItems.java"
-      ]
+      ],
+      "revision_59": "Baya Regenerativa roja; identificador anterior conservado.",
+      "display_name": "Baya Regenerativa"
     },
     {
       "item_model": "minecraft:baya_sculk",
@@ -378,7 +384,8 @@
       "java_sources": [
         "src/main/java/Casino/BlackJack.java"
       ],
-      "card": "A♠"
+      "card": "A♠",
+      "revision_59": "Pica con lóbulos y tallo."
     },
     {
       "item_model": "minecraft:carta_5001",
@@ -388,7 +395,8 @@
       "java_sources": [
         "src/main/java/Casino/BlackJack.java"
       ],
-      "card": "2♠"
+      "card": "2♠",
+      "revision_59": "Pica con lóbulos y tallo."
     },
     {
       "item_model": "minecraft:carta_5002",
@@ -398,7 +406,8 @@
       "java_sources": [
         "src/main/java/Casino/BlackJack.java"
       ],
-      "card": "3♠"
+      "card": "3♠",
+      "revision_59": "Pica con lóbulos y tallo."
     },
     {
       "item_model": "minecraft:carta_5003",
@@ -408,7 +417,8 @@
       "java_sources": [
         "src/main/java/Casino/BlackJack.java"
       ],
-      "card": "4♠"
+      "card": "4♠",
+      "revision_59": "Pica con lóbulos y tallo."
     },
     {
       "item_model": "minecraft:carta_5004",
@@ -418,7 +428,8 @@
       "java_sources": [
         "src/main/java/Casino/BlackJack.java"
       ],
-      "card": "5♠"
+      "card": "5♠",
+      "revision_59": "Pica con lóbulos y tallo."
     },
     {
       "item_model": "minecraft:carta_5005",
@@ -428,7 +439,8 @@
       "java_sources": [
         "src/main/java/Casino/BlackJack.java"
       ],
-      "card": "6♠"
+      "card": "6♠",
+      "revision_59": "Pica con lóbulos y tallo."
     },
     {
       "item_model": "minecraft:carta_5006",
@@ -438,7 +450,8 @@
       "java_sources": [
         "src/main/java/Casino/BlackJack.java"
       ],
-      "card": "7♠"
+      "card": "7♠",
+      "revision_59": "Pica con lóbulos y tallo."
     },
     {
       "item_model": "minecraft:carta_5007",
@@ -448,7 +461,8 @@
       "java_sources": [
         "src/main/java/Casino/BlackJack.java"
       ],
-      "card": "8♠"
+      "card": "8♠",
+      "revision_59": "Pica con lóbulos y tallo."
     },
     {
       "item_model": "minecraft:carta_5008",
@@ -458,7 +472,8 @@
       "java_sources": [
         "src/main/java/Casino/BlackJack.java"
       ],
-      "card": "9♠"
+      "card": "9♠",
+      "revision_59": "Pica con lóbulos y tallo."
     },
     {
       "item_model": "minecraft:carta_5009",
@@ -468,7 +483,8 @@
       "java_sources": [
         "src/main/java/Casino/BlackJack.java"
       ],
-      "card": "10♠"
+      "card": "10♠",
+      "revision_59": "Pica con lóbulos y tallo."
     },
     {
       "item_model": "minecraft:carta_5010",
@@ -478,7 +494,8 @@
       "java_sources": [
         "src/main/java/Casino/BlackJack.java"
       ],
-      "card": "J♠"
+      "card": "J♠",
+      "revision_59": "Pica con lóbulos y tallo."
     },
     {
       "item_model": "minecraft:carta_5011",
@@ -488,7 +505,8 @@
       "java_sources": [
         "src/main/java/Casino/BlackJack.java"
       ],
-      "card": "Q♠"
+      "card": "Q♠",
+      "revision_59": "Pica con lóbulos y tallo."
     },
     {
       "item_model": "minecraft:carta_5012",
@@ -498,7 +516,8 @@
       "java_sources": [
         "src/main/java/Casino/BlackJack.java"
       ],
-      "card": "K♠"
+      "card": "K♠",
+      "revision_59": "Pica con lóbulos y tallo."
     },
     {
       "item_model": "minecraft:carta_5013",
@@ -1194,7 +1213,8 @@
       "origin": "Nueva textura de este lote",
       "java_sources": [
         "src/main/java/items/EndItems.java"
-      ]
+      ],
+      "revision_59": "Esquirla de cristal con facetas."
     },
     {
       "item_model": "minecraft:fragmento_profundo_cian",
@@ -1878,7 +1898,8 @@
       "origin": "Nueva textura de este lote",
       "java_sources": [
         "src/main/java/items/EndItems.java"
-      ]
+      ],
+      "revision_59": "Silueta y sombreado del lingote vanilla."
     },
     {
       "item_model": "minecraft:lingote_platino",
@@ -1887,7 +1908,8 @@
       "origin": "Nueva textura de este lote",
       "java_sources": [
         "src/main/java/items/FishingItems.java"
-      ]
+      ],
+      "revision_59": "Silueta y sombreado del lingote vanilla."
     },
     {
       "item_model": "minecraft:lingote_profundo",
@@ -1896,7 +1918,8 @@
       "origin": "Nueva textura de este lote",
       "java_sources": [
         "src/main/java/items/WardenCaveItems.java"
-      ]
+      ],
+      "revision_59": "Silueta y sombreado del lingote vanilla."
     },
     {
       "item_model": "minecraft:linterna_almas",
@@ -1959,7 +1982,8 @@
       "origin": "Nueva textura de este lote",
       "java_sources": [
         "src/main/java/items/WardenUpgrades.java"
-      ]
+      ],
+      "revision_59": "Marco y símbolo simétricos."
     },
     {
       "item_model": "minecraft:mejora_casco_warden",
@@ -1968,7 +1992,8 @@
       "origin": "Nueva textura de este lote",
       "java_sources": [
         "src/main/java/items/WardenUpgrades.java"
-      ]
+      ],
+      "revision_59": "Marco y símbolo simétricos."
     },
     {
       "item_model": "minecraft:mejora_pantalon_warden",
@@ -1977,7 +2002,8 @@
       "origin": "Nueva textura de este lote",
       "java_sources": [
         "src/main/java/items/WardenUpgrades.java"
-      ]
+      ],
+      "revision_59": "Marco y símbolo simétricos."
     },
     {
       "item_model": "minecraft:mejora_peto_warden",
@@ -1986,7 +2012,8 @@
       "origin": "Nueva textura de este lote",
       "java_sources": [
         "src/main/java/items/WardenUpgrades.java"
-      ]
+      ],
+      "revision_59": "Marco y símbolo simétricos."
     },
     {
       "item_model": "minecraft:mineral_crudo_cian",

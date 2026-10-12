@@ -16,10 +16,10 @@ public class Mission128 extends BaseMission {
 
     public Mission128(JavaPlugin plugin, MissionHandler handler) {
         super(plugin, handler, 128, "Sabores de la cueva", MissionDifficulty.FACIL, 12,
-                "Come las 3 frutas de la Warden Cave: Baya Sculk, Fruta Abisal y Baya Luminosa.");
+                "Come las 3 frutas de la Warden Cave: Baya Sculk, Fruta Abisal y Baya Regenerativa.");
         flag("baya_sculk", "Baya Sculk");
         flag("fruta_abisal", "Fruta Abisal");
-        flag("baya_luminosa", "Baya Luminosa");
+        flag("baya_luminosa", "Baya Regenerativa");
         extraOf(21);
     }
 

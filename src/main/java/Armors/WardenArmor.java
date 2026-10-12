@@ -1,17 +1,21 @@
 package Armors;
 
+import io.papermc.paper.event.entity.EntityEquipmentChangedEvent;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
+import org.bukkit.Sound;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerItemDamageEvent;
 import org.bukkit.inventory.EquipmentSlotGroup;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemRarity;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.components.EquippableComponent;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -21,6 +25,8 @@ import java.util.List;
 
 public class WardenArmor implements Listener {
 
+    private static final NamespacedKey WARDEN_MODEL = NamespacedKey.minecraft("warden");
+    private static final NamespacedKey WINGED_MODEL = NamespacedKey.minecraft("warden_alado");
     private final JavaPlugin plugin;
     private final NamespacedKey wardenArmorKey;
 
@@ -63,6 +69,7 @@ public class WardenArmor implements Listener {
         meta.setRarity(ItemRarity.EPIC);
         meta.getPersistentDataContainer().set(wardenArmorKey, PersistentDataType.BYTE, (byte) 1);
         meta.setItemModel(NamespacedKey.minecraft("casco_warden"));
+        setEquipmentModel(meta, EquipmentSlot.HEAD, WARDEN_MODEL);
         item.setItemMeta(meta);
 
         return item;
@@ -102,6 +109,7 @@ public class WardenArmor implements Listener {
         meta.setRarity(ItemRarity.EPIC);
         meta.getPersistentDataContainer().set(wardenArmorKey, PersistentDataType.BYTE, (byte) 1);
         meta.setItemModel(NamespacedKey.minecraft("peto_warden"));
+        setEquipmentModel(meta, EquipmentSlot.CHEST, WARDEN_MODEL);
         item.setItemMeta(meta);
 
         return item;
@@ -118,6 +126,7 @@ public class WardenArmor implements Listener {
         meta.setGlider(true);
         meta.getPersistentDataContainer().set(items.EndItems.ITEM_KEY, PersistentDataType.STRING, "peto_warden_alado");
         meta.setItemModel(NamespacedKey.minecraft("peto_warden_alado"));
+        setEquipmentModel(meta, EquipmentSlot.CHEST, WINGED_MODEL);
         item.setItemMeta(meta);
         return item;
     }
@@ -160,6 +169,7 @@ public class WardenArmor implements Listener {
         meta.setRarity(ItemRarity.EPIC);
         meta.getPersistentDataContainer().set(wardenArmorKey, PersistentDataType.BYTE, (byte) 1);
         meta.setItemModel(NamespacedKey.minecraft("pantalon_warden"));
+        setEquipmentModel(meta, EquipmentSlot.LEGS, WARDEN_MODEL);
         item.setItemMeta(meta);
 
         return item;
@@ -199,6 +209,7 @@ public class WardenArmor implements Listener {
         meta.setRarity(ItemRarity.EPIC);
         meta.getPersistentDataContainer().set(wardenArmorKey, PersistentDataType.BYTE, (byte) 1);
         meta.setItemModel(NamespacedKey.minecraft("bota_warden"));
+        setEquipmentModel(meta, EquipmentSlot.FEET, WARDEN_MODEL);
         item.setItemMeta(meta);
 
         return item;
@@ -207,6 +218,47 @@ public class WardenArmor implements Listener {
     public boolean isWardenArmor(ItemStack item) {
         if (item == null || !item.hasItemMeta()) return false;
         return item.getItemMeta().getPersistentDataContainer().has(wardenArmorKey, PersistentDataType.BYTE);
+    }
+
+    private static void setEquipmentModel(ItemMeta meta, EquipmentSlot slot, NamespacedKey model) {
+        EquippableComponent equipment = meta.getEquippable();
+        if (!meta.hasEquippable()) equipment.setEquipSound(Sound.ITEM_ARMOR_EQUIP_NETHERITE);
+        equipment.setSlot(slot);
+        equipment.setModel(model);
+        meta.setEquippable(equipment);
+    }
+
+    // Actualiza también las piezas anteriores al pack, sin reemplazar sus atributos,
+    // encantamientos, durabilidad, nombre ni capacidad de planeo.
+    boolean refreshEquipmentModel(ItemStack item) {
+        if (!isWardenArmor(item)) return false;
+        EquipmentSlot slot = switch (item.getType()) {
+            case NETHERITE_HELMET -> EquipmentSlot.HEAD;
+            case NETHERITE_CHESTPLATE -> EquipmentSlot.CHEST;
+            case NETHERITE_LEGGINGS -> EquipmentSlot.LEGS;
+            case NETHERITE_BOOTS -> EquipmentSlot.FEET;
+            default -> null;
+        };
+        if (slot == null) return false;
+        ItemMeta meta = item.getItemMeta();
+        NamespacedKey model = isWinged(item) ? WINGED_MODEL : WARDEN_MODEL;
+        EquippableComponent equipment = meta.getEquippable();
+        if (model.equals(equipment.getModel()) && slot == equipment.getSlot()) return false;
+        setEquipmentModel(meta, slot, model);
+        item.setItemMeta(meta);
+        return true;
+    }
+
+    @EventHandler
+    public void onEquipmentChanged(EntityEquipmentChangedEvent event) {
+        var equipment = event.getEntity().getEquipment();
+        if (equipment == null) return;
+        for (EquipmentSlot slot : event.getEquipmentChanges().keySet()) {
+            if (slot != EquipmentSlot.HEAD && slot != EquipmentSlot.CHEST
+                    && slot != EquipmentSlot.LEGS && slot != EquipmentSlot.FEET) continue;
+            ItemStack item = equipment.getItem(slot);
+            if (refreshEquipmentModel(item)) equipment.setItem(slot, item);
+        }
     }
 
     // La armadura del Warden tiene 30% de probabilidad de no gastarse

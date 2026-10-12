@@ -1,0 +1,14 @@
+{
+  "layers": {
+    "humanoid": [
+      {
+        "texture": "minecraft:warden_alado"
+      }
+    ],
+    "wings": [
+      {
+        "texture": "minecraft:warden_alado"
+      }
+    ]
+  }
+}

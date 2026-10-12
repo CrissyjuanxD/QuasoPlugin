@@ -2559,5 +2559,40 @@
     "minecraft:lime_banner",
     "minecraft:map",
     "minecraft:recovery_compass"
+  ],
+  "equipment": [
+    {
+      "asset_id": "minecraft:warden",
+      "definition": "assets/minecraft/equipment/warden.json",
+      "items": [
+        "casco_warden",
+        "peto_warden",
+        "pantalon_warden",
+        "bota_warden"
+      ],
+      "layers": [
+        "humanoid",
+        "humanoid_leggings"
+      ],
+      "texture_size": [
+        64,
+        32
+      ]
+    },
+    {
+      "asset_id": "minecraft:warden_alado",
+      "definition": "assets/minecraft/equipment/warden_alado.json",
+      "items": [
+        "peto_warden_alado"
+      ],
+      "layers": [
+        "humanoid",
+        "wings"
+      ],
+      "texture_size": [
+        64,
+        32
+      ]
+    }
   ]
 }

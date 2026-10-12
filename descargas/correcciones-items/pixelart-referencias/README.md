@@ -6,6 +6,8 @@ Se completaron **143 identificadores que no tenían textura**: 82 items y materi
 
 [Descargar ZIP](items-pixelart.zip) · [Catálogo de items](items-completados.md) · [Rutas y procedencia](catalogo-items.json)
 
+**Armadura equipada #60:** [guía y vistas previas](armadura-warden.md) · [ZIP solo de armadura](armadura-warden.zip). Incluye el conjunto Warden y el peto alado con alas sculk.
+
 **Tu estatua protectora `minecraft:statue_pr` conserva su modelo 3D.** No se incluye su atlas ni ningún JSON o PNG que lo reemplace. El otro item, `statue_effect`, sí tiene su propio icono de inventario.
 
 ## Correcciones de la versión #59
@@ -41,6 +43,8 @@ Los minerales crudos de colores permanecen intactos. Todas las texturas corregid
 | Tiras animadas originales de 16×96 | 2 |
 | Textura de lanza en mano de 32×32 | 1 |
 | Metadatos de animación `.png.mcmeta` | 2 |
+| Atlas de armadura de 64×32 | 4 |
+| Definiciones de equipo `equipment/*.json` | 2 |
 
 Los 143 iconos nuevos y los nueve cuadros adicionales de los arcos explosivos son PNG RGBA de **16×16 reales**, con transparencia binaria, bordes sin suavizar y un máximo de 24 colores opacos. Los cuadros auxiliares explican por qué hay más PNG/modelos que identificadores de item.
 
@@ -56,7 +60,7 @@ El arco de hielo y los tres niveles de arco explosivo incluyen reposo y tres fas
 
 La lanza de celestita mantiene un icono de inventario de 16×16 y una textura alargada de 32×32 para la mano, mediante `minecraft:display_context` y `minecraft:item/spear_in_hand`.
 
-La armadura Warden de este lote son iconos de inventario: no sustituye las texturas de la armadura equipada en el jugador.
+La armadura Warden incluye ahora sus [texturas para equipar](armadura-warden.md): dos capas vanilla para el conjunto normal, una variante de peto alado y sus alas. Sus cuatro atlas son de 64×32; los iconos de inventario siguen siendo de 16×16.
 
 ## Instalar
 
@@ -65,7 +69,7 @@ La armadura Warden de este lote son iconos de inventario: no sustituye las textu
 3. Conserva tu `pack.mcmeta`, tu modelo 3D de `statue_pr` y los demás archivos de tu pack.
 4. Recarga con **F3 + T**. Si distribuyes el pack desde el servidor, actualiza su ZIP y su hash.
 
-Esta carpeta es un complemento para tu pack de **26.2**, no un pack autónomo. Las texturas se instalan en el pack; para ver el nuevo nombre de la Baya Regenerativa en items recién creados y en la misión 128, utiliza también el plugin compilado con la revisión #59. Los comandos mantienen sus identificadores actuales. `gancho` apunta a tu textura `gancho_2d`; `ficha_mision` y las cinco mochilas mantienen sus nombres de modelo.
+Esta carpeta es un complemento para tu pack de **26.2**, no un pack autónomo. Las texturas se instalan en el pack; utiliza también el plugin compilado con la revisión **#60** para enlazar las texturas de armadura y conservar el cambio de nombre de la Baya Regenerativa de #59. Los comandos mantienen sus identificadores actuales. `gancho` apunta a tu textura `gancho_2d`; `ficha_mision` y las cinco mochilas mantienen sus nombres de modelo.
 
 ## Verificación
 

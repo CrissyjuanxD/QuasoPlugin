@@ -1,0 +1,33 @@
+{
+  "revision": 67,
+  "item_size": [
+    16,
+    16
+  ],
+  "equipment_size": [
+    64,
+    32
+  ],
+  "items": [
+    "aguijon_floral",
+    "botas_floral",
+    "casco_floral",
+    "esencia_floral",
+    "espada_floral",
+    "hacha_floral",
+    "libro_alcance",
+    "libro_anzuelo_veloz",
+    "libro_cosecha",
+    "libro_fervor_minero",
+    "libro_habilidades",
+    "libro_talador",
+    "libro_vigor_de_batalla",
+    "mejora_floral",
+    "pala_floral",
+    "pantalon_floral",
+    "peto_floral",
+    "pico_floral"
+  ],
+  "equipment": "minecraft:floral",
+  "flowers_overlay": "minecraft:floral_flores"
+}

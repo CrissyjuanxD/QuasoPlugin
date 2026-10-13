@@ -1,0 +1,20 @@
+{
+  "layers": {
+    "humanoid": [
+      {
+        "texture": "minecraft:floral"
+      },
+      {
+        "texture": "minecraft:floral_flores"
+      }
+    ],
+    "humanoid_leggings": [
+      {
+        "texture": "minecraft:floral"
+      },
+      {
+        "texture": "minecraft:floral_flores"
+      }
+    ]
+  }
+}

@@ -18,8 +18,8 @@ public class Mission14 extends BaseMission {
 
     public Mission14(JavaPlugin plugin, MissionHandler handler) {
         super(plugin, handler, 14, "Veneno Explosivo", MissionDifficulty.MEDIA, 16,
-                "Mata 30 Corrupted Bees y 30 Creepers Florales.");
-        counter("abejas", "Corrupted Bees", 30);
+                "Mata 30 Mini Abejas Florales y 30 Creepers Florales.");
+        counter("abejas", "Mini Abejas Florales", 30);
         counter("bombitas", "Creepers Florales", 30);
     }
 

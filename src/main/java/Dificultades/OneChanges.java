@@ -46,6 +46,7 @@ public class OneChanges implements Listener, Change {
     private final CorruptedBee corruptedBee;
     private final Bombita bombitaSpawner;;
     private final Iceologer iceologerSpawner;
+    private final FloralForja floralForja;
 
     private final NamespacedKey uuidKey;
     private final NamespacedKey upgradeKey;
@@ -61,6 +62,7 @@ public class OneChanges implements Listener, Change {
         this.corruptedBee = new CorruptedBee(plugin);
         this.bombitaSpawner = new Bombita(plugin);
         this.iceologerSpawner = new Iceologer(plugin);
+        this.floralForja = new FloralForja(plugin);
 
         this.uuidKey = new NamespacedKey(plugin, "creator_uuid");
         this.upgradeKey = new NamespacedKey(plugin, "is_upgrade");
@@ -73,12 +75,26 @@ public class OneChanges implements Listener, Change {
 
     @Override
     public String description() {
-        return "Día 1: mobs corruptos, raids modificadas, BloodMoon, altar de la Abeja Floral y la carne corrupta";
+        return "Día 1: mobs corruptos, raids modificadas, BloodMoon, altar de la Abeja Floral, la carne corrupta y el equipo floral";
     }
 
     @Override
     public boolean isApplied() {
         return isApplied;
+    }
+
+    @Override
+    public String tituloAnuncio() {
+        return "¡Empieza QuasoPlugin!";
+    }
+
+    @Override
+    public List<String> anuncio() {
+        return List.of(
+                "Las raids traen Creepers Florales, Iceologers y hordas de Zombies y Arañas Florales.",
+                "En la BloodMoon los monstruos sueltan Fragmentos de BloodMoon.",
+                "La Abeja Floral se invoca en su altar y suelta la Esencia Floral.",
+                "Mejora Floral: 64 de cada drop floral, la Esencia Floral y una plantilla de Netherite. Mejora las herramientas y la armadura de Netherite.");
     }
 
     // Activa todo lo del día 1: mobs corruptos, la receta de la carne y la tarea de targets
@@ -97,6 +113,7 @@ public class OneChanges implements Listener, Change {
             guardianCorruptedSkeleton.apply();
             corruptedInfernalSpider.apply();
             corruptedBee.apply();
+            floralForja.apply();
         }
     }
 
@@ -119,6 +136,7 @@ public class OneChanges implements Listener, Change {
             guardianCorruptedSkeleton.revert();
             corruptedInfernalSpider.revert();
             corruptedBee.revert();
+            floralForja.revert();
             HandlerList.unregisterAll(this);
 
             isApplied = false;
@@ -196,7 +214,10 @@ public class OneChanges implements Listener, Change {
 
     @Override
     public List<org.bukkit.inventory.Recipe> recetas() {
-        return List.of(corruptedSteakRecipe());
+        List<org.bukkit.inventory.Recipe> recetas = new ArrayList<>();
+        recetas.add(corruptedSteakRecipe());
+        recetas.addAll(floralForja.recetas());
+        return recetas;
     }
 
 

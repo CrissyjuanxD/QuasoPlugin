@@ -18,6 +18,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.components.EquippableComponent;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.java.JavaPlugin;
+import items.WardenCaveItems;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -40,17 +41,7 @@ public class WardenArmor implements Listener {
         ItemMeta meta = item.getItemMeta();
 
         meta.setDisplayName(ChatColor.of("#00ffff") + "" + ChatColor.BOLD + "Casco de Warden");
-        meta.setLore(Arrays.asList(
-                "",
-                ChatColor.of("#008b8b") + "Forjada en la profunda oscuridad,",
-                ChatColor.of("#008b8b") + "esta armadura resuena con las",
-                ChatColor.of("#008b8b") + "almas corrompidas del abismo.",
-                "",
-                ChatColor.GRAY + "Equipar esta pieza otorga: " + ChatColor.WHITE,
-                ChatColor.of("#00cccc") + "■ " + ChatColor.AQUA + ChatColor.BOLD + "+2 Corazones",
-                ChatColor.of("#00cccc") + "■ " + ChatColor.DARK_AQUA + ChatColor.BOLD + "30% Resistencia al Desgaste",
-                ""
-        ));
+        meta.setLore(lore(WardenCaveItems.Variant.CIAN));
 
         meta.addAttributeModifier(Attribute.ARMOR, new AttributeModifier(
                 new NamespacedKey(plugin, "warden_helmet_armor"), 4, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlotGroup.HEAD
@@ -80,17 +71,7 @@ public class WardenArmor implements Listener {
         ItemMeta meta = item.getItemMeta();
 
         meta.setDisplayName(ChatColor.of("#00ffff") + "" + ChatColor.BOLD + "Peto de Warden");
-        meta.setLore(Arrays.asList(
-                "",
-                ChatColor.of("#008b8b") + "Forjada en la profunda oscuridad,",
-                ChatColor.of("#008b8b") + "esta armadura resuena con las",
-                ChatColor.of("#008b8b") + "almas corrompidas del abismo.",
-                "",
-                ChatColor.GRAY + "Equipar esta pieza otorga: " + ChatColor.WHITE,
-                ChatColor.of("#00cccc") + "■ " + ChatColor.AQUA + ChatColor.BOLD + "+2 Corazones",
-                ChatColor.of("#00cccc") + "■ " + ChatColor.DARK_AQUA + ChatColor.BOLD + "30% Resistencia al Desgaste",
-                ""
-        ));
+        meta.setLore(lore(WardenCaveItems.Variant.MORADO));
 
         meta.addAttributeModifier(Attribute.ARMOR, new AttributeModifier(
                 new NamespacedKey(plugin, "warden_chestplate_armor"), 9, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlotGroup.CHEST
@@ -140,17 +121,7 @@ public class WardenArmor implements Listener {
         ItemMeta meta = item.getItemMeta();
 
         meta.setDisplayName(ChatColor.of("#00ffff") + "" + ChatColor.BOLD + "Pantalón de Warden");
-        meta.setLore(Arrays.asList(
-                "",
-                ChatColor.of("#008b8b") + "Forjada en la profunda oscuridad,",
-                ChatColor.of("#008b8b") + "esta armadura resuena con las",
-                ChatColor.of("#008b8b") + "almas corrompidas del abismo.",
-                "",
-                ChatColor.GRAY + "Equipar esta pieza otorga: " + ChatColor.WHITE,
-                ChatColor.of("#00cccc") + "■ " + ChatColor.AQUA + ChatColor.BOLD + "+2 Corazones",
-                ChatColor.of("#00cccc") + "■ " + ChatColor.DARK_AQUA + ChatColor.BOLD + "30% Resistencia al Desgaste",
-                ""
-        ));
+        meta.setLore(lore(WardenCaveItems.Variant.GRIS));
 
         meta.addAttributeModifier(Attribute.ARMOR, new AttributeModifier(
                 new NamespacedKey(plugin, "warden_leggings_armor"), 7, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlotGroup.LEGS
@@ -180,17 +151,7 @@ public class WardenArmor implements Listener {
         ItemMeta meta = item.getItemMeta();
 
         meta.setDisplayName(ChatColor.of("#00ffff") + "" + ChatColor.BOLD + "Botas de Warden");
-        meta.setLore(Arrays.asList(
-                "",
-                ChatColor.of("#008b8b") + "Forjada en la profunda oscuridad,",
-                ChatColor.of("#008b8b") + "esta armadura resuena con las",
-                ChatColor.of("#008b8b") + "almas corrompidas del abismo.",
-                "",
-                ChatColor.GRAY + "Equipar esta pieza otorga: " + ChatColor.WHITE,
-                ChatColor.of("#00cccc") + "■ " + ChatColor.AQUA + ChatColor.BOLD + "+2 Corazones",
-                ChatColor.of("#00cccc") + "■ " + ChatColor.DARK_AQUA + ChatColor.BOLD + "30% Resistencia al Desgaste",
-                ""
-        ));
+        meta.setLore(lore(WardenCaveItems.Variant.VERDE));
 
         meta.addAttributeModifier(Attribute.ARMOR, new AttributeModifier(
                 new NamespacedKey(plugin, "warden_boots_armor"), 4, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlotGroup.FEET
@@ -213,6 +174,38 @@ public class WardenArmor implements Listener {
         item.setItemMeta(meta);
 
         return item;
+    }
+
+    // El lore va con el color del bioma de la pieza, el mismo de su alma y su mineral: Casco cian (Caverna Sculk),
+    // Peto morado (Abismo Flotante), Pantalón gris (Ruinas de Ceniza) y Botas verde (Pantano Profundo)
+    static List<String> lore(WardenCaveItems.Variant bioma) {
+        ChatColor oscuro = ChatColor.of(tono(bioma.color(), 0.75));
+        ChatColor color = ChatColor.of(bioma.color());
+        ChatColor claro = ChatColor.of(tono(bioma.color(), 1.35));
+        return Arrays.asList(
+                "",
+                oscuro + "Forjada en la profunda oscuridad,",
+                oscuro + "esta armadura resuena con las",
+                oscuro + "almas corrompidas del abismo.",
+                color + "Pieza " + bioma.biome() + ".",
+                "",
+                ChatColor.GRAY + "Equipar esta pieza otorga: " + ChatColor.WHITE,
+                color + "■ " + claro + ChatColor.BOLD + "+2 Corazones",
+                color + "■ " + claro + ChatColor.BOLD + "30% Resistencia al Desgaste",
+                ""
+        );
+    }
+
+    // El color más oscuro (factor < 1) o más claro (> 1, hacia el blanco)
+    static String tono(String hex, double factor) {
+        java.awt.Color base = java.awt.Color.decode(hex);
+        int[] rgb = {base.getRed(), base.getGreen(), base.getBlue()};
+        for (int i = 0; i < 3; i++) {
+            rgb[i] = factor <= 1 ? (int) Math.round(rgb[i] * factor)
+                    : (int) Math.round(rgb[i] + (255 - rgb[i]) * (factor - 1));
+            rgb[i] = Math.max(0, Math.min(255, rgb[i]));
+        }
+        return String.format("#%02x%02x%02x", rgb[0], rgb[1], rgb[2]);
     }
 
     public boolean isWardenArmor(ItemStack item) {

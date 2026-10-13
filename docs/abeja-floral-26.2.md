@@ -42,3 +42,39 @@ comprobar entidades, barras, paquetes de chat, panales y recompensas. Pasaron
 130 pruebas automáticas y el combate interno completo, incluida la entrega de
 15 DinoCoins, cinco manzanas encantadas, 16 mieles y 3500 XP en la primera victoria.
 La apariencia con el resource pack debe revisarse dentro del cliente.
+
+## Refuerzos florales y equipo floral (Version #66)
+
+El ataque de refuerzos ya no crea abejas vanilla: salen de 6 a 10 mobs florales,
+40% Mini Abejas Florales y 20% cada uno de Zombie Floral, Araña Floral y Creeper
+Floral. Llevan la marca `invocado_abeja_floral`, no sueltan drops florales y se
+van a los 30 segundos. Los que caminan bajan al suelo de la arena.
+
+La Corrupted Bee ahora es la **Mini Abeja Floral**: escala 0,6, nombre rosa,
+partículas florales y 30% de soltar el **Aguijón Floral** (`aguijon_floral`).
+El id del mob sigue siendo `corrupted_bee`, así que la misión 14 y los spawners
+siguen igual.
+
+Cada recompensa cobrada de la Abeja Floral (respeta el tope de dos por día)
+también da **1 Esencia Floral** (`esencia_floral`).
+
+| Receta | Dónde | Ingredientes |
+| --- | --- | --- |
+| Mejora Floral | Mesa de crafteo | 64 Carne Podrida Floral, 64 Ojo de Araña Floral, 64 Pólvora Floral, 64 Aguijón Floral, 1 Esencia Floral y 1 plantilla de mejora de Netherite |
+| 2 Mejoras Florales | Mesa de crafteo | 1 Mejora Floral, 7 diamantes y 1 Aguijón Floral |
+| Pieza floral | Herrería | Mejora Floral + pieza de Netherite + Bloque de Miel |
+
+Cada stack de drops se gasta entero (con menos de 64 no sale nada). Las recetas
+están en `Dificultades/FloralForja` y se registran con la etapa uno.
+
+| Pieza | Floral | Netherite |
+| --- | --- | --- |
+| Espada | 9 de daño | 8 |
+| Hacha | 8 de daño, 1,2 ataques/s, pica 20% más rápido | 10 y 1,0 |
+| Pico | 1,3 ataques/s, pica 20% más rápido; rompe los minerales de la Warden Cave | 1,2 |
+| Pala | 1,1 ataques/s, pica 20% más rápido | 1,0 |
+| Armadura | 3/8/6/3 de armadura, 3,5 de dureza por pieza, +1 corazón por pieza y 15% de no gastarse | 3/8/6/3, 3 de dureza |
+
+La armadura de Warden sigue siendo mejor (24 de armadura, 4 de dureza, +2
+corazones por pieza y 30%). Las herramientas florales se pueden mejorar a
+Celestita y la armadura floral a Warden en la herrería.

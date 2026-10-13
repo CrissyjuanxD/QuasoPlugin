@@ -71,8 +71,9 @@ public class InfestedCreeper extends InfestedMob implements Listener {
         creeper.setCustomName(ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "Infested Creeper");
         creeper.setCustomNameVisible(false);
 
-        creeper.getAttribute(Attribute.MAX_HEALTH).setBaseValue(100);
-        creeper.setHealth(100);
+        // 120 de vida: con el equipo floral la Warden Cave tiene que seguir siendo difícil
+        creeper.getAttribute(Attribute.MAX_HEALTH).setBaseValue(120);
+        creeper.setHealth(120);
 
         creeper.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, PotionEffect.INFINITE_DURATION, 1, false, false));
 

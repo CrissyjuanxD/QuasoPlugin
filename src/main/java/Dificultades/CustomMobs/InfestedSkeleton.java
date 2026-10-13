@@ -72,8 +72,9 @@ public class InfestedSkeleton extends InfestedMob implements Listener {
         skeleton.setCustomName(ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "Infested Skeleton");
         skeleton.setCustomNameVisible(false);
 
-        skeleton.getAttribute(Attribute.MAX_HEALTH).setBaseValue(100);
-        skeleton.setHealth(100);
+        // 120 de vida: con el equipo floral la Warden Cave tiene que seguir siendo difícil
+        skeleton.getAttribute(Attribute.MAX_HEALTH).setBaseValue(120);
+        skeleton.setHealth(120);
 
         ItemStack bow = new ItemStack(Material.BOW);
         bow.addUnsafeEnchantment(Enchantment.POWER, 7);

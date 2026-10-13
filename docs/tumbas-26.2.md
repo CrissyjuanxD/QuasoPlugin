@@ -63,3 +63,13 @@ la mixta se le avisa al dueño cuando ya la puede abrir cualquiera.
 desde que moriste (00:05:00 y subiendo) y si está privada o abierta. Se hace
 clic en una para ir (si `muertes-teleport` es `true`) o para ver sus coordenadas.
 `/tumbas reload` relee la configuración.
+
+## Modelo dentro del cuadro para clickear (Version #66)
+
+El `block_display` de la tumba se invocaba con coordenadas enteras y un X o Z
+entero en un comando se corre al centro del bloque (+0,5): el modelo quedaba
+medio bloque afuera del `interaction`. Además el `interaction` usaba `%d.5`, que
+en coordenadas negativas cae en el bloque de al lado (-5 daba -5,5). Ahora la
+raíz va en la esquina con decimales (`-37.0 127 -12.0`) y el cuadro en el centro
+(`-36.5 127 -11.5`). Se probó en Paper 26.2 con una tumba en coordenadas
+negativas. Las tumbas que ya existen se arreglan solas al reiniciar.

@@ -1,0 +1,35 @@
+{
+  "anvil_cost": 4,
+  "description": {
+    "text": "Fervor Minero",
+    "color": "#A9B7C6"
+  },
+  "effects": {
+    "minecraft:attributes": [
+      {
+        "amount": {
+          "type": "minecraft:linear",
+          "base": 0.1,
+          "per_level_above_first": 0.1
+        },
+        "attribute": "minecraft:block_break_speed",
+        "id": "quaso:enchantment.fervor_minero",
+        "operation": "add_multiplied_base"
+      }
+    ]
+  },
+  "max_cost": {
+    "base": 25,
+    "per_level_above_first": 10
+  },
+  "max_level": 3,
+  "min_cost": {
+    "base": 10,
+    "per_level_above_first": 10
+  },
+  "slots": [
+    "mainhand"
+  ],
+  "supported_items": "#minecraft:pickaxes",
+  "weight": 1
+}

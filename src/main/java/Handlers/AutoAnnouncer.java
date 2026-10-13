@@ -23,7 +23,7 @@ public class AutoAnnouncer implements CommandExecutor {
             "Las DinoCoins se guardan en el Monedero, que se compra en el Mercado por 5 DinoCoins. Para comprar en la tienda o subir habilidades llévalas en el inventario.",
             "Usa el Libro de Habilidades para desbloquear tu árbol en /menu: ahí subes Vitalidad, Resistencia y Agilidad con DinoCoins, experiencia y bloques. La Biblioteca vende el libro por 1 DinoCoin.",
             "Si mueres, tus cosas quedan en una tumba a tus pies. Los primeros 20 minutos solo tú puedes abrirla y después cualquiera durante 10 minutos. Usa /muertes para ver dónde quedaron.",
-            "Usa /menu o /trabajos para elegir uno de los 6 trabajos y ganar DinoCoins al subir de nivel. Entrar cuesta 5 DinoCoins, 10 niveles y 5 diamantes, y te puedes cambiar cada 24 horas sin perder tu nivel.",
+            "Usa /trabajos para elegir uno de los 6 trabajos: cada nivel paga DinoCoins (más mientras más alto) y los niveles 10, 40 y 70 dan el libro de su encantamiento. Entrar cuesta 5 DinoCoins, 10 niveles y 5 diamantes; te cambias cada 24 horas.",
             "En las zonas de pesca, cuando algo pica vuelve a usar la caña justo cuando el marcador esté en el verde. Los premios especiales los compra la Pescadería.",
             "Durante la BloodMoon los monstruos sueltan Fragmentos de BloodMoon. En la tienda de Cambios, 6 fragmentos valen 1 DinoCoin.",
             "En el casino se juega con DinoFichas. En la tienda de Cambios 1 DinoCoin son 5 DinoFichas, y 6 DinoFichas vuelven a ser 1 DinoCoin.",

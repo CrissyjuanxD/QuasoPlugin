@@ -260,8 +260,8 @@ public class GravesManager implements Listener {
         String timerTag = "timer_" + graveId.toString();
 
         // El cuadro para clickear ocupa el bloque de la tumba, justo donde está el modelo
-        String interactionCmd = String.format(Locale.ROOT, "execute in %s positioned %d.5 %d %d.5 run summon interaction ~ ~ ~ {width:1.05f,height:1.15f,Tags:[\"%s\"]}",
-                loc.getWorld().getKey().toString(), loc.getBlockX(), loc.getBlockY(), loc.getBlockZ(), tag);
+        String interactionCmd = String.format(Locale.ROOT, "execute in %s positioned %s run summon interaction ~ ~ ~ {width:1.05f,height:1.15f,Tags:[\"%s\"]}",
+                loc.getWorld().getKey().toString(), centro(loc.getBlockX(), loc.getBlockY(), loc.getBlockZ()), tag);
         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), interactionCmd);
 
         String rawNbt = "{Tags:[\"" + tag + "\"],Passengers:[" +
@@ -280,10 +280,21 @@ public class GravesManager implements Listener {
                 "]}";
 
         // El modelo está armado desde la esquina del bloque: con la raíz ahí queda centrado en el bloque y apoyado en el suelo
-        String command = String.format(Locale.ROOT, "execute in %s positioned %d %d %d run summon block_display ~ ~ ~ %s",
-                loc.getWorld().getKey().toString(), loc.getBlockX(), loc.getBlockY(), loc.getBlockZ(), rawNbt);
+        String command = String.format(Locale.ROOT, "execute in %s positioned %s run summon block_display ~ ~ ~ %s",
+                loc.getWorld().getKey().toString(), esquina(loc.getBlockX(), loc.getBlockY(), loc.getBlockZ()), rawNbt);
 
         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
+    }
+
+    // La esquina del bloque con decimales: un X o Z entero en un comando se corre al centro (+0,5) y el modelo
+    // quedaba medio bloque afuera del cuadro para clickear
+    static String esquina(int x, int y, int z) {
+        return String.format(Locale.ROOT, "%.1f %d %.1f", (double) x, y, (double) z);
+    }
+
+    // El centro del bloque; con "%d.5" el bloque -5 daba -5,5, que es el centro del -6
+    static String centro(int x, int y, int z) {
+        return String.format(Locale.ROOT, "%.1f %d %.1f", x + 0.5, y, z + 0.5);
     }
 
     public void removeGrave(UUID id) {

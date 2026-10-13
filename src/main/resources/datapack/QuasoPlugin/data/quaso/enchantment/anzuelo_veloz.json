@@ -1,0 +1,35 @@
+{
+  "anvil_cost": 4,
+  "description": {
+    "text": "Anzuelo Veloz",
+    "color": "#8FB8C9"
+  },
+  "effects": {
+    "minecraft:fishing_time_reduction": [
+      {
+        "effect": {
+          "type": "minecraft:add",
+          "value": {
+            "type": "minecraft:linear",
+            "base": 2.0,
+            "per_level_above_first": 2.0
+          }
+        }
+      }
+    ]
+  },
+  "max_cost": {
+    "base": 25,
+    "per_level_above_first": 10
+  },
+  "max_level": 3,
+  "min_cost": {
+    "base": 10,
+    "per_level_above_first": 10
+  },
+  "slots": [
+    "mainhand"
+  ],
+  "supported_items": "#minecraft:enchantable/fishing",
+  "weight": 1
+}

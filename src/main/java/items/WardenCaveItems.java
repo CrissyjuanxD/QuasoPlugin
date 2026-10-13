@@ -52,6 +52,15 @@ public class WardenCaveItems {
             return displayName;
         }
 
+        public String color() {
+            return color;
+        }
+
+        // "de la Caverna Sculk", "del Pantano Profundo"...
+        public String biome() {
+            return biome;
+        }
+
         public String rawId() {
             return "mineral_crudo_" + id;
         }

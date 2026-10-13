@@ -17,6 +17,15 @@ public interface Change {
 
     boolean isApplied();
 
+    // Lo que se anuncia en el chat cuando un admin activa la etapa: el título y una línea por cambio
+    default String tituloAnuncio() {
+        return null;
+    }
+
+    default List<String> anuncio() {
+        return List.of();
+    }
+
     // Las recetas de la etapa sin registrarlas en el servidor: la web las usa para mostrar todos los crafteos
     default List<Recipe> recetas() {
         return List.of();

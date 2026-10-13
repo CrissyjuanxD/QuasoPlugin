@@ -18,6 +18,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
 // Cambio extra (día 14, entre el uno y el dos): el Zombie Floral, la Spider Floral y las Creepers Florales salen solos en el
@@ -57,6 +58,18 @@ public class ExtraChanges implements Listener, Change {
     @Override
     public boolean isApplied() {
         return isApplied;
+    }
+
+    @Override
+    public String tituloAnuncio() {
+        return "¡Los mobs florales salen por todo el mundo!";
+    }
+
+    @Override
+    public List<String> anuncio() {
+        return List.of(
+                "En el Overworld el 25% de los zombies y arañas y el 20% de los creepers salen florales.",
+                "Sus drops y el Aguijón Floral de la Mini Abeja Floral van en la Mejora Floral (64 de cada uno).");
     }
 
     @Override

@@ -7,22 +7,28 @@ import java.util.Locale;
 public enum Trabajo {
     GUERRERO("guerrero", "Guerrero", "⚔", "#D98C7A", 1,
             List.of("Defiende el server de los", "monstruos que lo rondan."),
-            List.of("Matar monstruos: 4 a 15 XP", "Monstruos élite: 20 a 60 XP", "Jefes de evento: 250 XP", "Wither y Dragón: 400 y 600 XP")),
+            List.of("Matar monstruos: 4 a 15 XP", "Mobs del plugin: 10 a 30 XP", "Wardens: 40 XP", "Monstruos élite: 20 a 60 XP",
+                    "Jefes: de 400 (Wither) a 2.200 XP (Rey Ender)")),
     MINERIA("mineria", "Minería", "⛏", "#A9B7C6", 3,
             List.of("Baja a las cuevas y saca", "los minerales del mundo."),
-            List.of("Piedra, deepslate y similares: 0,05 XP", "Carbón, cobre y redstone: 2 a 5 XP", "Hierro, oro y lapislázuli: 5 a 8 XP", "Diamante, esmeralda y debris: 15 a 30 XP")),
+            List.of("Piedra, deepslate y similares: 0,05 XP", "Carbón, cobre y redstone: 2 a 5 XP", "Hierro, oro y lapislázuli: 5 a 8 XP",
+                    "Diamante, esmeralda y debris: 15 a 30 XP", "Minerales de la Warden Cave: 25 XP", "Racimos de amatista del End: 5 XP",
+                    "Jefes: la mitad que Guerrero")),
     LENADOR("lenador", "Leñador", "☘", "#C4A076", 5,
             List.of("Tala los bosques del server", "tronco por tronco."),
-            List.of("Troncos: 1,2 XP", "Tallos del Nether: 1,4 XP", "Raíces de manglar: 0,5 XP")),
+            List.of("Troncos: 1,2 XP", "Tallos del Nether: 1,4 XP", "Troncos de la Warden Cave y del End: 1,8 XP",
+                    "Raíces de manglar: 0,5 XP", "Jefes: la mitad que Guerrero")),
     CONSTRUCTOR("constructor", "Constructor", "⚒", "#C9B79C", 7,
             List.of("Levanta las construcciones", "más lindas del mapa."),
-            List.of("Bloques básicos: 0,1 XP", "Bloques comunes: 0,3 XP", "Ladrillos, cuarzo, concreto...: 0,5 XP")),
+            List.of("Bloques básicos: 0,1 XP", "Bloques comunes: 0,3 XP", "Ladrillos, cuarzo, concreto...: 0,5 XP",
+                    "En la Warden Cave y el End: 50% más", "Jefes: la mitad que Guerrero")),
     GRANJERO("granjero", "Granjero", "✿", "#A8C3A0", 11,
             List.of("Cosecha cultivos y cría", "animales para el server."),
-            List.of("Cultivos maduros: 0,6 a 1,5 XP", "Sandías y calabazas: 1 XP", "Criar animales: 4 XP")),
+            List.of("Cultivos maduros: 0,6 a 1,5 XP", "Sandías y calabazas: 1 XP", "Criar animales: 4 XP",
+                    "Frutas de la Warden Cave: 1,5 a 2 XP", "Jefes: la mitad que Guerrero")),
     PESCADOR("pescador", "Pescador", "⚓", "#8FB8C9", 15,
             List.of("Paciencia y caña: lo que", "pica en el agua es tuyo."),
-            List.of("Peces: 6 a 8 XP", "Tesoros: 12 XP", "Basura: 3 XP"));
+            List.of("Peces: 6 a 8 XP", "Tesoros: 12 XP", "Basura: 3 XP", "Jefes: la mitad que Guerrero"));
 
     public static final int NIVEL_MAXIMO = 100;
 
@@ -54,6 +60,18 @@ public enum Trabajo {
 
     // El item model del papel del menú: minecraft:trabajo_<id> (la textura la pone el resource pack)
     public String modelo() { return "trabajo_" + id; }
+
+    // El encantamiento que se gana con el trabajo (libro I en el nivel 10, II en el 40 y III en el 70)
+    public Encantamientos.QuasoEnchant encantamiento() {
+        return switch (this) {
+            case GUERRERO -> Encantamientos.QuasoEnchant.VIGOR_DE_BATALLA;
+            case MINERIA -> Encantamientos.QuasoEnchant.FERVOR_MINERO;
+            case LENADOR -> Encantamientos.QuasoEnchant.TALADOR;
+            case CONSTRUCTOR -> Encantamientos.QuasoEnchant.ALCANCE;
+            case GRANJERO -> Encantamientos.QuasoEnchant.COSECHA;
+            case PESCADOR -> Encantamientos.QuasoEnchant.ANZUELO_VELOZ;
+        };
+    }
 
     public static Trabajo porId(String id) {
         if (id == null) return null;

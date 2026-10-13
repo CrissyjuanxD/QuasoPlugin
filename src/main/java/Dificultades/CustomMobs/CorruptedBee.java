@@ -89,6 +89,7 @@ public class CorruptedBee implements Listener {
 
                     if (entity instanceof Bee bee) {
                         manageBeeAI(bee);
+                        ParticulasFlorales.aura(bee.getLocation(), bee.getHeight());
                     }
                 }
             }
@@ -145,12 +146,14 @@ public class CorruptedBee implements Listener {
         startCentralTask();
     }
 
+    // La Mini Abeja Floral (antes Corrupted Bee): más chiquita, con el nombre y las partículas de los florales
     private void applyAttributes(Bee bee) {
-        bee.setCustomName(ChatColor.DARK_PURPLE + "" + ChatColor.BOLD + "Corrupted Bee");
+        bee.setCustomName(net.md_5.bungee.api.ChatColor.of("#FFB3D9") + "" + ChatColor.BOLD + "Mini Abeja Floral");
         bee.setCustomNameVisible(false);
 
         Objects.requireNonNull(bee.getAttribute(Attribute.MAX_HEALTH)).setBaseValue(15.0);
         bee.setHealth(15.0);
+        Objects.requireNonNull(bee.getAttribute(Attribute.SCALE)).setBaseValue(0.6);
 
         Objects.requireNonNull(bee.getAttribute(Attribute.ATTACK_DAMAGE)).setBaseValue(8.0);
 
@@ -172,9 +175,14 @@ public class CorruptedBee implements Listener {
         if (event.getEntity() instanceof LivingEntity target) {
             target.addPotionEffect(new PotionEffect(PotionEffectType.POISON, 200, 2));
 
-            target.getWorld().spawnParticle(Particle.SQUID_INK, target.getEyeLocation(), 5, 0.2, 0.2, 0.2, 0.1);
-            target.getWorld().playSound(target.getLocation(), Sound.ENTITY_BEE_STING, 1.0f, 0.8f);
+            ParticulasFlorales.estallido(target.getEyeLocation());
+            target.getWorld().playSound(target.getLocation(), Sound.ENTITY_BEE_STING, 1.0f, 1.3f);
         }
+    }
+
+    @EventHandler
+    public void onDeath(org.bukkit.event.entity.EntityDeathEvent event) {
+        if (isCorruptedBee(event.getEntity())) ParticulasFlorales.estallido(event.getEntity().getLocation());
     }
 
     public boolean isCorruptedBee(Entity entity) {

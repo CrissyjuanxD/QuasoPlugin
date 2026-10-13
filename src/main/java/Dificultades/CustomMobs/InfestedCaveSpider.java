@@ -82,10 +82,11 @@ public class InfestedCaveSpider extends InfestedMob implements Listener {
         spider.setCustomName(ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "Infested Cave Spider");
         spider.setCustomNameVisible(false);
 
-        spider.getAttribute(Attribute.MAX_HEALTH).setBaseValue(100);
-        spider.setHealth(100);
+        // 120 de vida: con el equipo floral la Warden Cave tiene que seguir siendo difícil
+        spider.getAttribute(Attribute.MAX_HEALTH).setBaseValue(120);
+        spider.setHealth(120);
         spider.getAttribute(Attribute.SCALE).setBaseValue(1.5);
-        spider.getAttribute(Attribute.ATTACK_DAMAGE).setBaseValue(8.0);
+        spider.getAttribute(Attribute.ATTACK_DAMAGE).setBaseValue(9.5);
         spider.getAttribute(Attribute.FOLLOW_RANGE).setBaseValue(32.0);
 
         List<SpiderEffect> shuffled = new ArrayList<>(POSSIBLE_EFFECTS);

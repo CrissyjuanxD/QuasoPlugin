@@ -4,11 +4,15 @@ import Events.MissionSystem.BossDefeatedEvent;
 import Events.MissionSystem.MissionUtils;
 import com.magmaguy.elitemobs.entitytracker.EntityTracker;
 import com.magmaguy.elitemobs.mobconstructor.EliteEntity;
+import imp.crissyjuanxd.QuasoPlugin;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
+import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.Ageable;
 import org.bukkit.entity.Enemy;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -35,8 +39,23 @@ import java.util.UUID;
 
 // Cómo se gana XP en cada trabajo. Contra las granjas: los bloques puestos no dan XP al romperlos, los mobs de spawner
 // no cuentan, si estás AFK (5 minutos sin moverte ni mover la cámara) no ganas nada y en Constructor volver a poner
-// un bloque en el mismo lugar antes de 30 minutos no da XP
+// un bloque en el mismo lugar antes de 30 minutos no da XP. Lo nuevo del plugin da más: los minerales y troncos de la
+// Warden Cave y del End, construir allá, sus frutas, los mobs del plugin y los jefes
 public final class TrabajosXp implements Listener {
+
+    // Dónde pasa: la Warden Cave y el End pagan más
+    enum Mundo {
+        NORMAL, WARDEN_CAVE, END;
+
+        static Mundo de(World world) {
+            if (world.getName().equals(QuasoPlugin.WORLD_NAME)) return WARDEN_CAVE;
+            return world.getEnvironment() == World.Environment.THE_END ? END : NORMAL;
+        }
+
+        boolean nuevo() {
+            return this != NORMAL;
+        }
+    }
 
     private static final long AFK = 5 * 60 * 1000L;
     private static final long MISMO_LUGAR = 30 * 60 * 1000L;
@@ -64,6 +83,12 @@ public final class TrabajosXp implements Listener {
 
     void guardar() {
         colocados.guardarTodo(Bukkit.getWorlds());
+    }
+
+    // Si el bloque lo puso un jugador (lo usa Talador para no tirar casas de troncos)
+    public static boolean puesto(Block block) {
+        TrabajosXp xp = actual;
+        return xp != null && xp.colocados.esColocado(block);
     }
 
     private void dar(Player player, Trabajo trabajo, double xp) {
@@ -104,14 +129,20 @@ public final class TrabajosXp implements Listener {
         if (puesto) return;
 
         Player player = event.getPlayer();
-        double mina = xpMineria(tipo);
+        Mundo mundo = Mundo.de(block.getWorld());
+        double mina = xpMineria(tipo, mundo);
         if (mina > 0) {
             dar(player, Trabajo.MINERIA, mina);
             return;
         }
-        double tala = xpLenador(tipo);
+        double tala = xpLenador(tipo, mundo);
         if (tala > 0) {
             dar(player, Trabajo.LENADOR, tala);
+            return;
+        }
+        double fruta = xpFruta(tipo, mundo);
+        if (fruta > 0) {
+            dar(player, Trabajo.GRANJERO, fruta);
             return;
         }
         double cultivo = xpCultivo(tipo);
@@ -128,7 +159,7 @@ public final class TrabajosXp implements Listener {
         Material tipo = block.getType();
         if (seRastrea(tipo)) colocados.marcar(block);
 
-        double xp = xpConstructor(tipo);
+        double xp = xpConstructor(tipo) * (Mundo.de(block.getWorld()).nuevo() ? 1.5 : 1);
         if (xp <= 0) return;
         Player player = event.getPlayer();
         Map<Lugar, Long> lugares = construidos.computeIfAbsent(player.getUniqueId(), id -> new HashMap<>());
@@ -149,7 +180,9 @@ public final class TrabajosXp implements Listener {
     public void onHarvest(PlayerHarvestBlockEvent event) {
         Material tipo = event.getHarvestedBlock().getType();
         if (tipo == Material.SWEET_BERRY_BUSH || tipo == Material.CAVE_VINES || tipo == Material.CAVE_VINES_PLANT) {
-            dar(event.getPlayer(), Trabajo.GRANJERO, 0.5);
+            // Las enredaderas del Pantano Profundo dan Bayas Regenerativas
+            boolean wardenCave = Mundo.de(event.getHarvestedBlock().getWorld()) == Mundo.WARDEN_CAVE;
+            dar(event.getPlayer(), Trabajo.GRANJERO, wardenCave ? 1.5 : 0.5);
         }
     }
 
@@ -180,8 +213,22 @@ public final class TrabajosXp implements Listener {
             dar(killer, Trabajo.GUERRERO, xpElite(elite));
             return;
         }
+        if (entity.getType() == EntityType.WARDEN) {
+            dar(killer, Trabajo.GUERRERO, XP_WARDEN);
+            return;
+        }
         AttributeInstance vida = entity.getAttribute(Attribute.MAX_HEALTH);
-        dar(killer, Trabajo.GUERRERO, xpMonstruo(vida != null ? vida.getValue() : 20));
+        double maxima = vida != null ? vida.getValue() : 20;
+        dar(killer, Trabajo.GUERRERO, delPlugin(entity) ? xpMobPlugin(maxima) : xpMonstruo(maxima));
+    }
+
+    // Los mobs del plugin (florales, infestados, del End...) llevan alguna marca del plugin en su PDC
+    private boolean delPlugin(LivingEntity entity) {
+        String namespace = manager.plugin().getName().toLowerCase(java.util.Locale.ROOT);
+        for (NamespacedKey key : entity.getPersistentDataContainer().getKeys()) {
+            if (key.getNamespace().equals(namespace)) return true;
+        }
+        return false;
     }
 
     private static int nivelElite(LivingEntity entity) {
@@ -193,17 +240,28 @@ public final class TrabajosXp implements Listener {
         return 0;
     }
 
-    // Los jefes le dan XP a todos los que pelearon
+    // Los jefes le dan XP a todos los que pelearon: entera si son Guerreros y la mitad para el trabajo que tengan si no
     @EventHandler(priority = EventPriority.MONITOR)
     public void onBoss(BossDefeatedEvent event) {
-        double xp = switch (event.getBossId()) {
-            case "ender_dragon" -> 600;
+        double xp = xpJefe(event.getBossId());
+        for (Player player : event.getPlayers()) {
+            if (!player.isOnline()) continue;
+            Trabajo trabajo = TrabajosManager.activo(player);
+            if (trabajo != null) dar(player, trabajo, trabajo == Trabajo.GUERRERO ? xp : xp / 2);
+        }
+    }
+
+    // Por dificultad: Wither, Abeja Floral, Ender Dragon, Infested Warden, Ultra Warden y Rey Ender
+    static double xpJefe(String bossId) {
+        return switch (bossId) {
             case "wither" -> 400;
+            case "abeja_reina" -> 600;
+            case "ender_dragon" -> 900;
+            case "infested_warden_boss" -> 1200;
+            case "ultra_warden" -> 1600;
+            case "rey_ender" -> 2200;
             default -> 250;
         };
-        for (Player player : event.getPlayers()) {
-            if (player.isOnline()) dar(player, Trabajo.GUERRERO, xp);
-        }
     }
 
     // ---------------------------------------------------------------- Pescador
@@ -223,6 +281,15 @@ public final class TrabajosXp implements Listener {
 
     // ---------------------------------------------------------------- Tablas de XP
 
+    static final double XP_WARDEN = 40;
+
+    // Los Minerales Profundos de la Warden Cave (terracotas) y los racimos de amatista del End (de ahí sale la Celestita)
+    static double xpMineria(Material tipo, Mundo mundo) {
+        if (mundo == Mundo.WARDEN_CAVE && InfestedCaves.WardenBiome.fromOre(tipo) != null) return 25;
+        if (mundo == Mundo.END && tipo == Material.AMETHYST_CLUSTER) return 5;
+        return xpMineria(tipo);
+    }
+
     static double xpMineria(Material tipo) {
         return switch (tipo) {
             case STONE, DEEPSLATE, TUFF, GRANITE, DIORITE, ANDESITE, CALCITE, BLACKSTONE, BASALT, END_STONE -> 0.05;
@@ -240,6 +307,14 @@ public final class TrabajosXp implements Listener {
             case ANCIENT_DEBRIS -> 30;
             default -> 0;
         };
+    }
+
+    // En la Warden Cave y el End cuentan también los troncos pelados y la madera (los árboles del End son así)
+    static double xpLenador(Material tipo, Mundo mundo) {
+        String nombre = tipo.name();
+        if (mundo.nuevo() && (nombre.endsWith("_LOG") || nombre.endsWith("_WOOD") || nombre.endsWith("_STEM")
+                || nombre.endsWith("_HYPHAE"))) return 1.8;
+        return xpLenador(tipo);
     }
 
     static double xpLenador(Material tipo) {
@@ -262,9 +337,17 @@ public final class TrabajosXp implements Listener {
         };
     }
 
+    // Los froglights de los árboles de la Warden Cave se rompen en frutas
+    static double xpFruta(Material tipo, Mundo mundo) {
+        return mundo == Mundo.WARDEN_CAVE && (tipo == Material.VERDANT_FROGLIGHT || tipo == Material.PEARLESCENT_FROGLIGHT) ? 2 : 0;
+    }
+
     // Los bloques que dan XP al romperlos y que, si los pone un jugador, dejan de darla
     static boolean seRastrea(Material tipo) {
-        return xpMineria(tipo) > 0 || xpLenador(tipo) > 0 || tipo == Material.MELON || tipo == Material.PUMPKIN || tipo == Material.SUGAR_CANE;
+        for (Mundo mundo : Mundo.values()) {
+            if (xpMineria(tipo, mundo) > 0 || xpLenador(tipo, mundo) > 0 || xpFruta(tipo, mundo) > 0) return true;
+        }
+        return tipo == Material.MELON || tipo == Material.PUMPKIN || tipo == Material.SUGAR_CANE;
     }
 
     // Básicos 0,1 · comunes 0,3 · trabajados (ladrillos, cuarzo, concreto, terracota...) 0,5. Lo que no es de
@@ -297,6 +380,11 @@ public final class TrabajosXp implements Listener {
     // De 4 (zombi, araña) a 15 XP según la vida del monstruo
     static double xpMonstruo(double vidaMaxima) {
         return Math.max(4, Math.min(15, Math.round(2 + vidaMaxima / 5)));
+    }
+
+    // Los mobs del plugin pagan más: de 10 (los florales) a 30 XP (los infestados de la Warden Cave)
+    static double xpMobPlugin(double vidaMaxima) {
+        return Math.max(10, Math.min(30, Math.round(4 + vidaMaxima / 5)));
     }
 
     // Los élites dan de 20 a 60 XP según su nivel de EliteMobs (nivel 0 si no se pudo leer)

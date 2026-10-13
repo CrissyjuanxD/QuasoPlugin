@@ -27,18 +27,20 @@ public final class EndItems {
     // La misma PDC "custom_item" que leen las misiones (MissionUtils.customId)
     public static final NamespacedKey ITEM_KEY = new NamespacedKey("quasoplugin", "custom_item");
     private static final NamespacedKey DAMAGE_KEY = new NamespacedKey("quasoplugin", "celestita_dano");
+    private static final NamespacedKey MINING_KEY = new NamespacedKey("quasoplugin", "celestita_minado");
 
     private static final String CELESTE = "#8fd3ff";
 
-    // Las herramientas de Celestita: la de Netherite con 1 de daño más, y la espada con 12 (4 más). La espada le pega
-    // el doble a los mobs del End y al Rey Ender; el hacha y la lanza, 50% más al Rey Ender
+    // Las herramientas de Celestita: la de Netherite con 1 de daño más, y la espada con 13 (5 más). La espada le pega
+    // el doble a los mobs del End y al Rey Ender; el hacha y la lanza, 50% más al Rey Ender. Las que pican lo hacen 40%
+    // más rápido que el Netherite (las florales, 20%) y el hacha ataca más rápido que la floral
     public enum Tool {
-        ESPADA("espada_celestita", "Espada de Celestita", Material.NETHERITE_SWORD, true, 4),
-        HACHA("hacha_celestita", "Hacha de Celestita", Material.NETHERITE_AXE, true, 1),
-        LANZA("lanza_celestita", "Lanza de Celestita", Material.NETHERITE_SPEAR, true, 1),
-        PICO("pico_celestita", "Pico de Celestita", Material.NETHERITE_PICKAXE, false, 1),
-        PALA("pala_celestita", "Pala de Celestita", Material.NETHERITE_SHOVEL, false, 1),
-        AZADA("azada_celestita", "Azada de Celestita", Material.NETHERITE_HOE, false, 1);
+        ESPADA("espada_celestita", "Espada de Celestita", Material.NETHERITE_SWORD, true, 5, 0, null),
+        HACHA("hacha_celestita", "Hacha de Celestita", Material.NETHERITE_AXE, true, 1, 0.4, 1.3),
+        LANZA("lanza_celestita", "Lanza de Celestita", Material.NETHERITE_SPEAR, true, 1, 0, null),
+        PICO("pico_celestita", "Pico de Celestita", Material.NETHERITE_PICKAXE, false, 1, 0.4, 1.4),
+        PALA("pala_celestita", "Pala de Celestita", Material.NETHERITE_SHOVEL, false, 1, 0.4, 1.2),
+        AZADA("azada_celestita", "Azada de Celestita", Material.NETHERITE_HOE, false, 1, 0.4, null);
 
         public final String id;
         public final String name;
@@ -46,13 +48,19 @@ public final class EndItems {
         public final boolean weapon;
         // Daño de más sobre la de Netherite
         public final int extra;
+        // Cuánto más rápido pica que la de Netherite (0,4 = 40%)
+        public final double mining;
+        // Ataques por segundo (null = los de la de Netherite)
+        public final Double speed;
 
-        Tool(String id, String name, Material base, boolean weapon, int extra) {
+        Tool(String id, String name, Material base, boolean weapon, int extra, double mining, Double speed) {
             this.id = id;
             this.name = name;
             this.base = base;
             this.weapon = weapon;
             this.extra = extra;
+            this.mining = mining;
+            this.speed = speed;
         }
     }
 
@@ -113,12 +121,19 @@ public final class EndItems {
             if (entry.getKey().equals(Attribute.ATTACK_DAMAGE) && !raised) {
                 modifier = new AttributeModifier(modifier.getKey(), modifier.getAmount() + tool.extra, modifier.getOperation(), modifier.getSlotGroup());
                 raised = true;
+            } else if (entry.getKey().equals(Attribute.ATTACK_SPEED) && tool.speed != null) {
+                // El jugador ataca 4 veces por segundo sin nada en la mano: el modificador es el total menos eso
+                modifier = new AttributeModifier(modifier.getKey(), tool.speed - 4, modifier.getOperation(), modifier.getSlotGroup());
             }
             meta.addAttributeModifier(entry.getKey(), modifier);
         }
         if (!raised) {
             meta.addAttributeModifier(Attribute.ATTACK_DAMAGE, new AttributeModifier(DAMAGE_KEY, tool.extra,
                     AttributeModifier.Operation.ADD_NUMBER, EquipmentSlotGroup.MAINHAND));
+        }
+        if (tool.mining > 0) {
+            meta.addAttributeModifier(Attribute.BLOCK_BREAK_SPEED, new AttributeModifier(MINING_KEY, tool.mining,
+                    AttributeModifier.Operation.ADD_SCALAR, EquipmentSlotGroup.MAINHAND));
         }
 
         List<String> lore = new ArrayList<>();
@@ -132,6 +147,7 @@ public final class EndItems {
         } else if (tool.weapon) {
             lore.add(ChatColor.of(CELESTE) + "■ " + ChatColor.LIGHT_PURPLE + "+50% de daño al Rey Ender");
         }
+        if (tool.mining > 0) lore.add(ChatColor.of(CELESTE) + "■ " + ChatColor.AQUA + "Pica " + Math.round(tool.mining * 100) + "% más rápido que Netherite");
         if (tool == Tool.PICO) lore.add(ChatColor.of(CELESTE) + "■ " + ChatColor.LIGHT_PURPLE + "18% de Cristal en los racimos");
         meta.setLore(lore);
         item.setItemMeta(meta);

@@ -35,6 +35,7 @@ final class TrabajosGuia {
         CAMBIAR("Cambiar de trabajo", "La espera de 24 horas y tu progreso."),
         RECOMPENSAS("Recompensas", "Las DinoCoins de cada nivel."),
         BONUS("Bonus y avisos", "El bonus cada 5 niveles."),
+        ENCANTAMIENTOS("Encantamientos", "El libro de cada trabajo en los niveles 10, 40 y 70."),
         REGLAS("Reglas", "Lo que no da XP."),
         COMANDOS("Comandos y misiones", "Los comandos y las 10 misiones de cada trabajo.");
 
@@ -91,12 +92,14 @@ final class TrabajosGuia {
                     SALVIA + "Tu nivel en cada trabajo se guarda: " + CREMA + "si vuelves a uno sigues donde lo dejaste.");
             case RECOMPENSAS -> {
                 StringBuilder tabla = new StringBuilder(CREMA + "Cada nivel te da DinoCoins y experiencia de Minecraft. Mientras más alto, más paga:\n");
-                for (int desde = 1; desde <= Trabajo.NIVEL_MAXIMO; desde += 20) {
-                    int monedas = TrabajoNiveles.monedasPorNivel(desde);
-                    tabla.append('\n').append(GRIS).append("Niveles ").append(desde).append(" a ").append(desde + 19).append(": ")
+                for (int nivel : new int[]{1, 10, 25, 50, 75, 100}) {
+                    int monedas = TrabajoNiveles.monedasPorNivel(nivel);
+                    tabla.append('\n').append(GRIS).append("Nivel ").append(nivel).append(": ")
                             .append(DORADO).append(monedas).append(monedas == 1 ? " DinoCoin" : " DinoCoins");
                 }
-                yield List.of(tabla.toString(), GRIS + "Las DinoCoins van a tus monederos; lo que no entra, al inventario.");
+                yield List.of(tabla.toString(),
+                        CREMA + "Las DinoCoins crecen igual que la XP que pide cada nivel: subir cuesta más, pero paga más.",
+                        GRIS + "Las DinoCoins van a tus monederos; lo que no entra, al inventario.");
             }
             case BONUS -> {
                 StringBuilder tabla = new StringBuilder(CREMA + "Cada " + BLANCO + "5 niveles" + CREMA + " hay un bonus de DinoCoins que crece con el nivel:\n");
@@ -107,6 +110,16 @@ final class TrabajosGuia {
                         CREMA + "Al subir de nivel sale una " + SALVIA + "barra verde" + CREMA + " con un sonido; cada 5 niveles, un "
                                 + DORADO + "título" + CREMA + " con el bonus.",
                         GRIS + "Cada 25 niveles se entera todo el server.");
+            }
+            case ENCANTAMIENTOS -> {
+                StringBuilder tabla = new StringBuilder(CREMA + "Cada trabajo tiene su encantamiento. Ganas el libro " + BLANCO + "I" + CREMA
+                        + " en el nivel 10, el " + BLANCO + "II" + CREMA + " en el 40 y el " + BLANCO + "III" + CREMA + " en el 70:\n");
+                for (Trabajo trabajo : Trabajo.values()) {
+                    tabla.append('\n').append(nombre(trabajo)).append(GRIS).append(": ").append(TrabajosTexto.color(trabajo))
+                            .append(trabajo.encantamiento().nombre()).append(GRIS).append(" · ").append(CREMA)
+                            .append(trabajo.encantamiento().resumen());
+                }
+                yield List.of(tabla.toString(), GRIS + "Se ponen en el yunque como cualquier libro. No salen en la mesa de encantamientos.");
             }
             case REGLAS -> List.of(
                     CREMA + "Para que nadie haga granjas:\n\n"

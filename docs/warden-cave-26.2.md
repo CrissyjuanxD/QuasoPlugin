@@ -47,3 +47,18 @@ de él.
 - Cuenta para las misiones 63 (mobs con la Warden Gun) y 92 (equipo legendario).
 - Por debajo es un echo shard que no se apila y no entra en recetas vanilla. Su textura está en `resourcepack/`
   (`minecraft:warden_gun`, CustomModelData 713).
+
+## Ajustes de la Version #66
+
+- Los Minerales Profundos solo se rompen con un pico de Netherite. El Pico
+  Floral y el de Celestita también son de Netherite, así que sirven. Con otro
+  pico sale un aviso en la action bar y el bloque no se rompe.
+- Los mobs suben porque el equipo floral llega antes: los infestados tienen
+  120 de vida (antes 100), el Warden Zombie 72 y 8,5 de daño (antes 60 y 7), la
+  Infested Cave Spider 9,5 de daño (antes 8) y la explosión de las bolas del
+  Infested Ghast pasa de 2,5 a 3.
+- El lore de cada pieza de la armadura de Warden va con el color de su bioma,
+  igual que su alma: casco cian, peto morado, pantalón gris y botas verde. Las
+  piezas que ya existían conservan su lore.
+- Al activar la etapa con `/changes activar dos` sale un anuncio en el chat con
+  lo que trae la Infested Warden Cave. Las otras etapas también anuncian lo suyo.

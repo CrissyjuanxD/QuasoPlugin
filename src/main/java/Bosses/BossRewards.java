@@ -3,6 +3,7 @@ package Bosses;
 import Events.MissionSystem.BossDefeatedEvent;
 import items.CustomPotions;
 import items.EconomyItems;
+import items.FloralItems;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
@@ -86,7 +87,11 @@ public class BossRewards implements Listener {
         ItemStack coinItem = EconomyItems.createVithiumCoin();
         coinItem.setAmount(coins);
         items.add(coinItem);
-        if (bossId.equals("abeja_reina")) items.addAll(queenBeeExtras(kills));
+        if (bossId.equals("abeja_reina")) {
+            items.addAll(queenBeeExtras(kills));
+            // La Esencia Floral va en la Mejora Floral (equipo floral)
+            items.add(FloralItems.createEssence());
+        }
 
         if (bossId.equals("abeja_reina") && kills == 1) {
             ItemStack bundle = new ItemStack(Material.BUNDLE);
@@ -99,8 +104,9 @@ public class BossRewards implements Listener {
         }
 
         String times = kills == 1 ? "por primera vez" : "(" + kills + " veces)";
+        String extra = bossId.equals("abeja_reina") ? ChatColor.of(COLOR) + " y " + ChatColor.of(FloralItems.ROSA) + "1 Esencia Floral" : "";
         player.sendMessage(ChatColor.of(COLOR) + "۞ Derrotaste a " + reward.name() + " " + times + ": "
-                + ChatColor.of("#FFCC80") + coins + " DinoCoins" + ChatColor.of(COLOR) + ".");
+                + ChatColor.of("#FFCC80") + coins + " DinoCoins" + extra + ChatColor.of(COLOR) + ".");
         player.playSound(player.getLocation(), Sound.UI_TOAST_CHALLENGE_COMPLETE, 1f, 1f);
     }
 

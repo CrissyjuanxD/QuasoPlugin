@@ -73,8 +73,9 @@ public class InfestedGhast extends InfestedMob implements Listener {
         ghast.setCustomName(ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "Infested Ghast");
         ghast.setCustomNameVisible(false);
 
-        ghast.getAttribute(Attribute.MAX_HEALTH).setBaseValue(100);
-        ghast.setHealth(100);
+        // 120 de vida: con el equipo floral la Warden Cave tiene que seguir siendo difícil
+        ghast.getAttribute(Attribute.MAX_HEALTH).setBaseValue(120);
+        ghast.setHealth(120);
 
         ghast.getPersistentDataContainer().set(mobKey, PersistentDataType.BYTE, (byte) 1);
     }
@@ -88,7 +89,7 @@ public class InfestedGhast extends InfestedMob implements Listener {
 
         fireball.getPersistentDataContainer().set(mobKey, PersistentDataType.BYTE, (byte) 1);
         trackedFireballs.add(fireball.getUniqueId());
-        fireball.setYield(2.5f);
+        fireball.setYield(3.0f);
 
         new BukkitRunnable() {
             @Override

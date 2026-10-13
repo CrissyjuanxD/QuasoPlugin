@@ -41,9 +41,16 @@ class EndItemsTest {
     @Test
     void theCelestiteSwordHitsEveryEndMobHarder() {
         assertEquals(2, EspadaCelestita.MULTIPLICADOR);
-        // La espada de Netherite hace 8: la de Celestita 12; las demás herramientas 1 más
-        assertEquals(4, EndItems.Tool.ESPADA.extra);
+        // La espada de Netherite hace 8: la de Celestita 13; las demás herramientas 1 más
+        assertEquals(5, EndItems.Tool.ESPADA.extra);
         assertEquals(1, EndItems.Tool.HACHA.extra);
+        // Pican más rápido que las florales y el hacha ataca más rápido que la floral
+        for (EndItems.Tool tool : new EndItems.Tool[]{EndItems.Tool.HACHA, EndItems.Tool.PICO, EndItems.Tool.PALA}) {
+            assertTrue(tool.mining > items.FloralItems.Pieza.valueOf(tool.name()).minado, tool.name());
+        }
+        assertTrue(EndItems.Tool.HACHA.speed > items.FloralItems.Pieza.HACHA.velocidad);
+        assertTrue(EndItems.Tool.PICO.speed > items.FloralItems.Pieza.PICO.velocidad);
+        assertTrue(EndItems.Tool.PALA.speed > items.FloralItems.Pieza.PALA.velocidad);
         assertTrue(EspadaCelestita.delEnd(org.bukkit.World.Environment.THE_END, org.bukkit.entity.EntityType.ZOMBIE));
         assertTrue(EspadaCelestita.delEnd(org.bukkit.World.Environment.NORMAL, org.bukkit.entity.EntityType.ENDERMAN));
         assertTrue(EspadaCelestita.delEnd(org.bukkit.World.Environment.NETHER, org.bukkit.entity.EntityType.SHULKER));

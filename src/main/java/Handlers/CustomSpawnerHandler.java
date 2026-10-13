@@ -773,7 +773,7 @@ public class CustomSpawnerHandler implements Listener {
             case "darkskeleton": return "Dark Skeleton";
             case "infernalbeast": return "Infernal Beast";
             case "corrupteddrowned": return "Corrupted Drowned";
-            case "corruptedbee": return "Corrupted Bee";
+            case "corruptedbee": return "Mini Abeja Floral";
             default: return null;
         }
     }

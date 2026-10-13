@@ -4,6 +4,7 @@ import imp.crissyjuanxd.QuasoPlugin;
 import items.WardenCaveItems;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.Tag;
 import org.bukkit.World;
@@ -11,6 +12,7 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
@@ -104,6 +106,22 @@ public class WardenCaveListeners implements Listener {
         if (structureManager.pasteTempleAtSpawn(world)) {
             world.getPersistentDataContainer().set(templeKey, PersistentDataType.BYTE, (byte) 1);
         }
+    }
+
+    // Los Minerales Profundos solo se rompen con un pico de Netherite (el Floral y el de Celestita también lo son)
+    @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
+    public void onOreTool(BlockBreakEvent e) {
+        Block block = e.getBlock();
+        if (!block.getWorld().getName().equals(QuasoPlugin.WORLD_NAME) || WardenBiome.fromOre(block.getType()) == null) return;
+        if (e.getPlayer().getGameMode() == GameMode.CREATIVE || puedeRomper(e.getPlayer().getInventory().getItemInMainHand().getType())) return;
+        e.setCancelled(true);
+        e.getPlayer().sendActionBar(net.kyori.adventure.text.Component.text(
+                "Necesitas un pico de Netherite o el Pico Floral para romper este mineral.",
+                net.kyori.adventure.text.format.TextColor.color(0xFFA07A)));
+    }
+
+    static boolean puedeRomper(Material herramienta) {
+        return herramienta == Material.NETHERITE_PICKAXE;
     }
 
     // Cada Mineral Profundo suelta el mineral crudo de su bioma (Fortuna no da más)

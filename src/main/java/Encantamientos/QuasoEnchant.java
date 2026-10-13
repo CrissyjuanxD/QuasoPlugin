@@ -13,8 +13,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-// Los encantamientos del datapack (data/quaso/enchantment): 3 de la Warden Cave y 2 del End. No salen en la mesa de
-// encantamientos ni con aldeanos, solo en libros que sueltan los jefes, los mobs y los cofres (EnchantDrops)
+// Los encantamientos del datapack (data/quaso/enchantment): 3 de la Warden Cave, 2 del End y 6 de los trabajos (uno
+// por trabajo). No salen en la mesa de encantamientos ni con aldeanos: los de la Warden Cave y el End salen en libros
+// que sueltan los jefes, los mobs y los cofres (EnchantDrops) y los de trabajo al subir de nivel (TrabajosManager)
 public enum QuasoEnchant {
     PASO_IGNEO("paso_igneo", 2, Group.WARDEN_CAVE,
             "Caminas sobre la lava: se vuelve obsidiana,",
@@ -30,22 +31,71 @@ public enum QuasoEnchant {
             "y la Ender Spider a veces no te tepea. II: inmune."),
     RETORNO_DEL_VACIO("retorno_del_vacio", 1, Group.END,
             "Si caes al vacío del End vuelves al último",
-            "suelo firme. Se recarga en 5 minutos.");
+            "suelo firme. Se recarga en 5 minutos."),
+    TALADOR("talador", 3, "#C4A076",
+            "Al talar el tronco de abajo cae el árbol",
+            "entero: 24, 64 o 160 troncos por nivel."),
+    FERVOR_MINERO("fervor_minero", 3, "#A9B7C6",
+            "Picas más rápido: +10% de velocidad",
+            "de minado por nivel."),
+    ANZUELO_VELOZ("anzuelo_veloz", 3, "#8FB8C9",
+            "Los peces pican antes: 2 segundos menos",
+            "de espera por nivel (se suma a Atracción)."),
+    COSECHA("cosecha", 3, "#A8C3A0",
+            "Replanta lo que cosechas. II: cosecha 3x3.",
+            "III: cosecha 5x5."),
+    ALCANCE("alcance", 3, "#C9B79C",
+            "Pones y rompes bloques más lejos:",
+            "+1 bloque de alcance por nivel."),
+    VIGOR_DE_BATALLA("vigor_de_batalla", 3, "#D98C7A",
+            "Al matar un monstruo te curas",
+            "1 corazón por nivel.");
 
-    public enum Group { WARDEN_CAVE, END }
+    public enum Group { WARDEN_CAVE, END, TRABAJO }
 
     private final NamespacedKey key;
     // El mismo max_level del JSON
     private final int maxLevel;
     private final Group group;
+    private final String color;
     private final String[] description;
     private Enchantment cached;
 
     QuasoEnchant(String id, int maxLevel, Group group, String... description) {
+        this(id, maxLevel, group, group == Group.WARDEN_CAVE ? "#7FE3E6" : "#D3B1F0", description);
+    }
+
+    // Los de trabajo llevan el color de su trabajo
+    QuasoEnchant(String id, int maxLevel, String color, String... description) {
+        this(id, maxLevel, Group.TRABAJO, color, description);
+    }
+
+    QuasoEnchant(String id, int maxLevel, Group group, String color, String[] description) {
         this.key = new NamespacedKey("quaso", id);
         this.maxLevel = maxLevel;
         this.group = group;
+        this.color = color;
         this.description = description;
+    }
+
+    public int maxLevel() {
+        return maxLevel;
+    }
+
+    public String id() {
+        return key.getKey();
+    }
+
+    // Lo que hace, en una sola línea (la guía de trabajos)
+    public String resumen() {
+        return String.join(" ", description);
+    }
+
+    // El nombre que tiene en el datapack (Talador, Fervor Minero...)
+    public String nombre() {
+        Enchantment enchantment = get();
+        if (enchantment == null) return key.getKey();
+        return net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer.plainText().serialize(enchantment.description());
     }
 
     // El encantamiento del registro, o null si el datapack todavía no se cargó (hace falta reiniciar)
@@ -66,7 +116,6 @@ public enum QuasoEnchant {
         ItemStack book = new ItemStack(Material.ENCHANTED_BOOK);
         EnchantmentStorageMeta meta = (EnchantmentStorageMeta) book.getItemMeta();
         meta.addStoredEnchant(enchantment, Math.max(1, Math.min(level, maxLevel)), true);
-        String color = group == Group.WARDEN_CAVE ? "#7FE3E6" : "#D3B1F0";
         List<String> lore = new ArrayList<>();
         for (String line : description) lore.add(ChatColor.of(color) + line);
         meta.setLore(lore);

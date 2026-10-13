@@ -16,8 +16,8 @@ import org.bukkit.inventory.Recipe;
 
 public class WardenCaveItemGuard implements Listener {
 
-    // Los items de la Warden Cave y del End son cristales, sílex, tinte o cobre por debajo; así no se gastan en
-    // recetas vanilla. Las recetas del plugin (las de TwoChanges y ThreeChanges) no se tocan
+    // Los items de la Warden Cave, del End y los materiales florales son cristales, sílex, tinte, pólvora o cobre por
+    // debajo; así no se gastan en recetas vanilla. Las recetas del plugin (las de TwoChanges y ThreeChanges) no se tocan
     @EventHandler
     public void onPrepareCraft(PrepareItemCraftEvent event) {
         if (!isVanilla(event.getRecipe())) return;
@@ -70,7 +70,8 @@ public class WardenCaveItemGuard implements Listener {
     }
 
     private static boolean isCustom(ItemStack item) {
-        return WardenCaveItems.isWardenCaveItem(item) || EndItems.isEndItem(item) || items.tienda.ItemsTienda.isItem(item);
+        return WardenCaveItems.isWardenCaveItem(item) || EndItems.isEndItem(item) || items.tienda.ItemsTienda.isItem(item)
+                || FloralItems.isMaterial(item);
     }
 
     private boolean isVanilla(Recipe recipe) {

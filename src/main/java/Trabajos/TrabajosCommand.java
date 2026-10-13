@@ -64,6 +64,9 @@ final class TrabajosCommand implements CommandExecutor, TabCompleter {
                         + TrabajoNiveles.experiencia(nivel + 1) + " de experiencia");
                 int bonus = TrabajoNiveles.proximoBonus(nivel);
                 if (bonus > 0) player.sendMessage(CAFE + "  Próximo bonus: " + BLANCO + "nivel " + bonus + GRIS + " (+" + TrabajoNiveles.bonus(bonus) + " DinoCoins)");
+                int libro = TrabajoNiveles.proximoLibro(nivel);
+                if (libro > 0) player.sendMessage(CAFE + "  Próximo libro: " + BLANCO + "nivel " + libro + GRIS + " ("
+                        + trabajo.encantamiento().nombre() + " " + TrabajosManager.romano(TrabajoNiveles.libro(libro)) + ")");
             }
             long espera = manager.esperaRestante(datos);
             player.sendMessage(CAFE + "  Cambio de trabajo: " + (espera > 0 ? ROSA + "en " + tiempo(espera) : SALVIA + "disponible"));

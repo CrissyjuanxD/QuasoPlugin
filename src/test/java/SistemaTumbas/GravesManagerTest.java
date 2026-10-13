@@ -226,8 +226,15 @@ class GravesManagerTest {
         new GravesManager(plugin);
         visualTasks.getFirst().run();
         verify(chunk, times(1)).getEntities();
-        bukkit.verify(() -> Bukkit.dispatchCommand(any(), contains("positioned 15 -55 15 run summon block_display ~ ~ ~")));
+        bukkit.verify(() -> Bukkit.dispatchCommand(any(), contains("positioned 15.0 -55 15.0 run summon block_display ~ ~ ~")));
         bukkit.verify(() -> Bukkit.dispatchCommand(any(), contains("positioned 15.5 -55 15.5 run summon interaction ~ ~ ~")));
+    }
+
+    @Test void negativeCoordinatesKeepTheModelAndTheClickBoxInTheSameBlock() {
+        assertEquals("-4.0 70 -1.0", GravesManager.esquina(-4, 70, -1));
+        assertEquals("-3.5 70 -0.5", GravesManager.centro(-4, 70, -1));
+        assertEquals("0.0 -55 15.0", GravesManager.esquina(0, -55, 15));
+        assertEquals("0.5 -55 15.5", GravesManager.centro(0, -55, 15));
     }
 
     @Test void anOldConfigGetsTheNewModesWithTheMixedOneByDefault() throws Exception {

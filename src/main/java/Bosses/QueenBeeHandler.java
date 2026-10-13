@@ -50,6 +50,11 @@ public class QueenBeeHandler extends BaseBoss implements Listener {
 
     private final Bee bee;
     private final Random random = new Random();
+    // Los que crean los refuerzos florales (se arman la primera vez que se usan)
+    private Dificultades.CustomMobs.CorruptedZombies floralZombies;
+    private Dificultades.CustomMobs.CorruptedSpider floralSpiders;
+    private Dificultades.CustomMobs.Bombita floralCreepers;
+    private Dificultades.CustomMobs.CorruptedBee floralBees;
 
     // Estados
     private int globalTick = 0;
@@ -1006,14 +1011,14 @@ public class QueenBeeHandler extends BaseBoss implements Listener {
     }
 
     // =============================================================
-    // 3) Refuerzos: abejas VANILLA que siempre pueden atacar
+    // 3) Refuerzos florales: Zombies, Arañas y Creepers Florales y Mini Abejas Florales
     // =============================================================
 
     private void specialSummonBees() {
         World w = bee.getWorld();
         w.playSound(bee.getLocation(), Sound.ENTITY_BEE_LOOP_AGGRESSIVE, 1.5f, 0.7f);
 
-        int count = 8 + random.nextInt(9);
+        int count = 6 + random.nextInt(5);
 
         for (int i = 0; i < count; i++) {
             double dx = random.nextDouble() * getArenaRadius() * 2 - getArenaRadius();
@@ -1042,7 +1047,7 @@ public class QueenBeeHandler extends BaseBoss implements Listener {
             new CombatTask(false) {
                 @Override
                 protected void tick() {
-                    Bee minion = spawnFloralBee(spawnLoc);
+                    LivingEntity minion = spawnFloralMob(spawnLoc);
                     if (minion == null) return;
 
                     new CombatTask(false) {
@@ -1066,60 +1071,45 @@ public class QueenBeeHandler extends BaseBoss implements Listener {
         }.runTaskLater(plugin, 60L);
     }
 
-    /**
-     * Abeja vanilla que NUNCA pierde el aguijon: puede picar siempre y no muere
-     * despues de atacar.
-     */
-    private Bee spawnFloralBee(Location loc) {
+    // Uno de los mobs florales al azar: 40% Mini Abeja Floral y 20% cada uno de los otros. Llevan la marca de invocados
+    // (no sueltan drops florales) y se van solos a los 30 segundos
+    private LivingEntity spawnFloralMob(Location loc) {
         World w = loc.getWorld();
         if (w == null) return null;
+        if (floralZombies == null) {
+            floralZombies = new Dificultades.CustomMobs.CorruptedZombies(plugin);
+            floralSpiders = new Dificultades.CustomMobs.CorruptedSpider(plugin);
+            floralCreepers = new Dificultades.CustomMobs.Bombita(plugin);
+            floralBees = new Dificultades.CustomMobs.CorruptedBee(plugin);
+        }
 
-        Bee minion = w.spawn(loc, Bee.class, b -> {
-            b.setCustomName(ChatColor.of("#ffd6f0") + "Guardian Abeja Floral");
-            b.setCustomNameVisible(false);
-            b.setRemoveWhenFarAway(true);
-            b.setPersistent(false);
-            b.setHasStung(false);
-            b.setAnger(999999);
-            b.setCannotEnterHiveTicks(Integer.MAX_VALUE);
-        });
+        int roll = random.nextInt(10);
+        LivingEntity minion;
+        if (roll < 4) minion = floralBees.spawnCorruptedBee(loc.clone().add(0, 1, 0));
+        else if (roll < 6) minion = floralZombies.spawnCorruptedZombie(ground(loc));
+        else if (roll < 8) minion = floralSpiders.spawnCorruptedSpider(ground(loc));
+        else minion = floralCreepers.spawnBombita(ground(loc));
+
+        minion.getPersistentDataContainer().set(new NamespacedKey(plugin, Dificultades.CustomMobs.FloralMobDrops.INVOCADO),
+                PersistentDataType.BYTE, (byte) 1);
+        minion.setRemoveWhenFarAway(true);
+        minion.setPersistent(false);
 
         combatEntities.removeIf(entity -> !entity.isValid());
         combatEntities.add(minion);
 
         Player near = getNearestPlayerTo(loc);
-        if (near != null) minion.setTarget(near);
-
-        // Mientras viva: aguijon intacto, siempre enfadada y siempre con objetivo.
-        new CombatTask(true) {
-            int t = 0;
-
-            @Override
-            protected void tick() {
-                if (!minion.isValid() || minion.isDead()) {
-                    cancel();
-                    return;
-                }
-
-                minion.setHasStung(false);
-                minion.setAnger(999999);
-                minion.setCannotEnterHiveTicks(Integer.MAX_VALUE);
-
-                if (t % 20 == 0) {
-                    LivingEntity current = minion.getTarget();
-                    if (current == null || !current.isValid() || current.isDead()) {
-                        Player target = getNearestPlayerTo(minion.getLocation());
-                        if (target != null) minion.setTarget(target);
-                    }
-
-                    floralBurst(minion.getLocation().add(0, 0.4, 0), 3, 0.4, 0.9f);
-                }
-
-                t++;
-            }
-        }.runTaskTimer(plugin, 1L, 1L);
-
+        if (near != null && minion instanceof Mob mob) mob.setTarget(near);
+        floralBurst(minion.getLocation().add(0, 0.6, 0), 10, 0.5, 1.0f);
         return minion;
+    }
+
+    // Los que caminan bajan hasta el suelo de la arena (o suben si quedaron adentro de un bloque)
+    private static Location ground(Location loc) {
+        Location spot = loc.clone();
+        for (int i = 0; i < 4 && !spot.getBlock().isPassable(); i++) spot.add(0, 1, 0);
+        for (int i = 0; i < 6 && spot.clone().add(0, -1, 0).getBlock().isPassable(); i++) spot.add(0, -1, 0);
+        return spot;
     }
 
     // =============================================================

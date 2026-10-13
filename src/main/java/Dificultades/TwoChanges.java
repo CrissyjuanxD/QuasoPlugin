@@ -101,6 +101,23 @@ public class TwoChanges implements Listener, Change {
         return isApplied;
     }
 
+    @Override
+    public String tituloAnuncio() {
+        return "¡Se abrió la Infested Warden Cave!";
+    }
+
+    @Override
+    public List<String> anuncio() {
+        return List.of(
+                "4 biomas: Caverna Sculk, Pantano Profundo, Abismo Flotante y Ruinas de Ceniza, cada uno con su mob infestado.",
+                "El Warden Zombie sale en toda la dimensión y cada Ancient City tiene su Infested Warden.",
+                "Los Minerales Profundos solo se rompen con pico de Netherite o el Pico Floral; se funden en el alto horno.",
+                "Armadura de Warden: cada pieza pide el alma y el fragmento de su bioma (casco cian, peto morado, pantalón gris y botas verde).",
+                "Los árboles dan Bayas Sculk, Frutas Abisales y Bayas Regenerativas.",
+                "Libros de Paso Ígneo, Purificación y Visión Abisal en los cofres de las Ancient City y los jefes.",
+                "Minar, talar y construir allá da más XP de trabajo.");
+    }
+
     // Abre la segunda etapa: los mobs de la Warden Cave y las recetas de la armadura
     @Override
     public void apply() {

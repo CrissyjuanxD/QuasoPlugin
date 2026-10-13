@@ -1,0 +1,21 @@
+{
+  "anvil_cost": 4,
+  "description": {
+    "text": "Cosecha",
+    "color": "#A8C3A0"
+  },
+  "max_cost": {
+    "base": 25,
+    "per_level_above_first": 10
+  },
+  "max_level": 3,
+  "min_cost": {
+    "base": 10,
+    "per_level_above_first": 10
+  },
+  "slots": [
+    "mainhand"
+  ],
+  "supported_items": "#minecraft:hoes",
+  "weight": 1
+}

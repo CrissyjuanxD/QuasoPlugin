@@ -101,11 +101,11 @@ public class WardenZombie extends InfestedMob implements Listener {
         zombie.setCustomName(ChatColor.of("#1f7a86") + "" + ChatColor.BOLD + "Warden Zombie");
         zombie.setCustomNameVisible(false);
 
-        zombie.getAttribute(Attribute.MAX_HEALTH).setBaseValue(60);
-        zombie.setHealth(60);
+        zombie.getAttribute(Attribute.MAX_HEALTH).setBaseValue(72);
+        zombie.setHealth(72);
         zombie.getAttribute(Attribute.ARMOR).setBaseValue(6);
         zombie.getAttribute(Attribute.MOVEMENT_SPEED).setBaseValue(0.17);
-        zombie.getAttribute(Attribute.ATTACK_DAMAGE).setBaseValue(7);
+        zombie.getAttribute(Attribute.ATTACK_DAMAGE).setBaseValue(8.5);
         zombie.getAttribute(Attribute.KNOCKBACK_RESISTANCE).setBaseValue(0.6);
         zombie.getAttribute(Attribute.SPAWN_REINFORCEMENTS).setBaseValue(0);
 

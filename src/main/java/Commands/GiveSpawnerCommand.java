@@ -308,8 +308,8 @@ public class GiveSpawnerCommand implements CommandExecutor, TabCompleter {
                     break;
 
                 case "corruptedbee":
-                    displayName = ChatColor.DARK_PURPLE + "" + ChatColor.BOLD + "Spawner de Corrupted Bee";
-                    description = "Genera Abejas Corruptas";
+                    displayName = ChatColor.of("#FFB3D9") + "" + ChatColor.BOLD + "Spawner de Mini Abeja Floral";
+                    description = "Genera Mini Abejas Florales";
                     customModelData = 1036;
                     break;
                 default:

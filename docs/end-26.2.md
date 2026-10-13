@@ -142,3 +142,11 @@ Las herramientas de celestita, `enderking_pearl`, `ojo_rey_ender`, `peto_warden_
 textura en `resourcepack/` (ver `docs/texturas-26.2.md`). Faltan `lingote_celestita`, `plantilla_celestita`,
 `cristal_celestita`, `fragmento_astral` y `esencia_marchita` (todos como `minecraft:<id>`, igual que el resto de los
 items custom).
+
+## Celestita (Version #66)
+
+La Espada de Celestita hace 13 de daño (5 más que la de Netherite). El hacha,
+el pico, la pala y la azada pican 40% más rápido que las de Netherite (las
+florales, 20%) y el hacha, el pico y la pala atacan un poco más rápido que las
+florales. Las herramientas florales se pueden usar de base en la herrería. Las
+herramientas que ya existían conservan sus atributos viejos.

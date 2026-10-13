@@ -97,6 +97,13 @@ public final class TrabajosManager implements Listener {
         return TrabajosTexto.color(datos.activo) + datos.activo.nombre() + ChatColor.GRAY + " Nv " + datos.nivel(datos.activo);
     }
 
+    // El trabajo que tiene ahora (null si no tiene o no se cargaron sus datos)
+    public static Trabajo activo(Player player) {
+        TrabajosManager manager = instance;
+        DatosTrabajo datos = manager == null ? null : manager.datos.get(player.getUniqueId());
+        return datos == null ? null : datos.activo;
+    }
+
     // Nivel del jugador en un trabajo (-1 si todavía no se cargaron sus datos); lo usan las misiones de trabajo
     public static int nivel(Player player, Trabajo trabajo) {
         TrabajosManager manager = instance;
@@ -242,11 +249,37 @@ public final class TrabajosManager implements Listener {
         } else {
             mostrarBarra(player, trabajo, nivel, base);
         }
+        darLibro(player, trabajo, nivel);
         if (nivel % 25 == 0) {
             Bukkit.broadcastMessage(TrabajosTexto.PREFIJO + TrabajosTexto.BLANCO + player.getName() + TrabajosTexto.CREMA + " llegó al nivel "
                     + TrabajosTexto.DORADO + nivel + TrabajosTexto.CREMA + " de " + TrabajosTexto.nombre(trabajo) + TrabajosTexto.CREMA + ".");
         }
         Bukkit.getPluginManager().callEvent(new TrabajoSubeNivelEvent(player, trabajo, nivel));
+    }
+
+    // En los niveles 10, 40 y 70 se gana el libro del encantamiento del trabajo (I, II y III)
+    private void darLibro(Player player, Trabajo trabajo, int nivel) {
+        int nivelLibro = TrabajoNiveles.libro(nivel);
+        if (nivelLibro <= 0) return;
+        ItemStack libro = trabajo.encantamiento().book(nivelLibro);
+        if (libro == null) {
+            plugin.getLogger().warning("No se pudo dar el libro de " + trabajo.nombre() + " a " + player.getName() + ": el datapack no está cargado.");
+            return;
+        }
+        player.getInventory().addItem(libro).values().forEach(resto -> player.getWorld().dropItemNaturally(player.getLocation(), resto));
+        String nombre = trabajo.encantamiento().nombre() + " " + romano(nivelLibro);
+        player.sendMessage(TrabajosTexto.PREFIJO + "¡Ganaste el libro " + TrabajosTexto.color(trabajo) + nombre + TrabajosTexto.CREMA
+                + "! Es el encantamiento de " + TrabajosTexto.nombre(trabajo) + TrabajosTexto.CREMA + ": se pone en el yunque.");
+        player.playSound(player.getLocation(), Sound.BLOCK_ENCHANTMENT_TABLE_USE, SoundCategory.PLAYERS, 1f, 1.1f);
+    }
+
+    static String romano(int nivel) {
+        return switch (nivel) {
+            case 1 -> "I";
+            case 2 -> "II";
+            case 3 -> "III";
+            default -> String.valueOf(nivel);
+        };
     }
 
     // Los niveles normales: una bossbar verde unos segundos con un sonidito (si sube otro nivel se reusa la misma)

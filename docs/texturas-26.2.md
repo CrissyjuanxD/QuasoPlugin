@@ -69,6 +69,22 @@ todavía usa los modelos vanilla de los bundles (`minecraft:lime_bundle`, etc.),
 mochilas a `minecraft:mochila_nivel_<n>`. Cada nivel suma algo: el 3 tiene ribete dorado, el 4 una gema roja y el 5
 hebilla de diamante, gema morada y brillitos.
 
+## Equipo floral y libros de trabajo (Version #66)
+
+Están en `textures/item/custom/` con su `items/` y su modelo. `preview/floral-y-trabajos.png` los muestra en grande.
+
+| Item | ID | Estilo |
+| --- | --- | --- |
+| Aguijón Floral | `aguijon_floral` | Aguijón con la punta oscura, el cuerpo dorado y la base rosa |
+| Esencia Floral | `esencia_floral` | La perla de ender en rosa con dos hojitas arriba |
+| Mejora Floral | `mejora_floral` | La plantilla de Netherite en rosa con el emblema verde |
+| Espada, Hacha, Pico y Pala Florales | `espada_floral`... `pala_floral` | Las de Netherite con la cabeza rosa y el mango verde (`item/handheld`) |
+| Casco, Peto, Pantalón y Botas Florales | `casco_floral`... `botas_floral` | Las de Netherite en rosa con una florcita amarilla |
+| Libros de trabajo | `libro_talador`, `libro_fervor_minero`, `libro_anzuelo_veloz`, `libro_cosecha`, `libro_alcance`, `libro_vigor_de_batalla` | El libro de los encantamientos con la tapa del color del trabajo y su herramienta dibujada |
+
+La armadura floral puesta usa `equipment/floral.json` con `textures/entity/equipment/humanoid/floral.png` y
+`humanoid_leggings/floral.png` (las del Netherite en rosa).
+
 ## Pendientes
 
 Los minerales y materiales van al final: `cristal_celestita`, `lingote_celestita`, `fragmento_astral`,

@@ -53,6 +53,28 @@ class FloralMobDropsTest {
         }
     }
 
+    @Test void theMiniFloralBeeDropsItsStingerButBossSummonsDropNothing() {
+        try (var factories = mockStatic(FloralMobItems.class)) {
+            ItemStack stinger = mock(ItemStack.class);
+            factories.when(FloralMobItems::createStinger).thenReturn(stinger);
+            Bee bee = mock(Bee.class);
+            var data = mock(PersistentDataContainer.class);
+            when(data.has(new NamespacedKey("quasoplugin", "corrupted_bee"), PersistentDataType.BYTE)).thenReturn(true);
+            when(bee.getPersistentDataContainer()).thenReturn(data);
+            var event = mock(EntityDeathEvent.class);
+            when(event.getEntity()).thenReturn(bee);
+            List<ItemStack> drops = new ArrayList<>();
+            when(event.getDrops()).thenReturn(drops);
+            new FloralMobDrops(plugin(), () -> .1).onDeath(event);
+            assertEquals(List.of(stinger), drops);
+
+            drops.clear();
+            when(data.has(new NamespacedKey("quasoplugin", FloralMobDrops.INVOCADO), PersistentDataType.BYTE)).thenReturn(true);
+            new FloralMobDrops(plugin(), () -> 0).onDeath(event);
+            assertTrue(drops.isEmpty());
+        }
+    }
+
     @Test void vanillaMobsWithTheSameDisplayNameDoNotGetFloralDrops() {
         Zombie zombie=mock(Zombie.class);
         when(zombie.getCustomName()).thenReturn("Zombie Floral");

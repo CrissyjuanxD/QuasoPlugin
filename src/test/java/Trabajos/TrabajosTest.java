@@ -18,15 +18,18 @@ class TrabajosTest {
         assertEquals(45, TrabajoNiveles.xpParaNivel(1));
         assertTrue(TrabajoNiveles.xpParaNivel(100) > TrabajoNiveles.xpParaNivel(50));
 
+        // Las DinoCoins siguen a la XP que pide el nivel: los niveles altos pagan lo que cuestan
         assertEquals(2, TrabajoNiveles.monedasPorNivel(1));
-        assertEquals(2, TrabajoNiveles.monedasPorNivel(20));
-        assertEquals(3, TrabajoNiveles.monedasPorNivel(21));
-        assertEquals(6, TrabajoNiveles.monedasPorNivel(100));
+        assertEquals(10, TrabajoNiveles.monedasPorNivel(50));
+        assertEquals(22, TrabajoNiveles.monedasPorNivel(100));
+        for (int nivel = 2; nivel <= Trabajo.NIVEL_MAXIMO; nivel++) {
+            assertTrue(TrabajoNiveles.monedasPorNivel(nivel) >= TrabajoNiveles.monedasPorNivel(nivel - 1), "nivel " + nivel);
+        }
 
         assertEquals(0, TrabajoNiveles.bonus(4));
-        assertEquals(13, TrabajoNiveles.bonus(5));
-        assertEquals(40, TrabajoNiveles.bonus(50));
-        assertEquals(70, TrabajoNiveles.bonus(100));
+        assertEquals(14, TrabajoNiveles.bonus(5));
+        assertEquals(56, TrabajoNiveles.bonus(50));
+        assertEquals(110, TrabajoNiveles.bonus(100));
         assertEquals(1830, TrabajoNiveles.experiencia(100));
 
         assertEquals(5, TrabajoNiveles.proximoBonus(0));
@@ -35,7 +38,28 @@ class TrabajosTest {
 
         int total = 0;
         for (int nivel = 1; nivel <= Trabajo.NIVEL_MAXIMO; nivel++) total += TrabajoNiveles.monedasTotales(nivel);
-        assertTrue(total > 1150 && total < 1350, "Un trabajo completo paga " + total + " DinoCoins");
+        assertTrue(total > 2100 && total < 2400, "Un trabajo completo paga " + total + " DinoCoins");
+    }
+
+    @Test
+    void theJobBookComesAtLevelsTenFortyAndSeventy() {
+        assertEquals(1, TrabajoNiveles.libro(10));
+        assertEquals(2, TrabajoNiveles.libro(40));
+        assertEquals(3, TrabajoNiveles.libro(70));
+        assertEquals(0, TrabajoNiveles.libro(50));
+        assertEquals(10, TrabajoNiveles.proximoLibro(0));
+        assertEquals(40, TrabajoNiveles.proximoLibro(10));
+        assertEquals(70, TrabajoNiveles.proximoLibro(69));
+        assertEquals(-1, TrabajoNiveles.proximoLibro(70));
+        assertEquals("III", TrabajosManager.romano(3));
+
+        Set<Encantamientos.QuasoEnchant> encantamientos = new HashSet<>();
+        for (Trabajo trabajo : Trabajo.values()) {
+            Encantamientos.QuasoEnchant encantamiento = trabajo.encantamiento();
+            assertTrue(encantamientos.add(encantamiento), trabajo.name());
+            assertEquals(3, encantamiento.maxLevel(), trabajo.name());
+        }
+        assertEquals(Encantamientos.QuasoEnchant.TALADOR, Trabajo.LENADOR.encantamiento());
     }
 
     @Test
@@ -60,6 +84,29 @@ class TrabajosTest {
         assertEquals(1.2, TrabajosXp.xpLenador(Material.OAK_LOG));
         assertEquals(1.4, TrabajosXp.xpLenador(Material.WARPED_STEM));
         assertEquals(0, TrabajosXp.xpLenador(Material.STRIPPED_OAK_LOG));
+
+        // Lo nuevo del plugin da más XP
+        assertEquals(25, TrabajosXp.xpMineria(Material.CYAN_GLAZED_TERRACOTTA, TrabajosXp.Mundo.WARDEN_CAVE));
+        assertEquals(0, TrabajosXp.xpMineria(Material.CYAN_GLAZED_TERRACOTTA, TrabajosXp.Mundo.NORMAL));
+        assertEquals(5, TrabajosXp.xpMineria(Material.AMETHYST_CLUSTER, TrabajosXp.Mundo.END));
+        assertEquals(0, TrabajosXp.xpMineria(Material.AMETHYST_CLUSTER, TrabajosXp.Mundo.NORMAL));
+        assertEquals(18, TrabajosXp.xpMineria(Material.DEEPSLATE_DIAMOND_ORE, TrabajosXp.Mundo.WARDEN_CAVE));
+        assertEquals(1.8, TrabajosXp.xpLenador(Material.STRIPPED_BIRCH_LOG, TrabajosXp.Mundo.END));
+        assertEquals(1.8, TrabajosXp.xpLenador(Material.DARK_OAK_WOOD, TrabajosXp.Mundo.WARDEN_CAVE));
+        assertEquals(1.2, TrabajosXp.xpLenador(Material.OAK_LOG, TrabajosXp.Mundo.NORMAL));
+        assertEquals(2, TrabajosXp.xpFruta(Material.VERDANT_FROGLIGHT, TrabajosXp.Mundo.WARDEN_CAVE));
+        assertEquals(0, TrabajosXp.xpFruta(Material.VERDANT_FROGLIGHT, TrabajosXp.Mundo.NORMAL));
+        assertEquals(10, TrabajosXp.xpMobPlugin(20));
+        assertEquals(28, TrabajosXp.xpMobPlugin(120));
+        assertEquals(30, TrabajosXp.xpMobPlugin(500));
+        assertTrue(TrabajosXp.xpMobPlugin(20) > TrabajosXp.xpMonstruo(20));
+        assertTrue(TrabajosXp.XP_WARDEN > TrabajosXp.xpMonstruo(500));
+
+        // Los jefes, de menos a más difíciles
+        String[] jefes = {"wither", "abeja_reina", "ender_dragon", "infested_warden_boss", "ultra_warden", "rey_ender"};
+        for (int i = 1; i < jefes.length; i++) {
+            assertTrue(TrabajosXp.xpJefe(jefes[i]) > TrabajosXp.xpJefe(jefes[i - 1]), jefes[i]);
+        }
 
         assertEquals(0.5, TrabajosXp.xpConstructor(Material.STONE_BRICKS));
         assertEquals(0.5, TrabajosXp.xpConstructor(Material.WHITE_CONCRETE));
@@ -88,6 +135,10 @@ class TrabajosTest {
         assertTrue(TrabajosXp.seRastrea(Material.BIRCH_LOG));
         assertTrue(TrabajosXp.seRastrea(Material.MELON));
         assertTrue(TrabajosXp.seRastrea(Material.SUGAR_CANE));
+        assertTrue(TrabajosXp.seRastrea(Material.GRAY_GLAZED_TERRACOTTA));
+        assertTrue(TrabajosXp.seRastrea(Material.AMETHYST_CLUSTER));
+        assertTrue(TrabajosXp.seRastrea(Material.PEARLESCENT_FROGLIGHT));
+        assertTrue(TrabajosXp.seRastrea(Material.STRIPPED_SPRUCE_LOG));
         assertFalse(TrabajosXp.seRastrea(Material.WHEAT));
         assertFalse(TrabajosXp.seRastrea(Material.OAK_PLANKS));
     }

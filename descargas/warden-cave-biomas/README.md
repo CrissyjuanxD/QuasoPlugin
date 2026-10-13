@@ -1,6 +1,6 @@
 # Warden Cave · mobs, minerales y frutas
 
-**QuasoPlugin · rama 26.2 · revisión #63**
+**QuasoPlugin · rama 26.2 · revisión #64**
 
 [Descargar pack principal](warden-cave-biomas.zip) · [Frutas 3D opcionales](frutas-3d-opcional.zip) · [Visor 3D sin conexión](vista_modelos.html)
 
@@ -32,6 +32,16 @@ Los modelos mantienen las partes estándar para seguir las animaciones normales 
 ### Cambio del plugin
 
 La revisión **#63** elimina el shrieker del casco al crear el Warden Zombie. También lo retira de los Warden Zombies antiguos al iniciar el sistema o cargar sus entidades; no retira cascos de zombies normales. Se conserva la armadura de cuero, las estadísticas y la lógica de combate. La vista previa no dibuja esa armadura equipada, que puede cubrir parte de la piel en el juego.
+
+## Almas adaptadas a los modelos · #64
+
+[Descargar solo las cuatro almas y sus JSON](almas-warden.zip)
+
+![Almas en 16×16 reales](vista_almas.png)
+
+Las cuatro almas del plugin ahora representan los nuevos mobs: esqueleto sculk con antenas cian, araña verde con raíces y colmillos, ghast morado con cristales y creeper gris con cuernos de basalto. Conservan un pequeño contorno espectral y sus identificadores `alma_infested_skeleton`, `alma_infested_cave_spider`, `alma_infested_ghast` y `alma_infested_creeper`.
+
+Son PNG transparentes de **16×16**, con un máximo de 16 colores por icono. Se mantienen sus modelos y recetas. El plugin no tiene un item de alma de Warden Zombie; esta revisión actualiza las cuatro almas existentes.
 
 ## Cuatro minerales emisivos
 
@@ -67,7 +77,7 @@ El ZIP **frutas-3d-opcional.zip** añade tres modelos vanilla de frutas colgante
 ## Instalar
 
 1. Descomprime **warden-cave-biomas.zip** y fusiona su carpeta **assets** con la de tu resource pack.
-2. Aplica este lote **después** del pack de items anterior para que `baya_luminosa.png` sea la nueva baya roja.
+2. Aplica este lote **después** del pack de items anterior para que `baya_luminosa.png` sea la nueva baya roja y las cuatro almas usen sus nuevos rostros.
 3. Conserva tu `pack.mcmeta`. Recarga con **F3 + T**, o actualiza el ZIP y hash del pack del servidor.
 4. Compila e instala QuasoPlugin #63 para quitar los shriekers. Los recursos no eliminan por sí solos el bloque equipado.
 5. Solo si deseas el cambio global de frutas, fusiona además **assets** del ZIP opcional.

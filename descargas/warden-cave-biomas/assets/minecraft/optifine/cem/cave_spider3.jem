@@ -1,0 +1,961 @@
+{
+  "textureSize": [
+    128,
+    64
+  ],
+  "models": [
+    {
+      "part": "head",
+      "id": "head",
+      "invertAxis": "xy",
+      "translate": [
+        0,
+        -9,
+        3
+      ],
+      "boxes": [
+        {
+          "coordinates": [
+            -4,
+            5,
+            -11,
+            8,
+            8,
+            8
+          ],
+          "textureOffset": [
+            32,
+            4
+          ]
+        },
+        {
+          "coordinates": [
+            -5,
+            3,
+            -12,
+            2,
+            4,
+            2
+          ],
+          "uvNorth": [
+            64,
+            16,
+            66,
+            20
+          ],
+          "uvSouth": [
+            64,
+            16,
+            66,
+            20
+          ],
+          "uvEast": [
+            64,
+            16,
+            66,
+            20
+          ],
+          "uvWest": [
+            64,
+            16,
+            66,
+            20
+          ],
+          "uvUp": [
+            64,
+            16,
+            66,
+            18
+          ],
+          "uvDown": [
+            64,
+            16,
+            66,
+            18
+          ]
+        },
+        {
+          "coordinates": [
+            3,
+            3,
+            -12,
+            2,
+            4,
+            2
+          ],
+          "uvNorth": [
+            64,
+            16,
+            66,
+            20
+          ],
+          "uvSouth": [
+            64,
+            16,
+            66,
+            20
+          ],
+          "uvEast": [
+            64,
+            16,
+            66,
+            20
+          ],
+          "uvWest": [
+            64,
+            16,
+            66,
+            20
+          ],
+          "uvUp": [
+            64,
+            16,
+            66,
+            18
+          ],
+          "uvDown": [
+            64,
+            16,
+            66,
+            18
+          ]
+        }
+      ],
+      "submodels": [
+        {
+          "invertAxis": "xy",
+          "mirrorTexture": "u",
+          "boxes": []
+        }
+      ]
+    },
+    {
+      "part": "neck",
+      "id": "neck",
+      "invertAxis": "xy",
+      "translate": [
+        0,
+        -9,
+        0
+      ],
+      "boxes": [
+        {
+          "coordinates": [
+            -3,
+            6,
+            -3,
+            6,
+            6,
+            6
+          ],
+          "textureOffset": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "part": "body",
+      "id": "body",
+      "invertAxis": "xy",
+      "translate": [
+        0,
+        -9,
+        -9
+      ],
+      "boxes": [
+        {
+          "coordinates": [
+            -5,
+            5,
+            3,
+            10,
+            8,
+            12
+          ],
+          "textureOffset": [
+            0,
+            12
+          ]
+        },
+        {
+          "coordinates": [
+            -5,
+            12,
+            5,
+            2,
+            4,
+            2
+          ],
+          "uvNorth": [
+            64,
+            16,
+            66,
+            20
+          ],
+          "uvSouth": [
+            64,
+            16,
+            66,
+            20
+          ],
+          "uvEast": [
+            64,
+            16,
+            66,
+            20
+          ],
+          "uvWest": [
+            64,
+            16,
+            66,
+            20
+          ],
+          "uvUp": [
+            64,
+            16,
+            66,
+            18
+          ],
+          "uvDown": [
+            64,
+            16,
+            66,
+            18
+          ]
+        },
+        {
+          "coordinates": [
+            -5,
+            12,
+            9,
+            2,
+            4,
+            2
+          ],
+          "uvNorth": [
+            64,
+            16,
+            66,
+            20
+          ],
+          "uvSouth": [
+            64,
+            16,
+            66,
+            20
+          ],
+          "uvEast": [
+            64,
+            16,
+            66,
+            20
+          ],
+          "uvWest": [
+            64,
+            16,
+            66,
+            20
+          ],
+          "uvUp": [
+            64,
+            16,
+            66,
+            18
+          ],
+          "uvDown": [
+            64,
+            16,
+            66,
+            18
+          ]
+        },
+        {
+          "coordinates": [
+            -5,
+            12,
+            13,
+            2,
+            4,
+            2
+          ],
+          "uvNorth": [
+            64,
+            16,
+            66,
+            20
+          ],
+          "uvSouth": [
+            64,
+            16,
+            66,
+            20
+          ],
+          "uvEast": [
+            64,
+            16,
+            66,
+            20
+          ],
+          "uvWest": [
+            64,
+            16,
+            66,
+            20
+          ],
+          "uvUp": [
+            64,
+            16,
+            66,
+            18
+          ],
+          "uvDown": [
+            64,
+            16,
+            66,
+            18
+          ]
+        },
+        {
+          "coordinates": [
+            3,
+            12,
+            5,
+            2,
+            4,
+            2
+          ],
+          "uvNorth": [
+            64,
+            16,
+            66,
+            20
+          ],
+          "uvSouth": [
+            64,
+            16,
+            66,
+            20
+          ],
+          "uvEast": [
+            64,
+            16,
+            66,
+            20
+          ],
+          "uvWest": [
+            64,
+            16,
+            66,
+            20
+          ],
+          "uvUp": [
+            64,
+            16,
+            66,
+            18
+          ],
+          "uvDown": [
+            64,
+            16,
+            66,
+            18
+          ]
+        },
+        {
+          "coordinates": [
+            3,
+            12,
+            9,
+            2,
+            4,
+            2
+          ],
+          "uvNorth": [
+            64,
+            16,
+            66,
+            20
+          ],
+          "uvSouth": [
+            64,
+            16,
+            66,
+            20
+          ],
+          "uvEast": [
+            64,
+            16,
+            66,
+            20
+          ],
+          "uvWest": [
+            64,
+            16,
+            66,
+            20
+          ],
+          "uvUp": [
+            64,
+            16,
+            66,
+            18
+          ],
+          "uvDown": [
+            64,
+            16,
+            66,
+            18
+          ]
+        },
+        {
+          "coordinates": [
+            3,
+            12,
+            13,
+            2,
+            4,
+            2
+          ],
+          "uvNorth": [
+            64,
+            16,
+            66,
+            20
+          ],
+          "uvSouth": [
+            64,
+            16,
+            66,
+            20
+          ],
+          "uvEast": [
+            64,
+            16,
+            66,
+            20
+          ],
+          "uvWest": [
+            64,
+            16,
+            66,
+            20
+          ],
+          "uvUp": [
+            64,
+            16,
+            66,
+            18
+          ],
+          "uvDown": [
+            64,
+            16,
+            66,
+            18
+          ]
+        },
+        {
+          "coordinates": [
+            -3,
+            13,
+            5,
+            6,
+            1,
+            8
+          ],
+          "uvNorth": [
+            64,
+            16,
+            70,
+            17
+          ],
+          "uvSouth": [
+            64,
+            16,
+            70,
+            17
+          ],
+          "uvEast": [
+            64,
+            16,
+            72,
+            17
+          ],
+          "uvWest": [
+            64,
+            16,
+            72,
+            17
+          ],
+          "uvUp": [
+            64,
+            16,
+            70,
+            24
+          ],
+          "uvDown": [
+            64,
+            16,
+            70,
+            24
+          ]
+        },
+        {
+          "coordinates": [
+            -3,
+            9,
+            14,
+            2,
+            3,
+            3
+          ],
+          "uvNorth": [
+            64,
+            16,
+            66,
+            19
+          ],
+          "uvSouth": [
+            64,
+            16,
+            66,
+            19
+          ],
+          "uvEast": [
+            64,
+            16,
+            67,
+            19
+          ],
+          "uvWest": [
+            64,
+            16,
+            67,
+            19
+          ],
+          "uvUp": [
+            64,
+            16,
+            66,
+            19
+          ],
+          "uvDown": [
+            64,
+            16,
+            66,
+            19
+          ]
+        },
+        {
+          "coordinates": [
+            1,
+            9,
+            14,
+            2,
+            3,
+            3
+          ],
+          "uvNorth": [
+            64,
+            16,
+            66,
+            19
+          ],
+          "uvSouth": [
+            64,
+            16,
+            66,
+            19
+          ],
+          "uvEast": [
+            64,
+            16,
+            67,
+            19
+          ],
+          "uvWest": [
+            64,
+            16,
+            67,
+            19
+          ],
+          "uvUp": [
+            64,
+            16,
+            66,
+            19
+          ],
+          "uvDown": [
+            64,
+            16,
+            66,
+            19
+          ]
+        }
+      ]
+    },
+    {
+      "part": "leg1",
+      "id": "leg1",
+      "invertAxis": "xy",
+      "translate": [
+        -4,
+        -9,
+        -4
+      ],
+      "boxes": [
+        {
+          "coordinates": [
+            3,
+            8,
+            3,
+            16,
+            2,
+            2
+          ],
+          "textureOffset": [
+            18,
+            0
+          ]
+        }
+      ],
+      "submodels": [
+        {
+          "invertAxis": "xy",
+          "mirrorTexture": "u",
+          "boxes": [
+            {
+              "coordinates": [
+                3,
+                8,
+                3,
+                16,
+                2,
+                2
+              ],
+              "textureOffset": [
+                0,
+                32
+              ],
+              "sizeAdd": 0.01
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "part": "leg2",
+      "id": "leg2",
+      "invertAxis": "xy",
+      "translate": [
+        4,
+        -9,
+        -4
+      ],
+      "boxes": [
+        {
+          "coordinates": [
+            -19,
+            8,
+            3,
+            16,
+            2,
+            2
+          ],
+          "textureOffset": [
+            18,
+            0
+          ]
+        },
+        {
+          "coordinates": [
+            -19,
+            8,
+            3,
+            16,
+            2,
+            2
+          ],
+          "textureOffset": [
+            0,
+            32
+          ],
+          "sizeAdd": 0.01
+        }
+      ]
+    },
+    {
+      "part": "leg3",
+      "id": "leg3",
+      "invertAxis": "xy",
+      "translate": [
+        -4,
+        -9,
+        -1
+      ],
+      "boxes": [
+        {
+          "coordinates": [
+            3,
+            8,
+            0,
+            16,
+            2,
+            2
+          ],
+          "textureOffset": [
+            18,
+            0
+          ]
+        }
+      ],
+      "submodels": [
+        {
+          "invertAxis": "xy",
+          "mirrorTexture": "u",
+          "boxes": [
+            {
+              "coordinates": [
+                3,
+                8,
+                0,
+                16,
+                2,
+                2
+              ],
+              "textureOffset": [
+                0,
+                32
+              ],
+              "sizeAdd": 0.01
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "part": "leg4",
+      "id": "leg4",
+      "invertAxis": "xy",
+      "translate": [
+        4,
+        -9,
+        -1
+      ],
+      "boxes": [
+        {
+          "coordinates": [
+            -19,
+            8,
+            0,
+            16,
+            2,
+            2
+          ],
+          "textureOffset": [
+            18,
+            0
+          ]
+        },
+        {
+          "coordinates": [
+            -19,
+            8,
+            0,
+            16,
+            2,
+            2
+          ],
+          "textureOffset": [
+            0,
+            32
+          ],
+          "sizeAdd": 0.01
+        }
+      ]
+    },
+    {
+      "part": "leg5",
+      "id": "leg5",
+      "invertAxis": "xy",
+      "translate": [
+        -4,
+        -9,
+        2
+      ],
+      "boxes": [
+        {
+          "coordinates": [
+            3,
+            8,
+            -3,
+            16,
+            2,
+            2
+          ],
+          "textureOffset": [
+            18,
+            0
+          ]
+        }
+      ],
+      "submodels": [
+        {
+          "invertAxis": "xy",
+          "mirrorTexture": "u",
+          "boxes": [
+            {
+              "coordinates": [
+                3,
+                8,
+                -3,
+                16,
+                2,
+                2
+              ],
+              "textureOffset": [
+                0,
+                32
+              ],
+              "sizeAdd": 0.01
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "part": "leg6",
+      "id": "leg6",
+      "invertAxis": "xy",
+      "translate": [
+        4,
+        -9,
+        2
+      ],
+      "boxes": [
+        {
+          "coordinates": [
+            -19,
+            8,
+            -3,
+            16,
+            2,
+            2
+          ],
+          "textureOffset": [
+            18,
+            0
+          ]
+        },
+        {
+          "coordinates": [
+            -19,
+            8,
+            -3,
+            16,
+            2,
+            2
+          ],
+          "textureOffset": [
+            0,
+            32
+          ],
+          "sizeAdd": 0.01
+        }
+      ]
+    },
+    {
+      "part": "leg7",
+      "id": "leg7",
+      "invertAxis": "xy",
+      "translate": [
+        -4,
+        -9,
+        5
+      ],
+      "boxes": [
+        {
+          "coordinates": [
+            3,
+            8,
+            -6,
+            16,
+            2,
+            2
+          ],
+          "textureOffset": [
+            18,
+            0
+          ]
+        }
+      ],
+      "submodels": [
+        {
+          "invertAxis": "xy",
+          "mirrorTexture": "u",
+          "boxes": [
+            {
+              "coordinates": [
+                3,
+                8,
+                -6,
+                16,
+                2,
+                2
+              ],
+              "textureOffset": [
+                0,
+                32
+              ],
+              "sizeAdd": 0.01
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "part": "leg8",
+      "id": "leg8",
+      "invertAxis": "xy",
+      "translate": [
+        4,
+        -9,
+        5
+      ],
+      "boxes": [
+        {
+          "coordinates": [
+            -19,
+            8,
+            -6,
+            16,
+            2,
+            2
+          ],
+          "textureOffset": [
+            18,
+            0
+          ]
+        },
+        {
+          "coordinates": [
+            -19,
+            8,
+            -6,
+            16,
+            2,
+            2
+          ],
+          "textureOffset": [
+            0,
+            32
+          ],
+          "sizeAdd": 0.01
+        }
+      ]
+    }
+  ],
+  "texture": "minecraft:optifine/random/entity/spider/cave_spider3.png",
+  "credit": "Base Sculkified Mobs V2.0 de GillsBills (excepto ghast); adaptación Quaso por biomas y geometría 3D adicional."
+}

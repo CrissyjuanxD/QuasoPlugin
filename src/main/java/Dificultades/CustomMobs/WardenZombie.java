@@ -110,7 +110,7 @@ public class WardenZombie extends InfestedMob implements Listener {
         zombie.getAttribute(Attribute.SPAWN_REINFORCEMENTS).setBaseValue(0);
 
         EntityEquipment equipment = zombie.getEquipment();
-        equipment.setHelmet(new ItemStack(Material.SCULK_SHRIEKER));
+        equipment.setHelmet(null);
         equipment.setChestplate(dyed(Material.LEATHER_CHESTPLATE));
         equipment.setLeggings(dyed(Material.LEATHER_LEGGINGS));
         equipment.setBoots(dyed(Material.LEATHER_BOOTS));
@@ -163,7 +163,10 @@ public class WardenZombie extends InfestedMob implements Listener {
 
     @EventHandler
     public void onAddToWorld(EntityAddToWorldEvent event) {
-        if (isCustomMob(event.getEntity())) activeMobs.add(event.getEntity().getUniqueId());
+        if (isCustomMob(event.getEntity())) {
+            removeLegacyShrieker((Zombie) event.getEntity());
+            activeMobs.add(event.getEntity().getUniqueId());
+        }
     }
 
     @EventHandler
@@ -208,8 +211,20 @@ public class WardenZombie extends InfestedMob implements Listener {
     private void scanExisting() {
         for (World world : Bukkit.getWorlds()) {
             for (Zombie zombie : world.getEntitiesByClass(Zombie.class)) {
-                if (isCustomMob(zombie)) activeMobs.add(zombie.getUniqueId());
+                if (isCustomMob(zombie)) {
+                    removeLegacyShrieker(zombie);
+                    activeMobs.add(zombie.getUniqueId());
+                }
             }
+        }
+    }
+
+    // Actualiza también los Warden Zombies guardados antes del modelo del resource pack.
+    private void removeLegacyShrieker(Zombie zombie) {
+        EntityEquipment equipment = zombie.getEquipment();
+        ItemStack helmet = equipment.getHelmet();
+        if (helmet != null && helmet.getType() == Material.SCULK_SHRIEKER) {
+            equipment.setHelmet(null);
         }
     }
 

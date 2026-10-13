@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "axis=x": {
+      "model": "minecraft:block/warden_cave/baya_sculk"
+    },
+    "axis=y": {
+      "model": "minecraft:block/warden_cave/baya_sculk"
+    },
+    "axis=z": {
+      "model": "minecraft:block/warden_cave/baya_sculk"
+    }
+  }
+}

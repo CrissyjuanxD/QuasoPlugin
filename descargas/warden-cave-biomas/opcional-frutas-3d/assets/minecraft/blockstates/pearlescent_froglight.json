@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "axis=x": {
+      "model": "minecraft:block/warden_cave/fruta_abisal"
+    },
+    "axis=y": {
+      "model": "minecraft:block/warden_cave/fruta_abisal"
+    },
+    "axis=z": {
+      "model": "minecraft:block/warden_cave/fruta_abisal"
+    }
+  }
+}

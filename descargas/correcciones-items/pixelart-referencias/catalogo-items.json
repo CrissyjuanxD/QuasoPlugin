@@ -320,7 +320,8 @@
       "origin": "Nueva textura de este lote",
       "java_sources": [
         "src/main/java/Armors/WardenArmor.java"
-      ]
+      ],
+      "revision_62": "Armadura y mejoras coherentes con Wardenite Armor V1.5 de ShadowsCrow: casco cian, peto morado, pantalón gris y botas verdes."
     },
     {
       "item_model": "minecraft:botiquin",
@@ -925,7 +926,8 @@
       "origin": "Nueva textura de este lote",
       "java_sources": [
         "src/main/java/Armors/WardenArmor.java"
-      ]
+      ],
+      "revision_62": "Armadura y mejoras coherentes con Wardenite Armor V1.5 de ShadowsCrow: casco cian, peto morado, pantalón gris y botas verdes."
     },
     {
       "item_model": "minecraft:casino_cerrar",
@@ -1983,7 +1985,8 @@
       "java_sources": [
         "src/main/java/items/WardenUpgrades.java"
       ],
-      "revision_59": "Marco y símbolo simétricos."
+      "revision_59": "Marco y símbolo simétricos.",
+      "revision_62": "Armadura y mejoras coherentes con Wardenite Armor V1.5 de ShadowsCrow: casco cian, peto morado, pantalón gris y botas verdes."
     },
     {
       "item_model": "minecraft:mejora_casco_warden",
@@ -1993,7 +1996,8 @@
       "java_sources": [
         "src/main/java/items/WardenUpgrades.java"
       ],
-      "revision_59": "Marco y símbolo simétricos."
+      "revision_59": "Marco y símbolo simétricos.",
+      "revision_62": "Armadura y mejoras coherentes con Wardenite Armor V1.5 de ShadowsCrow: casco cian, peto morado, pantalón gris y botas verdes."
     },
     {
       "item_model": "minecraft:mejora_pantalon_warden",
@@ -2003,7 +2007,8 @@
       "java_sources": [
         "src/main/java/items/WardenUpgrades.java"
       ],
-      "revision_59": "Marco y símbolo simétricos."
+      "revision_59": "Marco y símbolo simétricos.",
+      "revision_62": "Armadura y mejoras coherentes con Wardenite Armor V1.5 de ShadowsCrow: casco cian, peto morado, pantalón gris y botas verdes."
     },
     {
       "item_model": "minecraft:mejora_peto_warden",
@@ -2013,7 +2018,8 @@
       "java_sources": [
         "src/main/java/items/WardenUpgrades.java"
       ],
-      "revision_59": "Marco y símbolo simétricos."
+      "revision_59": "Marco y símbolo simétricos.",
+      "revision_62": "Armadura y mejoras coherentes con Wardenite Armor V1.5 de ShadowsCrow: casco cian, peto morado, pantalón gris y botas verdes."
     },
     {
       "item_model": "minecraft:mineral_crudo_cian",
@@ -2148,7 +2154,8 @@
       "origin": "Nueva textura de este lote",
       "java_sources": [
         "src/main/java/Armors/WardenArmor.java"
-      ]
+      ],
+      "revision_62": "Armadura y mejoras coherentes con Wardenite Armor V1.5 de ShadowsCrow: casco cian, peto morado, pantalón gris y botas verdes."
     },
     {
       "item_model": "minecraft:pepitas_diamante",
@@ -2184,7 +2191,8 @@
       "origin": "Nueva textura de este lote",
       "java_sources": [
         "src/main/java/Armors/WardenArmor.java"
-      ]
+      ],
+      "revision_62": "Armadura y mejoras coherentes con Wardenite Armor V1.5 de ShadowsCrow: casco cian, peto morado, pantalón gris y botas verdes."
     },
     {
       "item_model": "minecraft:peto_warden_alado",
@@ -2193,7 +2201,8 @@
       "origin": "itemsyahechos.rar",
       "java_sources": [
         "src/main/java/Armors/WardenArmor.java"
-      ]
+      ],
+      "revision_62": "Armadura y mejoras coherentes con Wardenite Armor V1.5 de ShadowsCrow: casco cian, peto morado, pantalón gris y botas verdes."
     },
     {
       "item_model": "minecraft:pico_celestita",
@@ -2577,7 +2586,8 @@
       "texture_size": [
         64,
         32
-      ]
+      ],
+      "revision_62": "Base Wardenite de ShadowsCrow adaptada por biomas; alas sculk con hueso y acentos morados."
     },
     {
       "asset_id": "minecraft:warden_alado",
@@ -2592,7 +2602,8 @@
       "texture_size": [
         64,
         32
-      ]
+      ],
+      "revision_62": "Base Wardenite de ShadowsCrow adaptada por biomas; alas sculk con hueso y acentos morados."
     }
   ]
 }

@@ -6,16 +6,22 @@ Se completaron **143 identificadores que no tenían textura**: 82 items y materi
 
 [Descargar ZIP](items-pixelart.zip) · [Catálogo de items](items-completados.md) · [Rutas y procedencia](catalogo-items.json)
 
-**Armadura equipada #60:** [guía y vistas previas](armadura-warden.md) · [ZIP solo de armadura](armadura-warden.zip). Incluye el conjunto Warden y el peto alado con alas sculk.
+**Armadura, iconos y mejoras #62:** [guía y vistas previas](armadura-warden.md) · [ZIP solo de armadura](armadura-warden.zip). Rediseño basado en Wardenite de ShadowsCrow: casco cian, peto morado, pantalones grises y botas verdes; cinco iconos y cuatro mejoras coordinados. Incluye el peto alado con alas sculk.
 
 **Tu estatua protectora `minecraft:statue_pr` conserva su modelo 3D.** No se incluye su atlas ni ningún JSON o PNG que lo reemplace. El otro item, `statue_effect`, sí tiene su propio icono de inventario.
 
-## Correcciones de la versión #59
+## Rediseño Warden de la versión #62
+
+![Armadura y mejoras actualizadas](vista_warden_items.png)
+
+Base sculk oscura, costillas claras y acentos por bioma. El [ZIP de armadura](armadura-warden.zip) incluye ahora también los iconos y JSON de las cinco piezas y cuatro mejoras.
+
+## Correcciones de la versión #59 (histórico)
 
 ![Lingotes, mejoras, almas, fragmento, baya y picas corregidos](vista_correcciones_59.png)
 
 - Los tres lingotes conservan exactamente la silueta y los ocho grupos de sombreado del lingote de hierro vanilla, con sus paletas propias.
-- Las cuatro mejoras Warden tienen simetría horizontal exacta en el marco y el símbolo de armadura.
+- Las cuatro mejoras Warden adquirieron simetría horizontal exacta; su aspecto actual es el rediseño #62 de arriba.
 - Las almas utilizan rostros de 8×8 basados en sus mobs vanilla, con colores adaptados al contorno de alma.
 - El fragmento astral es una esquirla alargada con facetas y extremo roto.
 - La **Baya Regenerativa** es roja. Su nombre visible también cambia en el plugin y en la misión 128. Conserva `baya_luminosa` como identificador de item, textura y dato persistente para mantener la compatibilidad.
@@ -48,7 +54,7 @@ Los minerales crudos de colores permanecen intactos. Todas las texturas corregid
 
 Los 143 iconos nuevos y los nueve cuadros adicionales de los arcos explosivos son PNG RGBA de **16×16 reales**, con transparencia binaria, bordes sin suavizar y un máximo de 24 colores opacos. Los cuadros auxiliares explican por qué hay más PNG/modelos que identificadores de item.
 
-Las texturas que ya tenías se conservan, incluidas las animaciones de `rep_hierro` y `rep_oro`. También se mantienen los 24 items y las seis herramientas de celestita de la revisión anterior. El Warden Gun incluye la corrección previa de orientación. Los cinco modelos vanilla que usa el plugin quedan a cargo de Minecraft.
+Salvo los rediseños indicados arriba, las texturas que ya tenías se conservan, incluidas las animaciones de `rep_hierro` y `rep_oro`. También se mantienen los 24 items y las seis herramientas de celestita de la revisión anterior. El Warden Gun incluye la corrección previa de orientación. Los cinco modelos vanilla que usa el plugin quedan a cargo de Minecraft.
 
 ## Herramientas, arcos y lanza
 
@@ -69,7 +75,7 @@ La armadura Warden incluye ahora sus [texturas para equipar](armadura-warden.md)
 3. Conserva tu `pack.mcmeta`, tu modelo 3D de `statue_pr` y los demás archivos de tu pack.
 4. Recarga con **F3 + T**. Si distribuyes el pack desde el servidor, actualiza su ZIP y su hash.
 
-Esta carpeta es un complemento para tu pack de **26.2**, no un pack autónomo. Las texturas se instalan en el pack; utiliza también el plugin compilado con la revisión **#60** para enlazar las texturas de armadura y conservar el cambio de nombre de la Baya Regenerativa de #59. Los comandos mantienen sus identificadores actuales. `gancho` apunta a tu textura `gancho_2d`; `ficha_mision` y las cinco mochilas mantienen sus nombres de modelo.
+Esta carpeta es un complemento para tu pack de **26.2**, no un pack autónomo. Las texturas se instalan en el pack; utiliza también el plugin compilado con la revisión **#60 o posterior** para enlazar las texturas de armadura y conservar el cambio de nombre de la Baya Regenerativa de #59. Los comandos mantienen sus identificadores actuales. `gancho` apunta a tu textura `gancho_2d`; `ficha_mision` y las cinco mochilas mantienen sus nombres de modelo.
 
 ## Verificación
 

@@ -1,49 +1,57 @@
-# Armadura Warden y peto alado · texturas vanilla 2D
+# Armadura Warden · sculk y biomas
 
-**Rama 26.2 · Revisión #60.** Texturas para las piezas equipadas, relacionadas con sus iconos de inventario.
+**Rama 26.2 · Revisión #62.** Rediseño basado en **Wardenite Armor V1.5 (1.21 Ver.)**, el pack que aportaste, acreditado a **ShadowsCrow** en su `pack.mcmeta`.
 
-[Descargar solo la armadura](armadura-warden.zip) · [Pack completo de items y armadura](items-pixelart.zip)
+[Descargar armadura, iconos y mejoras](armadura-warden.zip) · [Pack completo](items-pixelart.zip)
 
-![Vistas planas de las caras UV e iconos de referencia](vista_armadura.png)
+![Armadura normal y alada: caras UV reales](vista_armadura.png)
 
-## Diseño
+## Una base, cuatro biomas
 
-- **Casco:** base azul casi negra, frente cian y motivos de antenas Warden en ambos laterales.
-- **Peto:** placas y costillas cian alrededor de un núcleo de almas; espalda con vetas sculk.
-- **Pantalones:** placas azul petróleo, muslos cian, rodillas oscuras y hebilla luminosa en color.
-- **Botas:** base oscura y refuerzos cian en empeine y espinilla.
-- **Peto alado:** conserva el torso sculk/cian y añade bordes violetas, detalles morados en hombros y espalda, y alas oscuras con venas cian y bordes violetas.
+Se conservan el dibujo, la distribución de sombras, las costillas claras y la base sculk oscura de la referencia. Los colores del bioma se concentran en sus refuerzos; no se reparten puntos de muchos colores por toda la armadura.
 
-Las antenas son dibujos sobre las caras del casco. Las texturas 2D vanilla no añaden geometría que sobresalga de la cabeza. Las alas utilizan la geometría y la animación normales de las élitras.
+| Pieza | Bioma | Detalles |
+| --- | --- | --- |
+| Casco | Caverna Sculk / Deep Dark | Cian original del pack, sin recolorear |
+| Peto | Abismo Flotante | Hombros y refuerzos morados, costillas de hueso |
+| Pantalones | Ruinas de Ceniza | Cinturón y relieves gris ceniza |
+| Botas | Pantano Profundo | Punteras y refuerzos verdes |
+| Peto alado | Abismo Flotante | Mismo torso morado; alas sculk con nervaduras de hueso y acentos morados |
 
-## Las dos capas y el alado
+Los **cinco iconos de armadura** y las **cuatro mejoras** usan los mismos colores y motivos. Las mejoras son tablillas oscuras con esquinas de hueso y el símbolo de su pieza, con simetría horizontal exacta.
 
-Todos los PNG de armadura son **64×32**, con píxeles sin suavizado y transparencia binaria. Se mantiene el mapa UV y la máscara de transparencia de los atlas vanilla de Minecraft 26.2.
+![Cinco piezas y cuatro mejoras, a tamaño nativo y ampliadas](vista_warden_items.png)
+
+## Capas de la armadura
+
+Los atlas son PNG RGBA **64×32**, sin suavizado y con transparencia binaria. Se conserva el mapa UV y la máscara de las capas de Wardenite. Las alas mantienen la máscara UV de las élitras vanilla. Los huecos de la referencia forman parte del diseño y permiten ver la skin o la capa interior.
 
 | Archivo bajo `assets/minecraft/` | Uso |
 | --- | --- |
-| `textures/entity/equipment/humanoid/warden.png` | Capa exterior: casco, peto, brazos y botas |
-| `textures/entity/equipment/humanoid_leggings/warden.png` | Capa de pantalones y cintura |
-| `textures/entity/equipment/humanoid/warden_alado.png` | Torso y brazos del peto alado |
-| `textures/entity/equipment/wings/warden_alado.png` | Alas del peto alado |
-| `equipment/warden.json` | Une las dos capas de la armadura normal |
-| `equipment/warden_alado.json` | Une el peto alado y sus alas |
+| `textures/entity/equipment/humanoid/warden.png` | Casco, torso, brazos y botas |
+| `textures/entity/equipment/humanoid_leggings/warden.png` | Pantalones y cintura |
+| `textures/entity/equipment/humanoid/warden_alado.png` | Mismo torso y brazos para el peto alado |
+| `textures/entity/equipment/wings/warden_alado.png` | Alas sculk |
+| `equipment/warden.json` | Enlace de las dos capas normales |
+| `equipment/warden_alado.json` | Enlace del peto y las alas |
 
-`humanoid` y `humanoid_leggings` corresponden a las capas que antes se conocían como `layer_1` y `layer_2`. En 26.2 se enlazan mediante los JSON de `equipment` y el componente de equipamiento del item.
+Es una armadura **2D sobre la geometría vanilla**. Una textura no añade antenas que sobresalgan del casco. Las alas usan la geometría y animación normales de las élitras. No requiere shaders ni texturas emisivas.
 
-![Atlas UV sobre fondo oscuro y claro](vista_armadura_uv.png)
+![Atlas de las cuatro texturas](vista_armadura_uv.png)
 
-## Instalar y usar
+## Instalar
 
-1. Descomprime **armadura-warden.zip** y fusiona su carpeta **assets** con tu resource pack. El ZIP completo de items incluye los mismos archivos.
-2. Conserva el `pack.mcmeta` de tu pack de 26.2. Recarga con **F3 + T**; si lo distribuyes desde el servidor, actualiza su ZIP y hash.
-3. Compila y utiliza QuasoPlugin con la revisión **#60**. Esta revisión asigna `minecraft:warden` o `minecraft:warden_alado` al componente `equippable` de cada pieza.
-4. Las piezas nuevas ya llevan el enlace. Las antiguas se actualizan al iniciar sesión o volver a equiparlas, conservando sus metadatos. El peto alado mantiene su capacidad de planeo.
+1. Descomprime **armadura-warden.zip** y fusiona **assets** con tu resource pack, reemplazando las versiones anteriores. Este ZIP incluye los nueve iconos, sus JSON y las texturas de equipo; el ZIP completo contiene lo mismo.
+2. Conserva el `pack.mcmeta` de tu pack de 26.2. Los archivos se llaman `warden` y `warden_alado`: no reemplazan la armadura de netherita vanilla.
+3. Recarga con **F3 + T**. Si distribuyes el pack desde el servidor, actualiza su ZIP y hash.
+4. Usa QuasoPlugin **#60 o posterior**, que ya enlaza las piezas con los modelos de equipo. No hace falta cambiar comandos ni recrear los items por este rediseño.
 
-El icono de inventario sigue usando `casco_warden`, `peto_warden`, `pantalon_warden`, `bota_warden` o `peto_warden_alado`. El modelo de equipo es un componente distinto: cambiar únicamente `item_model` no cambia la apariencia puesta.
+Se mantienen `casco_warden`, `peto_warden`, `pantalon_warden`, `bota_warden`, `peto_warden_alado` y las cuatro claves `mejora_*_warden`. Los iconos son **16×16 reales**. Los items antiguos conservan sus datos y se enlazan al equipar o entrar, como en #60.
 
-## Verificación
+## Procedencia y comprobaciones
 
-Se comprobaron dimensiones, transparencia y UV contra los atlas vanilla, referencias de los JSON y contenido de ambos ZIP. El plugin se compiló con Java 25 y se comprobaron la migración de las cuatro piezas, la variante alada, la conservación de metadatos y la actualización al equipar.
+Las cuatro piezas normales adaptan las texturas e iconos de Wardenite de ShadowsCrow proporcionados por el usuario. El casco conserva sus píxeles originales; las otras piezas mantienen sus formas y grupos de sombreado con la paleta del bioma. Las alas, el icono alado y las nuevas tablillas de mejora se diseñaron para acompañar ese conjunto.
 
-Las vistas previas son montajes planos de las caras UV reales sobre un maniquí de referencia. No son capturas del juego; queda pendiente comprobar el resultado visual en un cliente de Minecraft.
+Se verificaron dimensiones, transparencia binaria, máscaras UV, simetría de las mejoras, nombres y referencias de los JSON, y contenido de los dos ZIP. Los demás recursos del pack permanecen intactos. Esta revisión solo cambia recursos y documentación; no modifica Java.
+
+Las vistas son montajes de las caras UV reales sobre un maniquí, no capturas del juego. Queda pendiente comprobar el aspecto en un cliente de Minecraft.

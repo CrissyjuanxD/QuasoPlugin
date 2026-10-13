@@ -188,7 +188,7 @@ public class EndDragon implements Listener {
         world.playSound(portal, Sound.BLOCK_BEACON_ACTIVATE, 3f, 0.6f);
         world.playSound(portal, Sound.BLOCK_END_PORTAL_SPAWN, 2f, 1.4f);
         for (Player p : world.getPlayers()) {
-            p.sendTitle(ChatColor.of("#c58cff") + "✦ Ritual del Dragón ✦", ChatColor.of("#ff8cc6") + "Los cristales despiertan al Ender Dragon", 10, 60, 20);
+            p.sendTitle(ChatColor.of("#c58cff") + "⚔ Ritual del Dragón ⚔", ChatColor.of("#ff8cc6") + "Los cristales despiertan al Ender Dragon", 10, 60, 20);
         }
     }
 

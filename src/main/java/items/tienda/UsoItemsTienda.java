@@ -190,7 +190,7 @@ public final class UsoItemsTienda implements Listener {
                         quitados++;
                     }
                 }
-                ActionBarHandler.get(plugin).sendNotification(player, "tienda:antidoto", ChatColor.of("#a6e3a1") + "✦ "
+                ActionBarHandler.get(plugin).sendNotification(player, "tienda:antidoto", ChatColor.of("#a6e3a1") + "✔ "
                         + (quitados == 0 ? "No tenías efectos malos" : "Se fueron " + quitados + (quitados == 1 ? " efecto malo" : " efectos malos")));
             }
             case "frasco_sabiduria" -> efectos.activar(player, EfectosTienda.Buff.SABIDURIA);
@@ -447,7 +447,7 @@ public final class UsoItemsTienda implements Listener {
             }
         }
         Bukkit.getScheduler().runTaskLater(plugin, () -> marcas.forEach(Entity::remove), 200L);
-        avisar(player, ChatColor.of("#b0e0ff") + "✦ " + (marcas.isEmpty() ? "No hay minerales cerca" : marcas.size() + " minerales marcados por 10 s"));
+        avisar(player, ChatColor.of("#b0e0ff") + "► " + (marcas.isEmpty() ? "No hay minerales cerca" : marcas.size() + " minerales marcados por 10 s"));
         player.playSound(player.getLocation(), Sound.BLOCK_SCULK_SENSOR_CLICKING, SoundCategory.PLAYERS, 1f, 1.4f);
         gastarUso(player, mano);
     }
@@ -482,7 +482,7 @@ public final class UsoItemsTienda implements Listener {
             meta.setEnchantmentGlintOverride(true);
             item.setItemMeta(meta);
             player.getInventory().setItem(mano, item);
-            avisar(player, ChatColor.of("#5ad1c5") + "✦ Lugar guardado en el Cristal de Eco");
+            avisar(player, ChatColor.of("#5ad1c5") + "✔ Lugar guardado en el Cristal de Eco");
             player.playSound(aqui, Sound.BLOCK_AMETHYST_BLOCK_CHIME, SoundCategory.PLAYERS, 1f, 1.2f);
             return;
         }
@@ -584,7 +584,7 @@ public final class UsoItemsTienda implements Listener {
         consumir(player, mano);
         player.getInventory().addItem(item).values().forEach(sobra -> player.getWorld().dropItem(player.getLocation(), sobra));
         boolean grande = (int) premio[0] <= 6;
-        player.sendMessage(ChatColor.of("#f5d76e") + "✦ " + ChatColor.GRAY + "La Caja Misteriosa traía: "
+        player.sendMessage(ChatColor.of("#f5d76e") + "► " + ChatColor.GRAY + "La Caja Misteriosa traía: "
                 + LEGACY.serialize(item.effectiveName()) + ChatColor.GRAY + " x" + item.getAmount() + (grande ? ChatColor.of("#f5d76e") + " ¡Qué suerte!" : ""));
         player.getWorld().spawnParticle(grande ? Particle.TOTEM_OF_UNDYING : Particle.FIREWORK, player.getLocation().add(0, 1, 0), 30, 0.4, 0.6, 0.4, 0.2);
         player.playSound(player.getLocation(), grande ? Sound.UI_TOAST_CHALLENGE_COMPLETE : Sound.ENTITY_PLAYER_LEVELUP,

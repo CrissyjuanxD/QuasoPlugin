@@ -77,7 +77,7 @@ public final class EfectosTienda implements Listener {
         activos.computeIfAbsent(player.getUniqueId(), id -> new EnumMap<>(Buff.class))
                 .put(buff, System.currentTimeMillis() + buff.segundos * 1000L);
         ActionBarHandler.get(plugin).sendNotification(player, "tienda:" + buff.name(),
-                buff.color + "✦ " + buff.nombre + ChatColor.GRAY + " activo por " + ChatColor.WHITE + buff.segundos / 60 + " min");
+                buff.color + "► " + buff.nombre + ChatColor.GRAY + " activo por " + ChatColor.WHITE + buff.segundos / 60 + " min");
     }
 
     boolean tiene(Player player, Buff buff) {
@@ -222,7 +222,7 @@ public final class EfectosTienda implements Listener {
             world.spawnParticle(Particle.REVERSE_PORTAL, desde, 50, 0.5, 1, 0.5, 0.1);
             world.spawnParticle(Particle.END_ROD, destino.clone().add(0, 1, 0), 30, 0.4, 0.8, 0.4, 0.05);
             world.playSound(destino, Sound.ENTITY_ENDERMAN_TELEPORT, SoundCategory.PLAYERS, 1f, 0.8f);
-            ActionBarHandler.get(plugin).sendNotification(player, "tienda:pluma", ChatColor.of("#b57edc") + "✦ ¡La Pluma del Vacío te salvó!");
+            ActionBarHandler.get(plugin).sendNotification(player, "tienda:pluma", ChatColor.of("#b57edc") + "♥ ¡La Pluma del Vacío te salvó!");
             return;
         }
     }

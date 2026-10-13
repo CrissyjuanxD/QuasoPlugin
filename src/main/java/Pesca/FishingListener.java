@@ -285,7 +285,7 @@ public class FishingListener implements Listener {
     private void sendResultMessage(Player player, FishingMiniGame.Resultado resultado, ItemStack reward, FishingLoot.Premio premio, int hoy) {
         Component nombre = reward.effectiveName();
         Component titulo = switch (resultado) {
-            case PERFECTA -> Component.text("✦ ¡Pesca perfecta! ✦", VERDE, TextDecoration.BOLD);
+            case PERFECTA -> Component.text("✔ ¡Pesca perfecta!", VERDE, TextDecoration.BOLD);
             case BUENA -> Component.text("¡Buena pesca!", NARANJA, TextDecoration.BOLD);
             default -> Component.text("Pesca normal", TEXTO);
         };
@@ -295,12 +295,12 @@ public class FishingListener implements Listener {
         if (premio == null) return;
 
         TextColor rareza = premio.rareza().color();
-        player.sendMessage(PREFIJO.append(Component.text("✦ ", rareza)).append(nombre)
+        player.sendMessage(PREFIJO.append(Component.text("► ", rareza)).append(nombre)
                 .append(Component.text(" · " + premio.rareza().nombre(), rareza))
                 .append(Component.text("  (" + hoy + "/" + FishingLoot.TOPE_DIARIO + " hoy)", GRIS)));
         if (premio.rareza() == FishingLoot.Rareza.EPICO) {
             Bukkit.broadcast(PREFIJO.append(Component.text(player.getName(), TEXTO, TextDecoration.BOLD))
-                    .append(Component.text(" pescó ", TEXTO)).append(nombre).append(Component.text(" ✦", rareza)));
+                    .append(Component.text(" pescó ", TEXTO)).append(nombre).append(Component.text(".", rareza)));
         }
     }
 }

@@ -66,7 +66,7 @@ public class KeepInventoryEffect implements CustomEffect, Listener {
         Particle.DustOptions celeste = new Particle.DustOptions(Color.fromRGB(168, 223, 255), 1.3f);
         player.getWorld().spawnParticle(Particle.DUST, loc.clone().add(0, 1, 0), 35, 0.45, 0.7, 0.45, 0, celeste);
 
-        enviarActionBar(player, ChatColor.of("#A8DFFF") + "✦ Tu inventario está protegido.");
+        enviarActionBar(player, ChatColor.of("#A8DFFF") + "✔ Tu inventario está protegido.");
     }
 
     @Override

@@ -47,7 +47,7 @@ public class GravesPublicCommand implements CommandExecutor, TabCompleter {
             for (Grave g : myGraves) {
                 Location loc = g.getLocation();
                 String shortId = "#" + g.getId().toString().substring(0, 4);
-                TextComponent line = new TextComponent(ChatColor.of("#CDB4DB") + " ✦ " + ChatColor.of("#FDE2E4") + worldName(loc.getWorld())
+                TextComponent line = new TextComponent(ChatColor.of("#CDB4DB") + " • " + ChatColor.of("#FDE2E4") + worldName(loc.getWorld())
                         + ChatColor.of("#B8C0FF") + " X:" + loc.getBlockX() + " Y:" + loc.getBlockY() + " Z:" + loc.getBlockZ()
                         + ChatColor.GRAY + " · hace " + ChatColor.WHITE + ModoTumba.reloj(now - g.getCreationTime())
                         + ChatColor.GRAY + " · " + state(g, now));

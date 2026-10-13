@@ -193,7 +193,7 @@ public class EstatuaProtectora implements Listener {
         loc.getWorld().playSound(loc, Sound.ENTITY_ARMOR_STAND_PLACE, SoundCategory.BLOCKS, 1.0f, 0.9f);
         loc.getWorld().playSound(loc, Sound.BLOCK_BEACON_ACTIVATE, SoundCategory.BLOCKS, 0.7f, 1.6f);
 
-        p.sendMessage(ChatColor.of("#ff9e9e") + "✦ " + ChatColor.of("#e88f8f")
+        p.sendMessage(ChatColor.of("#ff9e9e") + "✔ " + ChatColor.of("#e88f8f")
                 + "Estatua Protectora colocada. Zona protegida de "
                 + ChatColor.of("#ff9e9e") + "18×18" + ChatColor.of("#e88f8f") + " bloques.");
 
@@ -242,7 +242,7 @@ public class EstatuaProtectora implements Listener {
             p.getInventory().addItem(devuelta);
         }
 
-        p.sendMessage(ChatColor.of("#ff9e9e") + "✦ " + ChatColor.of("#e88f8f")
+        p.sendMessage(ChatColor.of("#ff9e9e") + "✔ " + ChatColor.of("#e88f8f")
                 + "Has recogido la Estatua Protectora.");
     }
 

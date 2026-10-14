@@ -1,5 +1,6 @@
 package Handlers;
 
+import items.ArcoMejorado;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
@@ -21,7 +22,9 @@ public class AnvilOverEnchantHandler implements Listener {
         this.plugin = plugin;
     }
 
-    // Deja pasar encantamientos por encima del nivel máximo usando libros en el yunque, con coste fijo de 12
+    // Deja pasar encantamientos por encima del nivel máximo usando libros en el yunque, con coste fijo de 12. Solo en
+    // items que aceptan ese encantamiento y sin chocar con los que ya tienen. El Arco Mejorado además acepta
+    // Perforación y sube a Poder VI juntando Poder V con un libro de Poder V
     @EventHandler
     public void onPrepareAnvil(PrepareAnvilEvent event) {
         ItemStack firstItem = event.getInventory().getItem(0);
@@ -43,6 +46,7 @@ public class AnvilOverEnchantHandler implements Listener {
 
             boolean hasOverEnchant = false;
             boolean isResultBook = resultItem.getType() == Material.ENCHANTED_BOOK;
+            boolean arcoMejorado = ArcoMejorado.es(firstItem);
 
             for (Map.Entry<Enchantment, Integer> entry : bookMeta.getStoredEnchants().entrySet()) {
                 Enchantment enchant = entry.getKey();
@@ -57,10 +61,16 @@ public class AnvilOverEnchantHandler implements Listener {
                         hasOverEnchant = true;
                     }
                 } else {
-                    int currentLevel = resultItem.getEnchantmentLevel(enchant);
+                    boolean acepta = enchant.canEnchantItem(firstItem) || (arcoMejorado && enchant.equals(Enchantment.PIERCING));
+                    if (!acepta || choca(resultMeta, enchant)) continue;
 
-                    if (bookLevel > enchant.getMaxLevel() || bookLevel > currentLevel) {
-                        resultMeta.addEnchant(enchant, bookLevel, true);
+                    int currentLevel = resultMeta.getEnchantLevel(enchant);
+                    int level = enchant.equals(Enchantment.POWER)
+                            ? poder(currentLevel, bookLevel, ArcoMejorado.poderMaximo(firstItem), arcoMejorado)
+                            : bookLevel;
+
+                    if (level > currentLevel) {
+                        resultMeta.addEnchant(enchant, level, true);
                         hasOverEnchant = true;
                     }
                 }
@@ -76,5 +86,19 @@ public class AnvilOverEnchantHandler implements Listener {
                 );
             }
         }
+    }
+
+    // Choca con algún encantamiento que ya tiene (Infinidad con Reparación, Filo con Castigo...)
+    private static boolean choca(ItemMeta meta, Enchantment enchant) {
+        for (Enchantment existing : meta.getEnchants().keySet()) {
+            if (!existing.equals(enchant) && existing.conflictsWith(enchant)) return true;
+        }
+        return false;
+    }
+
+    // Poder en un arco: dos iguales suben uno (como en el juego) y el tope es V, o VI en el Arco Mejorado
+    static int poder(int actual, int libro, int maximo, boolean arcoMejorado) {
+        int nivel = arcoMejorado && libro == actual ? actual + 1 : libro;
+        return Math.min(nivel, maximo);
     }
 }

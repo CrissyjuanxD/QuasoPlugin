@@ -18,11 +18,13 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.java.JavaPlugin;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 
-/** Una tirada del 40% por muerte, también para mobs creados por comandos antes del día 1. Si sale, el Saqueo da más:
- *  con II de 1 a 2 y con III de 1 a 3. Los que invoca la Abeja Floral en su pelea no sueltan nada, si no se farmean en
- *  el boss. */
+/** Una tirada por muerte, también para mobs creados por comandos antes del día 1. Con el cambio uno es 10% y siempre
+ *  sale 1 (el Saqueo no cambia nada). Desde el día 12 (cuando se activa la misión 12) es 40% y, si sale, el Saqueo da
+ *  más: con II de 1 a 2 y con III de 1 a 3. Los que invoca la Abeja Floral en su pelea no sueltan nada, si no se
+ *  farmean en el boss. */
 public final class FloralMobDrops implements Listener {
     private final NamespacedKey zombieKey;
     private final NamespacedKey spiderKey;
@@ -30,28 +32,36 @@ public final class FloralMobDrops implements Listener {
     private final NamespacedKey beeKey;
     private final NamespacedKey summonKey;
     private final DoubleSupplier random;
-    static final double PROBABILIDAD = 0.40;
+    private final BooleanSupplier dia12;
+    static final double PROBABILIDAD = 0.10;
+    static final double PROBABILIDAD_DIA_12 = 0.40;
     // La marca de los mobs que invoca la Abeja Floral
     public static final String INVOCADO = "invocado_abeja_floral";
+    // La misión del día 12 (matar a la Abeja Floral): con ella activa los drops suben al 40%
+    public static final int MISION_DIA_12 = 12;
 
-    public FloralMobDrops(JavaPlugin plugin) {
-        this(plugin, () -> ThreadLocalRandom.current().nextDouble());
+    // dia12 dice si ya es el día 12 (la misión 12 está activa)
+    public FloralMobDrops(JavaPlugin plugin, BooleanSupplier dia12) {
+        this(plugin, () -> ThreadLocalRandom.current().nextDouble(), dia12);
     }
-    FloralMobDrops(JavaPlugin plugin, DoubleSupplier random) {
+    FloralMobDrops(JavaPlugin plugin, DoubleSupplier random, BooleanSupplier dia12) {
         this.zombieKey = new NamespacedKey(plugin, "corrupted_zombie");
         this.spiderKey = new NamespacedKey(plugin, "corruptedspider");
         this.creeperKey = new NamespacedKey(plugin, "bombita");
         this.beeKey = new NamespacedKey(plugin, "corrupted_bee");
         this.summonKey = new NamespacedKey(plugin, INVOCADO);
         this.random = random;
+        this.dia12 = dia12;
     }
     @EventHandler(ignoreCancelled = true)
     public void onDeath(EntityDeathEvent event) {
         LivingEntity mob = event.getEntity();
         if (marked(mob, summonKey)) return;
         ItemStack drop = drop(mob);
-        if (drop == null || random.getAsDouble() >= PROBABILIDAD) return;
-        drop.setAmount(cantidad(saqueo(mob), random.getAsDouble()));
+        if (drop == null) return;
+        boolean potenciado = dia12.getAsBoolean();
+        if (random.getAsDouble() >= (potenciado ? PROBABILIDAD_DIA_12 : PROBABILIDAD)) return;
+        drop.setAmount(potenciado ? cantidad(saqueo(mob), random.getAsDouble()) : 1);
         event.getDrops().add(drop);
     }
 

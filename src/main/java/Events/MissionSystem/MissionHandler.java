@@ -60,7 +60,11 @@ public class MissionHandler implements Listener {
             Mission121::new, Mission122::new, Mission123::new, Mission124::new, Mission125::new,
             Mission126::new, Mission127::new, Mission128::new, Mission129::new, Mission130::new,
             Mission131::new, Mission132::new, Mission133::new, Mission134::new, Mission135::new,
-            Mission136::new, Mission137::new, Mission138::new, Mission139::new, Mission140::new
+            Mission136::new, Mission137::new, Mission138::new, Mission139::new, Mission140::new,
+            // Las extras de crafteos van desde la 201 (de la 141 a la 200 son las de trabajo)
+            Mission201::new, Mission202::new, Mission203::new, Mission204::new, Mission205::new,
+            Mission206::new, Mission207::new, Mission208::new, Mission209::new, Mission210::new,
+            Mission211::new, Mission212::new
     );
 
     private final JavaPlugin plugin;
@@ -81,8 +85,12 @@ public class MissionHandler implements Listener {
 
         Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
             Set<Integer> dbActiveMissions = dbManager.getGlobalActiveMissions();
+            Set<Integer> knownMissions = dbManager.getKnownGlobalMissions();
             globalActiveMissions.addAll(dbActiveMissions);
             plugin.getLogger().info("Se han restaurado " + globalActiveMissions.size() + " misiones globales activas desde la BD.");
+            if (knownMissions.containsAll(dbActiveMissions)) {
+                Bukkit.getScheduler().runTask(plugin, () -> activateNewExtras(knownMissions));
+            }
         });
 
         Bukkit.getScheduler().runTaskTimerAsynchronously(plugin, this::autoSaveAll, 3600L, 3600L);
@@ -280,19 +288,21 @@ public class MissionHandler implements Listener {
         return TipoMision.de(missionNumber, mission != null ? mission.getParentMission() : 0);
     }
 
-    // Cómo se escribe en los comandos: 1, 1ex o 170tra
+    // Cómo se escribe en los comandos: 1, 1ex (1ex2 la segunda extra de la 1) o 170tra
     public String token(int missionNumber) {
         Mission mission = missions.get(missionNumber);
-        return TipoMision.token(missionNumber, mission != null ? mission.getParentMission() : 0);
+        int parent = mission != null ? mission.getParentMission() : 0;
+        int orden = parent > 0 ? Math.max(0, getExtras(parent).indexOf(missionNumber)) : 0;
+        return TipoMision.token(missionNumber, parent, orden);
     }
 
-    // El número de misión de "1", "1ex", "170tra" (o el número de siempre); -1 si no existe
+    // El número de misión de "1", "1ex", "1ex2", "170tra" (o el número de siempre); -1 si no existe
     public int parse(String text) {
-        int number = TipoMision.parse(text, parent -> {
+        int number = TipoMision.parse(text, (parent, orden) -> {
             Mission base = missions.get(parent);
             if (base == null || base.getParentMission() != 0 || MisionTrabajo.es(parent)) return -1;
             List<Integer> extras = getExtras(parent);
-            return extras.isEmpty() ? -1 : extras.get(0);
+            return orden < extras.size() ? extras.get(orden) : -1;
         });
         return missions.containsKey(number) ? number : -1;
     }
@@ -316,6 +326,19 @@ public class MissionHandler implements Listener {
         return extras;
     }
 
+    // Las extras que se agregaron después de activar su misión se activan solas al prender el server. Solo las que
+    // nunca estuvieron en la base de datos: si el staff desactivó una, se queda así
+    private void activateNewExtras(Set<Integer> knownMissions) {
+        for (Mission mission : missions.values()) {
+            int number = mission.getMissionNumber();
+            int parent = mission.getParentMission();
+            if (parent <= 0 || !globalActiveMissions.contains(parent)) continue;
+            if (globalActiveMissions.contains(number) || knownMissions.contains(number)) continue;
+            setGlobalState(number, true);
+            plugin.getLogger().info("La misión extra " + token(number) + " se activó porque la misión " + parent + " ya estaba activa.");
+        }
+    }
+
     // Activa la misión (y sus extras) para todos y lo anuncia con la animación
     public void activateMission(CommandSender sender, int missionNumber) {
         if (!missions.containsKey(missionNumber)) {
@@ -336,11 +359,7 @@ public class MissionHandler implements Listener {
         setGlobalState(missionNumber, true);
         for (int extra : extras) setGlobalState(extra, true);
 
-        if (extras.isEmpty()) {
-            sender.sendMessage(ChatColor.GREEN + "Misión " + token(missionNumber) + " activada globalmente.");
-        } else {
-            sender.sendMessage(ChatColor.GREEN + "Misión " + token(missionNumber) + " activada globalmente junto con su extra.");
-        }
+        sender.sendMessage(ChatColor.GREEN + "Misión " + token(missionNumber) + " activada globalmente" + conExtras(extras.size()));
 
         TipoMision normal = tipo(missionNumber);
         StringBuilder json = new StringBuilder("[\"\",{\"text\":\"\\n۞ \",\"bold\":true,\"color\":\"" + normal.primario + "\"},")
@@ -406,9 +425,13 @@ public class MissionHandler implements Listener {
             }
         }
 
-        sender.sendMessage(ChatColor.GREEN + "Misión " + token(missionNumber) + " desactivada globalmente"
-                + (extras.isEmpty() ? "." : " junto con su extra."));
+        sender.sendMessage(ChatColor.GREEN + "Misión " + token(missionNumber) + " desactivada globalmente" + conExtras(extras.size()));
         return true;
+    }
+
+    private static String conExtras(int extras) {
+        if (extras == 0) return ".";
+        return extras == 1 ? " junto con su extra." : " junto con sus " + extras + " extras.";
     }
 
     // Activa de una todas las que falten, con un solo anuncio
@@ -536,8 +559,8 @@ public class MissionHandler implements Listener {
         if (coins <= 0) return;
         if (dinoCoins != null) dinoCoins.deposit(player, coins);
         else DinoCoinsManager.giveLoose(player, coins);
-        player.sendMessage(ChatColor.of(TipoMision.EXTRA.primario) + "Has obtenido " + ChatColor.of(TipoMision.EXTRA.secundario)
-                + coins + " Dinocoins" + ChatColor.of(TipoMision.EXTRA.primario) + ".");
+        player.sendMessage(ChatColor.of(TipoMision.EXTRA.primario) + "Has obtenido " + items.EconomyItems.iconoDinoCoins()
+                + ChatColor.of(TipoMision.EXTRA.secundario) + coins + " Dinocoins" + ChatColor.of(TipoMision.EXTRA.primario) + ".");
     }
 
     public long getCompletedCount(Player player) {

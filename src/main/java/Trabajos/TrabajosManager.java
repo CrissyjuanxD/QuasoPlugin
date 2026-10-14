@@ -237,14 +237,15 @@ public final class TrabajosManager implements Listener {
         player.giveExp(TrabajoNiveles.experiencia(nivel));
 
         player.sendMessage(TrabajosTexto.PREFIJO + "¡Subiste a " + TrabajosTexto.nombre(trabajo) + " nivel " + TrabajosTexto.BLANCO + nivel
-                + TrabajosTexto.CREMA + "! " + TrabajosTexto.DORADO + "+" + base + " DinoCoins" + TrabajosTexto.CREMA + " y "
+                + TrabajosTexto.CREMA + "! " + items.EconomyItems.iconoDinoCoins() + TrabajosTexto.DORADO + "+" + base + " DinoCoins"
+                + TrabajosTexto.CREMA + " y "
                 + TrabajoNiveles.experiencia(nivel) + " de experiencia.");
         if (bonus > 0) {
             // Cada 5 niveles: title y el bonus
             player.sendTitle(TrabajosTexto.color(trabajo) + "" + ChatColor.BOLD + trabajo.nombre() + " " + nivel,
                     TrabajosTexto.DORADO + "¡Bonus! " + TrabajosTexto.CREMA + "+" + (base + bonus) + " DinoCoins", 5, 50, 15);
-            player.sendMessage(TrabajosTexto.PREFIJO + TrabajosTexto.DORADO + "¡Bonus de nivel " + nivel + "! " + TrabajosTexto.BLANCO + "+"
-                    + bonus + " DinoCoins" + TrabajosTexto.CREMA + ".");
+            player.sendMessage(TrabajosTexto.PREFIJO + TrabajosTexto.DORADO + "¡Bonus de nivel " + nivel + "! "
+                    + items.EconomyItems.iconoDinoCoins() + TrabajosTexto.BLANCO + "+" + bonus + " DinoCoins" + TrabajosTexto.CREMA + ".");
             player.playSound(player.getLocation(), Sound.UI_TOAST_CHALLENGE_COMPLETE, SoundCategory.PLAYERS, 0.8f, 1.2f);
         } else {
             mostrarBarra(player, trabajo, nivel, base);

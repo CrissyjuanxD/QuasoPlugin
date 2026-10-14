@@ -117,3 +117,10 @@ Se completan `lanza_floral`, `azada_floral`, `libro_veta` y `escudo_floral`. [De
 Los cuatro iconos son 16×16. La lanza tiene una textura adicional de 32×32 para `item/spear_in_hand`, seleccionada únicamente al equiparla; el escudo conserva los modelos normal y de bloqueo. La azada mantiene exactamente la silueta de la referencia del usuario. El libro de Veta comparte el estilo de los otros libros, con tapa gris y una veta cian.
 
 Los nuevos recursos están también en `resourcepack/assets`. Instala este complemento después de los ZIP florales anteriores. No hay cambios de Java ni de atributos.
+
+## Arco Mejorado (Version #80)
+
+El Arco Mejorado usa el item model `minecraft:arco_mejorado`. Mientras no tenga textura propia,
+`items/arco_mejorado.json` muestra el arco normal con sus tres poses al tensarlo. Para cambiarlo se reemplazan
+los `model` de ese archivo por `item/custom/arco_mejorado` y `arco_mejorado_pulling_0..2`, igual que en
+`arco_nivel1`.

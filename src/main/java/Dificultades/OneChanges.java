@@ -47,6 +47,7 @@ public class OneChanges implements Listener, Change {
     private final Bombita bombitaSpawner;;
     private final Iceologer iceologerSpawner;
     private final FloralForja floralForja;
+    private final items.ArcoMejorado arcoMejorado;
 
     private final NamespacedKey uuidKey;
     private final NamespacedKey upgradeKey;
@@ -63,6 +64,7 @@ public class OneChanges implements Listener, Change {
         this.bombitaSpawner = new Bombita(plugin);
         this.iceologerSpawner = new Iceologer(plugin);
         this.floralForja = new FloralForja(plugin);
+        this.arcoMejorado = new items.ArcoMejorado(plugin);
 
         this.uuidKey = new NamespacedKey(plugin, "creator_uuid");
         this.upgradeKey = new NamespacedKey(plugin, "is_upgrade");
@@ -75,7 +77,7 @@ public class OneChanges implements Listener, Change {
 
     @Override
     public String description() {
-        return "Día 1: mobs corruptos, raids modificadas, BloodMoon, altar de la Abeja Floral, la carne corrupta y el equipo floral";
+        return "Día 1: mobs corruptos, raids modificadas, BloodMoon, altar de la Abeja Floral, la carne corrupta, el equipo floral y el Arco Mejorado";
     }
 
     @Override
@@ -102,6 +104,7 @@ public class OneChanges implements Listener, Change {
             corruptedInfernalSpider.apply();
             corruptedBee.apply();
             floralForja.apply();
+            arcoMejorado.apply();
         }
     }
 
@@ -125,6 +128,7 @@ public class OneChanges implements Listener, Change {
             corruptedInfernalSpider.revert();
             corruptedBee.revert();
             floralForja.revert();
+            arcoMejorado.revert();
             HandlerList.unregisterAll(this);
 
             isApplied = false;
@@ -205,6 +209,7 @@ public class OneChanges implements Listener, Change {
         List<org.bukkit.inventory.Recipe> recetas = new ArrayList<>();
         recetas.add(corruptedSteakRecipe());
         recetas.addAll(floralForja.recetas());
+        recetas.addAll(arcoMejorado.recetas());
         return recetas;
     }
 

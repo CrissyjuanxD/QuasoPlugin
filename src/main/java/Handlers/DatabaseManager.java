@@ -236,6 +236,21 @@ public class DatabaseManager {
         return activeMissions;
     }
 
+    // Todas las misiones que alguna vez se activaron o desactivaron (las que no están nunca se tocaron)
+    public Set<Integer> getKnownGlobalMissions() {
+        Set<Integer> known = new HashSet<>();
+        try (Connection conn = getConnection();
+             PreparedStatement stmt = conn.prepareStatement("SELECT mission_id FROM global_missions")) {
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                known.add(rs.getInt("mission_id"));
+            }
+        } catch (SQLException e) {
+            plugin.getLogger().severe("Error cargando el estado de las misiones globales: " + e.getMessage());
+        }
+        return known;
+    }
+
     public void setMissionGlobalState(int missionId, boolean active) {
         String sql = "INSERT INTO global_missions (mission_id, is_active) VALUES (?, ?) " +
                 "ON DUPLICATE KEY UPDATE is_active = ?";

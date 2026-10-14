@@ -641,7 +641,8 @@ public class QuasoPlugin extends JavaPlugin implements Listener {
     }
 
     private void initMobsAndBossesSystem() {
-        Dificultades.CustomMobs.FloralMobDrops floralDrops = new Dificultades.CustomMobs.FloralMobDrops(this);
+        Dificultades.CustomMobs.FloralMobDrops floralDrops = new Dificultades.CustomMobs.FloralMobDrops(this,
+                () -> missionHandler != null && missionHandler.getActiveMissions().contains(Dificultades.CustomMobs.FloralMobDrops.MISION_DIA_12));
         getServer().getPluginManager().registerEvents(floralDrops, this);
         Bukkit.getWorlds().forEach(world -> world.getEntities().forEach(floralDrops::refreshName));
         corruptedZombies = new CorruptedZombies(this);

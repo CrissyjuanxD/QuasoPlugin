@@ -69,3 +69,9 @@ pack debe incluir `assets/minecraft/items/monedero.json`.
   de antes (de a 64) pasan a las de 99 al entrar al server, al abrir un cofre o el monedero y al levantarlas del
   suelo. Los tradeos guardados de la tienda también se pasan al cargarse, así siguen aceptando las monedas.
 - Las mochilas y el monedero ya no brillan; a los que ya existían se les quita al abrirlos.
+
+## Tiendas (Version #80)
+
+En el menú de las tiendas ya no está la primera fila con «Precio #1», «Precio #2» y «Producto». Las flechas (pepitas)
+y los espacios «Vacío» (structure void) no se ven, pero al pasar el mouse siguen mostrando su nombre. Todos los slots
+que quedaban vacíos tienen un item invisible sin nombre ni lore, así no se puede meter nada.

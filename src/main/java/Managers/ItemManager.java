@@ -76,7 +76,7 @@ public class ItemManager {
         "bar_mezcal", "bar_pulque", "bar_cerveza", "bar_ron", "bar_vodka", "bar_whisky",
         "bar_sake", "bar_ginebra", "bar_azulito", "bar_michelada", "manzana_vida", "pluma_levitacion", "pluma_levitacion_mejorada",
         "keep_inventory_liquido", "estatua_protectora", "amuleto_ultima_esperanza",
-        "carne_podrida_floral", "ojo_arana_floral", "polvora_floral", "bloque_oro_apilado", "arco_hielo_jugador",
+        "carne_podrida_floral", "ojo_arana_floral", "polvora_floral", "bloque_oro_apilado", "arco_hielo_jugador", "arco_mejorado",
         "aguijon_floral", "esencia_floral", "mejora_floral", "espada_floral", "hacha_floral", "lanza_floral", "pico_floral",
         "pala_floral", "azada_floral", "escudo_floral", "casco_floral", "peto_floral", "pantalon_floral", "botas_floral",
 
@@ -197,6 +197,7 @@ public class ItemManager {
                 item = FloralItems.create(FloralItems.piezaPorId(itemName.toLowerCase())); break;
             case "bloque_oro_apilado": item = CorruptedGoldenApple.createApilateGoldBlock(); break;
             case "arco_hielo_jugador": item = iceBowItem.createPlayerIceBow(); break;
+            case "arco_mejorado": item = items.ArcoMejorado.create(); break;
 
             case "amuleto_invisiblidad": item = amuletInvisibility.createAmulet(); break;
             case "arco_nivel1": item = explosiveBow.createExplosiveBowLevel1(); break;

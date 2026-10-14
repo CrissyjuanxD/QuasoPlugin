@@ -34,6 +34,7 @@ uno, que está activo desde el día 1. Si se desactiva el cambio extra, los que 
 Con el cambio extra también salen solas las **Mini Abejas Florales**. De los zombies, arañas, creepers y esqueletos
 que spawnean solos en el Overworld y no salen florales, 10 de cada 100 se cambian por una Mini Abeja Floral (los
 zombies bebé y los esqueletos solo pueden salir abeja). La abeja sale en el lugar del mob, no se guarda cuando se
-descarga el chunk y se va si no hay jugadores a 128 bloques, como un monstruo. Suelta el Aguijón Floral al 40%.
+descarga el chunk y se va si no hay jugadores a 128 bloques, como un monstruo. Suelta el Aguijón Floral al 40% (al 10%
+si la misión 12 todavía no se activó).
 
 El anuncio que salía en el chat al activar un cambio con `/changes activar` se quitó: lo hace el staff a mano.

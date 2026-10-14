@@ -26,7 +26,7 @@ class FloralMobDropsTest {
         return plugin;
     }
 
-    @Test void eachMarkedMobHasOneDropBelowFortyPercentAndNoDropAtTheBoundary() {
+    @Test void eachMarkedMobHasOneDropBelowFortyPercentFromDayTwelveAndNoDropAtTheBoundary() {
         try (var factories = mockStatic(FloralMobItems.class)) {
             ItemStack flesh=mock(ItemStack.class), eye=mock(ItemStack.class), powder=mock(ItemStack.class);
             factories.when(FloralMobItems::createFlesh).thenReturn(flesh);
@@ -44,10 +44,10 @@ class FloralMobDropsTest {
                 List<ItemStack> drops = new ArrayList<>();
                 ItemStack vanillaDrop=mock(ItemStack.class); drops.add(vanillaDrop);
                 when(event.getDrops()).thenReturn(drops);
-                new FloralMobDrops(plugin(),()->.399999).onDeath(event);
+                new FloralMobDrops(plugin(),()->.399999,()->true).onDeath(event);
                 assertEquals(List.of(vanillaDrop,expected.get(i)),drops);
                 drops.clear();
-                new FloralMobDrops(plugin(),()->.40).onDeath(event);
+                new FloralMobDrops(plugin(),()->.40,()->true).onDeath(event);
                 assertTrue(drops.isEmpty());
             }
         }
@@ -65,13 +65,36 @@ class FloralMobDropsTest {
             when(event.getEntity()).thenReturn(bee);
             List<ItemStack> drops = new ArrayList<>();
             when(event.getDrops()).thenReturn(drops);
-            new FloralMobDrops(plugin(), () -> .1).onDeath(event);
+            new FloralMobDrops(plugin(), () -> .1, () -> true).onDeath(event);
             assertEquals(List.of(stinger), drops);
 
             drops.clear();
             when(data.has(new NamespacedKey("quasoplugin", FloralMobDrops.INVOCADO), PersistentDataType.BYTE)).thenReturn(true);
-            new FloralMobDrops(plugin(), () -> 0).onDeath(event);
+            new FloralMobDrops(plugin(), () -> 0, () -> true).onDeath(event);
             assertTrue(drops.isEmpty());
+        }
+    }
+
+    // Antes del día 12 es 10% y siempre 1, aunque tenga Saqueo III
+    @Test void beforeDayTwelveItIsTenPercentAndLootingDoesNothing() {
+        try (var factories = mockStatic(FloralMobItems.class)) {
+            ItemStack flesh = mock(ItemStack.class);
+            factories.when(FloralMobItems::createFlesh).thenReturn(flesh);
+            Zombie zombie = mock(Zombie.class);
+            var data = mock(PersistentDataContainer.class);
+            when(data.has(new NamespacedKey("quasoplugin", "corrupted_zombie"), PersistentDataType.BYTE)).thenReturn(true);
+            when(zombie.getPersistentDataContainer()).thenReturn(data);
+            var event = mock(EntityDeathEvent.class);
+            when(event.getEntity()).thenReturn(zombie);
+            List<ItemStack> drops = new ArrayList<>();
+            when(event.getDrops()).thenReturn(drops);
+
+            new FloralMobDrops(plugin(), () -> .10, () -> false).onDeath(event);
+            assertTrue(drops.isEmpty());
+            new FloralMobDrops(plugin(), () -> .099, () -> false).onDeath(event);
+            assertEquals(List.of(flesh), drops);
+            verify(flesh).setAmount(1);
+            verify(zombie, never()).getKiller();
         }
     }
 
@@ -94,7 +117,7 @@ class FloralMobDropsTest {
         when(zombie.getPersistentDataContainer()).thenReturn(mock(PersistentDataContainer.class));
         EntityDeathEvent event=mock(EntityDeathEvent.class);
         when(event.getEntity()).thenReturn(zombie);
-        new FloralMobDrops(plugin(),()->0).onDeath(event);
+        new FloralMobDrops(plugin(),()->0,()->false).onDeath(event);
         verify(event,never()).getDrops();
     }
 }

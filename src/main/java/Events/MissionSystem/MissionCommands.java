@@ -145,7 +145,7 @@ public class MissionCommands implements CommandExecutor, TabCompleter {
 
     private void sendHelpMenu(CommandSender sender) {
         sender.sendMessage(ChatColor.GOLD + "=== Menú de Administración de Misiones ===");
-        sender.sendMessage(ChatColor.GRAY + "Las misiones se escriben 1 (normal), 1ex (la extra de la 1) o 170tra (de trabajo).");
+        sender.sendMessage(ChatColor.GRAY + "Las misiones se escriben 1 (normal), 1ex (la extra de la 1; la segunda es 1ex2) o 170tra (de trabajo).");
         sender.sendMessage(ChatColor.YELLOW + "/missions activar <número|todas> " + ChatColor.GRAY + "- Activa una misión (con sus extras) o todas.");
         sender.sendMessage(ChatColor.YELLOW + "/missions desactivar <número|todas> " + ChatColor.GRAY + "- Desactiva una misión (con sus extras) o todas.");
         sender.sendMessage(ChatColor.YELLOW + "/missions complete <jugador> <número> " + ChatColor.GRAY + "- Completa forzosamente una misión a un jugador.");
@@ -168,7 +168,8 @@ public class MissionCommands implements CommandExecutor, TabCompleter {
                 }
             }
         }
-        extras.sort(java.util.Comparator.comparingInt(token -> Integer.parseInt(token.replace(TipoMision.EXTRA.sufijo, ""))));
+        extras.sort(java.util.Comparator.<String>comparingInt(token -> TipoMision.partesExtra(token)[0])
+                .thenComparingInt(token -> TipoMision.partesExtra(token)[1]));
         normal.addAll(extras);
         normal.addAll(jobs);
         return normal;

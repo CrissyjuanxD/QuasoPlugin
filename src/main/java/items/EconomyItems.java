@@ -19,6 +19,13 @@ import java.util.UUID;
 
 public class EconomyItems {
     public static final String DINOCOINS_COLOR = "#6fa2e7";
+    // El ícono de las DinoCoins del resource pack (el mismo del scoreboard). Va en blanco para que se vean sus colores,
+    // así que después hay que volver a poner el color del texto
+    public static final String ICONO_DINOCOINS = "\uE904";
+
+    public static String iconoDinoCoins() {
+        return ChatColor.WHITE + ICONO_DINOCOINS + " ";
+    }
     public static final String DINOFICHAS_COLOR = "#dfb56b";
     public static final String MISSION_TOKEN_COLOR = "#ec9052";
 

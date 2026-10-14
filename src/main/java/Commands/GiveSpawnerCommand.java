@@ -338,6 +338,7 @@ public class GiveSpawnerCommand implements CommandExecutor, TabCompleter {
         lore.add(ChatColor.GRAY + "Min Delay: " + ChatColor.WHITE + "200");
         lore.add(ChatColor.GRAY + "Max Delay: " + ChatColor.WHITE + "600");
         lore.add(ChatColor.GRAY + "Spawn Range: " + ChatColor.WHITE + "4");
+        lore.add(ChatColor.GRAY + "Rompible: " + ChatColor.WHITE + "Sí");
         lore.add("");
         lore.add(ChatColor.YELLOW + "Shift + Click derecho para configurar");
 

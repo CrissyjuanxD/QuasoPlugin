@@ -106,7 +106,7 @@ public class BossRewards implements Listener {
         String times = kills == 1 ? "por primera vez" : "(" + kills + " veces)";
         String extra = bossId.equals("abeja_reina") ? ChatColor.of(COLOR) + " y " + ChatColor.of(FloralItems.ROSA) + "1 Esencia Floral" : "";
         player.sendMessage(ChatColor.of(COLOR) + "۞ Derrotaste a " + reward.name() + " " + times + ": "
-                + ChatColor.of("#FFCC80") + coins + " DinoCoins" + extra + ChatColor.of(COLOR) + ".");
+                + EconomyItems.iconoDinoCoins() + ChatColor.of("#FFCC80") + coins + " DinoCoins" + extra + ChatColor.of(COLOR) + ".");
         player.playSound(player.getLocation(), Sound.UI_TOAST_CHALLENGE_COMPLETE, 1f, 1f);
     }
 

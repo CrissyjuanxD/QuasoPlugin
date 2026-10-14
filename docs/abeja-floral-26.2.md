@@ -102,3 +102,12 @@ resaltada. Las piezas que ya existían conservan su lore viejo.
   armadura, los corazones y el 30% de no gastarse.
 - El lore ya no usa ✦: cada línea tiene su ícono (⛏ el pico rompe los minerales de la Warden Cave, ⚡ el hacha ataca
   más rápido, ⛨ el escudo bloquea, ∞ irrompible).
+
+## Drops por día (Version #80)
+
+- Con el cambio uno los drops florales salen al **10%** y siempre de a 1: el Saqueo no cambia nada.
+- Desde el **día 12**, cuando se activa la misión 12 (matar a la Abeja Floral), vuelven al 40% y el Saqueo da más:
+  con II de 1 a 2 y con III de 1 a 3. Si se desactiva la misión 12, vuelven al 10%.
+- La misión 2 tiene una extra nueva, **Botín floral** (`2ex2`), que pide conseguir un drop floral. La misión 12 tiene
+  dos extras nuevas: forjar las 4 piezas de la armadura floral (`12ex2`) y la espada, el hacha, el pico y la pala
+  florales (`12ex3`). La misión 14 tiene la del Escudo Floral (`14ex`).

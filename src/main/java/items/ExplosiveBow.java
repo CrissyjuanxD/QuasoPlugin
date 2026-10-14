@@ -45,8 +45,7 @@ public class ExplosiveBow implements Listener {
             lore.add("");
             lore.add(ChatColor.GRAY + "> Lanza flechas espectrales");
             lore.add(ChatColor.RED + "> Nivel de Explosión: " + ChatColor.WHITE + "2");
-            lore.add(ChatColor.GOLD + "⚠ Consume 3 flechas por disparo");
-            lore.add(ChatColor.DARK_GRAY + "" + ChatColor.ITALIC + "(Infinidad reduce el coste en 1)");
+            lore.addAll(costoLore(1));
             lore.add("");
 
             meta.setLore(lore);
@@ -72,8 +71,7 @@ public class ExplosiveBow implements Listener {
             lore.add("");
             lore.add(ChatColor.GRAY + "> Lanza flechas espectrales");
             lore.add(ChatColor.RED + "> Nivel de Explosión: " + ChatColor.WHITE + "3");
-            lore.add(ChatColor.GOLD + "⚠ Consume 6 flechas por disparo");
-            lore.add(ChatColor.DARK_GRAY + "" + ChatColor.ITALIC + "(Infinidad reduce el coste en 1)");
+            lore.addAll(costoLore(2));
             lore.add("");
 
             meta.setLore(lore);
@@ -99,8 +97,7 @@ public class ExplosiveBow implements Listener {
             lore.add("");
             lore.add(ChatColor.GRAY + "> Lanza flechas espectrales");
             lore.add(ChatColor.RED + "> Nivel de Explosión: " + ChatColor.WHITE + "4");
-            lore.add(ChatColor.GOLD + "⚠ Consume 10 flechas por disparo");
-            lore.add(ChatColor.DARK_GRAY + "" + ChatColor.ITALIC + "(Infinidad reduce el coste en 1)");
+            lore.addAll(costoLore(3));
             lore.add("");
 
             meta.setLore(lore);
@@ -121,20 +118,15 @@ public class ExplosiveBow implements Listener {
 
         int level = meta.getPersistentDataContainer().get(explosiveBowLevelKey, PersistentDataType.INTEGER);
 
-        if (player.getGameMode() != GameMode.CREATIVE) {
-            int requiredArrows = switch (level) {
-                case 1 -> 3;
-                case 2 -> 6;
-                case 3 -> 10;
-                default -> 1;
-            };
+        actualizarLore(event.getBow(), level);
 
+        if (player.getGameMode() != GameMode.CREATIVE) {
             boolean hasInfinity = event.getBow().containsEnchantment(Enchantment.INFINITY);
             ItemStack flecha = event.getConsumable();
+            // Con Infinidad y una flecha normal el juego no gasta la del disparo; si no, ya la sacó del inventario
             boolean disparoGratis = hasInfinity && flecha != null && flecha.getType() == Material.ARROW;
 
-            int amountToConsume = hasInfinity ? (requiredArrows - 1) : requiredArrows;
-            if (!disparoGratis) amountToConsume = Math.max(0, amountToConsume - 1);
+            int amountToConsume = Math.max(0, costo(level, hasInfinity) - (disparoGratis ? 0 : 1));
 
             if (!consumeArrows(player, amountToConsume)) {
                 event.setCancelled(true);
@@ -154,6 +146,46 @@ public class ExplosiveBow implements Listener {
 
             player.getWorld().playSound(player.getLocation(), Sound.BLOCK_AMETHYST_CLUSTER_BREAK, 1.5f, 1.0f);
         }
+    }
+
+    // Flechas por disparo: 3, 6 y 10; con Infinidad la mitad (1, 3 y 5)
+    static int costo(int level, boolean infinidad) {
+        int base = switch (level) {
+            case 1 -> 3;
+            case 2 -> 6;
+            case 3 -> 10;
+            default -> 1;
+        };
+        return infinidad ? Math.max(1, base / 2) : base;
+    }
+
+    static List<String> costoLore(int level) {
+        return List.of(ChatColor.GOLD + "⚠ Consume " + costo(level, false) + " flechas por disparo",
+                ChatColor.DARK_GRAY + "" + ChatColor.ITALIC + "(con Infinidad, " + costo(level, true) + ")");
+    }
+
+    // Los arcos de antes decían "Infinidad reduce el coste en 1": se les cambia el lore al disparar
+    private void actualizarLore(ItemStack bow, int level) {
+        ItemMeta meta = bow.getItemMeta();
+        List<String> lore = meta.getLore();
+        if (lore == null) return;
+        List<String> nuevo = new ArrayList<>();
+        boolean cambio = false;
+        for (String line : lore) {
+            String plano = ChatColor.stripColor(line);
+            if (plano.startsWith("⚠ Consume")) {
+                cambio |= !line.equals(costoLore(level).get(0));
+                nuevo.add(costoLore(level).get(0));
+            } else if (plano.contains("Infinidad")) {
+                cambio |= !line.equals(costoLore(level).get(1));
+                nuevo.add(costoLore(level).get(1));
+            } else {
+                nuevo.add(line);
+            }
+        }
+        if (!cambio) return;
+        meta.setLore(nuevo);
+        bow.setItemMeta(meta);
     }
 
     @EventHandler

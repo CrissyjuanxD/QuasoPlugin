@@ -1,5 +1,6 @@
 package ShopSystem;
 
+import Gui.Invisible;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -58,17 +59,11 @@ public class ShopGUI {
         player.openInventory(gui);
     }
 
-    // Dos columnas de 5 tradeos cada una: precio 1, precio 2, flecha y producto
+    // Dos columnas de 5 tradeos cada una (de la fila 2 a la 6): precio 1, precio 2, flecha y producto. La flecha y los
+    // "Vacío" no se ven pero muestran su nombre; todo lo demás es relleno invisible para que no se pueda meter nada
     private void populateBaseGUI(Inventory gui, Villager villager, boolean isConfig) {
-        gui.setItem(0, createHeader(Material.ORANGE_DYE, ChatColor.GOLD + "Precio #1", false));
-        gui.setItem(1, createHeader(Material.ORANGE_DYE, ChatColor.GOLD + "Precio #2", false));
-        gui.setItem(2, createHeader(Material.COPPER_NUGGET, ChatColor.GOLD + "\u279C", true));
-        gui.setItem(3, createHeader(Material.LIME_DYE, ChatColor.GREEN + "Producto", false));
-
-        gui.setItem(5, createHeader(Material.ORANGE_DYE, ChatColor.GOLD + "Precio #1", false));
-        gui.setItem(6, createHeader(Material.ORANGE_DYE, ChatColor.GOLD + "Precio #2", false));
-        gui.setItem(7, createHeader(Material.COPPER_NUGGET, ChatColor.GOLD + "\u279C", true));
-        gui.setItem(8, createHeader(Material.LIME_DYE, ChatColor.GREEN + "Producto", false));
+        ItemStack relleno = Invisible.relleno();
+        for (int slot = 0; slot < gui.getSize(); slot++) gui.setItem(slot, relleno);
 
         List<MerchantRecipe> recipes = villager.getRecipes();
 
@@ -88,7 +83,7 @@ public class ShopGUI {
             int baseSlot = row * 9 + colBase;
             gui.setItem(baseSlot, createDisplayItem(ing1, "Ingrediente 1", i, isConfig));
             gui.setItem(baseSlot + 1, createDisplayItem(ing2, "Ingrediente 2", i, isConfig));
-            gui.setItem(baseSlot + 2, createHeader(Material.IRON_NUGGET, ChatColor.GOLD + "\u279C", true));
+            gui.setItem(baseSlot + 2, Invisible.ocultar(createHeader(Material.IRON_NUGGET, ChatColor.GOLD + "\u279C", true)));
             gui.setItem(baseSlot + 3, createDisplayItem(res, "Producto", i, isConfig));
         }
     }
@@ -120,7 +115,7 @@ public class ShopGUI {
                     displayItem.setItemMeta(m);
                 }
             } else {
-                displayItem = shopManager.createEmptyTradeItem();
+                displayItem = Invisible.ocultar(shopManager.createEmptyTradeItem());
             }
         } else {
             displayItem = item.clone();

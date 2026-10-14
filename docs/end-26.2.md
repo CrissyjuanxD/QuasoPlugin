@@ -101,7 +101,7 @@ TNT, así no se encadenan.
 | Cristal de Celestita | 12% al romper un racimo de amatista en el End, 18% con el Pico de Celestita |
 | Lingote de Celestita | 4 cristales, 4 lingotes de oro y 1 Lingote Profundo |
 | Plantilla de Celestita | 4 Fragmentos Astrales, 2 Lingotes de Celestita, 2 ojos de ender y 1 plantilla de Netherite |
-| Herramienta de Celestita | Herrería: plantilla, herramienta floral (desde la Version #67, antes de Netherite) y 1 Lingote de Celestita |
+| Herramienta de Celestita | Herrería: plantilla, herramienta floral (desde la Version #74, antes de Netherite) y 1 Lingote de Celestita |
 | Peto de Warden Alado | Herrería: EnderKing Pearl, Peto de Warden y unas Elytras |
 
 Herramientas: espada, hacha, lanza, pico, pala y azada. Tienen 1 de daño más que las de Netherite (la espada 4 más:
@@ -151,7 +151,7 @@ florales, 20%) y el hacha, el pico y la pala atacan un poco más rápido que las
 florales. Las herramientas florales se pueden usar de base en la herrería. Las
 herramientas que ya existían conservan sus atributos viejos.
 
-## Celestita (Version #67)
+## Celestita (Version #74)
 
 - Las herramientas de Celestita solo salen de las florales: la línea es Netherite » Floral » Celestita, sin saltarse
   un paso. Con una herramienta de Netherite común la herrería no da resultado.

@@ -50,7 +50,7 @@ El ataque de refuerzos ya no crea abejas vanilla: salen de 6 a 10 mobs florales,
 Floral. Llevan la marca `invocado_abeja_floral`, no sueltan drops florales y se
 van a los 30 segundos. Los que caminan bajan al suelo de la arena.
 
-La Corrupted Bee ahora es la **Mini Abeja Floral**: escala 0,6, nombre rosa,
+La Corrupted Bee ahora es la **Mini Abeja Floral**: escala 0,8, nombre rosa,
 partículas florales y 30% de soltar el **Aguijón Floral** (`aguijon_floral`).
 El id del mob sigue siendo `corrupted_bee`, así que la misión 14 y los spawners
 siguen igual.
@@ -63,7 +63,7 @@ también da **1 Esencia Floral** (`esencia_floral`).
 | Mejora Floral | Mesa de crafteo | 16 Carne Podrida Floral, 16 Ojo de Araña Floral, 16 Pólvora Floral, 16 Aguijón Floral, 1 Esencia Floral y 1 plantilla de mejora de Netherite |
 | Pieza floral | Herrería | Mejora Floral + pieza de Netherite (o escudo) + Bloque de Miel |
 
-Desde la Version #67 se gastan 16 de cada drop (con menos de 16 en alguna
+Desde la Version #74 se gastan 16 de cada drop (con menos de 16 en alguna
 casilla no sale nada) y la Mejora Floral **no se puede copiar**: hace falta
 una por pieza, así que el equipo completo (11 piezas) son 11 Esencias, 11
 plantillas de Netherite y 176 de cada drop. La herrería no acepta items custom

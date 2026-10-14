@@ -63,7 +63,7 @@ de él.
 - Al activar la etapa con `/changes activar dos` sale un anuncio en el chat con
   lo que trae la Infested Warden Cave. Las otras etapas también anuncian lo suyo.
 
-## Ajustes de la Version #67
+## Ajustes de la Version #74
 
 - La armadura de Warden solo sale de la floral: en la herrería la base tiene que ser la pieza floral (Netherite »
   Floral » Warden). Con una pieza de Netherite común no da resultado.

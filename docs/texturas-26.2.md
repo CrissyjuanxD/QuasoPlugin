@@ -118,9 +118,8 @@ Los cuatro iconos son 16×16. La lanza tiene una textura adicional de 32×32 par
 
 Los nuevos recursos están también en `resourcepack/assets`. Instala este complemento después de los ZIP florales anteriores. No hay cambios de Java ni de atributos.
 
-## Arco Mejorado (Version #80)
+## Arco Mejorado y explosivos (Version #83)
 
-El Arco Mejorado usa el item model `minecraft:arco_mejorado`. Mientras no tenga textura propia,
-`items/arco_mejorado.json` muestra el arco normal con sus tres poses al tensarlo. Para cambiarlo se reemplazan
-los `model` de ese archivo por `item/custom/arco_mejorado` y `arco_mejorado_pulling_0..2`, igual que en
-`arco_nivel1`.
+[Arcos nuevos: ZIP, vista y guía](../descargas/arcos%20nuevos/README.md). El Arco Mejorado (`minecraft:arco_mejorado`) tiene texturas propias con hierro, oro y Netherite, basadas en la forma del arco explosivo. Los tres explosivos (`arco_nivel1`, `arco_nivel2`, `arco_nivel3`) ahora usan tonos rojos.
+
+Cada arco tiene cuatro PNG de 16×16 y sus modelos: reposo y `pulling_0..2`. Las definiciones cambian de pose al tensar el arco. Instala este ZIP después de los paquetes antiguos para aplicar los colores nuevos. `resourcepack/assets` incluye los mismos recursos.

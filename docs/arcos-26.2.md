@@ -41,3 +41,15 @@ mitad:
 El lore dice «⚠ Consume N flechas por disparo (con Infinidad, M)». Los arcos que ya existían cambian su lore la primera
 vez que disparan. Sin flechas suficientes no dispara y no se pierde ninguna. Lo probé en el servidor de prueba con un
 jugador falso.
+
+## Arco de Hielo unificado (Version #83)
+
+Solo existe `arco_hielo` en el catálogo, la tienda y los drops. Se elimina la fábrica de la versión para jugadores; el identificador antiguo `arco_hielo_jugador` queda únicamente como alias de compatibilidad hacia el mismo item, sin entrada duplicada en la GUI ni el autocompletado.
+
+No hay cooldown entre disparos: se puede volver a tensar y disparar normalmente. Jugadores e Iceologer aplican el efecto del arco original: +160 ticks de congelación, Lentitud II durante 5 segundos y Fatiga Minera I durante 4 segundos. La cadencia de ataques del mob conserva su lógica propia. Los disparos y daños cancelados no aplican efectos de hielo.
+
+Los arcos antiguos siguen funcionando porque conservan la misma identificación. Su lore guardado puede seguir indicando 3 segundos o cooldown; para obtener el texto actualizado se puede entregar una copia nueva con `/giveqp arco_hielo`. No se sobrescriben los nombres, lores personalizados ni encantamientos de los arcos existentes.
+
+## Texturas (Version #83)
+
+[Arcos nuevos: ZIP, vista y guía](../descargas/arcos%20nuevos/README.md). El Arco Mejorado usa la forma del explosivo con hierro, oro y Netherite. Los tres niveles del explosivo son rojos. Cada uno incluye reposo y tres fases al tensar, todos a 16×16, además de los JSON. También están integrados en `resourcepack/assets`.

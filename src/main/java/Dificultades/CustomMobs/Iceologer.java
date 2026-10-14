@@ -31,7 +31,6 @@ public class Iceologer implements Listener {
     private static final Map<UUID, IceologerState> activeIceologers = new HashMap<>();
     private static final Set<Player> frozenPlayers = new HashSet<>();
     private static final Set<UUID> blindnessApplied = new HashSet<>();
-    private static final Map<UUID, Long> playerBowCooldowns = new HashMap<>();
     private static boolean eventsRegistered = false;
     private static BukkitTask mainTask;
 
@@ -60,7 +59,7 @@ public class Iceologer implements Listener {
         this.iceFangsKey = new NamespacedKey(plugin, "ice_fangs");
 
         this.iceBowItem = new IceBowItem(plugin);
-        this.iceBowLogic = new IceBowLogic(plugin, playerBowCooldowns);
+        this.iceBowLogic = new IceBowLogic(plugin);
     }
 
     public void apply() {
@@ -506,7 +505,6 @@ public class Iceologer implements Listener {
 
             activeIceologers.remove(iceologer.getUniqueId());
             blindnessApplied.remove(iceologer.getUniqueId());
-            playerBowCooldowns.entrySet().removeIf(entry -> System.currentTimeMillis() - entry.getValue() > 300000);
         }
     }
 

@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/bow",
+  "textures": {
+    "layer0": "minecraft:item/custom/arco_mejorado_pulling_0"
+  }
+}

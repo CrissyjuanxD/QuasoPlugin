@@ -143,7 +143,7 @@ public final class CatalogoTienda {
         tienda("legendario", "&c&lLegendario", "weaponsmith",
                 vende("excavator_pickaxe", 1, 100, 4),
                 vende("arco_nivel1", 1, 60, 4),
-                vende("arco_hielo_jugador", 1, 50, 4),
+                vende("arco_hielo", 1, 50, 4),
                 vende("arco_nivel2", 1, 90, 5),
                 vende("perla_infinita", 1, 110, 5),
                 vende("arco_nivel3", 1, 120, 6),

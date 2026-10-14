@@ -15,21 +15,14 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
 
-import java.util.Map;
-import java.util.UUID;
-
 /**
  * Clase responsable de toda la lógica de funcionamiento del Ice Bow
  */
 public class IceBowLogic implements Listener {
-    private final JavaPlugin plugin;
-    private final Map<UUID, Long> playerBowCooldowns;
     private final NamespacedKey playerIceArrowKey;
     private final IceBowItem iceBowItem;
 
-    public IceBowLogic(JavaPlugin plugin, Map<UUID, Long> playerBowCooldowns) {
-        this.plugin = plugin;
-        this.playerBowCooldowns = playerBowCooldowns;
+    public IceBowLogic(JavaPlugin plugin) {
         this.playerIceArrowKey = new NamespacedKey(plugin, "player_ice_arrow");
         this.iceBowItem = new IceBowItem(plugin);
     }
@@ -71,8 +64,9 @@ public class IceBowLogic implements Listener {
     /**
      * Maneja cuando un jugador dispara el arco de hielo
      */
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void onPlayerShootBow(EntityShootBowEvent event) {
+        if (event.isCancelled()) return;
         if (!(event.getEntity() instanceof Player player)) {
             return;
         }
@@ -80,28 +74,6 @@ public class IceBowLogic implements Listener {
         if (!iceBowItem.isIceBow(event.getBow())) {
             return;
         }
-
-        // Verificar cooldown
-        UUID playerId = player.getUniqueId();
-        long currentTime = System.currentTimeMillis();
-
-        if (playerBowCooldowns.containsKey(playerId)) {
-            long lastUse = playerBowCooldowns.get(playerId);
-            long remainingCooldown = (lastUse + 10000) - currentTime; // 10 segundos
-
-            if (remainingCooldown > 0) {
-                event.setCancelled(true);
-
-                // Mostrar mensaje de cooldown
-
-                // Efectos de error
-                player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_NO, 0.7f, 1.2f);
-                return;
-            }
-        }
-
-        // Establecer cooldown
-        playerBowCooldowns.put(playerId, currentTime);
 
         // Marcar la flecha del jugador
         if (event.getProjectile() instanceof Arrow arrow) {
@@ -120,24 +92,19 @@ public class IceBowLogic implements Listener {
      * Maneja el daño causado por las flechas del arco de hielo
      */
     public void handleArrowDamage(EntityDamageByEntityEvent event, Arrow arrow, NamespacedKey iceologerKey) {
-        // Flecha del Iceologer
-        if (arrow.getPersistentDataContainer().has(iceologerKey, PersistentDataType.BYTE)) {
-            if (event.getEntity() instanceof LivingEntity entity) {
-                applyIceologerArrowEffect(entity);
-            }
-        }
-        // Flecha de jugador con arco de hielo
-        else if (arrow.getPersistentDataContainer().has(playerIceArrowKey, PersistentDataType.BYTE)) {
-            if (event.getEntity() instanceof LivingEntity entity) {
-                applyPlayerArrowEffect(entity);
-            }
+        if (event.isCancelled()) return;
+        // Las flechas antiguas mantienen sus claves, pero todas aplican el mismo efecto.
+        if (event.getEntity() instanceof LivingEntity entity
+                && (arrow.getPersistentDataContainer().has(iceologerKey, PersistentDataType.BYTE)
+                || arrow.getPersistentDataContainer().has(playerIceArrowKey, PersistentDataType.BYTE))) {
+            applyIceArrowEffect(entity);
         }
     }
 
     /**
-     * Aplica efectos cuando una flecha del Iceologer impacta
+     * Aplica el efecto único del arco de hielo, tanto para jugadores como para el Iceologer
      */
-    private void applyIceologerArrowEffect(LivingEntity entity) {
+    private void applyIceArrowEffect(LivingEntity entity) {
         // 8 segundos de congelación (160 ticks)
         entity.setFreezeTicks(entity.getFreezeTicks() + 160);
 
@@ -155,56 +122,4 @@ public class IceBowLogic implements Listener {
         world.playSound(entity.getLocation(), Sound.BLOCK_GLASS_BREAK, 0.8f, 0.6f);
     }
 
-    /**
-     * Aplica efectos cuando una flecha de jugador con arco de hielo impacta
-     */
-    private void applyPlayerArrowEffect(LivingEntity entity) {
-        // Solo 3 segundos de congelación para jugadores (60 ticks)
-        entity.setFreezeTicks(entity.getFreezeTicks() + 60);
-
-        // Efectos más suaves
-        entity.addPotionEffect(new PotionEffect(PotionEffectType.SLOWNESS, 60, 0));
-
-        // Efectos visuales y sonoros reducidos
-        World world = entity.getWorld();
-        Location loc = entity.getLocation().add(0, 1, 0);
-
-        world.spawnParticle(Particle.SNOWFLAKE, loc, 10, 0.3, 0.3, 0.3, 0.1);
-        world.playSound(entity.getLocation(), Sound.ENTITY_PLAYER_HURT_FREEZE, 0.5f, 1.2f);
-
-    }
-
-    /**
-     * Limpia los cooldowns antiguos de los jugadores
-     */
-    public void cleanOldCooldowns() {
-        long currentTime = System.currentTimeMillis();
-        playerBowCooldowns.entrySet().removeIf(entry ->
-                currentTime - entry.getValue() > 300000); // Limpiar entradas de más de 5 minutos
-    }
-
-    /**
-     * Obtiene el tiempo restante de cooldown para un jugador
-     * @param playerId UUID del jugador
-     * @return Tiempo restante en milisegundos, 0 si no hay cooldown
-     */
-    public long getRemainingCooldown(UUID playerId) {
-        if (!playerBowCooldowns.containsKey(playerId)) {
-            return 0;
-        }
-
-        long lastUse = playerBowCooldowns.get(playerId);
-        long currentTime = System.currentTimeMillis();
-        long remainingTime = (lastUse + 10000) - currentTime; // 10 segundos de cooldown
-
-        return Math.max(0, remainingTime);
-    }
-
-    /**
-     * Remueve el cooldown de un jugador (útil para comandos de admin)
-     * @param playerId UUID del jugador
-     */
-    public void removeCooldown(UUID playerId) {
-        playerBowCooldowns.remove(playerId);
-    }
 }

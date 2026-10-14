@@ -76,7 +76,7 @@ public class ItemManager {
         "bar_mezcal", "bar_pulque", "bar_cerveza", "bar_ron", "bar_vodka", "bar_whisky",
         "bar_sake", "bar_ginebra", "bar_azulito", "bar_michelada", "manzana_vida", "pluma_levitacion", "pluma_levitacion_mejorada",
         "keep_inventory_liquido", "estatua_protectora", "amuleto_ultima_esperanza",
-        "carne_podrida_floral", "ojo_arana_floral", "polvora_floral", "bloque_oro_apilado", "arco_hielo_jugador", "arco_mejorado",
+        "carne_podrida_floral", "ojo_arana_floral", "polvora_floral", "bloque_oro_apilado", "arco_mejorado",
         "aguijon_floral", "esencia_floral", "mejora_floral", "espada_floral", "hacha_floral", "lanza_floral", "pico_floral",
         "pala_floral", "azada_floral", "escudo_floral", "casco_floral", "peto_floral", "pantalon_floral", "botas_floral",
 
@@ -162,7 +162,7 @@ public class ItemManager {
             case "ender_totem": item = ElementalTotems.create(ElementalTotems.Kind.ENDER); break;
             case "special_totem": item = ItemsTotems.createSpecialTotem(); break;
             case "cristal_hielo": item = ItemsTotems.createIceCrystal(); break;
-            case "arco_hielo": item = iceBowItem.createIceBow(); break;
+            case "arco_hielo", "arco_hielo_jugador": item = iceBowItem.createIceBow(); break;
             case "happy_ghast_enchant": item = QuasoEnchant.VUELO_RAPIDO.book(1); break;
             case "happy_ghast_enchant_2": item = QuasoEnchant.VUELO_RAPIDO.book(2); break;
             case "perla_infinita": item = InfinitePearl.createPearl(); break;
@@ -196,7 +196,6 @@ public class ItemManager {
                  "casco_floral", "peto_floral", "pantalon_floral", "botas_floral":
                 item = FloralItems.create(FloralItems.piezaPorId(itemName.toLowerCase())); break;
             case "bloque_oro_apilado": item = CorruptedGoldenApple.createApilateGoldBlock(); break;
-            case "arco_hielo_jugador": item = iceBowItem.createPlayerIceBow(); break;
             case "arco_mejorado": item = items.ArcoMejorado.create(); break;
 
             case "amuleto_invisiblidad": item = amuletInvisibility.createAmulet(); break;

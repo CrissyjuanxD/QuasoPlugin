@@ -16,11 +16,9 @@ import java.util.List;
  * Clase responsable de crear y gestionar el item Ice Bow
  */
 public class IceBowItem {
-    private final JavaPlugin plugin;
     private final NamespacedKey iceBowKey;
 
     public IceBowItem(JavaPlugin plugin) {
-        this.plugin = plugin;
         this.iceBowKey = new NamespacedKey(plugin, "ice_bow");
     }
 
@@ -46,7 +44,6 @@ public class IceBowItem {
             lore.add(ChatColor.AQUA + "que congela a sus víctimas.");
             lore.add(ChatColor.GRAY + "");
             lore.add(ChatColor.YELLOW + "▶ " + ChatColor.WHITE + "Congela enemigos por " + ChatColor.AQUA + "8 segundos");
-            lore.add(ChatColor.YELLOW + "▶ " + ChatColor.WHITE + "Cooldown de " + ChatColor.RED + "10 segundos");
             lore.add(ChatColor.GRAY + "");
             lore.add(ChatColor.DARK_PURPLE + "" + ChatColor.ITALIC + "Arma del Iceologer");
             meta.setLore(lore);
@@ -87,33 +84,6 @@ public class IceBowItem {
 
         // Verificar por CustomModelData (método de respaldo)
         return meta.hasCustomModelData() && meta.getCustomModelData() == 5;
-    }
-
-    /**
-     * Crea un arco de hielo para jugadores (con menor duración de efectos)
-     * @return ItemStack del arco de hielo para jugadores
-     */
-    public ItemStack createPlayerIceBow() {
-        ItemStack bow = createIceBow();
-        ItemMeta meta = bow.getItemMeta();
-
-        if (meta != null) {
-            // Modificar el lore para jugadores
-            List<String> lore = new ArrayList<>();
-            lore.add(ChatColor.GRAY + "");
-            lore.add(ChatColor.AQUA + "Un arco forjado con hielo eterno");
-            lore.add(ChatColor.AQUA + "que congela a sus víctimas.");
-            lore.add(ChatColor.GRAY + "");
-            lore.add(ChatColor.YELLOW + "▶ " + ChatColor.WHITE + "Congela enemigos por " + ChatColor.AQUA + "3 segundos");
-            lore.add(ChatColor.YELLOW + "▶ " + ChatColor.WHITE + "Cooldown de " + ChatColor.RED + "10 segundos");
-            lore.add(ChatColor.GRAY + "");
-            lore.add(ChatColor.BLUE + "" + ChatColor.ITALIC + "Versión para jugadores");
-            meta.setLore(lore);
-
-            bow.setItemMeta(meta);
-        }
-
-        return bow;
     }
 
     /**

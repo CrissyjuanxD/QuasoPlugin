@@ -2,6 +2,8 @@ package Bosses;
 
 import InfestedCaves.AncientCityLocator;
 import imp.crissyjuanxd.QuasoPlugin;
+import io.papermc.paper.registry.RegistryAccess;
+import io.papermc.paper.registry.RegistryKey;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.GameMode;
@@ -29,18 +31,22 @@ import org.bukkit.util.BoundingBox;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
 // Una guarida del Infested Warden por cada Ancient City de la Warden Cave. El boss aparece cuando hay alguien
-// cerca, no despawnea, y cuando muere vuelve a salir a la hora (solo con la zona cargada). Nunca hay dos por ciudad
+// cerca, no despawnea, y cuando muere vuelve a salir a la hora (solo con la zona cargada). Nunca hay dos por ciudad, y
+// las ciudades pegadas (las que se generaron antes de separarlas) comparten una sola guarida
 public class InfestedWardenLairs implements Listener {
 
     private static final long RESPAWN_MS = 60 * 60 * 1000L;
     private static final double NEAR_PLAYER = 96;
     private static final int SEARCH_RADIUS = 28;
+    // Dos ciudades a menos de esto son la misma guarida; ahora se generan a 512 bloques o más
+    static final double MISMA_GUARIDA = 300;
 
     private static final class Lair {
         final int x;
@@ -58,8 +64,11 @@ public class InfestedWardenLairs implements Listener {
     private final JavaPlugin plugin;
     private final File file;
     private final Map<String, Lair> lairs = new LinkedHashMap<>();
+    // Ciudad pegada a otra -> la guarida que comparten
+    private final Map<String, String> alias = new HashMap<>();
     private final NamespacedKey bossIdKey;
     private final NamespacedKey lairKey;
+    private List<Structure> ciudades;
 
     public InfestedWardenLairs(JavaPlugin plugin) {
         this.plugin = plugin;
@@ -75,16 +84,47 @@ public class InfestedWardenLairs implements Listener {
     @EventHandler
     public void onChunkLoad(ChunkLoadEvent event) {
         if (!event.getWorld().getName().equals(QuasoPlugin.WORLD_NAME)) return;
-        for (GeneratedStructure city : event.getChunk().getStructures(Structure.ANCIENT_CITY)) {
-            BoundingBox box = city.getBoundingBox();
-            int x = (int) Math.floor(box.getCenterX());
-            int z = (int) Math.floor(box.getCenterZ());
-            String key = Math.floorDiv(x, 16) + "," + Math.floorDiv(z, 16);
-            if (!lairs.containsKey(key)) {
-                lairs.put(key, new Lair(x, z));
-                save();
+        for (Structure structure : ciudades()) {
+            for (GeneratedStructure city : event.getChunk().getStructures(structure)) {
+                BoundingBox box = city.getBoundingBox();
+                int x = (int) Math.floor(box.getCenterX());
+                int z = (int) Math.floor(box.getCenterZ());
+                if (register(Math.floorDiv(x, 16) + "," + Math.floorDiv(z, 16), x, z)) save();
             }
         }
+    }
+
+    // La Ancient City de la Warden Cave (la del datapack) y la vanilla, que es la de las ciudades generadas antes
+    private List<Structure> ciudades() {
+        if (ciudades == null) {
+            List<Structure> list = new ArrayList<>(List.of(Structure.ANCIENT_CITY));
+            Structure propia = RegistryAccess.registryAccess().getRegistry(RegistryKey.STRUCTURE)
+                    .get(new NamespacedKey("quaso", AncientCityLocator.STRUCTURE_KEY));
+            if (propia != null) list.add(propia);
+            ciudades = list;
+        }
+        return ciudades;
+    }
+
+    // Anota una ciudad nueva; si queda pegada a una que ya tiene guarida, comparte esa. Devuelve si cambió algo
+    private boolean register(String key, int x, int z) {
+        if (lairs.containsKey(key) || alias.containsKey(key)) return false;
+        String cercana = cercana(lairs, x, z);
+        if (cercana != null) alias.put(key, cercana);
+        else lairs.put(key, new Lair(x, z));
+        return true;
+    }
+
+    private static String cercana(Map<String, Lair> lairs, int x, int z) {
+        for (Map.Entry<String, Lair> entry : lairs.entrySet()) {
+            if (Math.hypot(entry.getValue().x - x, entry.getValue().z - z) < MISMA_GUARIDA) return entry.getKey();
+        }
+        return null;
+    }
+
+    private Lair lairOf(Warden warden) {
+        String key = warden.getPersistentDataContainer().get(lairKey, PersistentDataType.STRING);
+        return key == null ? null : lairs.get(alias.getOrDefault(key, key));
     }
 
     // Al cargarse un boss guardado le vuelve a crear su pelea; si su ciudad ya tiene otro, este sobra
@@ -94,7 +134,7 @@ public class InfestedWardenLairs implements Listener {
             if (!(entity instanceof Warden warden) || !isBoss(warden)) continue;
             if (warden.isDead() || InfestedWardenBoss.ACTIVE_BOSSES.containsKey(warden.getUniqueId())) continue;
 
-            Lair lair = lairs.get(warden.getPersistentDataContainer().get(lairKey, PersistentDataType.STRING));
+            Lair lair = lairOf(warden);
             if (lair != null) {
                 if (lair.boss != null && !lair.boss.equals(warden.getUniqueId())) {
                     warden.remove();
@@ -115,8 +155,8 @@ public class InfestedWardenLairs implements Listener {
     @EventHandler
     public void onBossDeath(EntityDeathEvent event) {
         if (!(event.getEntity() instanceof Warden warden) || !isBoss(warden)) return;
-        Lair lair = lairs.get(warden.getPersistentDataContainer().get(lairKey, PersistentDataType.STRING));
-        if (lair == null) return;
+        Lair lair = lairOf(warden);
+        if (lair == null || !warden.getUniqueId().equals(lair.boss)) return;
         lair.boss = null;
         lair.respawnAt = System.currentTimeMillis() + RESPAWN_MS;
         save();
@@ -150,7 +190,7 @@ public class InfestedWardenLairs implements Listener {
                 continue;
             }
 
-            if (now >= lair.respawnAt && playerNear(world, lair)) spawn(world, entry.getKey(), lair);
+            if (now >= lair.respawnAt && playerNear(world, lair) && !bossNear(lair)) spawn(world, entry.getKey(), lair);
         }
     }
 
@@ -174,6 +214,16 @@ public class InfestedWardenLairs implements Listener {
             }
         }
         return true;
+    }
+
+    // Otro Infested Warden vivo en la zona (uno de /spawnqp o el de otra guarida que se alejó): no sale un segundo
+    private boolean bossNear(Lair lair) {
+        for (UUID id : InfestedWardenBoss.ACTIVE_BOSSES.keySet()) {
+            Entity boss = Bukkit.getEntity(id);
+            if (boss == null || !boss.isValid() || !boss.getWorld().getName().equals(QuasoPlugin.WORLD_NAME)) continue;
+            if (Math.hypot(boss.getX() - lair.x, boss.getZ() - lair.z) < MISMA_GUARIDA) return true;
+        }
+        return false;
     }
 
     private boolean playerNear(World world, Lair lair) {
@@ -317,19 +367,35 @@ public class InfestedWardenLairs implements Listener {
 
     // ---------------------------------------------------------------- Archivo
 
+    // Las guaridas que quedaron pegadas a otra (de antes de separar las ciudades) pasan a ser parte de esa; su boss,
+    // si sigue vivo, lo adopta la guarida que queda o se borra si ya tiene uno (onEntitiesLoad)
     private void load() {
         if (!file.exists()) return;
         YamlConfiguration yml = YamlConfiguration.loadConfiguration(file);
         ConfigurationSection section = yml.getConfigurationSection("ciudades");
-        if (section == null) return;
-        for (String key : section.getKeys(false)) {
-            ConfigurationSection s = section.getConfigurationSection(key);
-            if (s == null) continue;
-            Lair lair = new Lair(s.getInt("x"), s.getInt("z"));
-            String boss = s.getString("boss");
-            lair.boss = boss != null ? UUID.fromString(boss) : null;
-            lair.respawnAt = s.getLong("respawn");
-            lairs.put(key.replace('_', ','), lair);
+        if (section != null) {
+            for (String path : section.getKeys(false)) {
+                ConfigurationSection s = section.getConfigurationSection(path);
+                if (s == null) continue;
+                String key = path.replace('_', ',');
+                Lair lair = new Lair(s.getInt("x"), s.getInt("z"));
+                String cercana = cercana(lairs, lair.x, lair.z);
+                if (cercana != null) {
+                    alias.put(key, cercana);
+                    continue;
+                }
+                String boss = s.getString("boss");
+                lair.boss = boss != null ? UUID.fromString(boss) : null;
+                lair.respawnAt = s.getLong("respawn");
+                lairs.put(key, lair);
+            }
+        }
+        ConfigurationSection aliases = yml.getConfigurationSection("pegadas");
+        if (aliases != null) {
+            for (String path : aliases.getKeys(false)) {
+                String main = aliases.getString(path);
+                if (main != null) alias.putIfAbsent(path.replace('_', ','), main.replace('_', ','));
+            }
         }
     }
 
@@ -342,6 +408,9 @@ public class InfestedWardenLairs implements Listener {
             yml.set(path + ".z", lair.z);
             yml.set(path + ".boss", lair.boss != null ? lair.boss.toString() : null);
             yml.set(path + ".respawn", lair.respawnAt);
+        }
+        for (Map.Entry<String, String> entry : alias.entrySet()) {
+            yml.set("pegadas." + entry.getKey().replace(',', '_'), entry.getValue().replace(',', '_'));
         }
         try {
             yml.save(file);

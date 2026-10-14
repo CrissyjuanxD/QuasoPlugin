@@ -15,13 +15,16 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Stream;
 
-// El datapack del plugin: los biomas de la Warden Cave y del End, la lista de biomas donde sale la Ancient City, las
-// piezas de las End Cities, los encantamientos y la capa visual de BloodMoon. Es uno solo para todo el plugin
+// El datapack del plugin: los biomas de la Warden Cave y del End, la Ancient City de la Warden Cave, las piezas de las
+// End Cities, los encantamientos y la capa visual de BloodMoon. Es uno solo para todo el plugin
 public final class QuasoDatapack {
 
     private static final String NAME = "QuasoPlugin";
     // Datapacks de versiones anteriores que se borran (antes los biomas iban en uno aparte)
     private static final String[] OLD_PACKS = {"QuasoWardenCave"};
+    // Archivos que ya no van en el datapack y se borran: antes la Warden Cave usaba la Ancient City vanilla (sumando
+    // sus biomas al tag), ahora tiene la suya con más separación y el mundo normal queda como en vanilla
+    private static final String[] OLD_FILES = {"data/minecraft/tags/worldgen/biome/has_structure/ancient_city.json"};
     private static final String[] BASE_FILES = {
             "pack.mcmeta",
             "data/quaso/world_clock/bloodmoon.json",
@@ -31,7 +34,9 @@ public final class QuasoDatapack {
             "data/quaso/worldgen/biome/pantano_profundo.json",
             "data/quaso/worldgen/biome/abismo_flotante.json",
             "data/quaso/worldgen/biome/ruinas_de_ceniza.json",
-            "data/minecraft/tags/worldgen/biome/has_structure/ancient_city.json",
+            "data/quaso/tags/worldgen/biome/has_structure/ciudad_warden.json",
+            "data/quaso/worldgen/structure/ciudad_warden.json",
+            "data/quaso/worldgen/structure_set/ciudades_warden.json",
             "data/quaso/enchantment/paso_igneo.json",
             "data/quaso/enchantment/purificacion.json",
             "data/quaso/enchantment/vision_abisal.json",
@@ -80,6 +85,13 @@ public final class QuasoDatapack {
         }
 
         Path target = datapacks.resolve(NAME);
+        for (String old : OLD_FILES) {
+            try {
+                if (Files.deleteIfExists(target.resolve(old))) changed = true;
+            } catch (IOException e) {
+                plugin.getLogger().warning("No se pudo borrar " + old + " del datapack: " + e.getMessage());
+            }
+        }
         for (String file : files()) {
             try (InputStream in = plugin.getResource("datapack/" + NAME + "/" + file)) {
                 if (in == null) {

@@ -84,3 +84,27 @@ de él.
   - Las lomas de arriba de la caverna son más altas (hasta unos 50 bloques), con cerros y escalones.
 
   Solo cambia en los chunks nuevos: las ciudades ya generadas quedan como estaban.
+
+## Ajustes de la Version #81
+
+- Las Ancient City salían pegadas: usaban la colocación vanilla (una cada 24 chunks y a veces a solo 9). Ahora la
+  Warden Cave tiene su propia estructura, `quaso:ciudad_warden`, con su `structure_set` `quaso:ciudades_warden`:
+  - una ciudad por región de 36x36 chunks, corrida hasta 4 chunks;
+  - entre dos ciudades siempre hay al menos 512 bloques y en promedio unos 600, parecido a las Trial Chambers.
+
+  Las piezas y el loot son los vanilla. El mundo normal sigue con la Ancient City vanilla en el Deep Dark: el datapack
+  ya no suma los biomas de la Warden Cave al tag vanilla y borra ese archivo al instalarse. Para buscarla se usa
+  `/locate structure quaso:ciudad_warden`. Hay que reiniciar una vez para que se cargue el datapack.
+- En un mundo ya explorado las ciudades viejas quedan donde están y las nuevas salen con la separación nueva. Cerca
+  del borde de lo explorado puede quedar una ciudad vieja a medio generar dentro de la roca. Para que todo quede
+  parejo, borra la carpeta `dimensions/minecraft/wardencave` del mundo antes de que entren los jugadores.
+- Infested Warden:
+  - Las ciudades a menos de 300 bloques comparten una sola guarida y un solo boss. Antes cada ciudad pegada sacaba el
+    suyo y salían dos juntos. Las guaridas viejas de `infested_warden.yml` que quedan pegadas se juntan al cargar, y
+    si después aparece el boss sobrante, se borra.
+  - Tampoco sale un boss si ya hay otro Infested Warden vivo a menos de 300 bloques, por ejemplo uno de `/spawnqp`.
+  - Los ataques especiales se avisan en el chat a los de la arena, como la Abeja Floral: «Infested Warden » Rugido
+    Sónico», «Pulso de Sculk», «Llamado de la Infestación» y «Erupción de Sculk».
+- El Mineral Crudo tarda 3 minutos en el alto horno (antes 4) y su lore lo dice. El alto horno sigue aceptando los
+  minerales con el lore viejo. Además, el lore viejo se cambia por el nuevo en el inventario al entrar al server, al
+  abrir un cofre o al agarrarlos del suelo, así se apilan con los nuevos. Los que están dentro de un horno no se tocan.

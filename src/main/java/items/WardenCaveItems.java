@@ -11,10 +11,14 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class WardenCaveItems {
 
     public static final NamespacedKey ITEM_KEY = new NamespacedKey("quasoplugin", "warden_cave_item");
+    // Lo que tarda el mineral crudo en el alto horno
+    public static final int MINUTOS_FUNDICION = 3;
+    private static final int MINUTOS_FUNDICION_VIEJO = 4;
 
     private final JavaPlugin plugin;
 
@@ -88,6 +92,36 @@ public class WardenCaveItems {
     // Por debajo es un fragmento de prismarina (no se funde en ningún horno vanilla) con otra textura;
     // así solo entra en la receta del alto horno de la etapa 2
     public static ItemStack createRawOre(Variant variant) {
+        return createRawOre(variant, MINUTOS_FUNDICION);
+    }
+
+    // El mineral como era antes (4 minutos en el lore): el alto horno lo sigue aceptando
+    public static ItemStack createOldRawOre(Variant variant) {
+        return createRawOre(variant, MINUTOS_FUNDICION_VIEJO);
+    }
+
+    public static Variant rawVariant(ItemStack item) {
+        String id = idOf(item);
+        if (id == null) return null;
+        for (Variant variant : Variant.values()) {
+            if (variant.rawId().equals(id)) return variant;
+        }
+        return null;
+    }
+
+    // Un mineral crudo con el lore viejo pasa al de ahora (así se apila con los nuevos). Devuelve si lo cambió
+    public static boolean updateRawOreLore(ItemStack item) {
+        Variant variant = rawVariant(item);
+        if (variant == null) return false;
+        ItemMeta meta = item.getItemMeta();
+        List<String> lore = createRawOre(variant).getItemMeta().getLore();
+        if (Objects.equals(meta.getLore(), lore)) return false;
+        meta.setLore(lore);
+        item.setItemMeta(meta);
+        return true;
+    }
+
+    private static ItemStack createRawOre(Variant variant, int minutos) {
         ItemStack item = new ItemStack(Material.PRISMARINE_SHARD);
         ItemMeta meta = item.getItemMeta();
 
@@ -101,7 +135,7 @@ public class WardenCaveItems {
             lore.add(ChatColor.GRAY + "Roca infectada sacada de las vetas");
             lore.add(ChatColor.of(variant.color) + variant.biome + ChatColor.GRAY + ".");
             lore.add("");
-            lore.add(ChatColor.GRAY + "Se funde en el " + ChatColor.WHITE + "alto horno" + ChatColor.GRAY + " (4 minutos).");
+            lore.add(ChatColor.GRAY + "Se funde en el " + ChatColor.WHITE + "alto horno" + ChatColor.GRAY + " (" + minutos + " minutos).");
             lore.add("");
 
             meta.setLore(lore);

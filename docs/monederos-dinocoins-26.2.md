@@ -75,3 +75,5 @@ pack debe incluir `assets/minecraft/items/monedero.json`.
 En el menú de las tiendas ya no está la primera fila con «Precio #1», «Precio #2» y «Producto». Las flechas (pepitas)
 y los espacios «Vacío» (structure void) no se ven, pero al pasar el mouse siguen mostrando su nombre. Todos los slots
 que quedaban vacíos tienen un item invisible sin nombre ni lore, así no se puede meter nada.
+
+En la Version #81 la barrera roja del producto vacío también quedó invisible; al pasar el mouse sigue diciendo «Vacío».

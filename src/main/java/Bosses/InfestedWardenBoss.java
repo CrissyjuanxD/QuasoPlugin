@@ -58,8 +58,8 @@ import java.util.UUID;
 
 // Mini boss de las Ancient City de la Warden Cave. Pelea como la Abeja Reina: de 1 a 3 ataques cuerpo a cuerpo
 // y después uno especial. Los especiales se pueden esquivar: rayos que se marcan antes, una onda que se salta
-// y círculos en el suelo de los que hay que salir. Va cambiando de jugador cada tanto, así no persigue siempre al mismo
-// (el daño está pensado para Netherite con Protección IV)
+// y círculos en el suelo de los que hay que salir. Los especiales se avisan en el chat. Va cambiando de jugador cada
+// tanto, así no persigue siempre al mismo (el daño está pensado para Netherite con Protección IV)
 public class InfestedWardenBoss extends BaseBoss implements Listener {
 
     public static final String BOSS_ID = "infested_warden_boss";
@@ -283,6 +283,15 @@ public class InfestedWardenBoss extends BaseBoss implements Listener {
         }
         list.sort(Comparator.comparingDouble(p -> p.getLocation().distanceSquared(warden.getLocation())));
         return list;
+    }
+
+    // Avisa en el chat el ataque especial que viene, como la Abeja Floral (a todos los de la arena, también espectadores)
+    private void anunciar(String ataque) {
+        String mensaje = TITLE + ChatColor.of("#0BB5B5") + " » " + ChatColor.of("#B8F4F7") + ataque;
+        for (UUID id : currentPlayers) {
+            Player p = Bukkit.getPlayer(id);
+            if (p != null && p.isOnline() && p.getWorld().equals(warden.getWorld())) p.sendMessage(mensaje);
+        }
     }
 
     private Player nearestPlayer() {
@@ -588,6 +597,7 @@ public class InfestedWardenBoss extends BaseBoss implements Listener {
         if (players.isEmpty()) return;
         busy = true;
         warden.setAI(false);
+        anunciar("Rugido Sónico");
 
         World world = warden.getWorld();
         Location origin = warden.getEyeLocation();
@@ -664,6 +674,7 @@ public class InfestedWardenBoss extends BaseBoss implements Listener {
         if (activePlayers().isEmpty()) return;
         busy = true;
         warden.setAI(false);
+        anunciar("Pulso de Sculk");
 
         World world = warden.getWorld();
         Location center = warden.getLocation();
@@ -731,6 +742,7 @@ public class InfestedWardenBoss extends BaseBoss implements Listener {
             return;
         }
         busy = true;
+        anunciar("Llamado de la Infestación");
 
         World world = warden.getWorld();
         world.playSound(warden.getLocation(), Sound.ENTITY_WARDEN_ROAR, 3f, 1.2f);
@@ -780,6 +792,7 @@ public class InfestedWardenBoss extends BaseBoss implements Listener {
         List<Player> players = activePlayers();
         if (players.isEmpty()) return;
         busy = true;
+        anunciar("Erupción de Sculk");
 
         World world = warden.getWorld();
         List<Location> circles = new ArrayList<>();

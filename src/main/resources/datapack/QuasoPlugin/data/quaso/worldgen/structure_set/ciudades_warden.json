@@ -1,0 +1,14 @@
+{
+  "placement": {
+    "type": "minecraft:random_spread",
+    "salt": 61904217,
+    "separation": 31,
+    "spacing": 36
+  },
+  "structures": [
+    {
+      "structure": "quaso:ciudad_warden",
+      "weight": 1
+    }
+  ]
+}

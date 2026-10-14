@@ -5,14 +5,18 @@ import java.util.Optional;
 import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 
-// Las Ancient City de la dimensión son las vanilla. Acá se calcula dónde las va a poner el juego (misma cuenta
-// que el structure_set "ancient_cities") para que el generador les vacíe la caverna antes
+// Las Ancient City de la dimensión son las piezas vanilla con su propio structure_set (quaso:ciudades_warden). Acá se
+// calcula dónde las va a poner el juego (misma cuenta que el structure_set) para que el generador les vacíe la caverna antes
 public final class AncientCityLocator {
 
-    // Valores del structure_set vanilla: una ciudad por región de 24x24 chunks, separadas al menos 8
-    private static final int SPACING = 24;
-    private static final int SEPARATION = 8;
-    private static final int SALT = 20083232;
+    // La estructura del datapack (copia de la vanilla que solo sale en los biomas de la Warden Cave)
+    public static final String STRUCTURE_KEY = "ciudad_warden";
+
+    // Valores de quaso:ciudades_warden: una ciudad por región de 36x36 chunks, corrida hasta 4 chunks de la esquina,
+    // así entre dos ciudades siempre hay al menos 32 chunks (512 bloques), parecido a las Trial Chambers
+    static final int SPACING = 36;
+    static final int SEPARATION = 31;
+    static final int SALT = 61904217;
 
     // Las piezas llegan hasta unos 130 bloques del centro (medido en un server de prueba)
     public static final int CLEAR_RADIUS = 134;

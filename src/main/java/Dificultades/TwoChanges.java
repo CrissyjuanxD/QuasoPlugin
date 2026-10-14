@@ -34,9 +34,14 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.event.inventory.FurnaceSmeltEvent;
+import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.inventory.PrepareSmithingEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.inventory.BlastingRecipe;
+import org.bukkit.inventory.FurnaceInventory;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.RecipeChoice;
@@ -51,7 +56,7 @@ import java.util.Random;
 
 public class TwoChanges implements Listener, Change {
 
-    private static final int BLAST_TIME = 4800;
+    private static final int BLAST_TIME = WardenCaveItems.MINUTOS_FUNDICION * 60 * 20;
     private static final double MINING_ZOMBIE_CHANCE = 0.15;
     private static final int GHAST_REPLACE_CHANCE = 25;
     // Si ya hay estos ghasts cerca no se cambian más zombies (en el cielo abierto del Abismo se veían demasiados)
@@ -148,7 +153,8 @@ public class TwoChanges implements Listener, Change {
 
         for (WardenCaveItems.Variant variant : WardenCaveItems.Variant.values()) {
             addRecipe(new BlastingRecipe(key(variant.fragmentId()), WardenCaveItems.createFragment(variant),
-                    RecipeChoice.exactChoice(WardenCaveItems.createRawOre(variant)), 1.0f, BLAST_TIME));
+                    RecipeChoice.exactChoice(WardenCaveItems.createRawOre(variant), WardenCaveItems.createOldRawOre(variant)),
+                    1.0f, BLAST_TIME));
         }
 
         ShapedRecipe deepIngot = new ShapedRecipe(key("lingote_profundo"), WardenCaveItems.createDeepIngot());
@@ -237,7 +243,34 @@ public class TwoChanges implements Listener, Change {
         if (pieza == null || !pieza.esArmadura()) event.setResult(null);
     }
 
-    // Partículas de sculk cada vez que el alto horno termina un Fragmento Profundo (4 minutos por mineral)
+    // Los minerales crudos que quedaron con el lore viejo (4 minutos) se cambian al nuevo al entrar, al abrir un cofre o
+    // al agarrarlos del suelo. Los hornos no se tocan para no cortar lo que se está fundiendo (igual aceptan los viejos)
+    @EventHandler
+    public void onJoin(PlayerJoinEvent event) {
+        updateRawOres(event.getPlayer().getInventory());
+    }
+
+    @EventHandler(ignoreCancelled = true)
+    public void onOpen(InventoryOpenEvent event) {
+        updateRawOres(event.getPlayer().getInventory());
+        if (!(event.getInventory() instanceof FurnaceInventory)) updateRawOres(event.getInventory());
+    }
+
+    @EventHandler(ignoreCancelled = true)
+    public void onPickup(EntityPickupItemEvent event) {
+        ItemStack stack = event.getItem().getItemStack();
+        if (WardenCaveItems.updateRawOreLore(stack)) event.getItem().setItemStack(stack);
+    }
+
+    private static void updateRawOres(Inventory inventory) {
+        ItemStack[] contents = inventory.getContents();
+        for (int slot = 0; slot < contents.length; slot++) {
+            ItemStack item = contents[slot];
+            if (item != null && WardenCaveItems.updateRawOreLore(item)) inventory.setItem(slot, item);
+        }
+    }
+
+    // Partículas de sculk cada vez que el alto horno termina un Fragmento Profundo (3 minutos por mineral)
     @EventHandler(ignoreCancelled = true)
     public void onSmelt(FurnaceSmeltEvent event) {
         if (!(event.getRecipe() instanceof Keyed keyed)) return;

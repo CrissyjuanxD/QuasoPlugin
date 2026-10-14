@@ -59,8 +59,9 @@ public class ShopGUI {
         player.openInventory(gui);
     }
 
-    // Dos columnas de 5 tradeos cada una (de la fila 2 a la 6): precio 1, precio 2, flecha y producto. La flecha y los
-    // "Vacío" no se ven pero muestran su nombre; todo lo demás es relleno invisible para que no se pueda meter nada
+    // Dos columnas de 5 tradeos cada una (de la fila 2 a la 6): precio 1, precio 2, flecha y producto. La flecha, los
+    // "Vacío" y la barrera del producto vacío no se ven pero muestran su nombre; todo lo demás es relleno invisible para
+    // que no se pueda meter nada
     private void populateBaseGUI(Inventory gui, Villager villager, boolean isConfig) {
         ItemStack relleno = Invisible.relleno();
         for (int slot = 0; slot < gui.getSize(); slot++) gui.setItem(slot, relleno);
@@ -114,6 +115,7 @@ public class ShopGUI {
                     m.setDisplayName(ChatColor.RED + "Vacío");
                     displayItem.setItemMeta(m);
                 }
+                Invisible.ocultar(displayItem);
             } else {
                 displayItem = Invisible.ocultar(shopManager.createEmptyTradeItem());
             }

@@ -43,5 +43,6 @@ La API se busca entre los servicios de Bukkit por su nombre y se llama por refle
 de ViciontProtections. ViciontProtections va en `softdepend`. Si no está activo, el jugador recibe solo los panes y
 sale un aviso en la consola.
 
-Para poner el bloque, el jugador necesita el permiso `viciontprotections.user.create`. En ViciontProtections viene solo
-para OP, así que hay que darlo al grupo por defecto (por ejemplo `viciontprotections.user.*` en LuckPerms).
+Desde ViciontProtections 2.0.3 cualquier jugador puede colocar el bloque sin plugin de permisos. Lo controla
+`permissions.require-user-permissions` en su `config.yml`, que por defecto está en `false`. Con 2.0.2 o anterior, el
+permiso `viciontprotections.user.create` era solo de OP y los jugadores normales no podían colocarlo.

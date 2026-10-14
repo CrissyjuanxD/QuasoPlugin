@@ -1,0 +1,26 @@
+[
+  {
+    "orden": 1,
+    "archivo": "01_hacha_floral.png",
+    "modelo": "minecraft:hacha_floral",
+    "referencia": "twisted_axe_0.png"
+  },
+  {
+    "orden": 2,
+    "archivo": "02_pala_floral.png",
+    "modelo": "minecraft:pala_floral",
+    "referencia": "twisted_shovel_0.png"
+  },
+  {
+    "orden": 3,
+    "archivo": "03_espada_floral.png",
+    "modelo": "minecraft:espada_floral",
+    "referencia": "pale_sword.png"
+  },
+  {
+    "orden": 4,
+    "archivo": "04_pico_floral.png",
+    "modelo": "minecraft:pico_floral",
+    "referencia": "twisted_pickaxe_0.png"
+  }
+]

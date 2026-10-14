@@ -121,6 +121,6 @@ public class ArcoMejorado implements Listener {
 
     // El nivel de Poder que acepta un arco en el yunque
     public static int poderMaximo(ItemStack item) {
-        return es(item) ? PODER_MAXIMO : Enchantment.POWER.getMaxLevel();
+        return es(item) || ArcoSculk.es(item) ? PODER_MAXIMO : Enchantment.POWER.getMaxLevel();
     }
 }

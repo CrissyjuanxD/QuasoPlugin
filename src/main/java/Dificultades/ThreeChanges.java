@@ -135,7 +135,7 @@ public class ThreeChanges implements Listener, Change {
         celestiteIngot.shape("CGC", "GDG", "CGC");
         celestiteIngot.setIngredient('C', crystal);
         celestiteIngot.setIngredient('G', gold);
-        celestiteIngot.setIngredient('D', RecipeChoice.exactChoice(WardenCaveItems.createDeepIngot()));
+        celestiteIngot.setIngredient('D', RecipeChoice.exactChoice(WardenCaveItems.allDeepIngots()));
         addRecipe(celestiteIngot);
 
         ShapedRecipe celestiteTemplate = new ShapedRecipe(key("plantilla_celestita"), EndItems.createCelestiteTemplate());

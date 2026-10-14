@@ -53,3 +53,16 @@ Los arcos antiguos siguen funcionando porque conservan la misma identificación.
 ## Texturas (Version #83)
 
 [Arcos nuevos: ZIP, vista y guía](../descargas/arcos%20nuevos/README.md). El Arco Mejorado usa la forma del explosivo con hierro, oro y Netherite. Los tres niveles del explosivo son rojos. Cada uno incluye reposo y tres fases al tensar, todos a 16×16, además de los JSON. También están integrados en `resourcepack/assets`.
+
+## Arco de Sculk (Version #82)
+
+`items/ArcoSculk.java`. Se hace en la herrería con un Núcleo Sónico del Ultra Warden, un arco normal o el Arco Mejorado
+y una Energía de Warden. Se quedan los encantamientos del arco. Los arcos explosivos y los de hielo no sirven.
+
+- Las flechas dejan una estela de sculk y suman 4 de daño sónico al pegar.
+- Los Endermen no las esquivan. El arco sirve para el End: la flecha les pega con el mismo daño que hubiera hecho, Poder
+  incluido, más los 4 sónicos. Al Rey Ender lo sigue manejando su propio boss.
+- En el yunque acepta Perforación y Poder VI, como el Arco Mejorado.
+
+El item model es `minecraft:arco_sculk`. Mientras no tenga textura usa el modelo del arco normal
+(`resourcepack/assets/minecraft/items/arco_sculk.json`).

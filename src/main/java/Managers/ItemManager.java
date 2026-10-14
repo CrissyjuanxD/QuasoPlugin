@@ -84,7 +84,8 @@ public class ItemManager {
         "alma_infested_ghast", "alma_infested_creeper", "alma_infested_cave_spider", "energia_warden",
         "mineral_crudo_cian", "mineral_crudo_verde", "mineral_crudo_morado", "mineral_crudo_gris",
         "fragmento_profundo_cian", "fragmento_profundo_verde", "fragmento_profundo_morado",
-        "fragmento_profundo_gris", "lingote_profundo", "corazon_warden_boss",
+        "fragmento_profundo_gris", "lingote_profundo", "lingote_profundo_cian", "lingote_profundo_verde",
+        "lingote_profundo_morado", "lingote_profundo_gris", "tejido_sculk", "nucleo_sonico", "corazon_warden_boss",
         "baya_sculk", "fruta_abisal", "baya_luminosa",
         "cristal_celestita", "fragmento_astral", "esencia_marchita", "ojo_rey_ender",
         "lingote_celestita", "plantilla_celestita", "enderking_pearl", "espada_celestita", "hacha_celestita",
@@ -92,6 +93,7 @@ public class ItemManager {
         "mejora_casco_warden", "mejora_peto_warden", "mejora_pantalon_warden", "mejora_bota_warden",
 
         "casco_warden", "peto_warden", "pantalon_warden", "bota_warden", "peto_warden_alado", "warden_gun",
+        "botas_warden_escaladoras", "arco_sculk",
 
         "chatarra", "manzana_podrida", "zanahoria_encantada",
         "pepitas_hierro_oxidadas", "pepitas_diamante",
@@ -216,6 +218,12 @@ public class ItemManager {
             case "fragmento_profundo_morado": item = WardenCaveItems.createFragment(WardenCaveItems.Variant.MORADO); break;
             case "fragmento_profundo_gris": item = WardenCaveItems.createFragment(WardenCaveItems.Variant.GRIS); break;
             case "lingote_profundo": item = WardenCaveItems.createDeepIngot(); break;
+            case "lingote_profundo_cian": item = WardenCaveItems.createColoredIngot(WardenCaveItems.Variant.CIAN); break;
+            case "lingote_profundo_verde": item = WardenCaveItems.createColoredIngot(WardenCaveItems.Variant.VERDE); break;
+            case "lingote_profundo_morado": item = WardenCaveItems.createColoredIngot(WardenCaveItems.Variant.MORADO); break;
+            case "lingote_profundo_gris": item = WardenCaveItems.createColoredIngot(WardenCaveItems.Variant.GRIS); break;
+            case "tejido_sculk": item = WardenCaveItems.createSculkTissue(1); break;
+            case "nucleo_sonico": item = WardenCaveItems.createSonicCore(1); break;
             case "corazon_warden_boss": item = WardenCaveItems.createWardenBossHeart(); break;
             case "baya_sculk": item = WardenCaveItems.createSculkBerry(1); break;
             case "fruta_abisal": item = WardenCaveItems.createAbyssFruit(1); break;
@@ -244,6 +252,8 @@ public class ItemManager {
             case "bota_warden": item = wardenArmor.createWardenBoots(); break;
             case "peto_warden_alado": item = wardenArmor.createWingedWardenChestplate(); break;
             case "warden_gun": item = WardenGun.create(); break;
+            case "botas_warden_escaladoras": item = wardenArmor.createClimbingWardenBoots(); break;
+            case "arco_sculk": item = items.ArcoSculk.create(); break;
 
             case "chatarra": item = FishingItems.createChatarra(); break;
             case "manzana_podrida": item = FishingItems.createManzanaPodrida(); break;

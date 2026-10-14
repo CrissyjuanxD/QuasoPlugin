@@ -374,6 +374,8 @@ public class QuasoPlugin extends JavaPlugin implements Listener {
         Bukkit.getPluginManager().registerEvents(new InfinitePearl(), this);
         Bukkit.getPluginManager().registerEvents(new WardenReturnItem(), this);
         Bukkit.getPluginManager().registerEvents(new WardenGun(this), this);
+        Bukkit.getPluginManager().registerEvents(new items.ArcoSculk(this), this);
+        Bukkit.getPluginManager().registerEvents(new Armors.BotasEscaladoras(), this);
         Bukkit.getPluginManager().registerEvents(new EspadaCelestita(), this);
         items.tienda.EfectosTienda efectosTienda = new items.tienda.EfectosTienda(this);
         Bukkit.getPluginManager().registerEvents(efectosTienda, this);

@@ -117,6 +117,25 @@ public class WardenArmor implements Listener {
         return "peto_warden_alado".equals(items.EndItems.idOf(item));
     }
 
+    // Botas de Warden Escaladoras: las mismas botas pero se pegan a las paredes y saltan de una a otra (Núcleo Sónico +
+    // Botas de Warden + bloque de miel en la herrería). Lo hace BotasEscaladoras
+    public static final String CLIMBING_ID = "botas_warden_escaladoras";
+
+    public ItemStack createClimbingWardenBoots() {
+        ItemStack item = createWardenBoots();
+        ItemMeta meta = item.getItemMeta();
+        meta.setDisplayName(ChatColor.of("#5fd16a") + "" + ChatColor.BOLD + "Botas de Warden Escaladoras");
+        meta.setLore(lore(WardenCaveItems.Variant.VERDE, 4, false, true));
+        meta.getPersistentDataContainer().set(items.EndItems.ITEM_KEY, PersistentDataType.STRING, CLIMBING_ID);
+        meta.setItemModel(NamespacedKey.minecraft(CLIMBING_ID));
+        item.setItemMeta(meta);
+        return item;
+    }
+
+    public static boolean isClimbing(ItemStack item) {
+        return CLIMBING_ID.equals(items.EndItems.idOf(item));
+    }
+
     public ItemStack createWardenLeggings() {
         ItemStack item = new ItemStack(Material.NETHERITE_LEGGINGS);
         ItemMeta meta = item.getItemMeta();
@@ -183,12 +202,20 @@ public class WardenArmor implements Listener {
     // Peto morado (Abismo Flotante), Pantalón gris (Ruinas de Ceniza) y Botas verde (Pantano Profundo). Tiene el formato
     // de todo el equipo (EquipoLore) y el tooltip de atributos del juego se oculta
     static List<String> lore(WardenCaveItems.Variant bioma, int armadura, boolean alado) {
+        return lore(bioma, armadura, alado, false);
+    }
+
+    static List<String> lore(WardenCaveItems.Variant bioma, int armadura, boolean alado, boolean escaladoras) {
         List<EquipoLore.Atributo> atributos = new ArrayList<>(List.of(
                 new EquipoLore.Atributo(EquipoLore.ARMADURA, armadura + " de armadura y 4 de dureza"),
                 new EquipoLore.Atributo(EquipoLore.VIDA, "+2 corazones"),
                 new EquipoLore.Atributo(EquipoLore.DESGASTE, "30% de no gastarse"),
                 new EquipoLore.Atributo(EquipoLore.EMPUJE, "10% menos empuje")));
         if (alado) atributos.add(new EquipoLore.Atributo(EquipoLore.PLANEO, "Planea como unas Elytras"));
+        if (escaladoras) {
+            atributos.add(new EquipoLore.Atributo(EquipoLore.ESCALAR, "Se pega a las paredes"));
+            atributos.add(new EquipoLore.Atributo(EquipoLore.ESCALAR, "Salta de pared en pared"));
+        }
         return EquipoLore.lore(bioma.color(), List.of("Forjada en la profunda oscuridad,", "resuena con las almas del abismo.",
                 "Pieza " + bioma.biome() + "."), true, atributos, EquipoLore.Rango.WARDEN);
     }

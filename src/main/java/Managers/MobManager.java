@@ -90,7 +90,7 @@ public class MobManager {
                 "guardianblaze", "guardiancorruptedskeleton", "corruptedinfernalspider",
                 "infestedbee", "estatuarecompensa", "corruptedbee", "infestedcreeper",
                 "infestedghast", "infestedskeleton", "infestedcavespider", "wardenzombie", "enderblaze",
-                "endercreeper", "enderspider", "infestedwarden", "enderinsect", "shulkernegro", "reyender",
+                "endercreeper", "enderspider", "infestedwarden", "enderinsect", "shulkernegro", "reyender", "ultrawarden",
         };
         for (String mob : mobs) {
             registeredMobs.add(mob);
@@ -136,6 +136,7 @@ public class MobManager {
             case "shulkernegro": BlackShulker.spawn(plugin, location); return true;
             // De prueba: la arena queda donde se spawnea
             case "reyender": ReyEnderBoss.spawn(plugin, location); return true;
+            case "ultrawarden": Bosses.UltraWardenBoss.spawn(plugin, location); return true;
             default: return false;
         }
     }

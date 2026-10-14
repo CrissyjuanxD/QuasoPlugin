@@ -43,6 +43,7 @@ public final class EquipoLore {
     public static final String BLOQUEO = "⛨";
     public static final String IRROMPIBLE = "∞";
     public static final String PLANEO = "✈";
+    public static final String ESCALAR = "⇈";
 
     private EquipoLore() {}
 

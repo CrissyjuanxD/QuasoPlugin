@@ -78,7 +78,41 @@ public class AltarFunctions implements Listener, CommandExecutor, TabCompleter {
             }
     };
 
-    // Al hacer click al nido revisa que la estructura del altar esté bien y lanza el AltarActivateEvent
+    // Altar del Ultra Warden: base de deepslate con sculk, deepslate reforzado al centro, linternas de almas en las
+    // esquinas y el catalizador de sculk arriba (al que se le da click con el Corazón de Warden)
+    private final Material[][][] ultraWardenAltarLayers = {
+            {
+                    {Material.CHISELED_DEEPSLATE, Material.SCULK, Material.SCULK, Material.SCULK, Material.CHISELED_DEEPSLATE},
+                    {Material.SCULK, Material.DEEPSLATE_TILES, Material.DEEPSLATE_TILES, Material.DEEPSLATE_TILES, Material.SCULK},
+                    {Material.SCULK, Material.DEEPSLATE_TILES, Material.REINFORCED_DEEPSLATE, Material.DEEPSLATE_TILES, Material.SCULK},
+                    {Material.SCULK, Material.DEEPSLATE_TILES, Material.DEEPSLATE_TILES, Material.DEEPSLATE_TILES, Material.SCULK},
+                    {Material.CHISELED_DEEPSLATE, Material.SCULK, Material.SCULK, Material.SCULK, Material.CHISELED_DEEPSLATE}
+            },
+            {
+                    {Material.POLISHED_DEEPSLATE, Material.AIR, Material.AIR, Material.AIR, Material.POLISHED_DEEPSLATE},
+                    {Material.AIR, Material.AIR, Material.AIR, Material.AIR, Material.AIR},
+                    {Material.AIR, Material.AIR, Material.REINFORCED_DEEPSLATE, Material.AIR, Material.AIR},
+                    {Material.AIR, Material.AIR, Material.AIR, Material.AIR, Material.AIR},
+                    {Material.POLISHED_DEEPSLATE, Material.AIR, Material.AIR, Material.AIR, Material.POLISHED_DEEPSLATE}
+            },
+            {
+                    {Material.SOUL_LANTERN, Material.AIR, Material.AIR, Material.AIR, Material.SOUL_LANTERN},
+                    {Material.AIR, Material.AIR, Material.AIR, Material.AIR, Material.AIR},
+                    {Material.AIR, Material.AIR, Material.SCULK_CATALYST, Material.AIR, Material.AIR},
+                    {Material.AIR, Material.AIR, Material.AIR, Material.AIR, Material.AIR},
+                    {Material.SOUL_LANTERN, Material.AIR, Material.AIR, Material.AIR, Material.SOUL_LANTERN}
+            }
+    };
+
+    // Cada altar: el nombre para /altarvct create, el bloque al que se le da click (en la capa 3, al centro), su
+    // estructura y el tipo que lleva el AltarActivateEvent
+    private record Altar(String nombre, String tipo, Material activador, Material[][][] capas) {}
+
+    private final List<Altar> altares = List.of(
+            new Altar("queenbee", "queen_bee", Material.BEE_NEST, queenBeeAltarLayers),
+            new Altar("ultrawarden", "ultra_warden", Material.SCULK_CATALYST, ultraWardenAltarLayers));
+
+    // Al hacer click al bloque del centro revisa que la estructura del altar esté bien y lanza el AltarActivateEvent
     @EventHandler
     public void onInteract(PlayerInteractEvent event) {
         if (event.getHand() != EquipmentSlot.HAND) return;
@@ -87,24 +121,24 @@ public class AltarFunctions implements Listener, CommandExecutor, TabCompleter {
         Block block = event.getClickedBlock();
         if (block == null) return;
 
-        if (block.getType() == Material.BEE_NEST) {
-            if (isValidAltar(block.getLocation(), queenBeeAltarLayers)) {
+        for (Altar altar : altares) {
+            if (block.getType() != altar.activador() || !isValidAltar(block.getLocation(), altar.capas())) continue;
 
-                if (isCooldownActive(block.getLocation())) {
-                    event.getPlayer().sendMessage(ChatColor.RED + "⏳ Este altar se está regenerando...");
-                    event.getPlayer().playSound(block.getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 1f, 0.5f);
-                    return;
-                }
-
-                AltarActivateEvent activateEvent = new AltarActivateEvent(event.getPlayer(), block.getLocation(), "queen_bee");
-                Bukkit.getPluginManager().callEvent(activateEvent);
-
-                if (activateEvent.isCancelled()) return;
-
-                if (activateEvent.getCooldownSeconds() > 0) {
-                    createCooldownHologram(block.getLocation(), activateEvent.getCooldownSeconds());
-                }
+            if (isCooldownActive(block.getLocation())) {
+                event.getPlayer().sendMessage(ChatColor.RED + "⏳ Este altar se está regenerando...");
+                event.getPlayer().playSound(block.getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 1f, 0.5f);
+                return;
             }
+
+            AltarActivateEvent activateEvent = new AltarActivateEvent(event.getPlayer(), block.getLocation(), altar.tipo());
+            Bukkit.getPluginManager().callEvent(activateEvent);
+
+            if (activateEvent.isCancelled()) return;
+
+            if (activateEvent.getCooldownSeconds() > 0) {
+                createCooldownHologram(block.getLocation(), activateEvent.getCooldownSeconds());
+            }
+            return;
         }
     }
 
@@ -243,9 +277,10 @@ public class AltarFunctions implements Listener, CommandExecutor, TabCompleter {
                     sender.sendMessage(ChatColor.RED + "Uso: /altarvct create <nombre>");
                     return true;
                 }
-                if (args[1].equalsIgnoreCase("queenbee")) {
-                    buildStructure(player.getLocation(), queenBeeAltarLayers);
-                    player.sendMessage(ChatColor.GREEN + "Altar de Queen Bee construido.");
+                Altar altar = altares.stream().filter(a -> a.nombre().equalsIgnoreCase(args[1])).findFirst().orElse(null);
+                if (altar != null) {
+                    buildStructure(player.getLocation(), altar.capas());
+                    player.sendMessage(ChatColor.GREEN + "Altar " + altar.nombre() + " construido.");
                 } else {
                     player.sendMessage(ChatColor.RED + "Altar no reconocido.");
                 }
@@ -302,7 +337,7 @@ public class AltarFunctions implements Listener, CommandExecutor, TabCompleter {
         if (args.length == 2) {
             String action = args[0].toLowerCase();
             if (action.equals("create")) {
-                return filter(Collections.singletonList("queenbee"), args[1]);
+                return filter(altares.stream().map(Altar::nombre).toList(), args[1]);
             }
             if (action.equals("addcooldown") || action.equals("delcooldown")) {
                 List<String> indexes = new ArrayList<>();

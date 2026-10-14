@@ -778,6 +778,7 @@ public class InfestedWardenBoss extends BaseBoss implements Listener {
                 for (Location spot : spots) {
                     world.playSound(spot, Sound.BLOCK_SCULK_CATALYST_BLOOM, 2f, 0.8f);
                     Zombie minion = minionFactory.spawnWardenZombie(spot);
+                    marcarMinion(minion);
                     if (target != null) minion.setTarget(target);
                     minions.add(minion.getUniqueId());
                 }

@@ -34,7 +34,8 @@ de él.
 
 ## Warden Gun
 
-`items/WardenGun.java`. Se da con `/giveqp <jugador> warden_gun`; la soltará el Ultra Warden cuando esté hecho.
+`items/WardenGun.java`. Se da con `/giveqp <jugador> warden_gun`. Desde la Version #82 se fabrica con un Núcleo Sónico
+del Ultra Warden (ver más abajo).
 
 - Click derecho: carga 0,6 segundos (sonido de carga del Warden) y dispara un sonic boom.
 - 10 de daño a los mobs, 6 a los jefes y 5 a los jugadores. Como el del Warden, atraviesa la armadura.
@@ -108,3 +109,105 @@ de él.
 - El Mineral Crudo tarda 3 minutos en el alto horno (antes 4) y su lore lo dice. El alto horno sigue aceptando los
   minerales con el lore viejo. Además, el lore viejo se cambia por el nuevo en el inventario al entrar al server, al
   abrir un cofre o al agarrarlos del suelo, así se apilan con los nuevos. Los que están dentro de un horno no se tocan.
+
+## Version #82: Ultra Warden y su equipo
+
+### Materiales nuevos
+
+| Item | Id | Cómo sale | Para qué sirve |
+|---|---|---|---|
+| Lingote Profundo Cian, Verde, Morado y Gris | `lingote_profundo_<color>` | 8 Fragmentos Profundos del mismo bioma alrededor de un lingote de oro | La mejora de la pieza de su bioma y el Lingote de Celestita |
+| Tejido Sculk | `tejido_sculk` | 40% de los mobs de la Warden Cave (Infested Skeleton, Cave Spider, Ghast, Creeper y Warden Zombie) | La Energía de Warden |
+| Núcleo Sónico | `nucleo_sonico` | 1 o 2 a cada jugador que pelea contra el Ultra Warden | Las mejoras de la armadura, la Warden Gun, el Arco de Sculk y las Botas Escaladoras |
+
+- El Tejido Sculk solo cae si el mob lo mató un jugador. No sale de mobs de spawner ni de los que invocan los bosses
+  (llevan la marca `boss_minion`). En el servidor de prueba cayó en 84 de 200 Infested Skeletons.
+- El Lingote Profundo de antes (el de cualquier color) ya no se fabrica. Los que ya existen siguen sirviendo para el
+  Lingote de Celestita y para la misión 208.
+- Los items que ya existían no cambian de lore, así siguen entrando en las recetas.
+
+### Recetas nuevas
+
+| Receta | Ingredientes |
+|---|---|
+| Lingote Profundo de bioma | `FFF` / `FOF` / `FFF`: 8 fragmentos del bioma y 1 lingote de oro |
+| Energía de Warden | `FTF` / `TET` / `FTF`: 4 fragmentos de cualquier bioma, 4 Tejidos Sculk y 1 echo shard |
+| Mejora de cada pieza | `LAL` / `WTN` / `L L`: 4 lingotes de su bioma, su alma, 1 Energía, la plantilla de Netherite y 1 Núcleo Sónico |
+| Pieza de Warden (herrería) | La mejora, la pieza floral y el 5º lingote de su bioma |
+| Warden Gun | `ENE` / `W W` / `E E`: 1 Núcleo Sónico, 2 Energías de Warden y 4 echo shards |
+| Arco de Sculk (herrería) | Núcleo Sónico, un arco normal o el Arco Mejorado, y 1 Energía de Warden |
+| Botas de Warden Escaladoras (herrería) | Núcleo Sónico, Botas de Warden y un bloque de miel |
+
+Cada pieza pide 5 lingotes de su bioma, o sea 40 minerales de ese bioma. Casco cian, peto morado, pantalón gris y
+botas verde. Sin el Núcleo Sónico no hay armadura de Warden: hay que matar al Ultra Warden, como pasa con la Esencia
+Floral de la Abeja Floral.
+
+### Altar del Ultra Warden
+
+Es un tipo más del sistema de altares (`Dificultades/Features/AltarFunctions`). Se construye parado donde va, con
+`/altarvct create ultrawarden`:
+
+- una base de 5x5 de deepslate con sculk y deepslate reforzado al centro;
+- deepslate pulido en las esquinas con linternas de almas arriba;
+- un catalizador de sculk arriba del centro.
+
+Con un Corazón de Warden Boss en la mano se le da click derecho al catalizador:
+
+- El corazón se gasta.
+- Durante 5 segundos de ritual el corazón late, suben almas en espiral y se cierra un anillo de sculk.
+- Después el Ultra Warden sale del suelo al lado del altar, con la animación de emerger del warden. Mientras emerge
+  no recibe daño.
+
+Solo puede haber un Ultra Warden vivo. Mientras haya uno, el altar no gasta el corazón. Si se descarga su chunk,
+vuelve a pelear al cargarse (`Bosses/UltraWardenAltar`).
+
+### Ultra Warden
+
+`Bosses/UltraWardenBoss.java`. Se puede sacar de prueba con `/spawnqp ultrawarden`.
+
+- **Stats:** 2000 de vida, 1.6 de tamaño y 20 de daño base. El mob tiene 1000 y el daño que recibe se divide entre 2,
+  como el Rey Ender.
+- **Arena:** 34 bloques alrededor de donde sale.
+- **Ritmo:** pelea como el Rey Ender: de 1 a 3 ataques cuerpo a cuerpo y después un especial.
+- **Avisos:** cada especial se avisa en el chat a los de la arena, por ejemplo «۞ Ultra Warden » Silencio Profundo».
+- **Teleports:** se ven con una esfera donde está, un anillo que se cierra donde va a aparecer, un arco de almas entre
+  los dos puntos y un sonic boom al llegar.
+
+Los daños de la tabla son antes de la armadura y la dificultad. El sonic boom del Silencio Profundo no depende de la
+dificultad.
+
+| Ataque | Tipo | Qué hace |
+|---|---|---|
+| Embestida Sónica | Cuerpo a cuerpo | Marca en el suelo un camino de 16 bloques hacia su jugador y sale disparado. Todo lo que está en el camino recibe 24 de daño y sale volando hacia arriba. Frena si choca contra una pared |
+| Zarpazo Doble | Cuerpo a cuerpo | Se acerca y barre dos veces delante suyo (18 y 18). El segundo zarpazo llega más lejos y da Oscuridad |
+| Puño Sísmico | Cuerpo a cuerpo | Golpea el suelo (16 de daño a 3,5 bloques) y una grieta de sculk corre 16 bloques hacia su jugador. El que está sobre la grieta recibe 22 y sale volando |
+| Silencio Profundo | Especial | Sale el título «Silencio Profundo · No te muevas» y a los 3 segundos empieza el silencio. Durante 8 segundos el que se mueve (más de 0,4 bloques de costado o 0,6 de alto) recibe un sonic boom que le saca el 90% de la vida, una sola vez. Después queda 4 segundos aturdido y recibe 50% más de daño. Dura 15 segundos |
+| Esfera Resonante | Especial | Se queda quieto y crece una esfera de 13 bloques a su alrededor, con cuenta de 3 segundos («¡Sal de la esfera!»). Después explota por dentro durante 3 segundos: 6 de daño sónico cada medio segundo a los que siguen adentro |
+| Lluvia Sónica | Especial | Caen del cielo pilares de sonic boom, 3 por jugador y mínimo 5 (hasta 15), uno cerca de cada jugador. Se quedan 1 minuto y el que toca uno recibe 12 de daño sónico por segundo. El boss sigue peleando mientras están y no la repite hasta que se van |
+| Llamado de la Infestación | Especial | De la tierra salen Warden Zombies e Infested Skeletons: 2, o 3 con menos de la mitad de vida, hasta 5 vivos. No le pegan al boss y no sueltan Tejido Sculk |
+| Cacería en la Oscuridad | Especial | Da Oscuridad a todos, se vuelve invisible y aparece 3 veces detrás de jugadores al azar. Cada vez les pega un zarpazo y los deja ciegos un momento |
+| Corazón de Sculk | Regeneración | Al bajar del 50% y del 25% vuelve al centro de la arena y levanta 4 catalizadores de sculk que giran. Cada catalizador lo cura 5 de vida por segundo, con un rayo de almas hacia él. Mientras tanto recibe la mitad de daño y cada 4 segundos empuja a los que se le pegan. Termina cuando se rompen los 4 (un golpe o una flecha cada uno) o a los 30 segundos |
+
+Recompensas (`Bosses/BossRewards`):
+
+- 20 DinoCoins la primera vez y 5 las siguientes, más 1 o 2 Núcleos Sónicos a cada jugador que peleó.
+- Se cobra hasta 2 veces por día.
+- Suelta 1500 de experiencia y no suelta el catalizador del warden.
+- Cuenta para las misiones de jefes, los libros de jefe y la XP de trabajos, como antes.
+
+### Arco de Sculk
+
+Ver [arcos](arcos-26.2.md#arco-de-sculk-version-82).
+
+### Botas de Warden Escaladoras
+
+`Armors/BotasEscaladoras.java`. Son las Botas de Warden con los mismos stats, pero además:
+
+- **Agarre:** en el aire y pegado a una pared, el jugador se queda agarrado y baja despacio, hasta 2,5 segundos. Con
+  shift se suelta.
+- **Salto de pared:** con salto se impulsa hacia arriba y lejos de la pared, un poco hacia donde mira. Se puede seguir
+  de pared en pared como en parkour.
+- No funcionan en creativo, volando, planeando ni nadando.
+- Sin daño de caída mientras escala.
+
+Se quedan los encantamientos de las botas. El lore suma «⇈ Se pega a las paredes» y «⇈ Salta de pared en pared».

@@ -13,6 +13,8 @@ import imp.crissyjuanxd.QuasoPlugin;
 import items.InfestedSoulsItems;
 import items.WardenCaveItems;
 import items.WardenUpgrades;
+import items.WardenGun;
+import items.ArcoSculk;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Keyed;
@@ -27,6 +29,7 @@ import org.bukkit.entity.CaveSpider;
 import org.bukkit.entity.Creeper;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Ghast;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Skeleton;
 import org.bukkit.entity.Zombie;
 import org.bukkit.event.EventHandler;
@@ -34,6 +37,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.event.inventory.FurnaceSmeltEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
@@ -58,6 +62,7 @@ public class TwoChanges implements Listener, Change {
 
     private static final int BLAST_TIME = WardenCaveItems.MINUTOS_FUNDICION * 60 * 20;
     private static final double MINING_ZOMBIE_CHANCE = 0.15;
+    private static final double TISSUE_CHANCE = 0.4;
     private static final int GHAST_REPLACE_CHANCE = 25;
     // Si ya hay estos ghasts cerca no se cambian más zombies (en el cielo abierto del Abismo se veían demasiados)
     private static final int GHAST_NEARBY_MAX = 3;
@@ -76,6 +81,7 @@ public class TwoChanges implements Listener, Change {
     private final WardenUpgrades upgrades;
     private final WardenArmor armor;
     private final InfestedSoulsItems souls;
+    private Bosses.UltraWardenAltar ultraAltar;
     private final List<NamespacedKey> recipeKeys = new ArrayList<>();
     // Mientras no es null, addRecipe solo junta las recetas (para la web) en vez de registrarlas
     private List<Recipe> recolectando;
@@ -120,6 +126,9 @@ public class TwoChanges implements Listener, Change {
         infestedCreeper.apply();
         wardenZombie.apply();
         registerRecipes();
+        ultraAltar = new Bosses.UltraWardenAltar(plugin);
+        Bukkit.getPluginManager().registerEvents(ultraAltar, plugin);
+        ultraAltar.restoreLoaded();
         isApplied = true;
     }
 
@@ -136,17 +145,21 @@ public class TwoChanges implements Listener, Change {
         infestedGhast.revert();
         infestedCreeper.revert();
         wardenZombie.revert();
+        if (ultraAltar != null) HandlerList.unregisterAll(ultraAltar);
+        ultraAltar = null;
         HandlerList.unregisterAll(this);
         isApplied = false;
     }
 
-    // Recetas de la Warden Cave: cada mineral crudo en el alto horno da el fragmento de su bioma, el lingote acepta
-    // fragmentos de cualquier bioma y cada mejora pide los de su bioma. Los items vanilla van con exactChoice
-    // para que no entren mochilas o almas, que también son echo shards
+    // Recetas de la Warden Cave: cada mineral crudo en el alto horno da el fragmento de su bioma, con 8 fragmentos de un
+    // bioma sale su Lingote Profundo y cada pieza pide 5 lingotes de su bioma (40 minerales). La Energía usa materiales
+    // generales (fragmentos de cualquier bioma, Tejido Sculk y echo shard) y el Núcleo Sónico del Ultra Warden va en
+    // cada mejora. Los items vanilla van con exactChoice para que no entren mochilas o almas, que también son echo shards
     private void registerRecipes() {
         RecipeChoice anyFragment = RecipeChoice.exactChoice(WardenCaveItems.allFragments());
-        RecipeChoice ingot = RecipeChoice.exactChoice(WardenCaveItems.createDeepIngot());
         RecipeChoice energy = RecipeChoice.exactChoice(WardenCaveItems.createWardenEnergy());
+        RecipeChoice tissue = RecipeChoice.exactChoice(WardenCaveItems.createSculkTissue(1));
+        RecipeChoice core = RecipeChoice.exactChoice(WardenCaveItems.createSonicCore(1));
         RecipeChoice gold = RecipeChoice.exactChoice(new ItemStack(Material.GOLD_INGOT));
         RecipeChoice echo = RecipeChoice.exactChoice(new ItemStack(Material.ECHO_SHARD));
         RecipeChoice template = RecipeChoice.exactChoice(new ItemStack(Material.NETHERITE_UPGRADE_SMITHING_TEMPLATE));
@@ -155,58 +168,72 @@ public class TwoChanges implements Listener, Change {
             addRecipe(new BlastingRecipe(key(variant.fragmentId()), WardenCaveItems.createFragment(variant),
                     RecipeChoice.exactChoice(WardenCaveItems.createRawOre(variant), WardenCaveItems.createOldRawOre(variant)),
                     1.0f, BLAST_TIME));
+
+            ShapedRecipe ingot = new ShapedRecipe(key(variant.ingotId()), WardenCaveItems.createColoredIngot(variant));
+            ingot.shape("FFF", "FOF", "FFF");
+            ingot.setIngredient('F', RecipeChoice.exactChoice(WardenCaveItems.createFragment(variant)));
+            ingot.setIngredient('O', gold);
+            addRecipe(ingot);
         }
 
-        ShapedRecipe deepIngot = new ShapedRecipe(key("lingote_profundo"), WardenCaveItems.createDeepIngot());
-        deepIngot.shape("FGF", "GEG", "FGF");
-        deepIngot.setIngredient('F', anyFragment);
-        deepIngot.setIngredient('G', gold);
-        deepIngot.setIngredient('E', echo);
-        addRecipe(deepIngot);
-
         ShapedRecipe wardenEnergy = new ShapedRecipe(key("energia_warden"), WardenCaveItems.createWardenEnergy());
-        wardenEnergy.shape("ELE", "LEL", "ELE");
+        wardenEnergy.shape("FTF", "TET", "FTF");
+        wardenEnergy.setIngredient('F', anyFragment);
+        wardenEnergy.setIngredient('T', tissue);
         wardenEnergy.setIngredient('E', echo);
-        wardenEnergy.setIngredient('L', ingot);
         addRecipe(wardenEnergy);
 
         upgradeRecipe("mejora_casco_warden", upgrades.createHelmetWardenUpgrade(),
-                souls.createInfestedSkeletonSoul(), WardenCaveItems.Variant.CIAN, ingot, energy, template);
+                souls.createInfestedSkeletonSoul(), WardenCaveItems.Variant.CIAN, energy, core, template);
         upgradeRecipe("mejora_botas_warden", upgrades.createBootsWardenUpgrade(),
-                souls.createInfestedCaveSpiderSoul(), WardenCaveItems.Variant.VERDE, ingot, energy, template);
+                souls.createInfestedCaveSpiderSoul(), WardenCaveItems.Variant.VERDE, energy, core, template);
         upgradeRecipe("mejora_peto_warden", upgrades.createChestplateWardenUpgrade(),
-                souls.createInfestedGhastSoul(), WardenCaveItems.Variant.MORADO, ingot, energy, template);
+                souls.createInfestedGhastSoul(), WardenCaveItems.Variant.MORADO, energy, core, template);
         upgradeRecipe("mejora_pantalon_warden", upgrades.createLeggingsWardenUpgrade(),
-                souls.createInfestedCreeperSoul(), WardenCaveItems.Variant.GRIS, ingot, energy, template);
+                souls.createInfestedCreeperSoul(), WardenCaveItems.Variant.GRIS, energy, core, template);
 
         armorRecipe("casco_warden", armor.createWardenHelmet(), upgrades.createHelmetWardenUpgrade(),
-                Material.NETHERITE_HELMET, ingot);
+                Material.NETHERITE_HELMET, WardenCaveItems.Variant.CIAN);
         armorRecipe("peto_warden", armor.createWardenChestplate(), upgrades.createChestplateWardenUpgrade(),
-                Material.NETHERITE_CHESTPLATE, ingot);
+                Material.NETHERITE_CHESTPLATE, WardenCaveItems.Variant.MORADO);
         armorRecipe("pantalon_warden", armor.createWardenLeggings(), upgrades.createLeggingsWardenUpgrade(),
-                Material.NETHERITE_LEGGINGS, ingot);
+                Material.NETHERITE_LEGGINGS, WardenCaveItems.Variant.GRIS);
         armorRecipe("botas_warden", armor.createWardenBoots(), upgrades.createBootsWardenUpgrade(),
-                Material.NETHERITE_BOOTS, ingot);
+                Material.NETHERITE_BOOTS, WardenCaveItems.Variant.VERDE);
+
+        // Lo que sale del Ultra Warden: la Warden Gun, el Arco de Sculk y las Botas Escaladoras
+        ShapedRecipe gun = new ShapedRecipe(key(WardenGun.ID), WardenGun.create());
+        gun.shape("ENE", "W W", "E E");
+        gun.setIngredient('E', echo);
+        gun.setIngredient('N', core);
+        gun.setIngredient('W', energy);
+        addRecipe(gun);
+
+        addRecipe(new SmithingTransformRecipe(key(ArcoSculk.ID), ArcoSculk.create(), core,
+                new RecipeChoice.MaterialChoice(Material.BOW), energy));
+        addRecipe(new SmithingTransformRecipe(key(WardenArmor.CLIMBING_ID), armor.createClimbingWardenBoots(), core,
+                new RecipeChoice.MaterialChoice(Material.NETHERITE_BOOTS),
+                RecipeChoice.exactChoice(new ItemStack(Material.HONEY_BLOCK))));
     }
 
-    // Mejora de una pieza: 4 fragmentos y el alma de su bioma, 2 lingotes, 1 energía y la plantilla de netherite
+    // Mejora de una pieza: 4 Lingotes Profundos y el alma de su bioma, 1 energía, 1 Núcleo Sónico y la plantilla de netherite
     private void upgradeRecipe(String id, ItemStack upgrade, ItemStack soul, WardenCaveItems.Variant variant,
-                               RecipeChoice ingot, RecipeChoice energy, RecipeChoice template) {
+                               RecipeChoice energy, RecipeChoice core, RecipeChoice template) {
         ShapedRecipe recipe = new ShapedRecipe(key(id), upgrade);
-        recipe.shape("FAF", "LTL", "FWF");
-        recipe.setIngredient('F', RecipeChoice.exactChoice(WardenCaveItems.createFragment(variant)));
+        recipe.shape("LAL", "WTN", "L L");
+        recipe.setIngredient('L', RecipeChoice.exactChoice(WardenCaveItems.createColoredIngot(variant)));
         recipe.setIngredient('A', RecipeChoice.exactChoice(soul));
-        recipe.setIngredient('L', ingot);
-        recipe.setIngredient('T', template);
         recipe.setIngredient('W', energy);
+        recipe.setIngredient('T', template);
+        recipe.setIngredient('N', core);
         addRecipe(recipe);
     }
 
-    // En la mesa de herrería: mejora + pieza floral + 1 lingote (onPrepareSmithing no deja usar una de Netherite común).
-    // Se quedan los encantamientos de la pieza
-    private void armorRecipe(String id, ItemStack result, ItemStack upgrade, Material base, RecipeChoice ingot) {
-        addRecipe(new SmithingTransformRecipe(key(id), result,
-                RecipeChoice.exactChoice(upgrade), new RecipeChoice.MaterialChoice(base), ingot));
+    // En la mesa de herrería: mejora + pieza floral + el 5to lingote de su bioma (onPrepareSmithing no deja usar una de
+    // Netherite común). Se quedan los encantamientos de la pieza
+    private void armorRecipe(String id, ItemStack result, ItemStack upgrade, Material base, WardenCaveItems.Variant variant) {
+        addRecipe(new SmithingTransformRecipe(key(id), result, RecipeChoice.exactChoice(upgrade),
+                new RecipeChoice.MaterialChoice(base), RecipeChoice.exactChoice(WardenCaveItems.createColoredIngot(variant))));
     }
 
     @Override
@@ -235,12 +262,24 @@ public class TwoChanges implements Listener, Change {
         return new NamespacedKey(plugin, id);
     }
 
-    // La armadura de Warden solo sale de la floral: Netherite » Floral » Warden, sin saltarse un paso
+    // La herrería deja la base como está y le pone lo del resultado encima, así que se mira qué se mejora: la armadura
+    // de Warden solo sale de la floral (Netherite » Floral » Warden), las Botas Escaladoras de unas Botas de Warden y el
+    // Arco de Sculk de un arco normal o del Arco Mejorado
     @EventHandler
     public void onPrepareSmithing(PrepareSmithingEvent event) {
         if (!(event.getInventory().getRecipe() instanceof Keyed keyed) || !recipeKeys.contains(keyed.getKey())) return;
-        items.FloralItems.Pieza pieza = items.FloralItems.pieza(event.getInventory().getInputEquipment());
-        if (pieza == null || !pieza.esArmadura()) event.setResult(null);
+        String recipe = keyed.getKey().getKey();
+        ItemStack base = event.getInventory().getInputEquipment();
+        boolean ok;
+        if (recipe.equals(WardenArmor.CLIMBING_ID)) {
+            ok = armor.isWardenArmor(base) && !WardenArmor.isClimbing(base);
+        } else if (recipe.equals(ArcoSculk.ID)) {
+            ok = ArcoSculk.puedeMejorar(base);
+        } else {
+            items.FloralItems.Pieza pieza = items.FloralItems.pieza(base);
+            ok = pieza != null && pieza.esArmadura();
+        }
+        if (!ok) event.setResult(null);
     }
 
     // Los minerales crudos que quedaron con el lore viejo (4 minutos) se cambian al nuevo al entrar, al abrir un cofre o
@@ -268,6 +307,21 @@ public class TwoChanges implements Listener, Change {
             ItemStack item = contents[slot];
             if (item != null && WardenCaveItems.updateRawOreLore(item)) inventory.setItem(slot, item);
         }
+    }
+
+    // El 40% de los mobs de la Warden Cave suelta 1 Tejido Sculk (va en la Energía de Warden). Solo si lo mató un
+    // jugador y no sale de spawners ni de lo que invocan los bosses. HIGH: el Warden Zombie limpia sus drops en NORMAL
+    @EventHandler(priority = EventPriority.HIGH)
+    public void onMobDeath(EntityDeathEvent event) {
+        LivingEntity mob = event.getEntity();
+        if (mob.getKiller() == null || !mob.getWorld().getName().equals(QuasoPlugin.WORLD_NAME)) return;
+        if (!infestedSkeleton.isCustomMob(mob) && !infestedCaveSpider.isCustomMob(mob) && !infestedGhast.isCustomMob(mob)
+                && !infestedCreeper.isCustomMob(mob) && !wardenZombie.isCustomMob(mob)) return;
+        if (Bosses.BaseBoss.esMinion(mob) || mob.fromMobSpawner()) return;
+        CreatureSpawnEvent.SpawnReason reason = mob.getEntitySpawnReason();
+        if (reason == CreatureSpawnEvent.SpawnReason.SPAWNER || reason == CreatureSpawnEvent.SpawnReason.TRIAL_SPAWNER
+                || reason == CreatureSpawnEvent.SpawnReason.SPAWNER_EGG) return;
+        if (random.nextDouble() < TISSUE_CHANCE) event.getDrops().add(WardenCaveItems.createSculkTissue(1));
     }
 
     // Partículas de sculk cada vez que el alto horno termina un Fragmento Profundo (3 minutos por mineral)

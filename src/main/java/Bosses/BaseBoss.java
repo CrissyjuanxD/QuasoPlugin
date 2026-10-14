@@ -19,6 +19,17 @@ import java.util.UUID;
 
 public abstract class BaseBoss {
 
+    // Los mobs que invoca un boss llevan esta marca: no sueltan Tejido Sculk ni cuentan como mobs normales
+    public static final org.bukkit.NamespacedKey MINION_KEY = new org.bukkit.NamespacedKey("quasoplugin", "boss_minion");
+
+    public static void marcarMinion(org.bukkit.entity.Entity minion) {
+        minion.getPersistentDataContainer().set(MINION_KEY, org.bukkit.persistence.PersistentDataType.BYTE, (byte) 1);
+    }
+
+    public static boolean esMinion(org.bukkit.entity.Entity entity) {
+        return entity.getPersistentDataContainer().has(MINION_KEY, org.bukkit.persistence.PersistentDataType.BYTE);
+    }
+
     protected final JavaPlugin plugin;
     protected final LivingEntity entity;
     protected final Location spawnLocation;

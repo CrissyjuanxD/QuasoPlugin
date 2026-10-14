@@ -4,6 +4,7 @@ import Events.MissionSystem.BossDefeatedEvent;
 import items.CustomPotions;
 import items.EconomyItems;
 import items.FloralItems;
+import items.WardenCaveItems;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
@@ -34,7 +35,7 @@ public class BossRewards implements Listener {
 
     private static final Map<String, Reward> REWARDS = Map.of(
             "abeja_reina", new Reward("la Abeja Floral", new int[]{15, 10, 5}, 2),
-            "ultra_warden", new Reward("el Ultra Warden", new int[]{20, 5}, 1),
+            "ultra_warden", new Reward("el Ultra Warden", new int[]{20, 5}, 2),
             "ender_dragon", new Reward("el Ender Dragon", new int[]{15, 5}, 1),
             "rey_ender", new Reward("el Rey Ender", new int[]{25, 5}, 1),
             "wither", new Reward("un Wither", new int[]{7, 7, 7, 7, 7, 2}, 3),
@@ -92,6 +93,9 @@ public class BossRewards implements Listener {
             // La Esencia Floral va en la Mejora Floral (equipo floral)
             items.add(FloralItems.createEssence());
         }
+        // El Núcleo Sónico (1 o 2) va en la armadura de Warden, la Warden Gun, el Arco de Sculk y las Botas Escaladoras
+        int nucleos = bossId.equals("ultra_warden") ? 1 + java.util.concurrent.ThreadLocalRandom.current().nextInt(2) : 0;
+        if (nucleos > 0) items.add(WardenCaveItems.createSonicCore(nucleos));
 
         if (bossId.equals("abeja_reina") && kills == 1) {
             ItemStack bundle = new ItemStack(Material.BUNDLE);
@@ -105,6 +109,7 @@ public class BossRewards implements Listener {
 
         String times = kills == 1 ? "por primera vez" : "(" + kills + " veces)";
         String extra = bossId.equals("abeja_reina") ? ChatColor.of(COLOR) + " y " + ChatColor.of(FloralItems.ROSA) + "1 Esencia Floral" : "";
+        if (nucleos > 0) extra = ChatColor.of(COLOR) + " y " + ChatColor.of("#29DFEB") + nucleos + (nucleos == 1 ? " Núcleo Sónico" : " Núcleos Sónicos");
         player.sendMessage(ChatColor.of(COLOR) + "۞ Derrotaste a " + reward.name() + " " + times + ": "
                 + EconomyItems.iconoDinoCoins() + ChatColor.of("#FFCC80") + coins + " DinoCoins" + extra + ChatColor.of(COLOR) + ".");
         player.playSound(player.getLocation(), Sound.UI_TOAST_CHALLENGE_COMPLETE, 1f, 1f);

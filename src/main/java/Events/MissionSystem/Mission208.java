@@ -13,13 +13,13 @@ public class Mission208 extends MisionCrafteo {
 
     public Mission208(JavaPlugin plugin, MissionHandler handler) {
         super(plugin, handler, 208, "Fundición profunda", MissionDifficulty.MEDIA, 13,
-                "Funde un Mineral Crudo en el alto horno y fabrica un Lingote Profundo: 4 fragmentos, 4 lingotes de "
-                        + "oro y un fragmento de eco.");
+                "Funde un Mineral Crudo en el alto horno y fabrica un Lingote Profundo: 8 fragmentos del mismo "
+                        + "bioma y un lingote de oro.");
         objetivo("fragmento", "Fragmento Profundo", item -> {
             String id = WardenCaveItems.idOf(item);
             return id != null && id.startsWith("fragmento_profundo_");
         });
-        objetivo("lingote", "Lingote Profundo", id("lingote_profundo"));
+        objetivo("lingote", "Lingote Profundo", WardenCaveItems::isDeepIngot);
         extraOf(23);
     }
 

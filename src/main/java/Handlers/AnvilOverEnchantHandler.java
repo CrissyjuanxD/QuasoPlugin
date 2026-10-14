@@ -46,7 +46,7 @@ public class AnvilOverEnchantHandler implements Listener {
 
             boolean hasOverEnchant = false;
             boolean isResultBook = resultItem.getType() == Material.ENCHANTED_BOOK;
-            boolean arcoMejorado = ArcoMejorado.es(firstItem);
+            boolean arcoMejorado = ArcoMejorado.es(firstItem) || items.ArcoSculk.es(firstItem);
 
             for (Map.Entry<Enchantment, Integer> entry : bookMeta.getStoredEnchants().entrySet()) {
                 Enchantment enchant = entry.getKey();

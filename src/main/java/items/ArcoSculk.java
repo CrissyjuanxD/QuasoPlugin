@@ -125,9 +125,13 @@ public class ArcoSculk implements Listener {
         arrow.remove();
     }
 
-    // El Poder se suma al pegar (no viene en la flecha): +1 con Poder I y +0.5 por cada nivel más, como en el juego
-    static double bonoPoder(ItemStack arco) {
-        int poder = arco == null ? 0 : arco.getEnchantmentLevel(org.bukkit.enchantments.Enchantment.POWER);
+    // El Poder se suma al pegar (no viene en la flecha, arrow.getDamage() no lo trae): +1 con Poder I y +0.5 por cada
+    // nivel más, como en el juego. Lo usa también el Rey Ender para las flechas que recibe
+    public static double bonoPoder(ItemStack arco) {
+        return bonoPoder(arco == null ? 0 : arco.getEnchantmentLevel(org.bukkit.enchantments.Enchantment.POWER));
+    }
+
+    static double bonoPoder(int poder) {
         return poder <= 0 ? 0 : 1 + 0.5 * (poder - 1);
     }
 

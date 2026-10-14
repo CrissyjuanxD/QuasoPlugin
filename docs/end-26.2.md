@@ -180,3 +180,17 @@ herramientas que ya existían conservan sus atributos viejos.
   segundos y Ceguera 8 segundos a los jugadores alcanzados (un jugador no puede volver a quedar ciego hasta pasados 8
   segundos). La Ceguera reemplaza a la imagen de ViciontMedia, que este server no tiene. Los que invoca el Rey Ender
   también son así.
+
+## Ajustes de la Version #86
+
+- Las flechas contra el Rey Ender ahora suman el Poder del arco. Desde Minecraft 1.21 el Poder ya no viene en la
+  flecha y se suma recién al pegar, así que antes un arco con Poder V le hacía lo mismo que uno sin encantar. En el
+  servidor de prueba, una flecha tensada a 10 bloques le baja:
+
+  | Arco | Antes | Ahora |
+  |---|---|---|
+  | Sin encantar | 6 | 6 |
+  | Poder V | 6 | 15 |
+  | Poder VI | 6 | 17 |
+
+  Es la misma cuenta que usa el Arco de Sculk contra los Endermen (`ArcoSculk.bonoPoder`).

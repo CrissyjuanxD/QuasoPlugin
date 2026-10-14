@@ -4,6 +4,7 @@ import Dificultades.CustomMobs.EnderBlaze;
 import Dificultades.CustomMobs.EnderSpider;
 import EndBiomes.EnderInsect;
 import com.destroystokyo.paper.event.entity.EndermanEscapeEvent;
+import items.ArcoSculk;
 import items.EndItems;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.ChatMessageType;
@@ -1014,12 +1015,14 @@ public class ReyEnderBoss extends BaseBoss implements Listener {
                 && minions.contains(shooter.getUniqueId());
     }
 
-    // Como enderman las flechas no le harían nada: se cambian por su daño. El tridente rebota como siempre
+    // Como enderman las flechas no le harían nada: se cambian por su daño, con el Poder del arco incluido (el juego lo
+    // suma recién al pegar). El tridente rebota como siempre
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
     public void onArrow(ProjectileHitEvent event) {
         if (!king.equals(event.getHitEntity()) || !(event.getEntity() instanceof AbstractArrow arrow)) return;
         if (!(arrow.getShooter() instanceof Player shooter)) return;
-        double damage = arrow instanceof Trident ? 8 : Math.ceil(arrow.getDamage() * arrow.getVelocity().length());
+        double damage = arrow instanceof Trident ? 8
+                : Math.ceil((arrow.getDamage() + ArcoSculk.bonoPoder(arrow.getWeapon())) * arrow.getVelocity().length());
         if (!(arrow instanceof Trident)) arrow.remove();
         Bukkit.getScheduler().runTask(plugin, () -> {
             if (king.isValid() && !king.isDead()) king.damage(damage, shooter);

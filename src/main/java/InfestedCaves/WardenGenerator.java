@@ -219,6 +219,7 @@ public class WardenGenerator extends ChunkGenerator {
         WardenBiome biome;
         double spawnInfluence;
         double cityInfluence;
+        double cityFloor;
         double cityRoof;
         double cityTop;
         double cityHills;
@@ -243,6 +244,7 @@ public class WardenGenerator extends ChunkGenerator {
         c.spawnInfluence = influence(dist, SPAWN_RADIUS, SPAWN_TRANSITION);
         c.cityInfluence = city != null ? AncientCityLocator.computeInfluence(city, x, z) : 0.0;
         if (c.cityInfluence > 0) {
+            c.cityFloor = cityFloor(n, city, x, z);
             c.cityRoof = cityRoof(n, city, x, z);
             c.cityTop = c.cityRoof + 13 + n.crustVariation.noise(x * 1.7, z * 1.7, 0.5, 0.5, true) * 3;
             c.cityHills = c.cityTop + cityHills(n, x, z);
@@ -342,23 +344,37 @@ public class WardenGenerator extends ChunkGenerator {
         return -0.8 - (y - topY) * 0.05;
     }
 
-    // Caverna de la Ancient City: piso firme abajo de las piezas, cúpula irregular (alta en el centro y bajando hacia
-    // los bordes) y arriba una capa de roca de 10 a 16 bloques pegada a las paredes, así la ciudad queda bajo tierra
-    // como en el deep dark y no quedan pedazos de terreno flotando sobre ella. Sobre esa capa van lomas con cuevas
-    // (si no, quedaba una meseta plana) y después sigue el bioma con sus crestas
+    // Caverna de la Ancient City: piso firme abajo de las piezas (con lomas hacia las paredes), cúpula irregular (alta
+    // en el centro y bajando hacia los bordes) y arriba una capa de roca de 10 a 16 bloques pegada a las paredes, así la
+    // ciudad queda bajo tierra como en el deep dark y no quedan pedazos de terreno flotando sobre ella. Sobre esa capa
+    // van lomas con cuevas (si no, quedaba una meseta plana) y después sigue el bioma con sus crestas
     private double cityCarve(AncientCityLocator.CityInfo city, Column c, int y, double s) {
         double influence = c.cityInfluence;
-        if (y <= city.minY()) return s + (1.2 - s) * influence;
+        if (y <= c.cityFloor) return s + (1.2 - s) * influence;
         if (y <= c.cityRoof) return s + (-1.2 - s) * influence;
         if (y <= c.cityTop) return s + (1.2 - s) * influence;
         if (y <= c.cityHills) return s + (Math.min(1.2, s + 0.5) - s) * influence;
         return s;
     }
 
-    // Alto de las lomas sobre el techo de la ciudad: de 0 a unos 28 bloques, con valles y cerros redondeados
+    // Alto de las lomas sobre el techo de la ciudad: de 0 a unos 50 bloques, con valles, cerros y escalones, así no
+    // queda una meseta lisa en medio de las crestas del bioma
     private static double cityHills(Noises n, int x, int z) {
         double h = n.cityHills.noise(x, z, 0.5, 0.5, true);
-        return 26 * smooth(-0.35, 0.5, h) + 3 * n.crustVariation.noise(x * 2.3, z * 2.3, 0.5, 0.5, true);
+        double cerros = 34 * smooth(-0.3, 0.45, h);
+        double picos = 14 * smooth(0.35, 0.8, n.cityHills.noise(x * 2.4, z * 2.4, 0.5, 0.5, true));
+        return cerros + picos + 4 * n.crustVariation.noise(x * 2.3, z * 2.3, 0.5, 0.5, true);
+    }
+
+    // Piso de la caverna de la ciudad: plano en el centro, donde van las piezas, y con lomas y montículos de hasta unos
+    // 20 bloques hacia las paredes, como el piso del resto del bioma. Lo que quede adentro de una pieza lo saca la
+    // propia estructura (beard_box)
+    private static double cityFloor(Noises n, AncientCityLocator.CityInfo city, int x, int z) {
+        double d = Math.hypot(x - city.centerX, z - city.centerZ);
+        double borde = smooth(55, 125, d);
+        if (borde <= 0) return city.minY();
+        double lomas = 3 + 15 * smooth(-0.3, 0.6, n.cityHills.noise(x * 1.7, z * 1.7, 0.5, 0.5, true));
+        return city.minY() + borde * (lomas + 3 * n.crustVariation.noise(x * 3.1, z * 3.1, 0.5, 0.5, true));
     }
 
     // Si esa posición está dentro de la caverna de una Ancient City (del piso al techo en cúpula). El Infested Warden

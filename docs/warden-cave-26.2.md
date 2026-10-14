@@ -72,3 +72,15 @@ de él.
   con íconos (◆ armadura y dureza, ❤ +2 corazones, ✚ 30% de no gastarse, ⚓ 10% menos empuje y ✈ planear en el peto
   alado) y la línea de progresión con Warden resaltado. El tooltip de atributos del juego se oculta. Las piezas que
   ya existían conservan su lore.
+
+## Ajustes de la Version #78
+
+- Los libros de Paso Ígneo, Purificación y Visión Abisal salen en los cofres de las Ancient City (40%, antes 25%) y de
+  los jefes. Los mobs comunes ya no sueltan libros.
+- La zona de la Ancient City ya no queda plana:
+  - El piso de su caverna es plano solo en el centro, donde van las piezas. Hacia las paredes sube con lomas y
+    montículos de hasta unos 20 bloques. Lo que tape una pieza lo saca la propia estructura (beard_box).
+  - En la caverna salen los árboles del bioma, solo donde no tocan ninguna pieza de la ciudad.
+  - Las lomas de arriba de la caverna son más altas (hasta unos 50 bloques), con cerros y escalones.
+
+  Solo cambia en los chunks nuevos: las ciudades ya generadas quedan como estaban.

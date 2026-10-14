@@ -57,7 +57,7 @@ final class TrabajosCommand implements CommandExecutor, TabCompleter {
             if (nivel >= Trabajo.NIVEL_MAXIMO) {
                 player.sendMessage(DORADO + "  ¡Llegaste al nivel máximo!");
             } else {
-                int necesita = TrabajoNiveles.xpParaNivel(nivel + 1);
+                int necesita = TrabajoNiveles.xpParaNivel(trabajo, nivel + 1);
                 player.sendMessage(CAFE + "  Progreso: " + barra(datos.xp(trabajo), necesita) + GRIS + " (" + numero(datos.xp(trabajo)) + "/" + numero(necesita) + " XP)");
                 player.sendMessage(CAFE + "  Te faltan: " + BLANCO + numero(Math.ceil(necesita - datos.xp(trabajo))) + " XP" + GRIS + " para el nivel " + (nivel + 1));
                 player.sendMessage(CAFE + "  Recompensa: " + DORADO + TrabajoNiveles.monedasTotales(nivel + 1) + " DinoCoins" + GRIS + " + "
@@ -119,8 +119,8 @@ final class TrabajosCommand implements CommandExecutor, TabCompleter {
             monedasTotal += monedas;
             nivelesTotal += nivel;
             String progreso = nivel >= Trabajo.NIVEL_MAXIMO ? DORADO + "máximo"
-                    : barra(datos.xp(trabajo), TrabajoNiveles.xpParaNivel(nivel + 1)) + GRIS + " (" + numero(datos.xp(trabajo)) + "/"
-                    + numero(TrabajoNiveles.xpParaNivel(nivel + 1)) + ")";
+                    : barra(datos.xp(trabajo), TrabajoNiveles.xpParaNivel(trabajo, nivel + 1)) + GRIS + " (" + numero(datos.xp(trabajo)) + "/"
+                    + numero(TrabajoNiveles.xpParaNivel(trabajo, nivel + 1)) + ")";
             sender.sendMessage("  " + nombre(trabajo) + GRIS + " · " + BLANCO + "Nv " + nivel + GRIS + " · " + progreso
                     + GRIS + " · " + DORADO + monedas + " DC");
         }

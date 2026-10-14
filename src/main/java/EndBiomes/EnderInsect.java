@@ -1,23 +1,20 @@
 package EndBiomes;
 
 import org.bukkit.Bukkit;
-import org.bukkit.Color;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
+import org.bukkit.SoundCategory;
 import org.bukkit.World;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
-import org.bukkit.entity.AreaEffectCloud;
 import org.bukkit.entity.Enderman;
 import org.bukkit.entity.Endermite;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
-import org.bukkit.entity.Snowball;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -26,46 +23,50 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntityTargetLivingEntityEvent;
-import org.bukkit.event.entity.ProjectileHitEvent;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
-import org.bukkit.util.Vector;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 
-// Ender Insect: el endermite del Bosque Prismático. Es más grande y aguanta más, los Enderman no lo atacan, le
-// escupe bolas moradas al jugador que envenenan y dejan una nube de esporas 30 segundos, y suena como endermite y
-// como araña. Suelta Fragmento Astral (EndDrops)
+// Ender Insect: el endermite del Bosque Prismático, con la lógica del Corrupted Insect de Viciont pero de endgame: más
+// vida y más daño. Es el doble de grande, rápido y los Enderman no lo atacan. Cada 10 segundos, si su objetivo está a 8
+// bloques, carga una esfera de esporas que crece hasta 5 bloques y al reventar envenena (Veneno II) y ciega 8 segundos
+// a los jugadores alcanzados. Suena como endermite y como araña. Suelta Fragmento Astral (EndDrops)
 public class EnderInsect implements Listener {
 
-    private static final int RANGE = 14;
-    private static final Color SPORES = Color.fromRGB(0x9B30FF);
+    static final double HEALTH = 50;
+    static final double DAMAGE = 8;
+    // Cada cuánto puede reventar la esfera y a qué distancia tiene que estar su objetivo
+    static final long COOLDOWN_TICKS = 200;
+    private static final double TRIGGER_RANGE = 8;
+    private static final double SPHERE_RADIUS = 5;
+    // Un jugador no puede quedar ciego de nuevo hasta que pasen 8 segundos
+    private static final long PLAYER_COOLDOWN_TICKS = 160;
 
     private final JavaPlugin plugin;
     private final NamespacedKey key;
-    private final NamespacedKey spitKey;
-    private final Map<UUID, Long> nextShot = new HashMap<>();
+    private final Map<UUID, Long> nextAttack = new HashMap<>();
+    private final Map<UUID, Long> playerCooldown = new HashMap<>();
     private final BukkitTask task;
     private long tick = 0;
 
     public EnderInsect(JavaPlugin plugin) {
         this.plugin = plugin;
         this.key = new NamespacedKey(plugin, "ender_insect");
-        this.spitKey = new NamespacedKey(plugin, "ender_insect_spit");
         this.task = Bukkit.getScheduler().runTaskTimer(plugin, this::update, 20L, 10L);
     }
 
     public void stop() {
         task.cancel();
-        nextShot.clear();
+        nextAttack.clear();
+        playerCooldown.clear();
     }
 
     public static Endermite spawn(JavaPlugin plugin, Location location) {
@@ -74,10 +75,12 @@ public class EnderInsect implements Listener {
     }
 
     private static void setup(NamespacedKey key, Endermite insect) {
-        attribute(insect, Attribute.MAX_HEALTH, 16);
-        attribute(insect, Attribute.ATTACK_DAMAGE, 4);
-        attribute(insect, Attribute.SCALE, 1.5);
-        insect.setHealth(16);
+        attribute(insect, Attribute.MAX_HEALTH, HEALTH);
+        attribute(insect, Attribute.ATTACK_DAMAGE, DAMAGE);
+        attribute(insect, Attribute.SCALE, 2.0);
+        attribute(insect, Attribute.FOLLOW_RANGE, 32);
+        insect.setHealth(HEALTH);
+        insect.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, PotionEffect.INFINITE_DURATION, 0, false, false));
         insect.getPersistentDataContainer().set(key, PersistentDataType.BYTE, (byte) 1);
     }
 
@@ -98,8 +101,8 @@ public class EnderInsect implements Listener {
         setup(key, insect);
     }
 
-    // Cada medio segundo: no se mueren de viejos como los endermites, hacen ruido de araña y le disparan al jugador
-    // más cercano que vean
+    // Cada medio segundo: no se mueren de viejos como los endermites, hacen ruido de araña y revientan la esfera si su
+    // objetivo está cerca y ya pasaron los 10 segundos
     private void update() {
         tick += 10;
         for (World world : Bukkit.getWorlds()) {
@@ -113,87 +116,70 @@ public class EnderInsect implements Listener {
                     world.playSound(insect.getLocation(), Sound.ENTITY_SPIDER_STEP, 0.4f, 1.6f);
                 }
 
-                if (tick < nextShot.getOrDefault(insect.getUniqueId(), 0L)) continue;
-                Player target = target(insect);
-                if (target == null) continue;
-                shoot(insect, target);
-                nextShot.put(insect.getUniqueId(), tick + 60 + r.nextInt(30));
+                if (tick < nextAttack.getOrDefault(insect.getUniqueId(), 0L)) continue;
+                if (!(insect.getTarget() instanceof Player target) || !jugable(target)) continue;
+                if (insect.getLocation().distanceSquared(target.getLocation()) > TRIGGER_RANGE * TRIGGER_RANGE) continue;
+                nextAttack.put(insect.getUniqueId(), tick + COOLDOWN_TICKS);
+                sphere(insect);
             }
         }
-        if (nextShot.size() > 500) nextShot.keySet().removeIf(id -> Bukkit.getEntity(id) == null);
+        if (nextAttack.size() > 500) nextAttack.keySet().removeIf(id -> Bukkit.getEntity(id) == null);
+        playerCooldown.values().removeIf(until -> until < tick);
     }
 
-    private Player target(Endermite insect) {
-        Player best = null;
-        double bestDistance = RANGE * RANGE;
-        for (Player player : insect.getWorld().getPlayers()) {
-            if (player.getGameMode() != GameMode.SURVIVAL && player.getGameMode() != GameMode.ADVENTURE) continue;
-            double d = player.getLocation().distanceSquared(insect.getLocation());
-            if (d < bestDistance && insect.hasLineOfSight(player)) {
-                best = player;
-                bestDistance = d;
-            }
-        }
-        return best;
+    private static boolean jugable(Player player) {
+        return player.getGameMode() == GameMode.SURVIVAL || player.getGameMode() == GameMode.ADVENTURE;
     }
 
-    private void shoot(Endermite insect, Player target) {
-        Location origin = insect.getLocation().add(0, 0.4, 0);
-        Vector direction = target.getEyeLocation().toVector().subtract(origin.toVector());
-        double distance = direction.length();
-        direction.normalize().multiply(1.1).add(new Vector(0, 0.04 * distance / 4, 0));
-        Snowball spit = insect.launchProjectile(Snowball.class, direction);
-        spit.setItem(new ItemStack(Material.PURPLE_DYE));
-        spit.getPersistentDataContainer().set(spitKey, PersistentDataType.BYTE, (byte) 1);
-        World world = insect.getWorld();
-        world.playSound(origin, Sound.ENTITY_LLAMA_SPIT, 0.8f, 1.6f);
-        world.playSound(origin, Sound.ENTITY_ENDERMITE_AMBIENT, 0.8f, 0.8f);
-        world.spawnParticle(Particle.DUST, origin, 8, 0.2, 0.2, 0.2, 0, new Particle.DustOptions(SPORES, 1.2f));
-    }
-
-    // La bola envenena al que toca y donde cae deja una nube de esporas que envenena y suena durante 30 segundos
-    @EventHandler
-    public void onSpitHit(ProjectileHitEvent e) {
-        if (!(e.getEntity() instanceof Snowball spit) || !spit.getPersistentDataContainer().has(spitKey, PersistentDataType.BYTE)) return;
-        Location at = spit.getLocation();
-        if (e.getHitEntity() instanceof LivingEntity hit) {
-            hit.addPotionEffect(new PotionEffect(PotionEffectType.POISON, 100, 1));
-            at = hit.getLocation();
-        } else if (e.getHitBlock() != null && e.getHitBlockFace() != null) {
-            at = e.getHitBlock().getRelative(e.getHitBlockFace()).getLocation().add(0.5, 0, 0.5);
-        }
-        spores(at);
-    }
-
-    private void spores(Location at) {
-        World world = at.getWorld();
-        world.spawn(at, AreaEffectCloud.class, cloud -> {
-            cloud.setRadius(2.5f);
-            cloud.setDuration(600);
-            cloud.setRadiusPerTick(0);
-            cloud.setRadiusOnUse(0);
-            cloud.setDurationOnUse(0);
-            cloud.setWaitTime(0);
-            cloud.setReapplicationDelay(20);
-            cloud.setColor(SPORES);
-            cloud.addCustomEffect(new PotionEffect(PotionEffectType.POISON, 60, 0), true);
-        });
-        world.playSound(at, Sound.BLOCK_SPORE_BLOSSOM_BREAK, 1f, 0.6f);
-
+    // La esfera de esporas crece 1,5 bloques por tick desde el insecto; al pasar los 5 bloques revienta sobre los
+    // jugadores de alrededor. Si el insecto muere antes, no pasa nada
+    private void sphere(Endermite insect) {
+        insect.getWorld().playSound(insect.getLocation(), Sound.ENTITY_ILLUSIONER_CAST_SPELL, 1.0f, 2.0f);
         new BukkitRunnable() {
-            int left = 15;
+            double radius = 0.5;
 
             @Override
             public void run() {
-                if (left-- <= 0) {
+                if (!insect.isValid() || insect.isDead()) {
                     cancel();
                     return;
                 }
-                world.playSound(at, Sound.ENTITY_SILVERFISH_AMBIENT, 0.6f, 0.6f);
-                world.playSound(at, Sound.BLOCK_SPORE_BLOSSOM_FALL, 0.5f, 0.8f);
-                world.spawnParticle(Particle.SPORE_BLOSSOM_AIR, at.clone().add(0, 0.6, 0), 10, 1.4, 0.4, 1.4, 0);
+                Location center = insect.getLocation().add(0, 1.0, 0);
+                if (radius > SPHERE_RADIUS) {
+                    for (Player player : center.getNearbyPlayers(SPHERE_RADIUS + 0.5)) {
+                        if (jugable(player) && player.getLocation().distance(center) <= SPHERE_RADIUS + 0.5) hit(player);
+                    }
+                    cancel();
+                    return;
+                }
+                ThreadLocalRandom r = ThreadLocalRandom.current();
+                for (int i = 0; i < 40; i++) {
+                    double phi = r.nextDouble() * Math.PI * 2;
+                    double theta = Math.acos(r.nextDouble() * 2 - 1);
+                    Location at = center.clone().add(radius * Math.sin(theta) * Math.cos(phi), radius * Math.sin(theta) * Math.sin(phi),
+                            radius * Math.cos(theta));
+                    center.getWorld().spawnParticle(Particle.WITCH, at, 1, 0, 0, 0, 0);
+                    center.getWorld().spawnParticle(Particle.PORTAL, at, 1, 0, 0, 0, 0);
+                }
+                radius += 1.5;
             }
-        }.runTaskTimer(plugin, 40L, 40L);
+        }.runTaskTimer(plugin, 0L, 1L);
+    }
+
+    // Veneno II 10 segundos y Ceguera 8 segundos, con el sonido del Corrupted Insect (dos veces)
+    private void hit(Player player) {
+        UUID id = player.getUniqueId();
+        if (playerCooldown.getOrDefault(id, -1L) > tick) return;
+        playerCooldown.put(id, tick + PLAYER_COOLDOWN_TICKS);
+        player.addPotionEffect(new PotionEffect(PotionEffectType.POISON, 200, 1));
+        player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 160, 0));
+        for (int i = 0; i < 2; i++) {
+            Bukkit.getScheduler().runTaskLater(plugin, () -> {
+                if (!player.isOnline()) return;
+                player.playSound(player.getLocation(), Sound.ENTITY_WITHER_SHOOT, 1.0f, 2.0f);
+                player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_HURT_FREEZE, 1.0f, 2.0f);
+            }, i * 10L);
+        }
     }
 
     // Los Enderman lo dejan tranquilo: no lo eligen de objetivo ni le pegan
@@ -209,13 +195,18 @@ public class EnderInsect implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onHurt(EntityDamageEvent e) {
-        if (is(e.getEntity())) e.getEntity().getWorld().playSound(e.getEntity().getLocation(), Sound.ENTITY_SPIDER_HURT, 0.8f, 1.5f);
+        if (!is(e.getEntity())) return;
+        World world = e.getEntity().getWorld();
+        world.playSound(e.getEntity().getLocation(), Sound.ENTITY_ENDERMITE_HURT, SoundCategory.HOSTILE, 1.0f, 2.0f);
+        world.playSound(e.getEntity().getLocation(), Sound.ENTITY_SPIDER_HURT, 0.8f, 1.5f);
     }
 
     @EventHandler
     public void onDeath(EntityDeathEvent e) {
         if (!is(e.getEntity())) return;
-        e.getEntity().getWorld().playSound(e.getEntity().getLocation(), Sound.ENTITY_SPIDER_DEATH, 0.9f, 1.5f);
-        nextShot.remove(e.getEntity().getUniqueId());
+        World world = e.getEntity().getWorld();
+        world.playSound(e.getEntity().getLocation(), Sound.ENTITY_ENDERMITE_DEATH, SoundCategory.HOSTILE, 1.0f, 2.0f);
+        world.playSound(e.getEntity().getLocation(), Sound.ENTITY_SPIDER_DEATH, 0.9f, 1.5f);
+        nextAttack.remove(e.getEntity().getUniqueId());
     }
 }

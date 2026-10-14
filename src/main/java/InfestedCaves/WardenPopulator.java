@@ -29,8 +29,8 @@ public class WardenPopulator extends BlockPopulator {
         this.generator = generator;
     }
 
-    // Pone los árboles de cada bioma y las ruinas de obsidiana de las Ruinas de Ceniza. No toca el spawn del templo
-    // ni la caverna de las Ancient City; arriba de su techo de roca sí, como en cualquier otra parte del bioma
+    // Pone los árboles de cada bioma y las ruinas de obsidiana de las Ruinas de Ceniza. No toca el spawn del templo.
+    // En la caverna de las Ancient City también van árboles, pero solo donde no tocan ninguna pieza de la ciudad
     @Override
     public void populate(WorldInfo info, Random random, int chunkX, int chunkZ, LimitedRegion region) {
         long seed = info.getSeed();
@@ -49,7 +49,7 @@ public class WardenPopulator extends BlockPopulator {
             for (int i = 0; i < 6; i++) {
                 int x = baseX + 5 + random.nextInt(6);
                 int z = baseZ + 5 + random.nextInt(6);
-                int y = findSoil(region, ASH_SOIL, x, z, random, minY(seed, x, z));
+                int y = findSoil(region, ASH_SOIL, x, z, random, minY(seed, x, z), WardenGenerator.TOP_Y - 12);
                 if (y != Integer.MIN_VALUE && AshRuins.random(region, random, x, y + 1, z)) break;
             }
         }
@@ -57,16 +57,56 @@ public class WardenPopulator extends BlockPopulator {
         for (int i = 0; i < attempts; i++) {
             int x = baseX + 3 + random.nextInt(10);
             int z = baseZ + 3 + random.nextInt(10);
-            int y = findSoil(region, soilFor(biome), x, z, random, minY(seed, x, z));
+            int y = findSoil(region, soilFor(biome), x, z, random, minY(seed, x, z), WardenGenerator.TOP_Y - 12);
             if (y == Integer.MIN_VALUE) continue;
+            tree(biome, region, random, x, y + 1, z);
+        }
 
-            switch (biome) {
-                case CAVERNA_SCULK -> WardenTrees.sculk(region, random, x, y + 1, z);
-                case PANTANO_PROFUNDO -> WardenTrees.swamp(region, random, x, y + 1, z);
-                case ABISMO_FLOTANTE -> WardenTrees.crystal(region, random, x, y + 1, z);
-                case RUINAS_DE_CENIZA -> WardenTrees.ash(region, random, x, y + 1, z);
+        // La caverna de la Ancient City: la mitad de intentos, entre el piso y el techo, lejos de las piezas
+        int techo = generator.aboveCityCavern(seed, centerX, centerZ);
+        if (techo > WardenGenerator.MIN_Y) {
+            for (int i = 0; i < attempts; i++) {
+                int x = baseX + 3 + random.nextInt(10);
+                int z = baseZ + 3 + random.nextInt(10);
+                int y = findSoil(region, soilFor(biome), x, z, random, WardenGenerator.MIN_Y + 1, generator.aboveCityCavern(seed, x, z) - 16);
+                if (y == Integer.MIN_VALUE || !despejado(region, x, y + 1, z)) continue;
+                tree(biome, region, random, x, y + 1, z);
             }
         }
+    }
+
+    private static void tree(WardenBiome biome, LimitedRegion region, Random random, int x, int y, int z) {
+        switch (biome) {
+            case CAVERNA_SCULK -> WardenTrees.sculk(region, random, x, y, z);
+            case PANTANO_PROFUNDO -> WardenTrees.swamp(region, random, x, y, z);
+            case ABISMO_FLOTANTE -> WardenTrees.crystal(region, random, x, y, z);
+            case RUINAS_DE_CENIZA -> WardenTrees.ash(region, random, x, y, z);
+        }
+    }
+
+    // Lo que puso la Ancient City (ladrillos, baldosas, lana, velas, faroles, cofres, madera...): un árbol no puede
+    // tocar nada de eso
+    private static final String[] DE_LA_CIUDAD = {"BRICK", "TILE", "POLISHED", "CHISELED", "WOOL", "CANDLE", "LANTERN",
+            "CHEST", "REINFORCED", "SLAB", "STAIRS", "WALL", "SOUL", "SKULL", "HEAD", "LADDER", "TRAPDOOR", "FENCE",
+            "PLANKS", "DARK_OAK", "CARPET", "GLASS", "BARRIER", "STRUCTURE"};
+
+    // Lugar para un árbol en la caverna: 12 bloques de aire arriba del suelo y nada de la ciudad en 5 bloques alrededor
+    private static boolean despejado(LimitedRegion region, int x, int y, int z) {
+        for (int dy = 0; dy < 12; dy++) {
+            if (!region.isInRegion(x, y + dy, z) || !region.getType(x, y + dy, z).isAir()) return false;
+        }
+        for (int dx = -5; dx <= 5; dx++) {
+            for (int dz = -5; dz <= 5; dz++) {
+                for (int dy = -2; dy <= 14; dy++) {
+                    if (!region.isInRegion(x + dx, y + dy, z + dz)) return false;
+                    String name = region.getType(x + dx, y + dy, z + dz).name();
+                    for (String parte : DE_LA_CIUDAD) {
+                        if (name.contains(parte)) return false;
+                    }
+                }
+            }
+        }
+        return true;
     }
 
     private int minY(long seed, int x, int z) {
@@ -82,10 +122,10 @@ public class WardenPopulator extends BlockPopulator {
         };
     }
 
-    // Elige al azar un suelo válido de la columna (desde minY) que tenga al menos 4 bloques de aire arriba
-    private int findSoil(LimitedRegion region, Set<Material> soil, int x, int z, Random random, int minY) {
+    // Elige al azar un suelo válido de la columna (entre minY y maxY) que tenga al menos 4 bloques de aire arriba
+    private int findSoil(LimitedRegion region, Set<Material> soil, int x, int z, Random random, int minY, int maxY) {
         List<Integer> candidates = new ArrayList<>();
-        for (int y = minY; y < WardenGenerator.TOP_Y - 12; y++) {
+        for (int y = minY; y < maxY; y++) {
             if (!soil.contains(region.getType(x, y, z))) continue;
             boolean clear = true;
             for (int dy = 1; dy <= 4; dy++) {

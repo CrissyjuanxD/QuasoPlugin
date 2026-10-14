@@ -51,7 +51,7 @@ Floral. Llevan la marca `invocado_abeja_floral`, no sueltan drops florales y se
 van a los 30 segundos. Los que caminan bajan al suelo de la arena.
 
 La Corrupted Bee ahora es la **Mini Abeja Floral**: escala 0,8, nombre rosa,
-partículas florales y 30% de soltar el **Aguijón Floral** (`aguijon_floral`).
+partículas florales y 40% de soltar el **Aguijón Floral** (`aguijon_floral`).
 El id del mob sigue siendo `corrupted_bee`, así que la misión 14 y los spawners
 siguen igual.
 
@@ -79,7 +79,7 @@ como base (Warden, Celestita ni otra pieza floral). Las recetas están en
 | Pala | 1,1 ataques/s, pica 20% más rápido | 1,0 |
 | Azada | Pica 20% más rápido | Igual |
 | Escudo | Irrompible; bloquea como un escudo normal | Se gasta |
-| Armadura | 3/8/6/3 de armadura, 3,5 de dureza por pieza, +1 corazón por pieza y 15% de no gastarse | 3/8/6/3, 3 de dureza |
+| Armadura | 3/8/6/3 de armadura, 4 de dureza por pieza, +1 corazón por pieza y 15% de no gastarse | 3/8/6/3, 3 de dureza |
 
 La armadura de Warden sigue siendo mejor (24 de armadura, 4 de dureza, +2
 corazones por pieza y 30%). La línea es **Netherite » Floral » Warden o
@@ -93,3 +93,12 @@ historia de la pieza, los atributos con íconos (⚔ daño, ⚡ golpes por
 segundo, ◆ armadura, ❤ corazones, ✚ no gastarse, ⚓ empuje, ✦ especial) en
 vez del tooltip del juego y la línea de progresión con la pieza actual
 resaltada. Las piezas que ya existían conservan su lore viejo.
+
+## Ajustes de la Version #77
+
+- Los drops florales (carne, ojo, pólvora y aguijón) salen al 40% (antes 30%). Si sale, el Saqueo da más: con II de 1
+  a 2 y con III de 1 a 3. Sin Saqueo o con I, 1. Los refuerzos de la Abeja Floral siguen sin soltar nada.
+- La armadura floral tiene 4 de dureza por pieza (antes 3,5), igual que la de Warden, que sigue siendo mejor por la
+  armadura, los corazones y el 30% de no gastarse.
+- El lore ya no usa ✦: cada línea tiene su ícono (⛏ el pico rompe los minerales de la Warden Cave, ⚡ el hacha ataca
+  más rápido, ⛨ el escudo bloquea, ∞ irrompible).

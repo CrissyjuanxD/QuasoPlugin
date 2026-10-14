@@ -98,7 +98,8 @@ final class TrabajosGuia {
                             .append(DORADO).append(monedas).append(monedas == 1 ? " DinoCoin" : " DinoCoins");
                 }
                 yield List.of(tabla.toString(),
-                        CREMA + "Las DinoCoins crecen igual que la XP que pide cada nivel: subir cuesta más, pero paga más.",
+                        CREMA + "Las DinoCoins crecen con el nivel: subir cuesta más, pero paga más. Todos los trabajos pagan lo mismo por nivel,"
+                                + " aunque cada uno pide la XP según lo rápido que se gana (Guerrero es el que más pide).",
                         GRIS + "Las DinoCoins van a tus monederos; lo que no entra, al inventario.");
             }
             case BONUS -> {
@@ -152,6 +153,9 @@ final class TrabajosGuia {
 
         StringBuilder fuentes = new StringBuilder(BEIGE + "Cómo ganar XP:\n");
         for (String fuente : trabajo.fuentes()) fuentes.append('\n').append(GRIS).append(" · ").append(CREMA).append(fuente);
+        fuentes.append("\n\n").append(CREMA).append("Cada nivel pide ").append(BLANCO)
+                .append(trabajo == Trabajo.GUERRERO ? "la XP completa" : Math.round(trabajo.ritmo() * 100) + "% de la XP de Guerrero")
+                .append(GRIS).append(" (nivel 10: ").append(TrabajoNiveles.xpParaNivel(trabajo, 10)).append(" XP)");
 
         List<DialogBody> cuerpo = List.of(
                 DialogBody.item(papel).showTooltip(false).description(DialogBody.plainMessage(texto(GRIS + String.join(" ", trabajo.descripcion())), 250)).build(),

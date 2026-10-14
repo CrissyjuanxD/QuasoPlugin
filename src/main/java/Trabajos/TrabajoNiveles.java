@@ -4,16 +4,23 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
-// La curva de niveles y las recompensas, igual para los 6 trabajos. Un jugador trabajando en serio gana unas 1.000
-// XP por hora: el nivel 10 sale en ~1 hora y media, el 30 en ~15, el 50 en ~45 y el 100 en ~200 horas
+// La curva de niveles y las recompensas. La curva base es la de Guerrero, el trabajo que más XP da por hora; los otros
+// piden menos XP por nivel según lo rápido que se gana en cada uno (Trabajo.ritmo), así subir tarda parecido en todos.
+// Las recompensas (DinoCoins, bonus y experiencia) son las mismas para los 6 trabajos
 public final class TrabajoNiveles {
 
     private TrabajoNiveles() {}
 
-    // XP para pasar del nivel anterior a este (nivel 1 = 45 XP, nivel 50 = 1.823 XP, nivel 100 = 4.016 XP)
+    // XP base para pasar del nivel anterior a este (nivel 1 = 45 XP, nivel 50 = 1.823 XP, nivel 100 = 4.016 XP)
     public static int xpParaNivel(int nivel) {
         if (nivel <= 0) return 0;
         return (int) Math.round(25 + 20 * Math.pow(nivel, 1.15));
+    }
+
+    // XP que pide ese trabajo para pasar a este nivel: la base por su ritmo
+    public static int xpParaNivel(Trabajo trabajo, int nivel) {
+        if (nivel <= 0) return 0;
+        return (int) Math.max(1, Math.round(xpParaNivel(nivel) * trabajo.ritmo()));
     }
 
     // DinoCoins por subir de nivel: crecen igual que la XP que pide el nivel (1 DinoCoin cada 180 XP, mínimo 2), así

@@ -209,8 +209,8 @@ public final class TrabajosManager implements Listener {
         if (nivel >= Trabajo.NIVEL_MAXIMO) return;
 
         double xp = d.xp(trabajo) + ganado;
-        while (nivel < Trabajo.NIVEL_MAXIMO && xp >= TrabajoNiveles.xpParaNivel(nivel + 1)) {
-            xp -= TrabajoNiveles.xpParaNivel(nivel + 1);
+        while (nivel < Trabajo.NIVEL_MAXIMO && xp >= TrabajoNiveles.xpParaNivel(trabajo, nivel + 1)) {
+            xp -= TrabajoNiveles.xpParaNivel(trabajo, nivel + 1);
             nivel++;
             d.niveles.put(trabajo, nivel);
             subirNivel(player, trabajo, nivel);
@@ -221,7 +221,7 @@ public final class TrabajosManager implements Listener {
         d.sucio = true;
 
         String progreso = nivel >= Trabajo.NIVEL_MAXIMO ? TrabajosTexto.DORADO + "¡nivel máximo!"
-                : TrabajosTexto.BLANCO + TrabajosTexto.numero(xp) + TrabajosTexto.GRIS + "/" + TrabajosTexto.numero(TrabajoNiveles.xpParaNivel(nivel + 1));
+                : TrabajosTexto.BLANCO + TrabajosTexto.numero(xp) + TrabajosTexto.GRIS + "/" + TrabajosTexto.numero(TrabajoNiveles.xpParaNivel(trabajo, nivel + 1));
         ActionBarHandler.get(plugin).sendProgress(player, "trabajo", TrabajosTexto.nombre(trabajo) + TrabajosTexto.CREMA + " +"
                 + formatoXp(ganado) + " XP " + TrabajosTexto.GRIS + "· Nv " + nivel + " · " + progreso);
     }

@@ -53,3 +53,20 @@ Los jefes dan XP de menos a más según su dificultad: Wither 400, Abeja Floral 
 Ender Dragon 900, Infested Warden 1.200, Ultra Warden 1.600 y Rey Ender 2.200. Los
 Guerreros se la llevan entera y los demás trabajos la mitad. Las DinoCoins que
 pagan los jefes no cambian.
+
+## XP por nivel según el trabajo (Version #78)
+
+Cada trabajo pide la XP según lo rápido que se gana en él, así subir tarda parecido en todos. Guerrero es el que más
+XP da por hora y queda con la curva completa. Las DinoCoins, el bonus y la experiencia de cada nivel son iguales en
+los 6 trabajos.
+
+| Trabajo | XP por hora (jugando en serio) | XP que pide | Nivel 10 | Nivel 50 |
+| --- | --- | --- | --- | --- |
+| Guerrero | ~2.000 | 100% | 308 | 1.823 |
+| Minería | ~1.100 | 55% | 169 | 1.003 |
+| Leñador | ~1.000 | 50% | 154 | 912 |
+| Granjero | ~900 | 45% | 139 | 820 |
+| Pescador | ~900 | 45% | 139 | 820 |
+| Constructor | ~700 | 35% | 108 | 638 |
+
+El que ya tiene XP guardada en un nivel y ahora le alcanza, sube con la próxima XP que gane.

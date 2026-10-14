@@ -45,7 +45,12 @@ public class EndShulkers implements Listener {
     public EndShulkers(JavaPlugin plugin, BlackShulker blackShulker) {
         this.plugin = plugin;
         this.blackShulker = blackShulker;
-        this.tntKey = new NamespacedKey(plugin, "tnt_shulker");
+        this.tntKey = tntKey(plugin);
+    }
+
+    // La marca de las TNT de los shulkers (también la del Shulker Negro): no rompen bloques
+    static NamespacedKey tntKey(JavaPlugin plugin) {
+        return new NamespacedKey(plugin, "tnt_shulker");
     }
 
     private boolean isEndShulker(Entity entity) {

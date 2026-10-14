@@ -57,3 +57,15 @@ cerrarlo, reconectar y comprobar el contenido y el registro. Probar también
 una apuesta con una DinoFicha antigua y otra recién creada. El usuario de
 MySQL configurado necesita permiso para añadir las dos columnas. El resource
 pack debe incluir `assets/minecraft/items/monedero.json`.
+
+## Arreglos de la Version #77
+
+- **"Error guardando. Items en memoria"**: `ItemSerializer` usaba el `Base64Coder` de SnakeYAML, que no viene en Paper
+  26.2. Cada guardado de mochila o monedero tiraba un `NoClassDefFoundError` y por eso no se arreglaba con una base de
+  datos nueva. Ahora usa el Base64 de Java, que lee igual lo que se guardó antes. Probado en Paper 26.2 con MariaDB:
+  se guardan y cargan mochilas con diamantes, equipo floral, herramientas de Celestita, libros encantados, un shulker
+  con items adentro y el monedero.
+- Las DinoCoins y las DinoFichas se apilan de a **99** (el juego no deja más de 99 por stack; 100 no se puede). Las
+  de antes (de a 64) pasan a las de 99 al entrar al server, al abrir un cofre o el monedero y al levantarlas del
+  suelo. Los tradeos guardados de la tienda también se pasan al cargarse, así siguen aceptando las monedas.
+- Las mochilas y el monedero ya no brillan; a los que ya existían se les quita al abrirlos.

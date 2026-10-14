@@ -90,6 +90,7 @@ public class ThreeChanges implements Listener, Change {
         listeners.add(enderInsect);
         listeners.add(new EndDrops(plugin));
         listeners.add(new EndShulkers(plugin, blackShulker));
+        listeners.add(new EndBiomes.EndProteccion());
         listeners.add(new EndSpawns(plugin, enderBlaze, enderCreeper, enderSpider, blackShulker));
         listeners.add(altar);
         for (Listener listener : listeners) Bukkit.getPluginManager().registerEvents(listener, plugin);

@@ -86,7 +86,7 @@ final class TrabajosGUI implements Listener {
             if (nivel >= Trabajo.NIVEL_MAXIMO) {
                 lore.add(DORADO + "¡Nivel máximo alcanzado!");
             } else {
-                int necesita = TrabajoNiveles.xpParaNivel(nivel + 1);
+                int necesita = TrabajoNiveles.xpParaNivel(trabajo, nivel + 1);
                 lore.add(barra(datos.xp(trabajo), necesita));
                 lore.add(CAFE + "Te faltan: " + BLANCO + numero(Math.ceil(necesita - datos.xp(trabajo))) + " XP" + GRIS + " para el nivel " + (nivel + 1));
                 lore.add(CAFE + "Al subir: " + DORADO + TrabajoNiveles.monedasTotales(nivel + 1) + " DinoCoins" + GRIS + " + "

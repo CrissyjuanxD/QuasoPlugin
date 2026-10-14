@@ -88,7 +88,7 @@ mata de un golpe.
 | Ender Blaze | 50, Resistencia I | Sus bolas de fuego explotan al pegar (explosión chica que no rompe bloques) |
 | Ender Creeper | 40 | Cargado, invisible y con Velocidad I; explota como un creeper cargado normal |
 | Ender Spider | 40, Resistencia I | Velocidad I, 6 de daño y el proyectil que te tepea 15 bloques |
-| Shulker Negro | 60 | Balas al doble con Wither II y Ceguera, y cada 10 a 14 segundos una ráfaga de 6 balas a la vez |
+| Shulker Negro | 60 | Balas al doble con Wither II y Ceguera, y cada 10 a 14 segundos un ataque: ráfaga de 6 balas, lluvia de 3 tandas, nube marchita o onda de choque. Al morir deja una TNT de potencia 7 |
 | Shulker (End Cities) | 30 | 20% de que la bala dé un efecto malo y 10% de que explote; al morir deja una TNT (2,5 s) y 30% de soltar su caja |
 
 Las TNT de los shulkers y las explosiones de sus balas no rompen bloques. Si el shulker murió por una explosión no deja
@@ -158,3 +158,25 @@ herramientas que ya existían conservan sus atributos viejos.
 - El lore nuevo (`items/EquipoLore`) muestra la historia, los atributos con íconos (⚔ 13 de daño, ⚡ golpes por
   segundo, ⛏ cuánto más rápido pica, ✦ el doble contra el End) y la línea de progresión con Celestita resaltada. El
   tooltip de atributos del juego se oculta. Las herramientas que ya existían conservan su lore.
+
+## Ajustes de la Version #78
+
+- Los libros de Anclaje y Retorno del Vacío salen en los cofres de las End City (40%, antes 25%) y de los jefes (Ender
+  Dragon y Rey Ender). Los mobs comunes ya no sueltan libros.
+- **Shulker Negro**: cada 10 a 14 segundos elige un ataque contra el jugador que ve:
+  - Ráfaga: 6 balas a la vez, como antes.
+  - Lluvia de balas: 3 tandas de 3 balas.
+  - Nube marchita: una nube negra a los pies del jugador con Wither II y Lentitud II, 8 segundos.
+  - Onda de choque (solo a 7 bloques o menos): 6 de daño, empuje hacia atrás y un poco de levitación.
+
+  Al morir deja una TNT de potencia 7 (la de los otros shulkers es 4) que tampoco rompe bloques.
+- Los items tirados en el End no se queman ni explotan: el fuego del Páramo y las TNT de los shulkers ya no se comen
+  los drops.
+- Los mobs del End no reciben Wither (ni el efecto ni el daño): en el Páramo se lo pasaban entre ellos y se mataban
+  solos.
+- **Ender Insect**: usa la lógica del Corrupted Insect de Viciont, pero de endgame. Tiene 50 de vida (antes 16), 8 de
+  daño (antes 4), el doble de tamaño, Velocidad I y 32 bloques de rango. Ya no escupe bolas. Cada 10 segundos, si su
+  objetivo está a 8 bloques, carga una esfera de esporas que crece hasta 5 bloques. Al reventar da Veneno II 10
+  segundos y Ceguera 8 segundos a los jugadores alcanzados (un jugador no puede volver a quedar ciego hasta pasados 8
+  segundos). La Ceguera reemplaza a la imagen de ViciontMedia, que este server no tiene. Los que invoca el Rey Ender
+  también son así.

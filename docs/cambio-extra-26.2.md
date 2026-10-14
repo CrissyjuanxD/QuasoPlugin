@@ -28,3 +28,12 @@ En el Overworld (no en la Warden Cave), de los que spawnean solos:
 
 Se convierten ahí mismo, así la mobcap cuenta igual. Los zombies bebé quedan normales. Lo que hacen viene del cambio
 uno, que está activo desde el día 1. Si se desactiva el cambio extra, los que ya salieron se quedan.
+
+## Mini Abejas Florales (Version #77)
+
+Con el cambio extra también salen solas las **Mini Abejas Florales**. De los zombies, arañas, creepers y esqueletos
+que spawnean solos en el Overworld y no salen florales, 10 de cada 100 se cambian por una Mini Abeja Floral (los
+zombies bebé y los esqueletos solo pueden salir abeja). La abeja sale en el lugar del mob, no se guarda cuando se
+descarga el chunk y se va si no hay jugadores a 128 bloques, como un monstruo. Suelta el Aguijón Floral al 40%.
+
+El anuncio que salía en el chat al activar un cambio con `/changes activar` se quitó: lo hace el staff a mano.

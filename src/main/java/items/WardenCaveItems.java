@@ -72,7 +72,22 @@ public class WardenCaveItems {
         public String fragmentId() {
             return "fragmento_profundo_" + id;
         }
+
+        public String ingotId() {
+            return "lingote_profundo_" + id;
+        }
+
+        // "Casco", "Botas"...: la pieza de Warden que sale de este bioma
+        public String piece() {
+            return piece;
+        }
     }
+
+    public static final String TEJIDO = "tejido_sculk";
+    public static final String NUCLEO = "nucleo_sonico";
+    // Fragmentos de su color que lleva un Lingote Profundo de bioma; la pieza de Warden pide 5 lingotes (40 minerales)
+    public static final int FRAGMENTOS_POR_LINGOTE = 8;
+    public static final int LINGOTES_POR_PIEZA = 5;
 
     // Marca el item con su id para reconocerlo aunque cambien el nombre o el lore
     private static void mark(ItemMeta meta, String id) {
@@ -202,6 +217,96 @@ public class WardenCaveItems {
         return item;
     }
 
+    // Lingote Profundo de un bioma: 8 Fragmentos de su color y 1 lingote de oro. Va en la mejora de la pieza de su bioma
+    // y en el Lingote de Celestita
+    public static ItemStack createColoredIngot(Variant variant) {
+        ItemStack item = new ItemStack(Material.COPPER_INGOT);
+        ItemMeta meta = item.getItemMeta();
+        meta.setDisplayName(ChatColor.of(variant.color) + "" + ChatColor.BOLD + "Lingote Profundo " + variant.displayName);
+        mark(meta, variant.ingotId());
+
+        List<String> lore = new ArrayList<>();
+        lore.add("");
+        lore.add(ChatColor.GRAY + "Forjado con los fragmentos");
+        lore.add(ChatColor.of(variant.color) + variant.biome + ChatColor.GRAY + ".");
+        lore.add("");
+        lore.add(ChatColor.GRAY + "Va en la mejora de:");
+        lore.add(ChatColor.of(variant.color) + "> " + variant.piece + " de Warden");
+        lore.add(ChatColor.GRAY + "Y en el " + ChatColor.WHITE + "Lingote de Celestita" + ChatColor.GRAY + ".");
+        lore.add("");
+        meta.setLore(lore);
+        meta.setRarity(ItemRarity.EPIC);
+        item.setItemMeta(meta);
+        return item;
+    }
+
+    public static Variant ingotVariant(ItemStack item) {
+        String id = idOf(item);
+        if (id == null) return null;
+        for (Variant variant : Variant.values()) {
+            if (variant.ingotId().equals(id)) return variant;
+        }
+        return null;
+    }
+
+    // Todos los Lingotes Profundos: los 4 de bioma y el de antes (el de cualquier color), que sigue sirviendo para la
+    // Celestita
+    public static List<ItemStack> allDeepIngots() {
+        List<ItemStack> ingots = new ArrayList<>();
+        for (Variant variant : Variant.values()) ingots.add(createColoredIngot(variant));
+        ingots.add(createDeepIngot());
+        return ingots;
+    }
+
+    public static boolean isDeepIngot(ItemStack item) {
+        return ingotVariant(item) != null || "lingote_profundo".equals(idOf(item));
+    }
+
+    // Lo suelta el 40% de los mobs de la Warden Cave; va en la Energía de Warden
+    public static ItemStack createSculkTissue(int amount) {
+        ItemStack item = new ItemStack(Material.RABBIT_HIDE, Math.max(1, amount));
+        ItemMeta meta = item.getItemMeta();
+        meta.setDisplayName(ChatColor.of("#1fa3a3") + "" + ChatColor.BOLD + "Tejido Sculk");
+        mark(meta, TEJIDO);
+        meta.setLore(List.of(
+                "",
+                ChatColor.of("#147a7a") + "Restos de sculk que dejan",
+                ChatColor.of("#147a7a") + "los mobs de la Warden Cave.",
+                "",
+                ChatColor.GRAY + "Va en la " + ChatColor.of("#00ffff") + "Energía de Warden" + ChatColor.GRAY + ".",
+                ""));
+        meta.setRarity(ItemRarity.UNCOMMON);
+        item.setItemMeta(meta);
+        return item;
+    }
+
+    // Lo suelta el Ultra Warden (1 o 2 a cada jugador que le pegó): sin él no hay armadura de Warden
+    public static ItemStack createSonicCore(int amount) {
+        ItemStack item = new ItemStack(Material.NETHER_STAR, Math.max(1, amount));
+        ItemMeta meta = item.getItemMeta();
+        meta.setDisplayName(ChatColor.of("#29DFEB") + "" + ChatColor.BOLD + "Núcleo Sónico");
+        mark(meta, NUCLEO);
+        meta.setEnchantmentGlintOverride(false);
+        meta.setLore(List.of(
+                "",
+                ChatColor.of("#0BB5B5") + "El eco que todavía late",
+                ChatColor.of("#0BB5B5") + "en el pecho del Ultra Warden.",
+                "",
+                ChatColor.GRAY + "Va en:",
+                ChatColor.of("#29DFEB") + "> " + ChatColor.of("#B8F4F7") + "Las mejoras de la armadura de Warden",
+                ChatColor.of("#29DFEB") + "> " + ChatColor.of("#B8F4F7") + "La Warden Gun",
+                ChatColor.of("#29DFEB") + "> " + ChatColor.of("#B8F4F7") + "El Arco de Sculk",
+                ChatColor.of("#29DFEB") + "> " + ChatColor.of("#B8F4F7") + "Las Botas de Warden Escaladoras",
+                ""));
+        meta.setRarity(ItemRarity.EPIC);
+        item.setItemMeta(meta);
+        return item;
+    }
+
+    public static boolean isSonicCore(ItemStack item) {
+        return NUCLEO.equals(idOf(item));
+    }
+
     public static ItemStack createDeepIngot() {
         ItemStack item = new ItemStack(Material.COPPER_INGOT);
         ItemMeta meta = item.getItemMeta();
@@ -244,6 +349,9 @@ public class WardenCaveItems {
             lore.add("");
             lore.add(ChatColor.GRAY + "" + ChatColor.ITALIC + "Se obtiene al derrotar al gigantesco");
             lore.add(ChatColor.DARK_AQUA + "" + ChatColor.ITALIC + "Infested Warden Boss.");
+            lore.add("");
+            lore.add(ChatColor.GRAY + "Click derecho en el " + ChatColor.of("#29DFEB") + "Altar del Ultra Warden");
+            lore.add(ChatColor.GRAY + "para invocar al " + ChatColor.of("#29DFEB") + "Ultra Warden" + ChatColor.GRAY + ".");
             lore.add("");
 
             meta.setLore(lore);

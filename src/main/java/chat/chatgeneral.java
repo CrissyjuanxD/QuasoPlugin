@@ -23,6 +23,7 @@ import java.util.Objects;
 
 public class chatgeneral implements Listener {
 
+    // Unicode del rango en blanco y el nombre en su color; los teams de eventos usan su etiqueta de texto
     @EventHandler
     public void onPlayerChat(AsyncPlayerChatEvent event) {
         Player player = event.getPlayer();
@@ -36,64 +37,16 @@ public class chatgeneral implements Listener {
             finalPrefix = team.getPrefix();
             suffix = team.getSuffix();
 
-            try {
-                Handlers.Teams.TeamType type = Handlers.Teams.TeamType.getById(team.getName());
-                if (type != null) {
-                    nameColor = type.getBungeeColor();
-                }
-            } catch (Exception ignored) {}
+            Handlers.Teams.TeamType type = Handlers.Teams.TeamType.getById(team.getName());
+            if (type != null) {
+                finalPrefix = type.getChatPrefix();
+                nameColor = type.getBungeeColor();
+            }
         } else {
             finalPrefix = ChatColor.GRAY + "";
         }
 
         event.setFormat(finalPrefix + nameColor + "%1$s" + ChatColor.RESET + suffix + ChatColor.WHITE + ": %2$s");
-    }
-
-    private ChatColor getTeamColor(Team team) {
-        if (team == null) {
-            return ChatColor.DARK_AQUA;
-        }
-        String teamName = team.getName();
-
-            switch (teamName) {
-                case "Admin":
-                    return ChatColor.of("#ff935f");
-                case "Mod":
-                    return ChatColor.of("#00BFFF");
-                case "Helper":
-                    return ChatColor.of("#67E590");
-                case "TSurvivor":
-                    return ChatColor.of("#9455ED");
-                case "ZMiembro":
-                    return ChatColor.of("#ffa39d");
-                case "ZFantasma":
-                    return ChatColor.of("#555555");
-                default:
-                    return ChatColor.RESET;
-            }
-    }
-
-    private String getTeamPrefix(Team team) {
-        if (team == null) {
-            return "";
-        }
-        String teamName = team.getName();
-        switch (teamName) {
-            case "Admin":
-                return ChatColor.GRAY + "" + ChatColor.BOLD + "[" + ChatColor.GOLD + ChatColor.BOLD + "HOKAGE" + ChatColor.GRAY + ChatColor.BOLD + "]";
-            case "Mod":
-                return ChatColor.GRAY + "" + ChatColor.BOLD + "[" + ChatColor.AQUA + ChatColor.BOLD + "ANBU" + ChatColor.GRAY + ChatColor.BOLD + "]";
-            case "Helper":
-                return "\uEB89";
-            case "TSurvivor":
-                return "\uEB8A";
-            case "ZMiembro":
-                return ChatColor.GRAY + "" + ChatColor.BOLD + "[" + ChatColor.of("#ffa39d") + ChatColor.BOLD + "ALDEANO" + ChatColor.GRAY + ChatColor.BOLD + "]";
-            case "ZFantasma":
-                return "\uEB8C";
-            default:
-                return "";
-        }
     }
 
     @EventHandler

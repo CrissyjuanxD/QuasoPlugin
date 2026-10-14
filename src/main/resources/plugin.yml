@@ -298,7 +298,7 @@ commands:
     usage: /fly
 
 depend: [EliteMobs]
-softdepend: [FastAsyncWorldEdit, WorldGuard, ViaVersion]
+softdepend: [FastAsyncWorldEdit, WorldGuard, ViaVersion, ViciontProtections]
 
 permissions:
   viciont_hardcore3.command.givevct:

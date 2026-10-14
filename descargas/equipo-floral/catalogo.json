@@ -1,5 +1,5 @@
 {
-  "revision": 67,
+  "revision": 70,
   "item_size": [
     16,
     16
@@ -29,5 +29,18 @@
     "pico_floral"
   ],
   "equipment": "minecraft:floral",
-  "flowers_overlay": "minecraft:floral_flores"
+  "flowers_overlay": "minecraft:floral_flores",
+  "revised_icons_70": [
+    "botas_floral",
+    "casco_floral",
+    "esencia_floral",
+    "espada_floral",
+    "hacha_floral",
+    "mejora_floral",
+    "pala_floral",
+    "pantalon_floral",
+    "peto_floral",
+    "pico_floral"
+  ],
+  "equipment_revision": 67
 }

@@ -2,9 +2,19 @@
 
 [Descargar el conjunto](equipo-floral.zip) · [Ver los iconos](vista_items.png) · [Ver la armadura](vista_armadura.png)
 
-Rediseño para los items añadidos en **#66**, con texturas propias en **#67**. Los 18 iconos son PNG **16×16 reales**, con transparencia binaria y ampliación sin suavizado. Conservan los identificadores que usa el plugin.
+Rediseño para los items añadidos en **#66**, con texturas propias en **#67** y revisión de siluetas en **#70**. Los 18 iconos son PNG **16×16 reales**, con transparencia binaria y ampliación sin suavizado. Conservan los identificadores que usa el plugin.
 
 ![Items exportados](vista_items.png)
+
+## Revisión #70: contornos y materiales
+
+Se redibujaron las cuatro herramientas, los cuatro iconos de armadura, la esencia y la mejora. Un borde verde casi negro separa las siluetas del fondo; las zonas verdes, rosas y moradas se agrupan para que la forma se lea a 16×16.
+
+La esencia es una gota rosa con sombra morada sostenida por dos hojas. La mejora sigue la plantilla de celestita: placa verde oscura, esquinas biseladas y flecha rosa central.
+
+![Los diez iconos sobre fondos oscuro y claro](vista_contornos.png)
+
+La armadura equipada y sus atlas conservan el diseño de #67. Los siete libros, incluido el de habilidades verde, y el aguijón también se conservan.
 
 ## Conjunto floral
 
@@ -17,7 +27,7 @@ Una misma familia de materiales: raíces y hojas verdes para la estructura, pét
 | Herramientas | `espada_floral`, `hacha_floral`, `pico_floral`, `pala_floral` |
 | Armadura | `casco_floral`, `peto_floral`, `pantalon_floral`, `botas_floral` |
 
-La espada tiene una hoja curva; el hacha, dos filos de pétalos; el pico, extremos de espina; y la pala, una hoja puntiaguda. Son siluetas nuevas, no herramientas de netherita recoloreadas. La mejora tiene simetría horizontal.
+La espada tiene una hoja curva; el hacha, dos filos de pétalos; el pico, extremos de espina; y la pala, una hoja puntiaguda. Son siluetas nuevas, no herramientas de netherita recoloreadas. La mejora tiene forma de plantilla con una flecha central.
 
 ## Armadura equipada
 
@@ -59,4 +69,4 @@ Conservan el estilo de los libros anteriores: tapa oscura, esquinas iluminadas, 
 
 ## Comprobaciones
 
-Revisados tamaños, transparencia, correspondencia entre JSON y PNG, simetría de la mejora, composición de las dos texturas de armadura y contenido del ZIP. Pendiente comprobar el aspecto final en un cliente de Minecraft, especialmente con el brillo de los encantamientos activo.
+Revisados tamaños, transparencia, correspondencia entre JSON y PNG, conservación de los atlas de armadura y los otros ocho iconos, y contenido del ZIP. También se revisaron los contornos sobre fondos claro y oscuro. Pendiente comprobar el aspecto final en un cliente de Minecraft, especialmente con el brillo de los encantamientos activo.

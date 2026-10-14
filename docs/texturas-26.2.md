@@ -69,18 +69,18 @@ todavía usa los modelos vanilla de los bundles (`minecraft:lime_bundle`, etc.),
 mochilas a `minecraft:mochila_nivel_<n>`. Cada nivel suma algo: el 3 tiene ribete dorado, el 4 una gema roja y el 5
 hebilla de diamante, gema morada y brillitos.
 
-## Equipo floral y libros de trabajo (Version #67)
+## Equipo floral y libros de trabajo (Version #70)
 
-Rediseño de los items añadidos en #66. [Descarga, catálogo y guía](../descargas/equipo-floral/README.md).
+Rediseño de los items añadidos en #66, con contornos reforzados en #70. [Descarga, catálogo y guía](../descargas/equipo-floral/README.md).
 Las copias de `resourcepack/assets` y `descargas/equipo-floral/assets` son idénticas.
 
 | Item | ID | Estilo |
 | --- | --- | --- |
 | Aguijón Floral | `aguijon_floral` | Espina morada con una base de pétalos rosas |
-| Esencia Floral | `esencia_floral` | Gota de néctar rosa entre hojas curvas |
-| Mejora Floral | `mejora_floral` | Plantilla simétrica con borde verde y flor rosa |
-| Espada, Hacha, Pico y Pala Florales | `espada_floral`... `pala_floral` | Siluetas propias de pétalos y espinas, mangos de raíces; modelos `item/handheld` |
-| Casco, Peto, Pantalón y Botas Florales | `casco_floral`... `botas_floral` | Raíces verdes con flores rosas y sombras moradas, como los mobs florales |
+| Esencia Floral | `esencia_floral` | Gota de néctar rosa y morada sostenida por dos hojas, con borde verde casi negro |
+| Mejora Floral | `mejora_floral` | Plantilla verde oscura con flecha rosa, inspirada en la de celestita |
+| Espada, Hacha, Pico y Pala Florales | `espada_floral`... `pala_floral` | Siluetas propias con contornos verde casi negro, pétalos y mangos de raíces; modelos `item/handheld` |
+| Casco, Peto, Pantalón y Botas Florales | `casco_floral`... `botas_floral` | Iconos con borde verde casi negro, raíces verdes y pétalos rosas/morados |
 | Libros de trabajo | `libro_talador`, `libro_fervor_minero`, `libro_anzuelo_veloz`, `libro_cosecha`, `libro_alcance`, `libro_vigor_de_batalla` | Estilo de los libros anteriores: tapa oscura, bordes iluminados y símbolo del encantamiento |
 | Libro de Habilidades | `libro_habilidades` | Tapa y gema verde esmeralda |
 

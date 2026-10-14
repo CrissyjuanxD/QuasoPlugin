@@ -77,8 +77,9 @@ public class InfestedCreeper extends InfestedMob implements Listener {
 
         creeper.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, PotionEffect.INFINITE_DURATION, 1, false, false));
 
-        // Cargado (por el aura) y con radio 2: la explosión queda en potencia 4. Con 8 era potencia 16 y mataba de lejos
-        creeper.setExplosionRadius(2);
+        // Cargado (por el aura) y con radio 3: la explosión queda en potencia 6, como un creeper cargado normal. Con 8
+        // era potencia 16 y mataba de lejos
+        creeper.setExplosionRadius(3);
         creeper.setPowered(true);
 
         creeper.getPersistentDataContainer().set(mobKey, PersistentDataType.BYTE, (byte) 1);

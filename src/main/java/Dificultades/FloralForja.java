@@ -30,15 +30,14 @@ import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
 // Las recetas del equipo floral (van con la etapa uno, donde está la Abeja Floral):
-// - Mejora Floral en la mesa de crafteo: 64 de cada drop floral (carne, ojo, pólvora y aguijón), 1 Esencia Floral y una
-//   plantilla de mejora de Netherite. Cada stack se gasta entero
-// - 2 Mejoras Florales con 1 mejora, 7 diamantes y 1 Aguijón Floral (como la plantilla de Netherite)
-// - En la herrería: Mejora Floral + pieza de Netherite + Bloque de Miel. Se quedan los encantamientos
+// - Mejora Floral en la mesa de crafteo: 16 de cada drop floral (carne, ojo, pólvora y aguijón), 1 Esencia Floral y una
+//   plantilla de mejora de Netherite. No se puede copiar: hace falta una por pieza
+// - En la herrería: Mejora Floral + pieza de Netherite (o escudo) + Bloque de Miel. Se quedan los encantamientos
 public class FloralForja implements Listener {
 
-    static final int POR_STACK = 64;
+    static final int POR_STACK = 16;
     private static final String MEJORA = "mejora_floral";
-    private static final String COPIA = "mejora_floral_copia";
+    private static final NamespacedKey WARDEN_ARMOR = new NamespacedKey("quasoplugin", "warden_armor");
 
     private final JavaPlugin plugin;
     private final List<NamespacedKey> recipeKeys = new ArrayList<>();
@@ -84,16 +83,8 @@ public class FloralForja implements Listener {
         mejora.setIngredient('T', RecipeChoice.exactChoice(new ItemStack(Material.NETHERITE_UPGRADE_SMITHING_TEMPLATE)));
         addRecipe(mejora);
 
-        ItemStack dos = FloralItems.createUpgrade();
-        dos.setAmount(2);
-        ShapedRecipe copia = new ShapedRecipe(key(COPIA), dos);
-        copia.shape("DMD", "DAD", "DDD");
-        copia.setIngredient('D', RecipeChoice.exactChoice(new ItemStack(Material.DIAMOND)));
-        copia.setIngredient('M', RecipeChoice.exactChoice(FloralItems.createUpgrade()));
-        copia.setIngredient('A', stinger);
-        addRecipe(copia);
-
-        RecipeChoice plantilla = RecipeChoice.exactChoice(FloralItems.createUpgrade());
+        // La mejora se revisa por su id en onPrepareSmithing: así sirven también las hechas antes de cambiar su descripción
+        RecipeChoice plantilla = new RecipeChoice.MaterialChoice(Material.NETHERITE_UPGRADE_SMITHING_TEMPLATE);
         RecipeChoice miel = RecipeChoice.exactChoice(new ItemStack(Material.HONEY_BLOCK));
         for (FloralItems.Pieza pieza : FloralItems.Pieza.values()) {
             addRecipe(new SmithingTransformRecipe(key(pieza.id), FloralItems.create(pieza), plantilla,
@@ -101,15 +92,15 @@ public class FloralForja implements Listener {
         }
     }
 
-    // Sin 64 de cada drop no sale nada
+    // Sin 16 de cada drop no sale nada
     @EventHandler
     public void onPrepare(PrepareItemCraftEvent event) {
         if (!esMejora(event.getRecipe())) return;
         if (!alcanza(event.getInventory().getMatrix())) event.getInventory().setResult(null);
     }
 
-    // El juego gasta 1 de cada casilla; acá se gasta el stack entero de cada drop. Se hace a mano (y una sola
-    // vez aunque sea con shift)
+    // El juego gasta 1 de cada casilla; acá se gastan 16 de cada drop. Se hace a mano (y una sola vez aunque sea con
+    // shift)
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onCraft(CraftItemEvent event) {
         if (!esMejora(event.getRecipe()) || !(event.getWhoClicked() instanceof Player player)) return;
@@ -148,7 +139,7 @@ public class FloralForja implements Listener {
         return esencia && plantilla && alcanza(matrix);
     }
 
-    // De los drops se sacan 64; de la esencia y la plantilla, 1
+    // De los drops se sacan 16; de la esencia y la plantilla, 1
     static void gastar(ItemStack[] matrix) {
         for (int i = 0; i < matrix.length; i++) {
             ItemStack item = matrix[i];
@@ -164,15 +155,17 @@ public class FloralForja implements Listener {
         return recipe instanceof Keyed keyed && keyed.getKey().equals(key(MEJORA));
     }
 
-    // La herrería no mejora items custom (armadura de Warden, Celestita o lo que ya es floral)
+    // La herrería solo usa la Mejora Floral y no mejora items custom (armadura de Warden, Celestita o lo que ya es floral)
     @EventHandler
     public void onPrepareSmithing(PrepareSmithingEvent event) {
         if (!(event.getInventory().getRecipe() instanceof Keyed keyed) || !recipeKeys.contains(keyed.getKey())) return;
-        ItemStack base = event.getInventory().getInputEquipment();
-        if (EndItems.idOf(base) != null || (base != null && base.hasItemMeta()
-                && base.getItemMeta().getPersistentDataContainer().has(new NamespacedKey(plugin, "warden_armor")))) {
-            event.setResult(null);
-        }
+        if (!forjable(event.getInventory().getInputTemplate(), event.getInventory().getInputEquipment())) event.setResult(null);
+    }
+
+    static boolean forjable(ItemStack plantilla, ItemStack base) {
+        if (!MEJORA.equals(EndItems.idOf(plantilla))) return false;
+        return EndItems.idOf(base) == null && !(base != null && base.hasItemMeta()
+                && base.getItemMeta().getPersistentDataContainer().has(WARDEN_ARMOR));
     }
 
     // La armadura floral tiene 15% de no gastarse

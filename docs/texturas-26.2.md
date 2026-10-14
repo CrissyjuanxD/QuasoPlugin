@@ -99,3 +99,15 @@ Los minerales y materiales van al final: `cristal_celestita`, `lingote_celestita
 ## Tótems Sculk y Ender (#71)
 
 [Texturas, modelos y efectos](../descargas/totems-sculk-ender/README.md). Ambos tienen iconos 16×16 y están registrados en `/giveqp`.
+
+## Lanza, Azada y Escudo Florales y libro de Veta (Version #67)
+
+| Item | Id | Cómo es |
+| --- | --- | --- |
+| Lanza Floral | `lanza_floral` | La de Netherite con la punta rosa y el mango verde. En la mano usa `item/spear_in_hand` (como la de Celestita) |
+| Azada Floral | `azada_floral` | La de Netherite con la cabeza rosa y el mango verde (`item/handheld`) |
+| Escudo Floral | `escudo_floral` | Escudo plano con el borde rosa, la cara verde y una flor blanca. `items/escudo_floral.json` cambia a `escudo_floral_bloqueando` al bloquear; los dos modelos tienen la posición del escudo vanilla pasada a un item plano |
+| Libro de Veta | `libro_veta` | Tapa gris de piedra con una veta de mineral celeste, para que no se confunda con el de Fervor Minero |
+
+Todas son 16x16. `preview/floral-y-trabajos.png` ya las incluye. La posición del escudo en la mano no se pudo ver
+en un cliente: si queda corrida se ajustan los `display` de los dos modelos.

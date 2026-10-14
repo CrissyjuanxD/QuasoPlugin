@@ -62,3 +62,13 @@ de él.
   piezas que ya existían conservan su lore.
 - Al activar la etapa con `/changes activar dos` sale un anuncio en el chat con
   lo que trae la Infested Warden Cave. Las otras etapas también anuncian lo suyo.
+
+## Ajustes de la Version #67
+
+- La armadura de Warden solo sale de la floral: en la herrería la base tiene que ser la pieza floral (Netherite »
+  Floral » Warden). Con una pieza de Netherite común no da resultado.
+- El Infested Creeper explota más fuerte: radio 3 cargado, potencia 6 (antes 4), como un creeper cargado normal.
+- El lore de la armadura de Warden se rehízo con `items/EquipoLore`: historia en el color del bioma, los atributos
+  con íconos (◆ armadura y dureza, ❤ +2 corazones, ✚ 30% de no gastarse, ⚓ 10% menos empuje y ✈ planear en el peto
+  alado) y la línea de progresión con Warden resaltado. El tooltip de atributos del juego se oculta. Las piezas que
+  ya existían conservan su lore.

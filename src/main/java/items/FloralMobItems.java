@@ -9,7 +9,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 import java.util.List;
 
-// Lo que sueltan los mobs florales: 64 de cada uno van en la Mejora Floral
+// Lo que sueltan los mobs florales: 16 de cada uno van en la Mejora Floral
 public final class FloralMobItems {
     public static final NamespacedKey FLORAL_DROP = new NamespacedKey("quasoplugin", "floral_drop");
 

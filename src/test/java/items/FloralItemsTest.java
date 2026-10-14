@@ -36,6 +36,14 @@ class FloralItemsTest {
         assertEquals(2, FloralItems.Pieza.VIDA);
         assertTrue(FloralItems.Pieza.SIN_DESGASTE < 0.30);
 
+        // Hay pieza floral para cada herramienta de Celestita (así la Celestita sale de la floral) y el escudo
+        for (EndItems.Tool tool : EndItems.Tool.values()) {
+            assertEquals(tool.base, FloralItems.Pieza.valueOf(tool.name()).base, tool.name());
+        }
+        assertEquals(Material.SHIELD, FloralItems.Pieza.ESCUDO.base);
+        assertFalse(FloralItems.Pieza.ESCUDO.esArmadura());
+        assertEquals(11, FloralItems.Pieza.values().length);
+
         assertEquals(FloralItems.Pieza.PICO, FloralItems.piezaPorId("pico_floral"));
         assertEquals(Material.NETHERITE_PICKAXE, FloralItems.Pieza.PICO.base);
         assertNull(FloralItems.piezaPorId("pico_celestita"));
@@ -60,17 +68,18 @@ class FloralItemsTest {
     private static ItemStack[] matrix(int carne) {
         return new ItemStack[]{
                 item(Material.ROTTEN_FLESH, carne, "carne_podrida_floral", null),
-                item(Material.SPIDER_EYE, 64, "ojo_arana_floral", null),
-                item(Material.GUNPOWDER, 70, "polvora_floral", null),
-                item(Material.PRISMARINE_SHARD, 64, "aguijon_floral", null),
+                item(Material.SPIDER_EYE, 16, "ojo_arana_floral", null),
+                item(Material.GUNPOWDER, 22, "polvora_floral", null),
+                item(Material.PRISMARINE_SHARD, 16, "aguijon_floral", null),
                 item(Material.FIREWORK_STAR, 1, null, "esencia_floral"),
                 item(Material.NETHERITE_UPGRADE_SMITHING_TEMPLATE, 2, null, null),
                 null, null, null};
     }
 
-    @Test void theUpgradeNeedsAFullStackOfEachFloralDropAndSpendsIt() {
-        assertFalse(Dificultades.FloralForjaAccess.alcanza(matrix(63)));
-        ItemStack[] matrix = matrix(64);
+    // 16 de cada drop por mejora (no se puede copiar, hace falta una por pieza)
+    @Test void theUpgradeNeedsSixteenOfEachFloralDropAndSpendsThem() {
+        assertFalse(Dificultades.FloralForjaAccess.alcanza(matrix(15)));
+        ItemStack[] matrix = matrix(16);
         assertTrue(Dificultades.FloralForjaAccess.completo(matrix));
 
         Dificultades.FloralForjaAccess.gastar(matrix);
@@ -81,5 +90,20 @@ class FloralItemsTest {
         assertNull(matrix[4]);
         assertEquals(1, matrix[5].getAmount());
         assertFalse(Dificultades.FloralForjaAccess.completo(matrix));
+    }
+
+    // La herrería reconoce la Mejora Floral por su id (sirven las hechas con la descripción vieja) y no mejora items custom
+    @Test void theSmithingTableOnlyTakesTheFloralUpgradeOnPlainNetherite() {
+        ItemStack mejora = item(Material.NETHERITE_UPGRADE_SMITHING_TEMPLATE, 1, null, "mejora_floral");
+        ItemStack espada = item(Material.NETHERITE_SWORD, 1, null, null);
+        assertTrue(Dificultades.FloralForjaAccess.forjable(mejora, espada));
+        assertFalse(Dificultades.FloralForjaAccess.forjable(item(Material.NETHERITE_UPGRADE_SMITHING_TEMPLATE, 1, null, null), espada));
+        assertFalse(Dificultades.FloralForjaAccess.forjable(mejora, item(Material.NETHERITE_SWORD, 1, null, "espada_floral")));
+        assertFalse(Dificultades.FloralForjaAccess.forjable(mejora, item(Material.NETHERITE_PICKAXE, 1, null, "pico_celestita")));
+
+        ItemStack warden = item(Material.NETHERITE_HELMET, 1, null, null);
+        when(warden.getItemMeta().getPersistentDataContainer().has(new org.bukkit.NamespacedKey("quasoplugin", "warden_armor"))).thenReturn(true);
+        assertFalse(Dificultades.FloralForjaAccess.forjable(mejora, warden));
+        assertFalse(Dificultades.FloralForjaAccess.forjable(null, espada));
     }
 }

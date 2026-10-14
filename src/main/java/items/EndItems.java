@@ -116,6 +116,7 @@ public final class EndItems {
 
         Multimap<Attribute, AttributeModifier> defaults = tool.base.getDefaultAttributeModifiers(EquipmentSlot.HAND);
         boolean raised = false;
+        double damage = 1, speed = 4;
         for (Map.Entry<Attribute, AttributeModifier> entry : defaults.entries()) {
             AttributeModifier modifier = entry.getValue();
             if (entry.getKey().equals(Attribute.ATTACK_DAMAGE) && !raised) {
@@ -125,30 +126,36 @@ public final class EndItems {
                 // El jugador ataca 4 veces por segundo sin nada en la mano: el modificador es el total menos eso
                 modifier = new AttributeModifier(modifier.getKey(), tool.speed - 4, modifier.getOperation(), modifier.getSlotGroup());
             }
+            if (entry.getKey().equals(Attribute.ATTACK_DAMAGE)) damage += modifier.getAmount();
+            if (entry.getKey().equals(Attribute.ATTACK_SPEED)) speed += modifier.getAmount();
             meta.addAttributeModifier(entry.getKey(), modifier);
         }
         if (!raised) {
             meta.addAttributeModifier(Attribute.ATTACK_DAMAGE, new AttributeModifier(DAMAGE_KEY, tool.extra,
                     AttributeModifier.Operation.ADD_NUMBER, EquipmentSlotGroup.MAINHAND));
+            damage += tool.extra;
         }
         if (tool.mining > 0) {
             meta.addAttributeModifier(Attribute.BLOCK_BREAK_SPEED, new AttributeModifier(MINING_KEY, tool.mining,
                     AttributeModifier.Operation.ADD_SCALAR, EquipmentSlotGroup.MAINHAND));
         }
 
-        List<String> lore = new ArrayList<>();
-        lore.add("");
-        lore.add(ChatColor.of("#5fa8d3") + "Forjada con los cristales del End.");
-        lore.add("");
-        if (tool == Tool.ESPADA) {
-            lore.add(ChatColor.of(CELESTE) + "> " + ChatColor.LIGHT_PURPLE + "Doble de daño a los mobs del End");
-            lore.add(ChatColor.of(CELESTE) + "> " + ChatColor.LIGHT_PURPLE + "Doble de daño al Rey Ender");
-        } else if (tool.weapon) {
-            lore.add(ChatColor.of(CELESTE) + "> " + ChatColor.LIGHT_PURPLE + "+50% de daño al Rey Ender");
+        // El lore con el formato de todo el equipo (EquipoLore): el tooltip de atributos del juego se oculta
+        List<EquipoLore.Atributo> atributos = new ArrayList<>();
+        atributos.add(new EquipoLore.Atributo(EquipoLore.DANO, EquipoLore.numero(damage) + " de daño"));
+        atributos.add(new EquipoLore.Atributo(EquipoLore.VELOCIDAD, EquipoLore.numero(speed) + " golpes por segundo"));
+        if (tool.mining > 0) {
+            atributos.add(new EquipoLore.Atributo(EquipoLore.MINADO, "Pica " + Math.round(tool.mining * 100) + "% más rápido que Netherite"));
         }
-        if (tool.mining > 0) lore.add(ChatColor.of(CELESTE) + "> " + ChatColor.AQUA + "Pica " + Math.round(tool.mining * 100) + "% más rápido que Netherite");
-        if (tool == Tool.PICO) lore.add(ChatColor.of(CELESTE) + "> " + ChatColor.LIGHT_PURPLE + "18% de Cristal en los racimos");
-        meta.setLore(lore);
+        if (tool == Tool.ESPADA) {
+            atributos.add(new EquipoLore.Atributo(EquipoLore.ESPECIAL, "Doble de daño a los mobs del End"));
+            atributos.add(new EquipoLore.Atributo(EquipoLore.ESPECIAL, "Doble de daño al Rey Ender"));
+        } else if (tool.weapon) {
+            atributos.add(new EquipoLore.Atributo(EquipoLore.ESPECIAL, "+50% de daño al Rey Ender"));
+        }
+        if (tool == Tool.PICO) atributos.add(new EquipoLore.Atributo(EquipoLore.ESPECIAL, "18% de Cristal en los racimos"));
+        meta.addItemFlags(org.bukkit.inventory.ItemFlag.HIDE_ATTRIBUTES);
+        meta.setLore(EquipoLore.lore(CELESTE, List.of("Forjada con los cristales", "del End."), false, atributos, EquipoLore.Rango.CELESTITA));
         item.setItemMeta(meta);
         return item;
     }

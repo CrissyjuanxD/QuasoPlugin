@@ -13,8 +13,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-// Los encantamientos del datapack (data/quaso/enchantment): 3 de la Warden Cave, 2 del End y 6 de los trabajos (uno
-// por trabajo). No salen en la mesa de encantamientos ni con aldeanos: los de la Warden Cave y el End salen en libros
+// Los encantamientos del datapack (data/quaso/enchantment): 3 de la Warden Cave, 2 del End y 7 de los trabajos (uno
+// por trabajo y Veta, el segundo de Minería). No salen en la mesa de encantamientos ni con aldeanos: los de la Warden Cave y el End salen en libros
 // que sueltan los jefes, los mobs y los cofres (EnchantDrops) y los de trabajo al subir de nivel (TrabajosManager)
 public enum QuasoEnchant {
     PASO_IGNEO("paso_igneo", 2, Group.WARDEN_CAVE,
@@ -36,8 +36,11 @@ public enum QuasoEnchant {
             "Al talar el tronco de abajo cae el árbol",
             "entero: 24, 64 o 160 troncos por nivel."),
     FERVOR_MINERO("fervor_minero", 3, "#A9B7C6",
-            "Picas más rápido: +10% de velocidad",
+            "Picas más rápido: +5% de velocidad",
             "de minado por nivel."),
+    VETA("veta", 2, "#A9B7C6",
+            "Rompe la veta entera del mineral: hasta 12",
+            "bloques (I) o 32 (II). No va en La Excavadora."),
     ANZUELO_VELOZ("anzuelo_veloz", 3, "#8FB8C9",
             "Los peces pican antes: 2 segundos menos",
             "de espera por nivel (se suma a Atracción)."),

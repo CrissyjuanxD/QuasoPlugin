@@ -43,14 +43,20 @@ class TrabajosTest {
 
     @Test
     void theJobBookComesAtLevelsTenFortyAndSeventy() {
-        assertEquals(1, TrabajoNiveles.libro(10));
-        assertEquals(2, TrabajoNiveles.libro(40));
-        assertEquals(3, TrabajoNiveles.libro(70));
-        assertEquals(0, TrabajoNiveles.libro(50));
-        assertEquals(10, TrabajoNiveles.proximoLibro(0));
-        assertEquals(40, TrabajoNiveles.proximoLibro(10));
-        assertEquals(70, TrabajoNiveles.proximoLibro(69));
-        assertEquals(-1, TrabajoNiveles.proximoLibro(70));
+        assertEquals(new TrabajoNiveles.Libro(10, Encantamientos.QuasoEnchant.TALADOR, 1), TrabajoNiveles.libro(Trabajo.LENADOR, 10));
+        assertEquals(2, TrabajoNiveles.libro(Trabajo.GUERRERO, 40).nivelLibro());
+        assertEquals(3, TrabajoNiveles.libro(Trabajo.PESCADOR, 70).nivelLibro());
+        assertNull(TrabajoNiveles.libro(Trabajo.GRANJERO, 50));
+        assertNull(TrabajoNiveles.libro(Trabajo.GRANJERO, 25));
+        assertEquals(10, TrabajoNiveles.proximoLibro(Trabajo.CONSTRUCTOR, 0).nivel());
+        assertEquals(40, TrabajoNiveles.proximoLibro(Trabajo.CONSTRUCTOR, 10).nivel());
+        assertEquals(70, TrabajoNiveles.proximoLibro(Trabajo.CONSTRUCTOR, 69).nivel());
+        assertNull(TrabajoNiveles.proximoLibro(Trabajo.CONSTRUCTOR, 70));
+
+        // Minería además gana Veta en el 25 y el 55
+        assertEquals(new TrabajoNiveles.Libro(25, Encantamientos.QuasoEnchant.VETA, 1), TrabajoNiveles.libro(Trabajo.MINERIA, 25));
+        assertEquals(new TrabajoNiveles.Libro(55, Encantamientos.QuasoEnchant.VETA, 2), TrabajoNiveles.proximoLibro(Trabajo.MINERIA, 40));
+        assertEquals(5, TrabajoNiveles.libros(Trabajo.MINERIA).size());
         assertEquals("III", TrabajosManager.romano(3));
 
         Set<Encantamientos.QuasoEnchant> encantamientos = new HashSet<>();
@@ -64,7 +70,7 @@ class TrabajosTest {
 
     @Test
     void theSixJobsSitInTheirSlotsWithTheirOwnItemModel() {
-        int[] slots = {1, 3, 5, 7, 11, 15};
+        int[] slots = {10, 2, 12, 14, 6, 16};
         assertEquals(6, Trabajo.values().length);
         for (int i = 0; i < slots.length; i++) {
             assertEquals(Trabajo.values()[i], Trabajo.porSlot(slots[i]));

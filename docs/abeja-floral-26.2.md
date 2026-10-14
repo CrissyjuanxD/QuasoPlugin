@@ -60,21 +60,36 @@ también da **1 Esencia Floral** (`esencia_floral`).
 
 | Receta | Dónde | Ingredientes |
 | --- | --- | --- |
-| Mejora Floral | Mesa de crafteo | 64 Carne Podrida Floral, 64 Ojo de Araña Floral, 64 Pólvora Floral, 64 Aguijón Floral, 1 Esencia Floral y 1 plantilla de mejora de Netherite |
-| 2 Mejoras Florales | Mesa de crafteo | 1 Mejora Floral, 7 diamantes y 1 Aguijón Floral |
-| Pieza floral | Herrería | Mejora Floral + pieza de Netherite + Bloque de Miel |
+| Mejora Floral | Mesa de crafteo | 16 Carne Podrida Floral, 16 Ojo de Araña Floral, 16 Pólvora Floral, 16 Aguijón Floral, 1 Esencia Floral y 1 plantilla de mejora de Netherite |
+| Pieza floral | Herrería | Mejora Floral + pieza de Netherite (o escudo) + Bloque de Miel |
 
-Cada stack de drops se gasta entero (con menos de 64 no sale nada). Las recetas
-están en `Dificultades/FloralForja` y se registran con la etapa uno.
+Desde la Version #67 se gastan 16 de cada drop (con menos de 16 en alguna
+casilla no sale nada) y la Mejora Floral **no se puede copiar**: hace falta
+una por pieza, así que el equipo completo (11 piezas) son 11 Esencias, 11
+plantillas de Netherite y 176 de cada drop. La herrería no acepta items custom
+como base (Warden, Celestita ni otra pieza floral). Las recetas están en
+`Dificultades/FloralForja` y se registran con la etapa uno.
 
 | Pieza | Floral | Netherite |
 | --- | --- | --- |
 | Espada | 9 de daño | 8 |
 | Hacha | 8 de daño, 1,2 ataques/s, pica 20% más rápido | 10 y 1,0 |
+| Lanza | 5,5 de daño | 5 |
 | Pico | 1,3 ataques/s, pica 20% más rápido; rompe los minerales de la Warden Cave | 1,2 |
 | Pala | 1,1 ataques/s, pica 20% más rápido | 1,0 |
+| Azada | Pica 20% más rápido | Igual |
+| Escudo | Irrompible; bloquea como un escudo normal | Se gasta |
 | Armadura | 3/8/6/3 de armadura, 3,5 de dureza por pieza, +1 corazón por pieza y 15% de no gastarse | 3/8/6/3, 3 de dureza |
 
 La armadura de Warden sigue siendo mejor (24 de armadura, 4 de dureza, +2
-corazones por pieza y 30%). Las herramientas florales se pueden mejorar a
-Celestita y la armadura floral a Warden en la herrería.
+corazones por pieza y 30%). La línea es **Netherite » Floral » Warden o
+Celestita**: la herrería solo hace Celestita con una herramienta floral y
+armadura de Warden con una pieza floral (ya no desde Netherite).
+
+### Lore del equipo
+
+Floral, Warden y Celestita usan el mismo lore (`items/EquipoLore`): la
+historia de la pieza, los atributos con íconos (⚔ daño, ⚡ golpes por
+segundo, ◆ armadura, ❤ corazones, ✚ no gastarse, ⚓ empuje, ✦ especial) en
+vez del tooltip del juego y la línea de progresión con la pieza actual
+resaltada. Las piezas que ya existían conservan su lore viejo.

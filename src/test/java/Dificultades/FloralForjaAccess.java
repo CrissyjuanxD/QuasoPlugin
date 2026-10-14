@@ -9,4 +9,5 @@ public final class FloralForjaAccess {
     public static boolean alcanza(ItemStack[] matrix) { return FloralForja.alcanza(matrix); }
     public static boolean completo(ItemStack[] matrix) { return FloralForja.completo(matrix); }
     public static void gastar(ItemStack[] matrix) { FloralForja.gastar(matrix); }
+    public static boolean forjable(ItemStack plantilla, ItemStack base) { return FloralForja.forjable(plantilla, base); }
 }

@@ -119,7 +119,11 @@ final class TrabajosGuia {
                             .append(trabajo.encantamiento().nombre()).append(GRIS).append(" · ").append(CREMA)
                             .append(trabajo.encantamiento().resumen());
                 }
-                yield List.of(tabla.toString(), GRIS + "Se ponen en el yunque como cualquier libro. No salen en la mesa de encantamientos.");
+                Encantamientos.QuasoEnchant veta = Encantamientos.QuasoEnchant.VETA;
+                yield List.of(tabla.toString(),
+                        nombre(Trabajo.MINERIA) + CREMA + " además gana " + TrabajosTexto.color(Trabajo.MINERIA) + veta.nombre()
+                                + CREMA + " (I en el nivel 25 y II en el 55): " + veta.resumen(),
+                        GRIS + "Se ponen en el yunque como cualquier libro. No salen en la mesa de encantamientos.");
             }
             case REGLAS -> List.of(
                     CREMA + "Para que nadie haga granjas:\n\n"

@@ -79,8 +79,8 @@ public class ItemManager {
         "bar_sake", "bar_ginebra", "bar_azulito", "bar_michelada", "manzana_vida", "pluma_levitacion", "pluma_levitacion_mejorada",
         "keep_inventory_liquido", "estatua_protectora", "amuleto_ultima_esperanza",
         "carne_podrida_floral", "ojo_arana_floral", "polvora_floral", "bloque_oro_apilado", "arco_hielo_jugador",
-        "aguijon_floral", "esencia_floral", "mejora_floral", "espada_floral", "hacha_floral", "pico_floral", "pala_floral",
-        "casco_floral", "peto_floral", "pantalon_floral", "botas_floral",
+        "aguijon_floral", "esencia_floral", "mejora_floral", "espada_floral", "hacha_floral", "lanza_floral", "pico_floral",
+        "pala_floral", "azada_floral", "escudo_floral", "casco_floral", "peto_floral", "pantalon_floral", "botas_floral",
 
         "amuleto_invisiblidad", "arco_nivel1", "arco_nivel2", "arco_nivel3", "alma_infested_skeleton",
         "alma_infested_ghast", "alma_infested_creeper", "alma_infested_cave_spider", "energia_warden",
@@ -194,8 +194,9 @@ public class ItemManager {
             case "aguijon_floral": item = FloralMobItems.createStinger(); break;
             case "esencia_floral": item = FloralItems.createEssence(); break;
             case "mejora_floral": item = FloralItems.createUpgrade(); break;
-            case "espada_floral", "hacha_floral", "pico_floral", "pala_floral", "casco_floral", "peto_floral",
-                 "pantalon_floral", "botas_floral": item = FloralItems.create(FloralItems.piezaPorId(itemName.toLowerCase())); break;
+            case "espada_floral", "hacha_floral", "lanza_floral", "pico_floral", "pala_floral", "azada_floral", "escudo_floral",
+                 "casco_floral", "peto_floral", "pantalon_floral", "botas_floral":
+                item = FloralItems.create(FloralItems.piezaPorId(itemName.toLowerCase())); break;
             case "bloque_oro_apilado": item = CorruptedGoldenApple.createApilateGoldBlock(); break;
             case "arco_hielo_jugador": item = iceBowItem.createPlayerIceBow(); break;
 

@@ -1,0 +1,76 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "minecraft:item/custom/escudo_floral"
+  },
+  "display": {
+    "thirdperson_righthand": {
+      "rotation": [
+        45,
+        155,
+        0
+      ],
+      "translation": [
+        1.01,
+        -1.21,
+        -1.1
+      ],
+      "scale": [
+        1.2,
+        1.2,
+        1.2
+      ]
+    },
+    "thirdperson_lefthand": {
+      "rotation": [
+        45,
+        155,
+        0
+      ],
+      "translation": [
+        1.51,
+        -0.43,
+        -1.38
+      ],
+      "scale": [
+        1.2,
+        1.2,
+        1.2
+      ]
+    },
+    "firstperson_righthand": {
+      "rotation": [
+        0,
+        180,
+        -5
+      ],
+      "translation": [
+        -4.17,
+        -5.84,
+        -2.87
+      ],
+      "scale": [
+        1.5,
+        1.5,
+        1.5
+      ]
+    },
+    "firstperson_lefthand": {
+      "rotation": [
+        0,
+        180,
+        -5
+      ],
+      "translation": [
+        -4.09,
+        -5.83,
+        -2.88
+      ],
+      "scale": [
+        1.5,
+        1.5,
+        1.5
+      ]
+    }
+  }
+}

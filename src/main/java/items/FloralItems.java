@@ -9,6 +9,7 @@ import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.EquipmentSlotGroup;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemRarity;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -20,24 +21,27 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-// El equipo floral (etapa uno): la Abeja Floral suelta la Esencia Floral, con 64 de cada drop floral, la esencia y una
-// plantilla de Netherite sale la Mejora Floral, y con la mejora en la herrería las herramientas y la armadura de
-// Netherite pasan a florales. Es mejor que el Netherite y peor que la armadura de Warden; con el pico floral se pueden
-// romper los minerales de la Warden Cave. Las recetas están en FloralForja
+// El equipo floral (etapa uno): la Abeja Floral suelta la Esencia Floral, con 16 de cada drop floral, la esencia y una
+// plantilla de Netherite sale la Mejora Floral, y con la mejora en la herrería las herramientas, la armadura de
+// Netherite y el escudo pasan a florales. Es el paso entre el Netherite y la Celestita o la armadura de Warden (esas solo
+// salen de una pieza floral); con el pico floral se pueden romper los minerales de la Warden Cave. Las recetas están en
+// FloralForja
 public final class FloralItems {
 
     public static final String ROSA = "#FFB3D9";
-    private static final String VERDE = "#A8E6A1";
     private static final NamespacedKey MINADO_KEY = new NamespacedKey("quasoplugin", "floral_minado");
     private static final NamespacedKey ARMADURA_KEY = new NamespacedKey("quasoplugin", "floral_armadura");
 
-    // Las 8 piezas. Daño y velocidad son los totales que muestra el juego (null = los del Netherite); minado es lo que
+    // Las 11 piezas. Daño y velocidad son los totales que muestra el juego (null = los del Netherite); minado es lo que
     // pica más rápido que el Netherite. La armadura: armadura, dureza y vida de más de cada pieza
     public enum Pieza {
         ESPADA("espada_floral", "Espada Floral", Material.NETHERITE_SWORD, 9.0, null, 0),
         HACHA("hacha_floral", "Hacha Floral", Material.NETHERITE_AXE, 8.0, 1.2, 0.2),
+        LANZA("lanza_floral", "Lanza Floral", Material.NETHERITE_SPEAR, 5.5, null, 0),
         PICO("pico_floral", "Pico Floral", Material.NETHERITE_PICKAXE, null, 1.3, 0.2),
         PALA("pala_floral", "Pala Floral", Material.NETHERITE_SHOVEL, null, 1.1, 0.2),
+        AZADA("azada_floral", "Azada Floral", Material.NETHERITE_HOE, null, null, 0.2),
+        ESCUDO("escudo_floral", "Escudo Floral", Material.SHIELD, null, null, 0),
         CASCO("casco_floral", "Casco Floral", Material.NETHERITE_HELMET, 3),
         PETO("peto_floral", "Peto Floral", Material.NETHERITE_CHESTPLATE, 8),
         PANTALON("pantalon_floral", "Pantalón Floral", Material.NETHERITE_LEGGINGS, 6),
@@ -99,8 +103,7 @@ public final class FloralItems {
 
     public static ItemStack createUpgrade() {
         return material(Material.NETHERITE_UPGRADE_SMITHING_TEMPLATE, "mejora_floral", "Mejora Floral", ItemRarity.EPIC,
-                "En la herrería: la mejora, una pieza", "de Netherite y un Bloque de Miel.",
-                "Sirve para la espada, el hacha, el pico,", "la pala y las 4 piezas de armadura.");
+                "En la herrería: la mejora, una pieza", "de Netherite (o un escudo) y un", "Bloque de Miel. Sirve para una pieza.");
     }
 
     private static ItemStack material(Material type, String id, String name, ItemRarity rarity, String... lines) {
@@ -118,7 +121,8 @@ public final class FloralItems {
         return item;
     }
 
-    // La pieza de Netherite con los atributos florales. En la herrería se quedan sus encantamientos y su durabilidad
+    // La pieza de Netherite (o el escudo) con los atributos florales. En la herrería se quedan sus encantamientos y su
+    // durabilidad
     public static ItemStack create(Pieza pieza) {
         ItemStack item = new ItemStack(pieza.base);
         ItemMeta meta = item.getItemMeta();
@@ -127,20 +131,20 @@ public final class FloralItems {
         meta.setRarity(ItemRarity.EPIC);
         meta.setItemModel(NamespacedKey.minecraft(pieza.id));
 
-        List<String> lore = new ArrayList<>();
-        lore.add("");
-        lore.add(ChatColor.of("#d98cb3") + "Forjada con la esencia de la Abeja Floral.");
-        lore.add("");
-        if (pieza.esArmadura()) armadura(meta, pieza, lore);
-        else herramienta(meta, pieza, lore);
-        lore.add("");
-        meta.setLore(lore);
+        List<EquipoLore.Atributo> atributos;
+        if (pieza.esArmadura()) atributos = armadura(meta, pieza);
+        else if (pieza == Pieza.ESCUDO) atributos = escudo(meta);
+        else atributos = herramienta(meta, pieza);
+        meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+        meta.setLore(EquipoLore.lore(ROSA, List.of("Forjada con la esencia de", "la Abeja Floral."), pieza.esArmadura(),
+                atributos, EquipoLore.Rango.FLORAL));
         item.setItemMeta(meta);
         return item;
     }
 
     // Los atributos del Netherite cambiados: el daño y la velocidad de ataque nuevos, y el minado más rápido
-    private static void herramienta(ItemMeta meta, Pieza pieza, List<String> lore) {
+    private static List<EquipoLore.Atributo> herramienta(ItemMeta meta, Pieza pieza) {
+        double dano = 1, velocidad = 4;
         Multimap<Attribute, AttributeModifier> defaults = pieza.base.getDefaultAttributeModifiers(EquipmentSlot.HAND);
         for (Map.Entry<Attribute, AttributeModifier> entry : defaults.entries()) {
             AttributeModifier modifier = entry.getValue();
@@ -150,6 +154,8 @@ public final class FloralItems {
             } else if (entry.getKey().equals(Attribute.ATTACK_SPEED) && pieza.velocidad != null) {
                 modifier = new AttributeModifier(modifier.getKey(), pieza.velocidad - 4, modifier.getOperation(), modifier.getSlotGroup());
             }
+            if (entry.getKey().equals(Attribute.ATTACK_DAMAGE)) dano += modifier.getAmount();
+            if (entry.getKey().equals(Attribute.ATTACK_SPEED)) velocidad += modifier.getAmount();
             meta.addAttributeModifier(entry.getKey(), modifier);
         }
         if (pieza.minado > 0) {
@@ -157,13 +163,26 @@ public final class FloralItems {
                     AttributeModifier.Operation.ADD_SCALAR, EquipmentSlotGroup.MAINHAND));
         }
 
-        if (pieza == Pieza.ESPADA) lore.add(punto() + ChatColor.of(VERDE) + "9 de daño");
-        if (pieza == Pieza.HACHA) lore.add(punto() + ChatColor.of(VERDE) + "8 de daño y ataca más rápido");
-        if (pieza.minado > 0) lore.add(punto() + ChatColor.of(VERDE) + "Pica " + Math.round(pieza.minado * 100) + "% más rápido que Netherite");
-        if (pieza == Pieza.PICO) lore.add(punto() + ChatColor.of(VERDE) + "Rompe los minerales de la Warden Cave");
+        List<EquipoLore.Atributo> atributos = new ArrayList<>();
+        atributos.add(new EquipoLore.Atributo(EquipoLore.DANO, EquipoLore.numero(dano) + " de daño"));
+        atributos.add(new EquipoLore.Atributo(EquipoLore.VELOCIDAD, EquipoLore.numero(velocidad) + " golpes por segundo"));
+        if (pieza.minado > 0) {
+            atributos.add(new EquipoLore.Atributo(EquipoLore.MINADO, "Pica " + Math.round(pieza.minado * 100) + "% más rápido que Netherite"));
+        }
+        if (pieza == Pieza.PICO) atributos.add(new EquipoLore.Atributo(EquipoLore.ESPECIAL, "Rompe los minerales de la Warden Cave"));
+        if (pieza == Pieza.HACHA) atributos.add(new EquipoLore.Atributo(EquipoLore.ESPECIAL, "Ataca más rápido que la de Netherite"));
+        return atributos;
     }
 
-    private static void armadura(ItemMeta meta, Pieza pieza, List<String> lore) {
+    // El escudo floral no se rompe nunca
+    private static List<EquipoLore.Atributo> escudo(ItemMeta meta) {
+        meta.setUnbreakable(true);
+        meta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
+        return List.of(new EquipoLore.Atributo("∞", "Irrompible"),
+                new EquipoLore.Atributo(EquipoLore.ESPECIAL, "Bloquea como un escudo normal"));
+    }
+
+    private static List<EquipoLore.Atributo> armadura(ItemMeta meta, Pieza pieza) {
         EquipmentSlotGroup grupo = pieza.slot().getGroup();
         String nombre = pieza.name().toLowerCase(java.util.Locale.ROOT);
         meta.addAttributeModifier(Attribute.ARMOR, new AttributeModifier(new NamespacedKey("quasoplugin", "floral_" + nombre + "_armor"),
@@ -182,13 +201,11 @@ public final class FloralItems {
         equipo.setModel(NamespacedKey.minecraft("floral"));
         meta.setEquippable(equipo);
 
-        lore.add(ChatColor.GRAY + "Equipar esta pieza otorga:");
-        lore.add(punto() + ChatColor.of(VERDE) + ChatColor.BOLD + "+1 Corazón");
-        lore.add(punto() + ChatColor.of(VERDE) + ChatColor.BOLD + "15% Resistencia al Desgaste");
-    }
-
-    private static String punto() {
-        return ChatColor.of(ROSA) + "> ";
+        return List.of(
+                new EquipoLore.Atributo(EquipoLore.ARMADURA, pieza.armadura + " de armadura y " + EquipoLore.numero(Pieza.DUREZA) + " de dureza"),
+                new EquipoLore.Atributo(EquipoLore.VIDA, "+1 corazón"),
+                new EquipoLore.Atributo(EquipoLore.DESGASTE, Math.round(Pieza.SIN_DESGASTE * 100) + "% de no gastarse"),
+                new EquipoLore.Atributo(EquipoLore.EMPUJE, "10% menos empuje"));
     }
 
     public static Pieza piezaPorId(String id) {

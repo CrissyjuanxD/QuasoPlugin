@@ -737,7 +737,8 @@ public class QuasoPlugin extends JavaPlugin implements Listener {
     }
 
     // Los encantamientos del datapack: Paso Ígneo, Purificación y Visión Abisal (Warden Cave), Anclaje y Retorno del
-    // Vacío (End) y los 6 de trabajo (Talador, Cosecha y Vigor de Batalla tienen su parte acá; los otros 3 son del datapack)
+    // Vacío (End) y los 7 de trabajo (Talador, Veta, Cosecha y Vigor de Batalla tienen su parte acá; los otros 3 son del
+    // datapack)
     private void initEnchantmentSystem() {
         this.pasoIgneo = new PasoIgneo(this);
         getServer().getPluginManager().registerEvents(pasoIgneo, this);
@@ -746,6 +747,7 @@ public class QuasoPlugin extends JavaPlugin implements Listener {
         getServer().getPluginManager().registerEvents(new RetornoDelVacio(this), this);
         getServer().getPluginManager().registerEvents(new EnchantDrops(this), this);
         getServer().getPluginManager().registerEvents(new Talador(this), this);
+        getServer().getPluginManager().registerEvents(new Veta(this), this);
         getServer().getPluginManager().registerEvents(new Cosecha(this), this);
         getServer().getPluginManager().registerEvents(new VigorDeBatalla(), this);
         if (!QuasoEnchant.allLoaded()) {

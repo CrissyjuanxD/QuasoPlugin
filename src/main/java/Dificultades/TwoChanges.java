@@ -35,6 +35,7 @@ import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.inventory.FurnaceSmeltEvent;
+import org.bukkit.event.inventory.PrepareSmithingEvent;
 import org.bukkit.inventory.BlastingRecipe;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Recipe;
@@ -112,7 +113,7 @@ public class TwoChanges implements Listener, Change {
                 "4 biomas: Caverna Sculk, Pantano Profundo, Abismo Flotante y Ruinas de Ceniza, cada uno con su mob infestado.",
                 "El Warden Zombie sale en toda la dimensión y cada Ancient City tiene su Infested Warden.",
                 "Los Minerales Profundos solo se rompen con pico de Netherite o el Pico Floral; se funden en el alto horno.",
-                "Armadura de Warden: cada pieza pide el alma y el fragmento de su bioma (casco cian, peto morado, pantalón gris y botas verde).",
+                "Armadura de Warden: sale de la floral y cada pieza pide el alma y el fragmento de su bioma (casco cian, peto morado, pantalón gris y botas verde).",
                 "Los árboles dan Bayas Sculk, Frutas Abisales y Bayas Regenerativas.",
                 "Libros de Paso Ígneo, Purificación y Visión Abisal en los cofres de las Ancient City y los jefes.",
                 "Minar, talar y construir allá da más XP de trabajo.");
@@ -210,7 +211,8 @@ public class TwoChanges implements Listener, Change {
         addRecipe(recipe);
     }
 
-    // En la mesa de herrería: mejora + pieza de netherite + 1 lingote. Se quedan los encantamientos de la pieza
+    // En la mesa de herrería: mejora + pieza floral + 1 lingote (onPrepareSmithing no deja usar una de Netherite común).
+    // Se quedan los encantamientos de la pieza
     private void armorRecipe(String id, ItemStack result, ItemStack upgrade, Material base, RecipeChoice ingot) {
         addRecipe(new SmithingTransformRecipe(key(id), result,
                 RecipeChoice.exactChoice(upgrade), new RecipeChoice.MaterialChoice(base), ingot));
@@ -240,6 +242,14 @@ public class TwoChanges implements Listener, Change {
 
     private NamespacedKey key(String id) {
         return new NamespacedKey(plugin, id);
+    }
+
+    // La armadura de Warden solo sale de la floral: Netherite » Floral » Warden, sin saltarse un paso
+    @EventHandler
+    public void onPrepareSmithing(PrepareSmithingEvent event) {
+        if (!(event.getInventory().getRecipe() instanceof Keyed keyed) || !recipeKeys.contains(keyed.getKey())) return;
+        items.FloralItems.Pieza pieza = items.FloralItems.pieza(event.getInventory().getInputEquipment());
+        if (pieza == null || !pieza.esArmadura()) event.setResult(null);
     }
 
     // Partículas de sculk cada vez que el alto horno termina un Fragmento Profundo (4 minutos por mineral)

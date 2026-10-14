@@ -257,17 +257,18 @@ public final class TrabajosManager implements Listener {
         Bukkit.getPluginManager().callEvent(new TrabajoSubeNivelEvent(player, trabajo, nivel));
     }
 
-    // En los niveles 10, 40 y 70 se gana el libro del encantamiento del trabajo (I, II y III)
+    // En los niveles 10, 40 y 70 se gana el libro del encantamiento del trabajo (I, II y III); Minería además gana Veta
+    // en el 25 y el 55
     private void darLibro(Player player, Trabajo trabajo, int nivel) {
-        int nivelLibro = TrabajoNiveles.libro(nivel);
-        if (nivelLibro <= 0) return;
-        ItemStack libro = trabajo.encantamiento().book(nivelLibro);
+        TrabajoNiveles.Libro ganado = TrabajoNiveles.libro(trabajo, nivel);
+        if (ganado == null) return;
+        ItemStack libro = ganado.encantamiento().book(ganado.nivelLibro());
         if (libro == null) {
             plugin.getLogger().warning("No se pudo dar el libro de " + trabajo.nombre() + " a " + player.getName() + ": el datapack no está cargado.");
             return;
         }
         player.getInventory().addItem(libro).values().forEach(resto -> player.getWorld().dropItemNaturally(player.getLocation(), resto));
-        String nombre = trabajo.encantamiento().nombre() + " " + romano(nivelLibro);
+        String nombre = ganado.encantamiento().nombre() + " " + romano(ganado.nivelLibro());
         player.sendMessage(TrabajosTexto.PREFIJO + "¡Ganaste el libro " + TrabajosTexto.color(trabajo) + nombre + TrabajosTexto.CREMA
                 + "! Es el encantamiento de " + TrabajosTexto.nombre(trabajo) + TrabajosTexto.CREMA + ": se pone en el yunque.");
         player.playSound(player.getLocation(), Sound.BLOCK_ENCHANTMENT_TABLE_USE, SoundCategory.PLAYERS, 1f, 1.1f);

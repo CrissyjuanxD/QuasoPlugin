@@ -69,7 +69,7 @@ public class ExtraChanges implements Listener, Change {
     public List<String> anuncio() {
         return List.of(
                 "En el Overworld el 25% de los zombies y arañas y el 20% de los creepers salen florales.",
-                "Sus drops y el Aguijón Floral de la Mini Abeja Floral van en la Mejora Floral (64 de cada uno).");
+                "Sus drops y el Aguijón Floral de la Mini Abeja Floral van en la Mejora Floral (16 de cada uno).");
     }
 
     @Override

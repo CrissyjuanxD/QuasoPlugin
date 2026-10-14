@@ -82,7 +82,7 @@ public class ThreeChanges implements Listener, Change {
         return List.of(
                 "Biomas nuevos en las islas de afuera: Bosque Prismático, Páramo Marchito y Picos Helados.",
                 "Ender Blaze, Ender Creeper, Ender Spider, Ender Insect y el Shulker Negro.",
-                "Celestita: los racimos de amatista del Bosque Prismático dan Cristales para el lingote y las 6 herramientas.",
+                "Celestita: los racimos de amatista del Bosque Prismático dan Cristales para el lingote y las 6 herramientas (salen de las florales).",
                 "El Rey Ender se invoca con su ojo en un Santuario Marchito y suelta la EnderKing Pearl (Peto de Warden Alado).",
                 "Libros de Anclaje y Retorno del Vacío en las End Cities y los jefes.");
     }
@@ -177,8 +177,8 @@ public class ThreeChanges implements Listener, Change {
     }
 
     // La herrería deja la base como está y le pone lo del resultado encima, así que hay que mirar qué se mejora: el
-    // Peto Alado solo sale de un Peto de Warden, y las herramientas de Celestita salen de las de Netherite o de las
-    // florales, no de otro item custom
+    // Peto Alado solo sale de un Peto de Warden, y las herramientas de Celestita solo de las florales (Netherite »
+    // Floral » Celestita, sin saltarse un paso)
     @EventHandler
     public void onPrepareSmithing(PrepareSmithingEvent event) {
         if (!(event.getInventory().getRecipe() instanceof Keyed keyed)) return;
@@ -187,8 +187,7 @@ public class ThreeChanges implements Listener, Change {
         ItemStack base = event.getInventory().getInputEquipment();
         if (recipe.getKey().equals(WINGED)) {
             if (!armor.isWardenArmor(base) || WardenArmor.isWinged(base)) event.setResult(null);
-        } else if (EndItems.toolById(recipe.getKey()) != null && EndItems.idOf(base) != null
-                && items.FloralItems.pieza(base) == null) {
+        } else if (EndItems.toolById(recipe.getKey()) != null && items.FloralItems.pieza(base) == null) {
             event.setResult(null);
         }
     }

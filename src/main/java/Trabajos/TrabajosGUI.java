@@ -95,10 +95,10 @@ final class TrabajosGUI implements Listener {
                 if (bonus > 0) {
                     lore.add(CAFE + "Próximo bonus: " + BLANCO + "nivel " + bonus + GRIS + " (" + DORADO + "+" + TrabajoNiveles.bonus(bonus) + " DinoCoins" + GRIS + ")");
                 }
-                int libro = TrabajoNiveles.proximoLibro(nivel);
-                if (libro > 0) {
-                    lore.add(CAFE + "Próximo libro: " + BLANCO + "nivel " + libro + GRIS + " (" + TrabajosTexto.color(trabajo)
-                            + trabajo.encantamiento().nombre() + " " + TrabajosManager.romano(TrabajoNiveles.libro(libro)) + GRIS + ")");
+                TrabajoNiveles.Libro libro = TrabajoNiveles.proximoLibro(trabajo, nivel);
+                if (libro != null) {
+                    lore.add(CAFE + "Próximo libro: " + BLANCO + "nivel " + libro.nivel() + GRIS + " (" + TrabajosTexto.color(trabajo)
+                            + libro.encantamiento().nombre() + " " + TrabajosManager.romano(libro.nivelLibro()) + GRIS + ")");
                 }
             }
         }

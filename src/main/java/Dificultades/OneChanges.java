@@ -94,7 +94,7 @@ public class OneChanges implements Listener, Change {
                 "Las raids traen Creepers Florales, Iceologers y hordas de Zombies y Arañas Florales.",
                 "En la BloodMoon los monstruos sueltan Fragmentos de BloodMoon.",
                 "La Abeja Floral se invoca en su altar y suelta la Esencia Floral.",
-                "Mejora Floral: 64 de cada drop floral, la Esencia Floral y una plantilla de Netherite. Mejora las herramientas y la armadura de Netherite.");
+                "Mejora Floral: 16 de cada drop floral, la Esencia Floral y una plantilla de Netherite (una por pieza). Pasa a floral las herramientas, el escudo y la armadura de Netherite.");
     }
 
     // Activa todo lo del día 1: mobs corruptos, la receta de la carne y la tarea de targets

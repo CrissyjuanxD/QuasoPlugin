@@ -12,7 +12,8 @@ import java.util.Locale;
 
 /** Mantiene los comandos del ciclo y de las hordas y completa sus argumentos según el remitente. */
 public final class BloodMoonCommands implements TabExecutor {
-    private static final List<String> COMMANDS = List.of("show", "start", "stop", "reload", "spawnhorde");
+    private static final List<String> COMMANDS = List.of("show", "start", "stop", "reload", "spawnhorde", "dificultad");
+    private static final List<String> DIFICULTADES = List.of("facil", "normal", "dificil");
     private final BloodMoon manager;
     public BloodMoonCommands(BloodMoon manager) { this.manager = manager; }
 
@@ -52,6 +53,20 @@ public final class BloodMoonCommands implements TabExecutor {
                     else if (nights == 1) LocaleReader.CommandLocale("BloodMoonTomorrow", null, null, sender);
                     else LocaleReader.CommandLocale("DaysBeforeBloodMoon", new String[]{"$d"}, new String[]{String.valueOf(nights)}, sender);
                 }
+                reply(sender, "Dificultad: " + config.GetDifficultyConfig().nombre() + ".");
+            }
+            // Sin argumento dice la dificultad del mundo; con facil, normal o dificil la cambia y la guarda en su config
+            case "dificultad" -> {
+                if (args.length <= parameter) {
+                    reply(sender, "Dificultad de la BloodMoon en " + world.getName() + ": " + config.GetDifficultyConfig().nombre()
+                            + ". Para cambiarla: /bloodmoon dificultad <facil|normal|dificil>");
+                    return true;
+                }
+                BloodMoonDificultad difficulty = BloodMoonDificultad.de(args[parameter]);
+                if (difficulty == null) reply(sender, "Dificultad inválida: usa facil, normal o dificil.");
+                else if (config.SetDifficultyConfig(difficulty)) reply(sender, "Dificultad de la BloodMoon en " + world.getName() + ": " + difficulty.nombre()
+                        + " (" + difficulty.probabilidadMob() + "% de mobs de BloodMoon).");
+                else LocaleReader.CommandLocale("GeneralError", null, null, sender);
             }
             case "start" -> {
                 if (actuator.isInProgress()) LocaleReader.CommandLocale("BloodMoonRightNow", null, null, sender);
@@ -98,7 +113,7 @@ public final class BloodMoonCommands implements TabExecutor {
     private void help(CommandSender sender) {
         String world = sender instanceof Player ? "" : " <mundo>";
         LocaleReader.CommandLocale("AllowedCommands", new String[]{"$d"}, new String[]{
-                "show" + world + ", start" + world + ", stop" + world + ", reload, spawnhorde" + world + " [jugador]"}, sender);
+                "show" + world + ", start" + world + ", stop" + world + ", reload, spawnhorde" + world + " [jugador], dificultad" + world + " [facil|normal|dificil]"}, sender);
     }
 
     @Override public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
@@ -110,6 +125,7 @@ public final class BloodMoonCommands implements TabExecutor {
         if (!playerSender && args.length == 2) return matching(manager.getWorlds().stream().map(World::getName).toList(), args[1]);
         int parameter = playerSender ? 1 : 2;
         if (args.length != parameter + 1) return List.of();
+        if (action.equals("dificultad")) return matching(DIFICULTADES, args[parameter]);
         if (action.equals("spawnhorde")) {
             World world = playerSender ? ((Player) sender).getWorld() : Bukkit.getWorld(args[1]);
             return world == null ? List.of() : matching(world.getPlayers().stream().map(Player::getName).toList(), args[parameter]);

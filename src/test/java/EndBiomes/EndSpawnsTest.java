@@ -26,7 +26,8 @@ class EndSpawnsTest {
         assertEquals(7, vanilla.get(EndSpawns.Mob.ENDER_CREEPER));
 
         Map<EndSpawns.Mob, Integer> prismatic = table(EndBiomeMap.Zone.PRISMATICO);
-        assertEquals(80, prismatic.get(EndSpawns.Mob.NINGUNO));
+        assertEquals(70, prismatic.get(EndSpawns.Mob.NINGUNO));
+        assertEquals(10, prismatic.get(EndSpawns.Mob.ENDER_INSECT));
         assertTrue(prismatic.get(EndSpawns.Mob.ENDER_SPIDER) > prismatic.get(EndSpawns.Mob.ENDER_BLAZE));
 
         Map<EndSpawns.Mob, Integer> paramo = table(EndBiomeMap.Zone.MARCHITO);
@@ -36,6 +37,13 @@ class EndSpawnsTest {
 
         // Los Picos Helados son decorativos: salen los mismos mobs que en el End de siempre
         assertEquals(vanilla, table(EndBiomeMap.Zone.HIELO));
+    }
+
+    @Test
+    void enderInsectsOnlyReplaceEndermenInThePrismaticForest() {
+        for (EndBiomeMap.Zone zone : EndBiomeMap.Zone.values()) {
+            if (zone != EndBiomeMap.Zone.PRISMATICO) assertNull(table(zone).get(EndSpawns.Mob.ENDER_INSECT), zone.name());
+        }
     }
 
     @Test

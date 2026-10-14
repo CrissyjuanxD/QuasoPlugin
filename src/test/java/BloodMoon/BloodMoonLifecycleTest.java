@@ -61,6 +61,18 @@ class BloodMoonLifecycleTest {
         bukkit.when(() -> Bukkit.createBossBar(anyString(), any(), any(), any(org.bukkit.boss.BarFlag[].class))).thenReturn(mock(BossBar.class));
     }
     @AfterEach void cleanup() { if (manager != null) manager.shutdown(); bukkit.close(); }
+    // Sin la clave es Normal; /bloodmoon dificultad la guarda en el config del mundo y un valor mal escrito juega en Normal
+    @Test void difficultyDefaultsToNormalAndIsSavedPerWorld() throws Exception {
+        ConfigReader config = new ConfigReader(plugin, world);
+        assertEquals(BloodMoonDificultad.NORMAL, config.GetDifficultyConfig());
+        assertTrue(config.SetDifficultyConfig(BloodMoonDificultad.FACIL));
+        Path file = folder.resolve("bloodmoon/world/config.yml");
+        assertEquals("facil", YamlConfiguration.loadConfiguration(file.toFile()).getString("Dificultad"));
+        assertEquals(BloodMoonDificultad.FACIL, new ConfigReader(plugin, world).GetDifficultyConfig());
+        Files.writeString(file, Files.readString(file).replace("Dificultad: facil", "Dificultad: extrema"));
+        config.RefreshConfigs();
+        assertEquals(BloodMoonDificultad.NORMAL, config.GetDifficultyConfig());
+    }
     @Test void originalWorldSettingsAreImportedAndRemovedFeaturesAreDiscarded() throws Exception {
         Path old = directory.resolve("plugins/BloodMoon/world/config.yml");
         Files.createDirectories(old.getParent());

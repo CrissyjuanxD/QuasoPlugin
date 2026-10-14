@@ -5,6 +5,11 @@
 # CommandsOnStart/End: comando;s (consola), comando;p (jugador), comando;f (consola por jugador).
 # Marcadores: $w = mundo, $p = jugador. No incluyen ningún cambio de inventario o experiencia al morir.
 IsBlacklisted: false
+# Dificultad: facil, normal o dificil (también con /bloodmoon dificultad).
+# facil: 5% de mobs de BloodMoon; los mobs normales pegan y aguantan menos y sueltan 75% menos botín extra.
+# normal: 25% de mobs de BloodMoon; fuerza intermedia y 35% menos botín extra.
+# dificil: 50% de mobs de BloodMoon; fuerza y botín completos (los multiplicadores de abajo).
+Dificultad: normal
 # Si se activa, hay BloodMoon cada noche; siempre termina al amanecer.
 PermanentBloodMoon: false
 BloodMoonInterval: 5

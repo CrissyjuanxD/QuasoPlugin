@@ -91,6 +91,7 @@ public class MobManager {
                 "infestedbee", "estatuarecompensa", "corruptedbee", "infestedcreeper",
                 "infestedghast", "infestedskeleton", "infestedcavespider", "wardenzombie", "enderblaze",
                 "endercreeper", "enderspider", "infestedwarden", "enderinsect", "shulkernegro", "reyender", "ultrawarden",
+                "zombiebloodmoon", "esqueletobloodmoon", "aranabloodmoon", "creeperbloodmoon",
         };
         for (String mob : mobs) {
             registeredMobs.add(mob);
@@ -137,6 +138,9 @@ public class MobManager {
             // De prueba: la arena queda donde se spawnea
             case "reyender": ReyEnderBoss.spawn(plugin, location); return true;
             case "ultrawarden": Bosses.UltraWardenBoss.spawn(plugin, location); return true;
+            case "zombiebloodmoon", "esqueletobloodmoon", "aranabloodmoon", "creeperbloodmoon":
+                BloodMoon.BloodMoonMobs.spawn(BloodMoon.BloodMoonMobs.Tipo.porId(mobType), location);
+                return true;
             default: return false;
         }
     }
@@ -184,6 +188,14 @@ public class MobManager {
                     "Lanza cráneos que dan Wither III si no te cubres con el escudo.", "wither_skeleton_spawn_egg"),
             new InfoMob("corruptedinfernalspider", "Corrupted Infernal Spider", "#FF5555", "uno", "16", "Dungeons y estructuras del server",
                     "Araña de fuego que deja telarañas.", "spider_spawn_egg"),
+            new InfoMob("zombiebloodmoon", "Zombie BloodMoon", "#E05555", "uno", "36", "BloodMoon (5%, 25% o 50% según la dificultad)",
+                    "Más rápido y con armadura. Su mordida da Sangrado 4 s y lo cura 3; con menos de 40% de vida entra en frenesí (Velocidad II y Fuerza I). 50% de soltar fragmentos de BloodMoon.", "zombie_spawn_egg"),
+            new InfoMob("esqueletobloodmoon", "Esqueleto BloodMoon", "#E05555", "uno", "30", "BloodMoon (5%, 25% o 50% según la dificultad)",
+                    "Sus flechas dan Sangrado 4 s y cada 7 segundos tira 3 flechas en abanico. 50% de soltar fragmentos de BloodMoon.", "skeleton_spawn_egg"),
+            new InfoMob("aranabloodmoon", "Araña BloodMoon", "#E05555", "uno", "30", "BloodMoon (5%, 25% o 50% según la dificultad)",
+                    "Más grande y rápida. Cada 5 segundos salta hacia ti: si te cae encima te pega, te da Sangrado y Lentitud. 50% de soltar fragmentos de BloodMoon.", "spider_spawn_egg"),
+            new InfoMob("creeperbloodmoon", "Creeper BloodMoon", "#E05555", "uno", "28", "BloodMoon (5%, 25% o 50% según la dificultad)",
+                    "Rápido y con mecha corta. Explota más grande sin romper bloques: Sangrado 6 s y Debilidad, y deja un charco que da Lentitud. 50% de soltar fragmentos de BloodMoon.", "creeper_spawn_egg"),
             new InfoMob("wardenzombie", "Warden Zombie", "#1f7a86", "dos", "72", "Los 4 biomas de la Warden Cave",
                     "Lento pero con mucha vida y armadura. Te escucha si te mueves sin agacharte y su golpe da Oscuridad 4 segundos. 15% de soltar un fragmento resonante.", "zombie_spawn_egg"),
             new InfoMob("infestedskeleton", "Infested Skeleton", "#00AAAA", "dos", "120", "Caverna Sculk (cian)",

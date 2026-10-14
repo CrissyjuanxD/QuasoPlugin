@@ -7,7 +7,7 @@ description: Plugin dedicado para el streamer Crosszy
 commands:
   bloodmoon:
     description: Controla la BloodMoon y sus hordas.
-    usage: /bloodmoon <show|start|stop|reload|spawnhorde>
+    usage: /bloodmoon <show|start|stop|reload|spawnhorde|dificultad>
     permission: bloodmoon.bloodmoon
     permission-message: 'No tienes permiso para usar este comando.'
   revive:
@@ -321,3 +321,6 @@ permissions:
     default: op
   bloodmoon.spawnhorde:
     default: op
+  bloodmoon.dificultad:
+    default: op
+    description: Permite ver y cambiar la dificultad de la BloodMoon.

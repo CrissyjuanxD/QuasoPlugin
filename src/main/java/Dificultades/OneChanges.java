@@ -11,6 +11,7 @@ import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
@@ -25,7 +26,6 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
-import BloodMoon.BloodMoonActuator;
 
 import java.util.*;
 
@@ -302,38 +302,26 @@ public class OneChanges implements Listener, Change {
         }
     }
 
-    // Durante la Luna de Sangre los monstruos pueden soltar fragmentos de sangre
+    // Los fragmentos de BloodMoon solo los sueltan los mobs de BloodMoon: 50% de soltar 1 (y de esos, 1 de cada 5 suelta
+    // 2). Los de spawners y huevos no sueltan
     @EventHandler
     public void onBloodMoonMobKill(EntityDeathEvent event) {
         if (!isApplied) return;
-
-        if (event.getEntity().getWorld().getEnvironment() != World.Environment.NORMAL) return;
-
-        if (!(event.getEntity() instanceof org.bukkit.entity.Monster)) return;
-
-        Player killer = event.getEntity().getKiller();
-        if (killer == null) return;
-
-        BloodMoonActuator actuator = BloodMoonActuator.GetActuator(event.getEntity().getWorld());
-        if (actuator != null && actuator.isInProgress()) {
-
-            int chance = random.nextInt(100);
-            int amount = 0;
-
-            if (chance < 5) {
-                amount = 2;
-            } else if (chance < 25) {
-                amount = 1;
-            } else {
-                amount = 0;
-            }
-
-            if (amount > 0) {
-                ItemStack tokens = items.EconomyItems.createBloodFragment();
-                tokens.setAmount(amount);
-                event.getDrops().add(tokens);
-            }
+        LivingEntity mob = event.getEntity();
+        if (!BloodMoon.BloodMoonMobs.es(mob) || mob.getKiller() == null || mob.fromMobSpawner()) return;
+        CreatureSpawnEvent.SpawnReason reason = mob.getEntitySpawnReason();
+        if (reason == CreatureSpawnEvent.SpawnReason.SPAWNER || reason == CreatureSpawnEvent.SpawnReason.SPAWNER_EGG) return;
+        int amount = bloodFragments(random.nextInt(100));
+        if (amount > 0) {
+            ItemStack tokens = items.EconomyItems.createBloodFragment();
+            tokens.setAmount(amount);
+            event.getDrops().add(tokens);
         }
+    }
+
+    // Tirada de 0 a 99: menos de 10 son 2 fragmentos, de 10 a 49 es 1 y de 50 para arriba nada
+    public static int bloodFragments(int roll) {
+        return roll < 10 ? 2 : roll < 50 ? 1 : 0;
     }
 
     // El altar de la Abeja Floral necesita Bad Omen y queda con 3 horas de cooldown

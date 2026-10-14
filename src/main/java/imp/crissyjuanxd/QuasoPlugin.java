@@ -758,8 +758,8 @@ public class QuasoPlugin extends JavaPlugin implements Listener {
 
     // Los biomas nuevos del End (Bosque Prismático, Páramo Marchito y Picos Helados) se ponen con un populator en las
     // islas de afuera que se generen desde ahora; los chunks que ya existían no cambian. En el End el fuego no se
-    // esparce, la isla del dragón se decora una vez y el dragón hay que invocarlo con los cristales. Los mobs, drops y
-    // recetas del End van en la etapa "tres" (ThreeChanges)
+    // esparce, los Enderman no agarran bloques, la isla del dragón se decora una vez y el dragón hay que invocarlo con
+    // los cristales. Los mobs, drops y recetas del End van en la etapa "tres" (ThreeChanges)
     private void initEndSystem() {
         BlackShulker blackShulker = new BlackShulker(this);
         for (World world : Bukkit.getWorlds()) {
@@ -767,6 +767,8 @@ public class QuasoPlugin extends JavaPlugin implements Listener {
         }
         Bukkit.getPluginManager().registerEvents(new EndBiomes.EndIslandFix(), this);
         Bukkit.getPluginManager().registerEvents(new EndBiomes.EndFire(), this);
+        Bukkit.getPluginManager().registerEvents(new EndBiomes.EndEndermen(), this);
+        EndBiomes.EndEndermen.limpiar();
 
         EndBiomes.EndIslaPrincipal isla = new EndBiomes.EndIslaPrincipal(this);
         for (World world : Bukkit.getWorlds()) {

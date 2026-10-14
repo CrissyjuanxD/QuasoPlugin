@@ -35,6 +35,7 @@ public final class BloodMoon implements Listener {
     private final BloodMoonSky sky;
     private final BloodMoonDayClock dayClock;
     private final BloodMoonWeather weather;
+    private final BloodMoonMobs mobs;
     private BukkitTask clock;
     private boolean shuttingDown;
 
@@ -47,12 +48,15 @@ public final class BloodMoon implements Listener {
         sky = new BloodMoonSky(plugin);
         dayClock = new BloodMoonDayClock(plugin);
         weather = new BloodMoonWeather(this, sky);
+        mobs = new BloodMoonMobs(plugin);
     }
 
     public void enable() {
         Bukkit.getPluginManager().registerEvents(this, plugin);
         for (World world : Bukkit.getWorlds()) LoadWorld(world);
         weather.enable();
+        Bukkit.getPluginManager().registerEvents(mobs, plugin);
+        mobs.start();
         PluginCommand command = plugin.getCommand("bloodmoon");
         if (command != null) {
             BloodMoonCommands executor = new BloodMoonCommands(this);
@@ -181,6 +185,8 @@ public final class BloodMoon implements Listener {
     public void shutdown() {
         shuttingDown = true;
         weather.shutdown();
+        mobs.stop();
+        HandlerList.unregisterAll(mobs);
         if (clock != null) clock.cancel();
         for (BloodMoonActuator actuator : worlds.values()) { remember(actuator); actuator.shutdown(); HandlerList.unregisterAll(actuator); }
         worlds.clear();

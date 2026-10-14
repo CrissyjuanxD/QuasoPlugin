@@ -18,12 +18,12 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.concurrent.ThreadLocalRandom;
 
-// En las islas de afuera del End el juego solo spawnea endermans (y endermites en el Bosque Prismático, que pasan a
-// ser Ender Insects). Parte de esos endermans se cambian ahí mismo por un mob del End según el bioma, uno por uno,
+// En las islas de afuera del End el juego solo spawnea endermans (y unos pocos endermites en el Bosque Prismático, que
+// pasan a ser Ender Insects). Parte de esos endermans se cambian ahí mismo por un mob del End según el bioma, uno por uno,
 // así la mobcap sigue contando igual (como los ghasts del Abismo en TwoChanges)
 public class EndSpawns implements Listener {
 
-    public enum Mob { NINGUNO, ENDER_BLAZE, ENDER_CREEPER, ENDER_SPIDER, SHULKER_NEGRO, WITHER_SKELETON }
+    public enum Mob { NINGUNO, ENDER_BLAZE, ENDER_CREEPER, ENDER_SPIDER, SHULKER_NEGRO, WITHER_SKELETON, ENDER_INSECT }
 
     // La isla del dragón queda vanilla
     private static final int MAIN_ISLAND = 500;
@@ -43,12 +43,13 @@ public class EndSpawns implements Listener {
     }
 
     // Qué sale en lugar del enderman según la zona y una tirada de 0 a 99: 25% en el End de siempre y en los Picos
-    // Helados, 20% en el Bosque Prismático (que ya tiene los Ender Insects) y 41% en el Páramo, que además tiene
-    // Shulkers Negros sueltos y Wither Skeletons (los del datapack casi no salían)
+    // Helados, 30% en el Bosque Prismático (10% son Ender Insects: los endermites del bioma casi no salían) y 41% en el
+    // Páramo, que además tiene Shulkers Negros sueltos y Wither Skeletons (los del datapack casi no salían)
     public static Mob reemplazo(EndBiomeMap.Zone zone, int roll) {
         return switch (zone) {
             case VANILLA, HIELO -> roll < 9 ? Mob.ENDER_BLAZE : roll < 18 ? Mob.ENDER_SPIDER : roll < 25 ? Mob.ENDER_CREEPER : Mob.NINGUNO;
-            case PRISMATICO -> roll < 9 ? Mob.ENDER_SPIDER : roll < 15 ? Mob.ENDER_CREEPER : roll < 20 ? Mob.ENDER_BLAZE : Mob.NINGUNO;
+            case PRISMATICO -> roll < 9 ? Mob.ENDER_SPIDER : roll < 15 ? Mob.ENDER_CREEPER : roll < 20 ? Mob.ENDER_BLAZE
+                    : roll < 30 ? Mob.ENDER_INSECT : Mob.NINGUNO;
             case MARCHITO -> roll < 10 ? Mob.ENDER_BLAZE : roll < 17 ? Mob.ENDER_CREEPER : roll < 24 ? Mob.ENDER_SPIDER
                     : roll < 29 ? Mob.SHULKER_NEGRO : roll < 41 ? Mob.WITHER_SKELETON : Mob.NINGUNO;
         };
@@ -88,6 +89,7 @@ public class EndSpawns implements Listener {
                 shulker.setRemoveWhenFarAway(true);
             }
             case WITHER_SKELETON -> loc.getWorld().spawn(loc, WitherSkeleton.class);
+            case ENDER_INSECT -> EnderInsect.spawn(plugin, loc);
             default -> { }
         }
     }

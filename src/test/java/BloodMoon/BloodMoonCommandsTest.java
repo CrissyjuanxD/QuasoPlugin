@@ -31,9 +31,16 @@ class BloodMoonCommandsTest {
         when(world.getName()).thenReturn("world");
     }
     @Test void firstArgumentCompletesAllOriginalSubcommandsAndFiltersPermissions() {
-        assertEquals(5, commands.onTabComplete(player, command, "bloodmoon", new String[]{""}).size());
+        assertEquals(6, commands.onTabComplete(player, command, "bloodmoon", new String[]{""}).size());
         when(player.hasPermission("bloodmoon.start")).thenReturn(false);
         assertEquals(List.of("show", "spawnhorde", "stop"), commands.onTabComplete(player, command, "bloodmoon", new String[]{"s"}));
+    }
+    @Test void difficultyCompletesTheThreeLevels() {
+        assertEquals(List.of("dificultad"), commands.onTabComplete(player, command, "bloodmoon", new String[]{"d"}));
+        assertEquals(List.of("dificil", "facil", "normal"), commands.onTabComplete(player, command, "bloodmoon", new String[]{"dificultad", ""}));
+        assertEquals(List.of("facil"), commands.onTabComplete(player, command, "bloodmoon", new String[]{"dificultad", "f"}));
+        when(player.hasPermission("bloodmoon.dificultad")).thenReturn(false);
+        assertEquals(List.of(), commands.onTabComplete(player, command, "bloodmoon", new String[]{"dificultad", ""}));
     }
     @Test void playerNamesMatchTheOriginalPlayerSyntax() {
         Player target = mock(Player.class);

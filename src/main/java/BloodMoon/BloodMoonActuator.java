@@ -69,6 +69,10 @@ public final class BloodMoonActuator implements Listener {
         return active ? Math.max(0, remainingAtStart - Math.max(0, world.getGameTime() - startedAtGameTime)) : 0;
     }
     private ConfigReader config() { return manager.getConfigReader(world); }
+    BloodMoonDificultad dificultad() {
+        BloodMoonDificultad difficulty = config().GetDifficultyConfig();
+        return difficulty == null ? BloodMoonDificultad.NORMAL : difficulty;
+    }
 
     public void checkNight() {
         if (closed) return;
@@ -258,9 +262,14 @@ public final class BloodMoonActuator implements Listener {
         Bukkit.getPluginManager().callEvent(event);
         if (event.isCancelled()) return HordeResult.BLOCKED;
         int spawned = 0;
+        BloodMoonMobs bloodMobs = BloodMoonMobs.instancia();
         for (PlannedSpawn entry : plan) {
             Entity entity = spawnSafe(entry.location(), entry.type(), entry.size());
-            if (entity instanceof Mob mob) { mob.setTarget(target); spawned++; world.strikeLightningEffect(entry.location()); }
+            if (entity instanceof Mob mob) {
+                // Las hordas también traen mobs de BloodMoon con la misma probabilidad que el spawn natural
+                if (bloodMobs != null) bloodMobs.quizas(mob, dificultad());
+                mob.setTarget(target); spawned++; world.strikeLightningEffect(entry.location());
+            }
         }
         if (spawned == 0) return HordeResult.NO_SAFE_LOCATION;
         LocaleReader.MessageAllLocale("HordeArrived", new String[]{"$p"}, new String[]{target.getName()}, world);
@@ -365,42 +374,54 @@ public final class BloodMoonActuator implements Listener {
     @EventHandler public void onSpawner(SpawnerSpawnEvent event) {
         if (active && event.getEntity().getWorld().equals(world) && config().GetMobsFromSpawnerNoRewardConfig() && event.getEntity() instanceof LivingEntity living) AddToBlacklist(living);
     }
+    // Botín extra: los mobs de BloodMoon lo dan entero y a los normales se les quita según la dificultad (Fácil se
+    // queda con el 25% de los items y de la experiencia extra, Normal con el 65%)
     @EventHandler public void onMobDeath(EntityDeathEvent event) {
         LivingEntity entity = event.getEntity();
         if (!entity.getWorld().equals(world)) return;
         if (!active || !REWARDED.contains(entity.getType()) || blacklisted.remove(entity.getUniqueId())) return;
-        event.setDroppedExp(event.getDroppedExp() * config().GetExpMultConfig());
+        double loot = BloodMoonMobs.es(entity) ? 1 : dificultad().botin();
+        int exp = event.getDroppedExp();
+        event.setDroppedExp((int) Math.round(exp + exp * (config().GetExpMultConfig() - 1) * loot));
         if (config().GetMobDeathThunderConfig()) world.strikeLightningEffect(entity.getLocation());
         int min = Math.min(128, config().GetMinItemsDropConfig()), max = Math.min(128, Math.max(min, config().GetMaxItemsDropConfig()));
         int count = min + random.nextInt(max - min + 1);
-        for (int i = 0; i < count; i++) { ItemStack bonus = GetRandomBonus(); if (bonus != null) event.getDrops().add(bonus); }
+        for (int i = 0; i < count; i++) {
+            if (loot < 1 && random.nextDouble() >= loot) continue;
+            ItemStack bonus = GetRandomBonus(); if (bonus != null) event.getDrops().add(bonus);
+        }
     }
+    // Los mobs normales pegan y aguantan más según la dificultad (Difícil usa los multiplicadores enteros). Los mobs de
+    // BloodMoon tienen su propia vida, daño y ataques, así que no se tocan
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH) public void onDamage(EntityDamageByEntityEvent event) {
         if (!active || !event.getEntity().getWorld().equals(world)) return;
         Entity attacker = event.getDamager();
         if (attacker instanceof Projectile projectile && projectile.getShooter() instanceof LivingEntity shooter) attacker = shooter;
-        if (event.getEntity() instanceof Player player && attacker instanceof LivingEntity mob && REWARDED.contains(mob.getType())) {
+        if (event.getEntity() instanceof Player player && attacker instanceof LivingEntity mob && REWARDED.contains(mob.getType()) && !BloodMoonMobs.es(mob)) {
             if (event.getFinalDamage() <= 0 && config().GetShieldPreventEffects()) return;
-            event.setDamage(event.getDamage() * config().GetMobDamageMultConfig());
+            BloodMoonDificultad difficulty = dificultad();
+            event.setDamage(event.getDamage() * difficulty.multiplicador(config().GetMobDamageMultConfig()));
             if (WorldGuardSupport.canDamage(player.getLocation())) {
                 String name = mob.getType().name();
-                for (String spec : config().GetMobEffectConfig(name)) applyEffect(player, spec);
+                for (String spec : config().GetMobEffectConfig(name)) applyEffect(player, spec, difficulty.fuerza());
             }
             if (config().GetPlayerDamageSoundConfig()) player.playSound(player.getLocation(), Sound.AMBIENT_CAVE, 1f, 1.5f);
             if (config().GetPlayerHitParticleConfig()) world.spawnParticle(Particle.FLAME, player.getLocation(), 60);
-        } else if (attacker instanceof Player && event.getEntity() instanceof LivingEntity mob && REWARDED.contains(mob.getType())) {
-            event.setDamage(Math.ceil(event.getDamage() / config().GetMobHealthMultConfig()));
+        } else if (attacker instanceof Player && event.getEntity() instanceof LivingEntity mob && REWARDED.contains(mob.getType()) && !BloodMoonMobs.es(mob)) {
+            event.setDamage(Math.ceil(event.getDamage() / dificultad().multiplicador(config().GetMobHealthMultConfig())));
             if (config().GetMobHitParticleConfig()) world.spawnParticle(Particle.ENCHANTED_HIT, mob.getLocation(), 60);
         }
     }
-    private void applyEffect(Player player, String spec) {
-        if (spec.equals("LIGHTNING")) { world.strikeLightning(player.getLocation()); return; }
+    // Con menos fuerza los efectos duran menos y el rayo cae solo a veces (en Fácil 1 de cada 4)
+    private void applyEffect(Player player, String spec, double strength) {
+        if (spec.equals("LIGHTNING")) { if (strength >= 1 || random.nextDouble() < strength) world.strikeLightning(player.getLocation()); return; }
         try {
             String[] parts = spec.split(",");
             String name = parts[0].toLowerCase(Locale.ROOT);
             name = switch (name) { case "slow" -> "slowness"; case "increase_damage" -> "strength"; default -> name; };
             PotionEffectType type = PotionEffectType.getByKey(NamespacedKey.minecraft(name));
-            if (type != null) player.addPotionEffect(new PotionEffect(type, Math.max(1, (int) (Double.parseDouble(parts[1]) * 20)), Math.max(0, Integer.parseInt(parts[2]))));
+            int ticks = Math.max(20, (int) (Double.parseDouble(parts[1]) * 20 * strength));
+            if (type != null) player.addPotionEffect(new PotionEffect(type, ticks, Math.max(0, Integer.parseInt(parts[2]))));
         } catch (RuntimeException ex) { manager.getPlugin().getLogger().warning("Efecto de BloodMoon inválido: " + spec); }
     }
 }

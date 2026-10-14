@@ -334,6 +334,7 @@ class BloodMoonActuatorTest {
         }
     }
     @Test void regularBloodMoonMobsKeepTheirDamageAndResistanceMultipliers() {
+        when(config.GetDifficultyConfig()).thenReturn(BloodMoonDificultad.DIFICIL);
         when(config.GetMobDamageMultConfig()).thenReturn(2);
         when(config.GetMobHealthMultConfig()).thenReturn(3);
         Zombie zombie = mock(Zombie.class);
@@ -356,6 +357,106 @@ class BloodMoonActuatorTest {
             actuator.onDamage(defend);
             verify(defend).setDamage(3);
         }
+    }
+    // En Fácil los mobs normales pegan x1.25 y aguantan x1.5; en Normal x1.6 y x2.2
+    @Test void easierNightsMakeRegularMobsWeaker() {
+        when(config.GetMobDamageMultConfig()).thenReturn(2);
+        when(config.GetMobHealthMultConfig()).thenReturn(3);
+        Zombie zombie = mock(Zombie.class);
+        when(zombie.getType()).thenReturn(EntityType.ZOMBIE);
+        when(zombie.getWorld()).thenReturn(world);
+        try (var singleton = mockStatic(BloodMoon.class)) {
+            singleton.when(BloodMoon::GetInstance).thenReturn(manager);
+            actuator.StartBloodMoon();
+            when(config.GetDifficultyConfig()).thenReturn(BloodMoonDificultad.FACIL);
+            var attack = hit(zombie, player, 8.0);
+            actuator.onDamage(attack);
+            verify(attack).setDamage(10.0);
+            var defend = hit(player, zombie, 9.0);
+            actuator.onDamage(defend);
+            verify(defend).setDamage(6.0);
+            when(config.GetDifficultyConfig()).thenReturn(BloodMoonDificultad.NORMAL);
+            var normal = hit(zombie, player, 10.0);
+            actuator.onDamage(normal);
+            verify(normal).setDamage(16.0);
+        }
+    }
+    // Los mobs de BloodMoon tienen su propia fuerza: la BloodMoon no les sube el daño ni el aguante
+    @Test void bloodMoonMobsAreNotMultiplied() {
+        when(config.GetDifficultyConfig()).thenReturn(BloodMoonDificultad.DIFICIL);
+        when(config.GetMobDamageMultConfig()).thenReturn(2);
+        when(config.GetMobHealthMultConfig()).thenReturn(3);
+        Zombie zombie = mock(Zombie.class);
+        when(zombie.getType()).thenReturn(EntityType.ZOMBIE);
+        when(zombie.getWorld()).thenReturn(world);
+        var data = mock(org.bukkit.persistence.PersistentDataContainer.class);
+        when(zombie.getPersistentDataContainer()).thenReturn(data);
+        when(data.get(BloodMoonMobs.KEY, org.bukkit.persistence.PersistentDataType.STRING)).thenReturn("zombiebloodmoon");
+        try (var singleton = mockStatic(BloodMoon.class)) {
+            singleton.when(BloodMoon::GetInstance).thenReturn(manager);
+            actuator.StartBloodMoon();
+            var attack = hit(zombie, player, 6.0);
+            actuator.onDamage(attack);
+            verify(attack, never()).setDamage(anyDouble());
+            var defend = hit(player, zombie, 9.0);
+            actuator.onDamage(defend);
+            verify(defend, never()).setDamage(anyDouble());
+        }
+    }
+    // Botín extra: Difícil da todo (x4 de experiencia y 4 items), Fácil se queda con un cuarto y Normal con el 65%
+    @Test void lootIsCutOnEasierNightsButBloodMoonMobsGiveItAll() {
+        when(config.GetExpMultConfig()).thenReturn(4);
+        when(config.GetMinItemsDropConfig()).thenReturn(4);
+        when(config.GetMaxItemsDropConfig()).thenReturn(4);
+        // Los items de verdad necesitan el server: cada bonus es un item de mentira
+        actuator = spy(actuator);
+        doAnswer(call -> mock(org.bukkit.inventory.ItemStack.class)).when(actuator).GetRandomBonus();
+        Zombie zombie = mock(Zombie.class);
+        when(zombie.getType()).thenReturn(EntityType.ZOMBIE);
+        when(zombie.getWorld()).thenReturn(world);
+        when(zombie.getUniqueId()).thenReturn(UUID.randomUUID());
+        try (var singleton = mockStatic(BloodMoon.class)) {
+            singleton.when(BloodMoon::GetInstance).thenReturn(manager);
+            actuator.StartBloodMoon();
+            when(config.GetDifficultyConfig()).thenReturn(BloodMoonDificultad.DIFICIL);
+            assertEquals(20, death(zombie, 5, new ArrayList<>()));
+            when(config.GetDifficultyConfig()).thenReturn(BloodMoonDificultad.NORMAL);
+            assertEquals(15, death(zombie, 5, new ArrayList<>()));
+            when(config.GetDifficultyConfig()).thenReturn(BloodMoonDificultad.FACIL);
+            assertEquals(9, death(zombie, 5, new ArrayList<>()));
+            int items = 0;
+            for (int i = 0; i < 400; i++) {
+                List<org.bukkit.inventory.ItemStack> drops = new ArrayList<>();
+                death(zombie, 0, drops);
+                items += drops.size();
+            }
+            // 1600 tiradas al 25%: tienen que quedar cerca de 400
+            assertTrue(items > 300 && items < 500, "items en Fácil: " + items);
+            var data = mock(org.bukkit.persistence.PersistentDataContainer.class);
+            when(zombie.getPersistentDataContainer()).thenReturn(data);
+            when(data.get(BloodMoonMobs.KEY, org.bukkit.persistence.PersistentDataType.STRING)).thenReturn("zombiebloodmoon");
+            List<org.bukkit.inventory.ItemStack> full = new ArrayList<>();
+            assertEquals(20, death(zombie, 5, full));
+            assertEquals(4, full.size());
+        }
+    }
+    private EntityDamageByEntityEvent hit(Entity from, Entity to, double damage) {
+        var event = mock(EntityDamageByEntityEvent.class);
+        when(event.getDamager()).thenReturn(from);
+        when(event.getEntity()).thenReturn(to);
+        when(event.getDamage()).thenReturn(damage);
+        when(event.getFinalDamage()).thenReturn(damage);
+        return event;
+    }
+    private int death(Zombie zombie, int exp, List<org.bukkit.inventory.ItemStack> drops) {
+        var event = mock(org.bukkit.event.entity.EntityDeathEvent.class);
+        when(event.getEntity()).thenReturn(zombie);
+        when(event.getDroppedExp()).thenReturn(exp);
+        when(event.getDrops()).thenReturn(drops);
+        int[] result = {-1};
+        doAnswer(call -> { result[0] = call.getArgument(0); return null; }).when(event).setDroppedExp(anyInt());
+        actuator.onMobDeath(event);
+        return result[0];
     }
     @Test void playerDeathDoesNotClearInventoryOrResetExperience() {
         try (var singleton = mockStatic(BloodMoon.class)) {

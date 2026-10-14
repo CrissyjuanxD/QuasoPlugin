@@ -113,4 +113,26 @@ public final class ConfigReader {
     public int GetMaxItemsDropConfig() { return Math.max(0, config.getInt("ItemDropsMaximum", 4)); }
     public int GetMobDamageMultConfig() { return Math.max(0, config.getInt("MobDamageMultiplicator", 2)); }
     public int GetMobHealthMultConfig() { return Math.max(1, config.getInt("MobHealthMultiplicator", 3)); }
+
+    // Si el valor está mal escrito se juega en Normal y se avisa en la consola
+    public BloodMoonDificultad GetDifficultyConfig() {
+        String value = config.getString("Dificultad", "normal");
+        BloodMoonDificultad difficulty = BloodMoonDificultad.de(value);
+        if (difficulty != null) return difficulty;
+        plugin.getLogger().warning("Dificultad de BloodMoon inválida en bloodmoon/" + file.getParentFile().getName()
+                + "/config.yml: " + value + " (usa facil, normal o dificil). Se usa normal.");
+        return BloodMoonDificultad.NORMAL;
+    }
+
+    // La cambia el comando /bloodmoon dificultad y queda guardada en el config del mundo
+    public boolean SetDifficultyConfig(BloodMoonDificultad difficulty) {
+        config.set("Dificultad", difficulty.id());
+        try {
+            config.save(file);
+            return true;
+        } catch (IOException ex) {
+            plugin.getLogger().warning("No se pudo guardar la dificultad de BloodMoon: " + ex.getMessage());
+            return false;
+        }
+    }
 }

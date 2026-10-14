@@ -1,10 +1,18 @@
 # Armadura Warden · sculk y biomas
 
-**Rama 26.2 · Revisión #62.** Rediseño basado en **Wardenite Armor V1.5 (1.21 Ver.)**, el pack que aportaste, acreditado a **ShadowsCrow** en su `pack.mcmeta`.
+**Rama 26.2 · Revisión #72 (cobertura).** Rediseño basado en **Wardenite Armor V1.5 (1.21 Ver.)**, el pack que aportaste, acreditado a **ShadowsCrow** en su `pack.mcmeta`.
 
-[Descargar armadura, iconos y mejoras](armadura-warden.zip) · [Pack completo](items-pixelart.zip)
+[Descargar solo modelos y texturas equipadas](armadura-warden-modelos.zip) · [Armadura con sus iconos y mejoras](armadura-warden.zip) · [Pack completo](items-pixelart.zip)
 
 ![Armadura normal y alada: caras UV reales](vista_armadura.png)
+
+## Cobertura revisada en #72
+
+Se rellenaron los huecos del torso, espalda, hombros, brazos y piernas con una base sculk oscura. El casco cubre los laterales y la mandíbula, dejando una abertura pequeña para los ojos. Las botas cubren de forma continua su parte inferior; el pantalón completa el resto de las piernas.
+
+El peto Warden Alado usa la misma cobertura del peto normal. Las alas conservan su textura anterior. **Los iconos de inventario y las mejoras no se modificaron.**
+
+El ZIP **armadura-warden-modelos.zip** contiene únicamente las definiciones de equipo y sus cuatro texturas, junto con esta guía y las vistas. Es el recomendado para aplicar esta corrección sin reemplazar tus iconos.
 
 ## Una base, cuatro biomas
 
@@ -24,7 +32,7 @@ Los **cinco iconos de armadura** y las **cuatro mejoras** usan los mismos colore
 
 ## Capas de la armadura
 
-Los atlas son PNG RGBA **64×32**, sin suavizado y con transparencia binaria. Se conserva el mapa UV y la máscara de las capas de Wardenite. Las alas mantienen la máscara UV de las élitras vanilla. Los huecos de la referencia forman parte del diseño y permiten ver la skin o la capa interior.
+Los atlas son PNG RGBA **64×32**, sin suavizado y con transparencia binaria. Se conserva el mapa UV de Wardenite y todos sus píxeles originalmente pintados. Se amplía la zona opaca de los atlas para cerrar los huecos entre los adornos y cubrir las caras de las piezas. Las alas mantienen su máscara anterior de élitras vanilla.
 
 | Archivo bajo `assets/minecraft/` | Uso |
 | --- | --- |
@@ -41,7 +49,7 @@ Es una armadura **2D sobre la geometría vanilla**. Una textura no añade antena
 
 ## Instalar
 
-1. Descomprime **armadura-warden.zip** y fusiona **assets** con tu resource pack, reemplazando las versiones anteriores. Este ZIP incluye los nueve iconos, sus JSON y las texturas de equipo; el ZIP completo contiene lo mismo.
+1. Descomprime **armadura-warden-modelos.zip** y fusiona **assets** con tu resource pack, reemplazando las versiones anteriores. Ese ZIP no contiene iconos de inventario. Los ZIP de armadura completa y del pack general también llevan la cobertura corregida.
 2. Conserva el `pack.mcmeta` de tu pack de 26.2. Los archivos se llaman `warden` y `warden_alado`: no reemplazan la armadura de netherita vanilla.
 3. Recarga con **F3 + T**. Si distribuyes el pack desde el servidor, actualiza su ZIP y hash.
 4. Usa QuasoPlugin **#60 o posterior**, que ya enlaza las piezas con los modelos de equipo. No hace falta cambiar comandos ni recrear los items por este rediseño.
@@ -50,8 +58,8 @@ Se mantienen `casco_warden`, `peto_warden`, `pantalon_warden`, `bota_warden`, `p
 
 ## Procedencia y comprobaciones
 
-Las cuatro piezas normales adaptan las texturas e iconos de Wardenite de ShadowsCrow proporcionados por el usuario. El casco conserva sus píxeles originales; las otras piezas mantienen sus formas y grupos de sombreado con la paleta del bioma. Las alas, el icono alado y las nuevas tablillas de mejora se diseñaron para acompañar ese conjunto.
+Las cuatro piezas normales adaptan las texturas e iconos de Wardenite de ShadowsCrow proporcionados por el usuario. Se conservan todos los píxeles opacos de esas texturas; la revisión #72 añade una base oscura en sus huecos, manteniendo la paleta por bioma. Las alas, el icono alado y las nuevas tablillas de mejora se diseñaron para acompañar ese conjunto.
 
-Se verificaron dimensiones, transparencia binaria, máscaras UV, simetría de las mejoras, nombres y referencias de los JSON, y contenido de los dos ZIP. Los demás recursos del pack permanecen intactos. Esta revisión solo cambia recursos y documentación; no modifica Java.
+Se verificaron dimensiones 64×32, transparencia binaria, cobertura de las caras UV, conservación de cada píxel originalmente opaco, referencias JSON y contenido de los ZIP. Se comprobó que los iconos y la textura de las alas son idénticos byte a byte a los anteriores. Los demás recursos del pack permanecen intactos. Esta revisión solo cambia recursos y documentación; no modifica Java.
 
 Las vistas son montajes de las caras UV reales sobre un maniquí, no capturas del juego. Queda pendiente comprobar el aspecto en un cliente de Minecraft.

@@ -2587,7 +2587,8 @@
         64,
         32
       ],
-      "revision_62": "Base Wardenite de ShadowsCrow adaptada por biomas; alas sculk con hueso y acentos morados."
+      "revision_62": "Base Wardenite de ShadowsCrow adaptada por biomas; alas sculk con hueso y acentos morados.",
+      "revision_72": "Cobertura sculk continua en las caras de la armadura; abertura pequeña para los ojos. Iconos, alas y píxeles originalmente pintados conservados."
     },
     {
       "asset_id": "minecraft:warden_alado",
@@ -2603,7 +2604,8 @@
         64,
         32
       ],
-      "revision_62": "Base Wardenite de ShadowsCrow adaptada por biomas; alas sculk con hueso y acentos morados."
+      "revision_62": "Base Wardenite de ShadowsCrow adaptada por biomas; alas sculk con hueso y acentos morados.",
+      "revision_72": "Cobertura sculk continua en las caras de la armadura; abertura pequeña para los ojos. Iconos, alas y píxeles originalmente pintados conservados."
     }
   ]
 }

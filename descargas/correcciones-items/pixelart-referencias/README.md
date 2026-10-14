@@ -1,5 +1,8 @@
 # Items de QuasoPlugin · pixel art 16×16
 
+**Armadura Warden #72:** [descargar solo los modelos corregidos](armadura-warden-modelos.zip). Se cerraron los huecos de la armadura normal y del peto alado; los iconos se conservan. [Guía y vista actual](armadura-warden.md).
+
+
 **Rama 26.2 · Lote completo a partir de tus texturas y referencias.**
 
 Se completaron **143 identificadores que no tenían textura**: 82 items y materiales, 53 cartas —incluido el reverso— y ocho elementos de interfaz. Con las 131 texturas anteriores conservadas, esta carpeta cubre **274 modelos de item personalizados** que usa el plugin.

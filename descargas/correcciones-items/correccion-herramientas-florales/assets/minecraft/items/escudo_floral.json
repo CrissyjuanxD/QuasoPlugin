@@ -1,0 +1,14 @@
+{
+  "model": {
+    "type": "minecraft:condition",
+    "property": "minecraft:using_item",
+    "on_false": {
+      "type": "minecraft:model",
+      "model": "minecraft:item/custom/escudo_floral"
+    },
+    "on_true": {
+      "type": "minecraft:model",
+      "model": "minecraft:item/custom/escudo_floral_bloqueando"
+    }
+  }
+}

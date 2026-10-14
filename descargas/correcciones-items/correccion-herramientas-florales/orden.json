@@ -22,5 +22,29 @@
     "archivo": "04_pico_floral.png",
     "modelo": "minecraft:pico_floral",
     "referencia": "twisted_pickaxe_0.png"
+  },
+  {
+    "orden": 5,
+    "archivo": "05_lanza_floral.png",
+    "modelo": "minecraft:lanza_floral",
+    "referencia": "lanza_celestita.png"
+  },
+  {
+    "orden": 6,
+    "archivo": "06_azada_floral.png",
+    "modelo": "minecraft:azada_floral",
+    "referencia": "twisted_hoe_0.png"
+  },
+  {
+    "orden": 7,
+    "archivo": "07_libro_veta.png",
+    "modelo": "minecraft:libro_veta",
+    "referencia": "libro_fervor_minero.png"
+  },
+  {
+    "orden": 8,
+    "archivo": "08_escudo_floral.png",
+    "modelo": "minecraft:escudo_floral",
+    "referencia": "escudo_floral.png"
   }
 ]

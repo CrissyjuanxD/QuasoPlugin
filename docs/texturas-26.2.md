@@ -109,3 +109,11 @@ Los minerales y materiales van al final: `cristal_celestita`, `lingote_celestita
 Es 16x16. La posición del escudo en la mano no se pudo ver en un cliente: si queda corrida se ajustan los `display`
 de los dos modelos. Faltan las texturas de la Lanza Floral (`lanza_floral`), la Azada Floral (`azada_floral`) y el
 libro de Veta (`libro_veta`): se hacen aparte, con el item model `minecraft:<id>` como el resto.
+
+## Complementos florales (Version #79)
+
+Se completan `lanza_floral`, `azada_floral`, `libro_veta` y `escudo_floral`. [Descarga y vista previa](../descargas/correcciones-items/correccion-herramientas-florales/README.md). El ZIP incluye también las cuatro herramientas recoloreadas en #76.
+
+Los cuatro iconos son 16×16. La lanza tiene una textura adicional de 32×32 para `item/spear_in_hand`, seleccionada únicamente al equiparla; el escudo conserva los modelos normal y de bloqueo. La azada mantiene exactamente la silueta de la referencia del usuario. El libro de Veta comparte el estilo de los otros libros, con tapa gris y una veta cian.
+
+Los nuevos recursos están también en `resourcepack/assets`. Instala este complemento después de los ZIP florales anteriores. No hay cambios de Java ni de atributos.

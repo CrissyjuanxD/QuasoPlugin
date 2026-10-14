@@ -168,3 +168,43 @@ La prueba `PluginArtifactTest` comprueba que las carpetas compiladas no colision
 por mayúsculas y carga la clase nativa desde un JAR construido simulando las
 rutas de Windows. Esta prueba reprodujo el `ClassNotFoundException` original
 antes de separar las rutas de clases y recursos.
+
+## Dificultad y mobs de BloodMoon (Version #87)
+
+Cada mundo tiene `Dificultad: facil | normal | dificil` en `bloodmoon/<mundo>/config.yml` (por defecto `normal`). Se
+cambia con `/bloodmoon dificultad <facil|normal|dificil>` (permiso `bloodmoon.dificultad`, de operador) y sin argumento
+dice la que tiene. `/bloodmoon show` también la muestra.
+
+| | Fácil | Normal | Difícil |
+|---|---|---|---|
+| Mobs de BloodMoon (spawn natural y hordas) | 5% | 25% | 50% |
+| Daño de los mobs normales (con x2 en el config) | x1.25 | x1.6 | x2 |
+| Aguante de los mobs normales (con x3 en el config) | x1.5 | x2.2 | x3 |
+| Efectos al pegar (Wither, Lentitud...) | 25% de la duración | 60% | completos |
+| Rayo del creeper | 1 de cada 4 | 60% | siempre |
+| Botín extra (items y experiencia extra) | 25% (se quita el 75%) | 65% (se quita el 35%) | completo |
+
+Difícil es la BloodMoon de antes. Los multiplicadores del config siguen siendo los de Difícil; las otras dificultades
+se quedan con una parte de lo que suman.
+
+Los 4 mobs de BloodMoon salen de zombies adultos, esqueletos, arañas y creepers vanilla (no de los florales del cambio
+extra). Todos hacen **Sangrado**: 1 de daño mágico por segundo (la armadura no lo para), con gotas rojas. No reciben los
+multiplicadores de la BloodMoon porque tienen su propia vida y daño, y dan el botín extra completo. Son los únicos que
+sueltan fragmentos de BloodMoon: 50% (40% uno y 10% dos), con el cambio uno activado y si los mata un jugador (los de
+spawner o huevo no sueltan). Se invocan con `/spawnqp`.
+
+| Mob | Vida | Lo que hace |
+|---|---|---|
+| Zombie BloodMoon (`zombiebloodmoon`) | 36 | 6 de daño, 4 de armadura y más rápido. Su mordida da Sangrado 4 s y lo cura 3. Con menos de 40% de vida ruge y entra en frenesí (Velocidad II y Fuerza I). |
+| Esqueleto BloodMoon (`esqueletobloodmoon`) | 30 | Sus flechas dan Sangrado 4 s. Cada 7 segundos tira 3 flechas en abanico. |
+| Araña BloodMoon (`aranabloodmoon`) | 30 | Más grande y rápida, 5 de daño. Cada 5 segundos salta hacia el jugador: si le cae encima le pega 5, le da Sangrado y Lentitud. Su mordida da Sangrado 3 s. |
+| Creeper BloodMoon (`creeperbloodmoon`) | 28 | Rápido y con mecha corta (22 ticks). Explota más grande (radio 4) pero sin romper bloques: Sangrado 6 s y Debilidad a 6 bloques, y deja un charco rojo que da Lentitud. |
+
+Probado en el servidor de prueba:
+
+- 400 spawns naturales por dificultad: salieron de BloodMoon el 3.3% en Fácil, el 30.6% en Normal y el 51.8% en Difícil.
+- 200 zombies normales por dificultad: 0.50 items extra por mob en Fácil, 1.20 en Normal y 2.04 en Difícil. La
+  experiencia promedio fue 9.6, 15.5 y 21.7. Ninguno soltó fragmentos.
+- 400 mobs de BloodMoon: 233 fragmentos (se esperaban 240) y 2.17 items extra por mob.
+- Los ataques de los 4: Sangrado de 1 por segundo, curación y frenesí del zombie, ráfagas de 3 flechas, mordidas de la
+  araña y la explosión del creeper sin romper ningún bloque del piso.

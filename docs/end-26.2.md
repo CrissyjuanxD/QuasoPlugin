@@ -194,3 +194,21 @@ herramientas que ya existían conservan sus atributos viejos.
   | Poder VI | 6 | 17 |
 
   Es la misma cuenta que usa el Arco de Sculk contra los Endermen (`ArcoSculk.bonoPoder`).
+
+## Ajustes de la Version #87
+
+- **FPS en el Bosque Prismático**: la causa eran los Enderman. Agarraban el pasto, la tierra y las flores del bosque, y
+  un Enderman con un bloque en la mano no se va nunca ni cuenta para el límite de mobs. En el servidor de prueba, con
+  un jugador quieto en el bosque, a los 5 minutos había 191 Enderman (119 con un bloque) y seguían subiendo; en el End
+  normal se quedaban en 70. Cada Enderman tira partículas moradas todo el tiempo en el cliente. Los árboles y las
+  partículas del bioma pesan poco (unas 2350 caras visibles y 71 bloques de vidrio por chunk), así que no se tocaron.
+  - Ahora en el End los Enderman no agarran ni ponen bloques (`EndEndermen`, prendido siempre, no depende de la etapa).
+  - Los que ya tenían un bloque lo pierden al cargarse su chunk, así vuelven a contar para el límite y se van como
+    cualquier mob. El bloque que llevaban se pierde.
+  - Con el arreglo, el mismo lugar se queda entre 61 y 71 Enderman, ninguno con bloque.
+- **Ender Insects en el Bosque Prismático**: los endermites del bioma casi no salían (11 contra 529 Enderman en 4
+  minutos). Ahora el 10% de los Enderman que salen en el bosque se cambia por un Ender Insect (`EndSpawns`, etapa tres).
+  En la prueba quedaban entre 16 y 30 Ender Insects en la zona (con 15%; se bajó a 10%).
+- El Ender Insect sí tiene sus ataques con `/changes tres` activado: en la prueba persigue al jugador, muerde (5 de
+  daño en Fácil, 8 en Normal) y cada 10 segundos la esfera da Veneno II y Ceguera. Sin la etapa tres, los de
+  `/spawnqp` no atacan (igual que los demás mobs del End), y a jugadores en creativo no los ataca ningún mob.

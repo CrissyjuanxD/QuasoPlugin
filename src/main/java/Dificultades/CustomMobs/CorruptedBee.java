@@ -153,7 +153,7 @@ public class CorruptedBee implements Listener {
 
         Objects.requireNonNull(bee.getAttribute(Attribute.MAX_HEALTH)).setBaseValue(15.0);
         bee.setHealth(15.0);
-        Objects.requireNonNull(bee.getAttribute(Attribute.SCALE)).setBaseValue(0.6);
+        Objects.requireNonNull(bee.getAttribute(Attribute.SCALE)).setBaseValue(0.8);
 
         Objects.requireNonNull(bee.getAttribute(Attribute.ATTACK_DAMAGE)).setBaseValue(8.0);
 

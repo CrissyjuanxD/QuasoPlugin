@@ -56,10 +56,10 @@ public class Bombita implements Listener {
         creeper.setCustomName(net.md_5.bungee.api.ChatColor.of("#ef94b6") + "§lCreeper Floral");
         creeper.setCustomNameVisible(false);
         creeper.getAttribute(Attribute.FOLLOW_RANGE).setBaseValue(32);
-        creeper.setExplosionRadius(2);
+        creeper.setExplosionRadius(3);
         creeper.setMaxFuseTicks(5);
         creeper.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, PotionEffect.INFINITE_DURATION, 1));
-        creeper.getAttribute(Attribute.SCALE).setBaseValue(0.5);
+        creeper.getAttribute(Attribute.SCALE).setBaseValue(1);
         creeper.getPersistentDataContainer().set(bombitaKey, PersistentDataType.BYTE, (byte) 1);
     }
 

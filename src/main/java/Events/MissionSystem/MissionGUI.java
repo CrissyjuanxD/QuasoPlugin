@@ -27,8 +27,6 @@ import java.util.Comparator;
 import java.util.List;
 
 public class MissionGUI implements Listener {
-    // El fondo del menú es una textura del resource pack que se dibuja con estos caracteres del título
-    private static final String TITLE = "㈁㈁" + org.bukkit.ChatColor.WHITE + "㈂";
     private static final int PANEL_SLOTS = 18;
     private static final int PREV_SLOT = 45;
     private static final int NEXT_SLOT = 53;
@@ -108,10 +106,8 @@ public class MissionGUI implements Listener {
     public void openMissionGUI(Player player, int page) {
         int pages = maxPages();
         MissionMenu menu = new MissionMenu(page);
-        Inventory gui = Bukkit.createInventory(menu, 54, TITLE);
-        menu.inventory = gui;
 
-        // Busca en qué sección cae la página
+        // Busca en qué sección cae la página ANTES de crear el inventario
         TipoMision tipo = TipoMision.NORMAL;
         List<Integer> order = List.of();
         int first = 0;
@@ -127,6 +123,16 @@ public class MissionGUI implements Listener {
             }
             before += sectionPages;
         }
+
+        // Asigna el unicode correspondiente a la textura de cada sección
+        String dynamicTitle = switch (tipo) {
+            case NORMAL -> "㈁㈁" + org.bukkit.ChatColor.WHITE + "㈂";  // \u3202
+            case EXTRA -> "㈁㈁" + org.bukkit.ChatColor.WHITE + "㈃";   // \u3203
+            case TRABAJO -> "㈁㈁" + org.bukkit.ChatColor.WHITE + "㈄"; // \u3204
+        };
+
+        Inventory gui = Bukkit.createInventory(menu, 54, dynamicTitle);
+        menu.inventory = gui;
 
         // Las dos primeras filas (el panel de la textura) y los slots sin misión llevan items invisibles
         ItemStack relleno = Invisible.relleno();
@@ -147,7 +153,6 @@ public class MissionGUI implements Listener {
 
         player.openInventory(gui);
     }
-
     private ItemStack createArrow(String name, int page, int pages, TipoMision tipo) {
         ItemStack item = new ItemStack(Material.SPECTRAL_ARROW);
         ItemMeta meta = item.getItemMeta();

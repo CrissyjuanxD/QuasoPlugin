@@ -29,7 +29,7 @@ final class TrabajosGUI implements Listener {
 
     private static final int SLOT_GUIA = 22;
     // El fondo es una textura del resource pack que se dibuja con estos caracteres del título (igual que misiones)
-    static final String TITULO = "㈁㈁" + ChatColor.WHITE + "㈄";
+    static final String TITULO = "\u3201\u3201" + ChatColor.WHITE + "\u3207";
 
     private final JavaPlugin plugin;
     private final TrabajosManager manager;

@@ -262,11 +262,11 @@ commands:
     permission: viciont_hardcore3.command.pesca
     permission-message: No tienes permiso para usar este comando.
   tumba:
-    description: Ver la lista de tus tumbas activas
-    usage: /tumba
+    description: Abre tus tumbas para marcarlas en la barra de arriba
+    usage: /tumba [marcar #id|#id]
   muertes:
-    description: Lista tus tumbas con el mundo, las coordenadas y cuánto hace que moriste
-    usage: /muertes [#id]
+    description: Abre tus tumbas para marcarlas en la barra de arriba (8 minutos) o desmarcarlas
+    usage: /muertes [marcar #id|#id]
   tumbas:
     description: Comando de administrador de tumbas
     usage: /tumbas <list|remove|place|reload>

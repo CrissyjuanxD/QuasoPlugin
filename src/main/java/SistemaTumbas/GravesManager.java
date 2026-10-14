@@ -213,7 +213,7 @@ public class GravesManager implements Listener {
 
     // La tumba va en el bloque de los pies del jugador. Si murió en el vacío del End va al último suelo que pisó, y en
     // otro vacío 5 bloques arriba del fondo del mundo
-    public void createGrave(Player player, List<ItemStack> items) {
+    public Grave createGrave(Player player, List<ItemStack> items) {
         UUID id = UUID.randomUUID();
         Location blockLoc = feet(player.getLocation());
         if (blockLoc.getY() < blockLoc.getWorld().getMinHeight()) {
@@ -230,6 +230,7 @@ public class GravesManager implements Listener {
         saveData();
 
         spawnGraveVisuals(id, player.getName(), blockLoc, creationTime);
+        return grave;
     }
 
     private static Location feet(Location loc) {

@@ -14,12 +14,14 @@ import java.util.UUID;
 
 public class GravesListener implements Listener {
     private final GravesManager manager;
+    private final MarcadorTumba marcador;
 
-    public GravesListener(GravesManager manager) {
+    public GravesListener(GravesManager manager, MarcadorTumba marcador) {
         this.manager = manager;
+        this.marcador = marcador;
     }
 
-    // Si no tiene keepInventory los drops van a una tumba en vez de caer al suelo
+    // Si no tiene keepInventory los drops van a una tumba en vez de caer al suelo, y la tumba nueva queda marcada en la barra
     @EventHandler
     public void onDeath(PlayerDeathEvent event) {
         Player player = event.getEntity();
@@ -31,7 +33,7 @@ public class GravesListener implements Listener {
             List<ItemStack> dropsToSave = new ArrayList<>(event.getDrops());
             event.getDrops().clear();
 
-            manager.createGrave(player, dropsToSave);
+            marcador.marcar(player, manager.createGrave(player, dropsToSave));
             player.sendMessage(TumbaMessages.error("Has muerto. Tus cosas quedaron en una tumba en X:" + player.getLocation().getBlockX()
                     + " Y:" + player.getLocation().getBlockY() + " Z:" + player.getLocation().getBlockZ() + ". " + TumbaMessages.accent("/muertes")));
         }

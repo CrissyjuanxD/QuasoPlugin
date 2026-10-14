@@ -273,6 +273,16 @@ public class Homes implements CommandExecutor, TabCompleter, Listener {
     }
 
     int clientProtocol(Player player) {
+        return protocolo(plugin, player);
+    }
+
+    // Si el cliente del jugador ya tiene diálogos (1.21.6+); si no, se usa el chat
+    public static boolean soportaDialogos(Plugin plugin, Player player) {
+        int protocol = protocolo(plugin, player);
+        return protocol >= DIALOG_PROTOCOL && protocol < (1 << 30);
+    }
+
+    static int protocolo(Plugin plugin, Player player) {
         Plugin via = plugin.getServer().getPluginManager().getPlugin("ViaVersion");
         if (via != null && via.isEnabled()) {
             try {

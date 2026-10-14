@@ -73,3 +73,28 @@ en coordenadas negativas cae en el bloque de al lado (-5 daba -5,5). Ahora la
 raíz va en la esquina con decimales (`-37.0 127 -12.0`) y el cuadro en el centro
 (`-36.5 127 -11.5`). Se probó en Paper 26.2 con una tumba en coordenadas
 negativas. Las tumbas que ya existen se arreglan solas al reiniciar.
+
+## Barra hacia la tumba y diálogo de /muertes (Version #89)
+
+Al morir con cosas en el inventario, la tumba nueva queda marcada y aparece una
+barra blanca arriba de la pantalla: `Última Muerte: 500mt ↗`. La flecha gira
+según hacia dónde mira el jugador (↑ adelante, ↓ atrás, ← → a los lados y las
+cuatro diagonales). Al llegar dice `aquí`, y si la tumba está en otra dimensión
+dice `en el Nether`, `en el End` o `en el Overworld`. La barra se va vaciando y
+dura 8 minutos; después la tumba queda desmarcada y se avisa en el chat. También
+se quita sola cuando la tumba se vacía o expira, y vuelve al entrar al server si
+la marca sigue.
+
+`/muertes` (y `/tumba`) abre un diálogo con un botón por tumba (las 10 más
+nuevas) que dice **Marcar** o **Desmarcar**, con el mundo y los metros. Al pasar
+el mouse se ven las coordenadas, el tiempo y si está privada o abierta. Con
+`muertes-teleport: true` al lado va un botón **Ir**. Se marca una sola tumba a la
+vez: si se marca otra que no es la última, la barra dice la hora que tiene
+escrita su lápida (`Muerte de las 20:49`). Los clientes sin diálogos (antes de la
+1.21.6) ven la lista en el chat con `[Marcar]` o `[Desmarcar]`. Por comando:
+`/muertes marcar [#id]` (sin id, la última).
+
+Se probó en Paper 26.2 con un jugador de prueba: la barra salió al morir, las 8
+flechas apuntaron bien en los 8 ángulos, se desmarcó y marcó otra vez, cambió a
+`Muerte de las 20:49` al marcar la primera de dos muertes, se quitó al vencer y
+al vaciar la tumba, y en el Nether dijo `en el Overworld`.

@@ -537,9 +537,10 @@ public class QuasoPlugin extends JavaPlugin implements Listener {
 
     private void initGraveSystem() {
         this.gravesManager = new GravesManager(this);
-        getServer().getPluginManager().registerEvents(new GravesListener(gravesManager), this);
+        MarcadorTumba marcador = new MarcadorTumba(this, gravesManager);
+        getServer().getPluginManager().registerEvents(new GravesListener(gravesManager, marcador), this);
 
-        GravesPublicCommand tumbaCmd = new GravesPublicCommand(gravesManager);
+        GravesPublicCommand tumbaCmd = new GravesPublicCommand(gravesManager, marcador);
         getCommand("tumba").setExecutor(tumbaCmd);
         getCommand("tumba").setTabCompleter(tumbaCmd);
         getCommand("muertes").setExecutor(tumbaCmd);

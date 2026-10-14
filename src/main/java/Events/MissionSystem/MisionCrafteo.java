@@ -41,7 +41,10 @@ public abstract class MisionCrafteo extends BaseMission {
     // Un item custom por su id (cualquiera de los que se pasan)
     static Predicate<ItemStack> id(String... ids) {
         Set<String> set = Set.of(ids);
-        return item -> set.contains(MissionUtils.customId(item));
+        return item -> {
+            String customId = MissionUtils.customId(item);
+            return customId != null && set.contains(customId);
+        };
     }
 
     // Una pieza de la armadura de Warden según su tipo (casco, peto...)

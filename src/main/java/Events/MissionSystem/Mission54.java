@@ -5,12 +5,12 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.List;
-import java.util.Set;
+import java.util.function.Predicate;
 
 import static Events.MissionSystem.MissionRewards.*;
 
 public class Mission54 extends BaseMission {
-    private static final Set<String> WEAPONS = Set.of("espada_celestita", "hacha_celestita", "lanza_celestita");
+    private static final Predicate<ItemStack> WEAPONS = MisionCrafteo.id("espada_celestita", "hacha_celestita", "lanza_celestita");
 
     public Mission54(JavaPlugin plugin, MissionHandler handler) {
         super(plugin, handler, 54, "Armas para el Rey", MissionDifficulty.DIFICIL, 18,
@@ -31,6 +31,6 @@ public class Mission54 extends BaseMission {
     // Las armas de Celestita se reconocen por su id de item custom
     @Override
     protected void tick(Player player) {
-        if (MissionUtils.has(player, item -> WEAPONS.contains(MissionUtils.customId(item)))) mark(player, "arma");
+        if (MissionUtils.has(player, WEAPONS)) mark(player, "arma");
     }
 }

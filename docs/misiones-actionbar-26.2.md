@@ -72,3 +72,18 @@ floral y la de Celestita por la floral.
 El mensaje de las DinoCoins de las extras sale con el ícono de las DinoCoins (``, el mismo del scoreboard):
 «Has obtenido [ícono] 14 Dinocoins.». También lo llevan el mensaje de los jefes y los de subir de nivel y bonus de los
 trabajos.
+
+## Corrección del detector de items (Version #84)
+
+La misión 54 revisa el inventario cada 3 segundos. Los objetos vanilla o sin la etiqueta de item custom devuelven
+un identificador nulo; al consultarlo en `Set.of(...).contains(null)` se lanzaba una `NullPointerException`. Esto
+interrumpía la revisión incluso con un arma de Celestita en el inventario. El aviso solo mostraba el mensaje de la
+excepción, que podía ser `null`.
+
+El detector compartido de las misiones de crafteo ahora descarta esos identificadores antes de consultar los IDs
+permitidos, y la misión 54 reutiliza ese detector. Cuenta cualquiera de estas armas: espada, hacha o lanza de
+Celestita. Pico, pala y azada pertenecen a la extra 209 y no completan la 54.
+
+No requiere reiniciar misiones, borrar datos ni volver a fabricar el arma. Tras instalar el JAR actualizado y reiniciar
+el servidor, la siguiente revisión normal detecta el item si la misión está activa. Se comprobaron inventarios mixtos,
+objetos sin ID, cada arma válida y herramientas que no deben contar; compilación y 16 pruebas seleccionadas correctas.

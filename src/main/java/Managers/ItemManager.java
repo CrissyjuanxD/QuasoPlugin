@@ -70,7 +70,7 @@ public class ItemManager {
         "dinocoins", "dinofichas", "monedero", "blood_fragment", "mochila_nivel_1", "mochila_nivel_2",
         "mochila_nivel_3", "mochila_nivel_4", "mochila_nivel_5", "enderbag", "gancho",
         "panic_apple", "artefacto_nivel_1", "artefacto_nivel_2", "misiones", "icetotem",
-        "flytotem", "excavator_pickaxe", "potion_resistance_2", "splash_resistance_3",
+        "flytotem", "sculk_totem", "ender_totem", "excavator_pickaxe", "potion_resistance_2", "splash_resistance_3",
         "potion_slow_falling", "splash_regeneration_3", "potion_haste_3", "potion_haste_2",
         "splash_absorption_10", "frasco_de_velocidad", "amulet_bloodmoon", "amuleto_inmortalidad",
         "life_campfire", "fuel_campfire", "special_totem", "cristal_hielo", "arco_hielo",
@@ -160,6 +160,8 @@ public class ItemManager {
             case "amuleto_inmortalidad": item = amuletInmortal.createAmulet(); break;
             case "life_campfire": item = lifeCampfire.createCampfire(); break;
             case "fuel_campfire": item = lifeCampfire.createFuel(); break;
+            case "sculk_totem": item = ElementalTotems.create(ElementalTotems.Kind.SCULK); break;
+            case "ender_totem": item = ElementalTotems.create(ElementalTotems.Kind.ENDER); break;
             case "special_totem": item = ItemsTotems.createSpecialTotem(); break;
             case "cristal_hielo": item = ItemsTotems.createIceCrystal(); break;
             case "arco_hielo": item = iceBowItem.createIceBow(); break;

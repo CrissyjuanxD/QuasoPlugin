@@ -48,9 +48,9 @@ public class AmuletInvisibility implements Listener {
             lore.add(ChatColor.of("#66ffff") + "Al consumirse, este amuleto");
             lore.add(ChatColor.of("#66ffff") + "otorga al jugador:");
             lore.add("");
-            lore.add(ChatColor.GRAY + "■ " + ChatColor.of("#00cccc") + "Invisibilidad Perfecta " + ChatColor.GRAY + "(3:00)");
-            lore.add(ChatColor.GRAY + "■ " + ChatColor.of("#ff99cc") + "Regeneración II " + ChatColor.GRAY + "(3:00)");
-            lore.add(ChatColor.GRAY + "■ " + ChatColor.of("#ffcc00") + "Absorción III " + ChatColor.GRAY + "(3:00)");
+            lore.add(ChatColor.GRAY + "> " + ChatColor.of("#00cccc") + "Invisibilidad Perfecta " + ChatColor.GRAY + "(3:00)");
+            lore.add(ChatColor.GRAY + "> " + ChatColor.of("#ff99cc") + "Regeneración II " + ChatColor.GRAY + "(3:00)");
+            lore.add(ChatColor.GRAY + "> " + ChatColor.of("#ffcc00") + "Absorción III " + ChatColor.GRAY + "(3:00)");
             lore.add("");
             lore.add(ChatColor.of("#828282") + "Los mobs te ignorarán por completo");
             lore.add(ChatColor.of("#828282") + "a menos que los ataques directamente.");

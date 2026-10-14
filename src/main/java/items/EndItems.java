@@ -140,15 +140,14 @@ public final class EndItems {
         lore.add("");
         lore.add(ChatColor.of("#5fa8d3") + "Forjada con los cristales del End.");
         lore.add("");
-        lore.add(ChatColor.of(CELESTE) + "■ " + ChatColor.AQUA + "+" + tool.extra + " de daño sobre Netherite");
         if (tool == Tool.ESPADA) {
-            lore.add(ChatColor.of(CELESTE) + "■ " + ChatColor.LIGHT_PURPLE + "Doble de daño a los mobs del End");
-            lore.add(ChatColor.of(CELESTE) + "■ " + ChatColor.LIGHT_PURPLE + "Doble de daño al Rey Ender");
+            lore.add(ChatColor.of(CELESTE) + "> " + ChatColor.LIGHT_PURPLE + "Doble de daño a los mobs del End");
+            lore.add(ChatColor.of(CELESTE) + "> " + ChatColor.LIGHT_PURPLE + "Doble de daño al Rey Ender");
         } else if (tool.weapon) {
-            lore.add(ChatColor.of(CELESTE) + "■ " + ChatColor.LIGHT_PURPLE + "+50% de daño al Rey Ender");
+            lore.add(ChatColor.of(CELESTE) + "> " + ChatColor.LIGHT_PURPLE + "+50% de daño al Rey Ender");
         }
-        if (tool.mining > 0) lore.add(ChatColor.of(CELESTE) + "■ " + ChatColor.AQUA + "Pica " + Math.round(tool.mining * 100) + "% más rápido que Netherite");
-        if (tool == Tool.PICO) lore.add(ChatColor.of(CELESTE) + "■ " + ChatColor.LIGHT_PURPLE + "18% de Cristal en los racimos");
+        if (tool.mining > 0) lore.add(ChatColor.of(CELESTE) + "> " + ChatColor.AQUA + "Pica " + Math.round(tool.mining * 100) + "% más rápido que Netherite");
+        if (tool == Tool.PICO) lore.add(ChatColor.of(CELESTE) + "> " + ChatColor.LIGHT_PURPLE + "18% de Cristal en los racimos");
         meta.setLore(lore);
         item.setItemMeta(meta);
         return item;

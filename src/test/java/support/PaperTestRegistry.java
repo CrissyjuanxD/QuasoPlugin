@@ -7,6 +7,7 @@ import org.bukkit.Sound;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.MenuType;
+import org.bukkit.potion.PotionEffectType;
 import org.mockito.MockedStatic;
 
 import static org.mockito.Mockito.*;
@@ -26,6 +27,7 @@ public final class PaperTestRegistry {
                     if (!lookup.getMethod().getName().startsWith("get")) return null;
                     if (kind == RegistryKey.MENU || kind == MenuType.class) return mock(MenuType.Typed.class);
                     if (kind == RegistryKey.SOUND_EVENT || kind == Sound.class) return mock(Sound.class);
+                    if (kind == RegistryKey.MOB_EFFECT || kind == PotionEffectType.class) return mock(PotionEffectType.class);
                     if (kind == RegistryKey.ENCHANTMENT || kind == Enchantment.class) return mock(Enchantment.class);
                     return null;
                 });

@@ -43,8 +43,8 @@ public class ExplosiveBow implements Listener {
             lore.add(ChatColor.of("#ff9999") + "Un arma inestable y destructiva");
             lore.add(ChatColor.of("#ff9999") + "capaz de detonar en el impacto.");
             lore.add("");
-            lore.add(ChatColor.GRAY + "■ Lanza flechas espectrales");
-            lore.add(ChatColor.RED + "■ Nivel de Explosión: " + ChatColor.WHITE + "2");
+            lore.add(ChatColor.GRAY + "> Lanza flechas espectrales");
+            lore.add(ChatColor.RED + "> Nivel de Explosión: " + ChatColor.WHITE + "2");
             lore.add(ChatColor.GOLD + "⚠ Consume 3 flechas por disparo");
             lore.add(ChatColor.DARK_GRAY + "" + ChatColor.ITALIC + "(Infinidad reduce el coste en 1)");
             lore.add("");
@@ -70,8 +70,8 @@ public class ExplosiveBow implements Listener {
             lore.add(ChatColor.of("#ff6666") + "Un arma inestable y destructiva");
             lore.add(ChatColor.of("#ff6666") + "capaz de detonar en el impacto.");
             lore.add("");
-            lore.add(ChatColor.GRAY + "■ Lanza flechas espectrales");
-            lore.add(ChatColor.RED + "■ Nivel de Explosión: " + ChatColor.WHITE + "3");
+            lore.add(ChatColor.GRAY + "> Lanza flechas espectrales");
+            lore.add(ChatColor.RED + "> Nivel de Explosión: " + ChatColor.WHITE + "3");
             lore.add(ChatColor.GOLD + "⚠ Consume 6 flechas por disparo");
             lore.add(ChatColor.DARK_GRAY + "" + ChatColor.ITALIC + "(Infinidad reduce el coste en 1)");
             lore.add("");
@@ -97,8 +97,8 @@ public class ExplosiveBow implements Listener {
             lore.add(ChatColor.of("#ff3333") + "Un arma inestable y destructiva");
             lore.add(ChatColor.of("#ff3333") + "capaz de detonar en el impacto.");
             lore.add("");
-            lore.add(ChatColor.GRAY + "■ Lanza flechas espectrales");
-            lore.add(ChatColor.RED + "■ Nivel de Explosión: " + ChatColor.WHITE + "4");
+            lore.add(ChatColor.GRAY + "> Lanza flechas espectrales");
+            lore.add(ChatColor.RED + "> Nivel de Explosión: " + ChatColor.WHITE + "4");
             lore.add(ChatColor.GOLD + "⚠ Consume 10 flechas por disparo");
             lore.add(ChatColor.DARK_GRAY + "" + ChatColor.ITALIC + "(Infinidad reduce el coste en 1)");
             lore.add("");

@@ -102,7 +102,7 @@ public class WardenArmor implements Listener {
         ItemMeta meta = item.getItemMeta();
         meta.setDisplayName(ChatColor.of("#b55cff") + "" + ChatColor.BOLD + "Peto de Warden Alado");
         List<String> lore = new ArrayList<>(meta.getLore());
-        lore.add(lore.size() - 1, ChatColor.of("#00cccc") + "■ " + ChatColor.LIGHT_PURPLE + ChatColor.BOLD + "Planea como unas Elytras");
+        lore.add(lore.size() - 1, ChatColor.of("#00cccc") + "> " + ChatColor.LIGHT_PURPLE + ChatColor.BOLD + "Planea como unas Elytras");
         meta.setLore(lore);
         meta.setGlider(true);
         meta.getPersistentDataContainer().set(items.EndItems.ITEM_KEY, PersistentDataType.STRING, "peto_warden_alado");
@@ -190,8 +190,8 @@ public class WardenArmor implements Listener {
                 color + "Pieza " + bioma.biome() + ".",
                 "",
                 ChatColor.GRAY + "Equipar esta pieza otorga: " + ChatColor.WHITE,
-                color + "■ " + claro + ChatColor.BOLD + "+2 Corazones",
-                color + "■ " + claro + ChatColor.BOLD + "30% Resistencia al Desgaste",
+                color + "> " + claro + ChatColor.BOLD + "+2 Corazones",
+                color + "> " + claro + ChatColor.BOLD + "30% Resistencia al Desgaste",
                 ""
         );
     }

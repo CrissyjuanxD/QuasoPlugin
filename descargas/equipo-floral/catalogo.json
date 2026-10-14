@@ -1,5 +1,5 @@
 {
-  "revision": 70,
+  "revision": 71,
   "item_size": [
     16,
     16
@@ -42,5 +42,11 @@
     "peto_floral",
     "pico_floral"
   ],
-  "equipment_revision": 67
+  "equipment_revision": 67,
+  "revised_icons_71": [
+    "espada_floral",
+    "hacha_floral",
+    "pico_floral",
+    "pala_floral"
+  ]
 }

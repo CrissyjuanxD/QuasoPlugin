@@ -157,7 +157,7 @@ public final class FloralItems {
                     AttributeModifier.Operation.ADD_SCALAR, EquipmentSlotGroup.MAINHAND));
         }
 
-        if (pieza == Pieza.ESPADA) lore.add(punto() + ChatColor.of(VERDE) + "9 de daño (1 más que Netherite)");
+        if (pieza == Pieza.ESPADA) lore.add(punto() + ChatColor.of(VERDE) + "9 de daño");
         if (pieza == Pieza.HACHA) lore.add(punto() + ChatColor.of(VERDE) + "8 de daño y ataca más rápido");
         if (pieza.minado > 0) lore.add(punto() + ChatColor.of(VERDE) + "Pica " + Math.round(pieza.minado * 100) + "% más rápido que Netherite");
         if (pieza == Pieza.PICO) lore.add(punto() + ChatColor.of(VERDE) + "Rompe los minerales de la Warden Cave");
@@ -188,7 +188,7 @@ public final class FloralItems {
     }
 
     private static String punto() {
-        return ChatColor.of(ROSA) + "■ ";
+        return ChatColor.of(ROSA) + "> ";
     }
 
     public static Pieza piezaPorId(String id) {

@@ -360,6 +360,7 @@ public class QuasoPlugin extends JavaPlugin implements Listener {
 
         Bukkit.getPluginManager().registerEvents(invulnerableItemProtection, this);
         Bukkit.getPluginManager().registerEvents(normalTotemHandler, this);
+        Bukkit.getPluginManager().registerEvents(new ElementalTotems(this), this);
         Bukkit.getPluginManager().registerEvents(economyItemsFunctions, this);
         Bukkit.getPluginManager().registerEvents(doubleLifeTotemHandler, this);
         Bukkit.getPluginManager().registerEvents(economyIceTotem, this);

@@ -2,19 +2,17 @@
 
 [Descargar el conjunto](equipo-floral.zip) · [Ver los iconos](vista_items.png) · [Ver la armadura](vista_armadura.png)
 
-Rediseño para los items añadidos en **#66**, con texturas propias en **#67** y revisión de siluetas en **#70**. Los 18 iconos son PNG **16×16 reales**, con transparencia binaria y ampliación sin suavizado. Conservan los identificadores que usa el plugin.
+Rediseño para los items añadidos en **#66**, con texturas propias en **#67** y herramientas revisadas en **#71**. Los 18 iconos son PNG **16×16 reales**, con transparencia binaria y ampliación sin suavizado. Conservan los identificadores que usa el plugin.
 
 ![Items exportados](vista_items.png)
 
-## Revisión #70: contornos y materiales
+## Revisión #71: herramientas como las referencias
 
-Se redibujaron las cuatro herramientas, los cuatro iconos de armadura, la esencia y la mejora. Un borde verde casi negro separa las siluetas del fondo; las zonas verdes, rosas y moradas se agrupan para que la forma se lea a 16×16.
+Las cuatro herramientas siguen las formas limpias del pico 3×3 y del equipo de celestita: mangos rectos, hojas sólidas y una cabeza angular reconocible para el pico. Conservan metal rosa, sombras moradas y mangos verdes con borde oscuro.
 
-La esencia es una gota rosa con sombra morada sostenida por dos hojas. La mejora sigue la plantilla de celestita: placa verde oscura, esquinas biseladas y flecha rosa central.
+![Herramientas actuales a 16×16](vista_herramientas.png)
 
-![Los diez iconos sobre fondos oscuro y claro](vista_contornos.png)
-
-La armadura equipada y sus atlas conservan el diseño de #67. Los siete libros, incluido el de habilidades verde, y el aguijón también se conservan.
+La esencia, la plantilla y los cuatro iconos de armadura conservan la revisión #70. El aguijón, los siete libros y la armadura equipada conservan su diseño anterior.
 
 ## Conjunto floral
 
@@ -27,7 +25,7 @@ Una misma familia de materiales: raíces y hojas verdes para la estructura, pét
 | Herramientas | `espada_floral`, `hacha_floral`, `pico_floral`, `pala_floral` |
 | Armadura | `casco_floral`, `peto_floral`, `pantalon_floral`, `botas_floral` |
 
-La espada tiene una hoja curva; el hacha, dos filos de pétalos; el pico, extremos de espina; y la pala, una hoja puntiaguda. Son siluetas nuevas, no herramientas de netherita recoloreadas. La mejora tiene forma de plantilla con una flecha central.
+La espada tiene una hoja recta; el hacha, una cabeza compacta; el pico, una cabeza angular; y la pala, una hoja sólida. Las formas siguen las herramientas de celestita y el pico 3×3 usados como referencia. La mejora tiene forma de plantilla con una flecha central.
 
 ## Armadura equipada
 

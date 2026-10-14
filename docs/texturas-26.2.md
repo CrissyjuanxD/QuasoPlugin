@@ -69,9 +69,9 @@ todavía usa los modelos vanilla de los bundles (`minecraft:lime_bundle`, etc.),
 mochilas a `minecraft:mochila_nivel_<n>`. Cada nivel suma algo: el 3 tiene ribete dorado, el 4 una gema roja y el 5
 hebilla de diamante, gema morada y brillitos.
 
-## Equipo floral y libros de trabajo (Version #70)
+## Equipo floral y libros de trabajo (Version #71)
 
-Rediseño de los items añadidos en #66, con contornos reforzados en #70. [Descarga, catálogo y guía](../descargas/equipo-floral/README.md).
+Rediseño de los items añadidos en #66, con contornos reforzados en #70 y herramientas basadas en celestita/pico 3×3 en #71. [Descarga, catálogo y guía](../descargas/equipo-floral/README.md).
 Las copias de `resourcepack/assets` y `descargas/equipo-floral/assets` son idénticas.
 
 | Item | ID | Estilo |
@@ -79,7 +79,7 @@ Las copias de `resourcepack/assets` y `descargas/equipo-floral/assets` son idén
 | Aguijón Floral | `aguijon_floral` | Espina morada con una base de pétalos rosas |
 | Esencia Floral | `esencia_floral` | Gota de néctar rosa y morada sostenida por dos hojas, con borde verde casi negro |
 | Mejora Floral | `mejora_floral` | Plantilla verde oscura con flecha rosa, inspirada en la de celestita |
-| Espada, Hacha, Pico y Pala Florales | `espada_floral`... `pala_floral` | Siluetas propias con contornos verde casi negro, pétalos y mangos de raíces; modelos `item/handheld` |
+| Espada, Hacha, Pico y Pala Florales | `espada_floral`... `pala_floral` | Hojas sólidas y mangos rectos como las herramientas de celestita, metal rosa y contornos verde oscuro; modelos `item/handheld` |
 | Casco, Peto, Pantalón y Botas Florales | `casco_floral`... `botas_floral` | Iconos con borde verde casi negro, raíces verdes y pétalos rosas/morados |
 | Libros de trabajo | `libro_talador`, `libro_fervor_minero`, `libro_anzuelo_veloz`, `libro_cosecha`, `libro_alcance`, `libro_vigor_de_batalla` | Estilo de los libros anteriores: tapa oscura, bordes iluminados y símbolo del encantamiento |
 | Libro de Habilidades | `libro_habilidades` | Tapa y gema verde esmeralda |
@@ -95,3 +95,7 @@ Es una armadura 2D con geometría vanilla, sin flores que sobresalgan en 3D.
 Los minerales y materiales van al final: `cristal_celestita`, `lingote_celestita`, `fragmento_astral`,
 `esencia_marchita`, `plantilla_celestita`, `pepitas_hierro_oxidadas`, `pepitas_diamante`, `fragmentos_ambar` y
 `lingote_platino`. Faltan también los items de la tienda de los días 20 y 30 que no están arriba.
+
+## Tótems Sculk y Ender (#71)
+
+[Texturas, modelos y efectos](../descargas/totems-sculk-ender/README.md). Ambos tienen iconos 16×16 y están registrados en `/giveqp`.

@@ -1,12 +1,12 @@
-# Corrección de herramientas florales · #73
+# Corrección de herramientas florales · #76
 
 [Descargar ZIP](correccion-herramientas-florales.zip)
 
 ![Referencias y resultado en el mismo orden](vista_previa.png)
 
-Nueva variante en una subcarpeta independiente, usando las cuatro referencias del usuario. Mantiene el orden **hacha, pala, espada y pico**, los mangos diagonales y las formas de sus cabezas, con pequeños ajustes florales.
+Recoloración de las cuatro referencias originales, en el orden **hacha, pala, espada y pico**. Se mantiene exactamente la silueta de cada original: ningún píxel añadido, eliminado o desplazado. Se conserva la distribución de sus sombras y detalles, cambiando solamente la paleta.
 
-Los mangos son raíces verdes oscuras con vetas verde salvia; las cabezas llevan rosas claros y sombras moradas. Pequeños brotes rosas y hojas se concentran en las uniones, con contorno verde casi negro para mantener la lectura del item.
+Las cabezas llevan rosas y sombras moradas; los mangos, verdes oscuros con luces verde salvia. Los contornos son verde casi negro. No se añaden flores ni adornos que alteren las formas de referencia.
 
 ## Archivos sueltos, en orden
 
@@ -25,4 +25,4 @@ Fusiona la carpeta **assets** del ZIP con tu resource pack, reemplazando las cua
 
 Esta revisión está solo en esta subcarpeta: puedes compararla con las anteriores antes de integrarla. No modifica los atributos de las herramientas ni requiere recrear los items.
 
-Se verificaron dimensiones, transparencia, nombres de modelo, coincidencia entre los PNG sueltos y los de `assets`, y el contenido del ZIP. La vista es una ampliación de las texturas reales, no una captura del juego.
+Se comparó el canal de transparencia completo con cada original: los 256 píxeles coinciden en las cuatro herramientas. Se verificó que cada tono original conserva sus agrupaciones dentro de cada material, además de dimensiones, nombres de modelo, coincidencia entre los PNG sueltos y los de `assets`, y el contenido del ZIP. La vista es una ampliación de las texturas reales, no una captura del juego.

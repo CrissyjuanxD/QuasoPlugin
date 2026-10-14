@@ -16,7 +16,9 @@ import org.bukkit.event.block.BlockDispenseEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.inventory.*;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
+import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.Inventory;
@@ -178,10 +180,15 @@ public class EconomyItemsFunctions implements Listener {
         int modelData = meta.getCustomModelData();
         int size = getBackpackSize(modelData);
 
+        // Las de antes brillaban: se les quita al abrirlas
+        boolean cambio = EconomyItems.quitarBrillo(mochila);
         String mochilaId = getMochilaId(mochila);
         if (mochilaId == null) {
             mochilaId = UUID.randomUUID().toString();
             setMochilaId(mochila, mochilaId);
+            cambio = true;
+        }
+        if (cambio) {
             if (player.getInventory().getItemInMainHand().getType() == mochila.getType()) {
                 player.getInventory().setItemInMainHand(mochila);
             } else {
@@ -495,6 +502,33 @@ public class EconomyItemsFunctions implements Listener {
             } else {
                 player.sendMessage(ChatColor.YELLOW + "✖ Operación cancelada.");
             }
+        }
+    }
+
+    // Las DinoCoins y DinoFichas de antes (de a 64) pasan a las de 99 al entrar, al abrir un cofre o el monedero y al
+    // levantarlas del suelo
+    @EventHandler
+    public void onJoinMonedas(PlayerJoinEvent event) {
+        normalizarMonedas(event.getPlayer().getInventory());
+        normalizarMonedas(event.getPlayer().getEnderChest());
+    }
+
+    @EventHandler
+    public void onOpenMonedas(InventoryOpenEvent event) {
+        normalizarMonedas(event.getView().getTopInventory());
+        normalizarMonedas(event.getView().getBottomInventory());
+    }
+
+    @EventHandler(ignoreCancelled = true)
+    public void onPickupMonedas(EntityPickupItemEvent event) {
+        ItemStack item = event.getItem().getItemStack();
+        if (EconomyItems.normalizarMoneda(item)) event.getItem().setItemStack(item);
+    }
+
+    private static void normalizarMonedas(Inventory inventory) {
+        ItemStack[] contents = inventory.getContents();
+        for (int i = 0; i < contents.length; i++) {
+            if (contents[i] != null && EconomyItems.normalizarMoneda(contents[i])) inventory.setItem(i, contents[i]);
         }
     }
 

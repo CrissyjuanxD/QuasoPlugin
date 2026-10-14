@@ -31,7 +31,7 @@ class FloralItemsTest {
         int armadura = 0;
         for (FloralItems.Pieza pieza : FloralItems.Pieza.values()) armadura += pieza.armadura;
         assertTrue(armadura >= 20 && armadura < 24, "armadura " + armadura);
-        assertTrue(FloralItems.Pieza.DUREZA > 3 && FloralItems.Pieza.DUREZA < 4);
+        assertEquals(4.0, FloralItems.Pieza.DUREZA);
         // 1 corazón por pieza (Warden da 2)
         assertEquals(2, FloralItems.Pieza.VIDA);
         assertTrue(FloralItems.Pieza.SIN_DESGASTE < 0.30);

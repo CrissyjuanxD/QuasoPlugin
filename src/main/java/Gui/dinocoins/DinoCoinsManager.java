@@ -197,7 +197,7 @@ public class DinoCoinsManager implements Listener {
     public static void giveLoose(Player player, int amount) {
         while (amount > 0) {
             ItemStack coins = EconomyItems.createVithiumCoin();
-            coins.setAmount(Math.min(64, amount));
+            coins.setAmount(Math.min(EconomyItems.STACK_MONEDA, amount));
             amount -= coins.getAmount();
             for (ItemStack left : player.getInventory().addItem(coins).values()) {
                 player.getWorld().dropItemNaturally(player.getLocation(), left);
@@ -256,7 +256,7 @@ public class DinoCoinsManager implements Listener {
         return wallets;
     }
 
-    // delta > 0 agrega DinoCoins (de a 64 por slot) y delta < 0 las saca; nunca toca las DinoFichas. Devuelve lo
+    // delta > 0 agrega DinoCoins (de a 99 por slot) y delta < 0 las saca; nunca toca las DinoFichas. Devuelve lo
     // que no se pudo mover
     private int change(Player player, int delta, Map<String, ItemStack[]> wallets) {
         int remaining = Math.abs(delta);
@@ -296,13 +296,15 @@ public class DinoCoinsManager implements Listener {
         for (int i = 0; i < contents.length && remaining > 0; i++) {
             ItemStack c = contents[i];
             if (c == null || c.getType() == Material.AIR) {
-                int toAdd = Math.min(remaining, 64);
+                int toAdd = Math.min(remaining, EconomyItems.STACK_MONEDA);
                 ItemStack coin = EconomyItems.createVithiumCoin();
                 coin.setAmount(toAdd);
                 contents[i] = coin;
                 remaining -= toAdd;
-            } else if (isDinoCoin(c) && c.getAmount() < 64) {
-                int toAdd = Math.min(remaining, 64 - c.getAmount());
+            } else if (isDinoCoin(c) && c.getAmount() < EconomyItems.STACK_MONEDA) {
+                // Las de antes (de a 64) pasan a las de 99 para poder llenarlas
+                EconomyItems.normalizarMoneda(c);
+                int toAdd = Math.min(remaining, EconomyItems.STACK_MONEDA - c.getAmount());
                 c.setAmount(c.getAmount() + toAdd);
                 remaining -= toAdd;
             }

@@ -43,7 +43,8 @@ public final class QuasoDatapack {
             "data/quaso/enchantment/cosecha.json",
             "data/quaso/enchantment/alcance.json",
             "data/quaso/enchantment/vigor_de_batalla.json",
-            "data/quaso/enchantment/veta.json"
+            "data/quaso/enchantment/veta.json",
+            "data/quaso/enchantment/vuelo_rapido.json"
     };
 
     // Las piezas de las End Cities (las de Better End Cities de IchPhilipp, reemplazan a las vanilla)

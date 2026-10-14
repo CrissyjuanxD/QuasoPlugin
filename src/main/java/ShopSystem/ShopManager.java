@@ -209,10 +209,14 @@ public class ShopManager {
                 ItemStack result = config.getItemStack(basePath + ".result");
 
                 if (result != null) {
+                    // Las DinoCoins guardadas antes eran de a 64: se pasan a las de 99, las que tienen los jugadores
+                    items.EconomyItems.normalizarMoneda(result);
                     MerchantRecipe recipe = new MerchantRecipe(result, 9999);
                     for (int j = 0; j < 2; j++) {
                         ItemStack ingredient = config.getItemStack(basePath + ".ingredients." + j);
-                        if (!isEmpty(ingredient)) recipe.addIngredient(ingredient);
+                        if (isEmpty(ingredient)) continue;
+                        items.EconomyItems.normalizarMoneda(ingredient);
+                        recipe.addIngredient(ingredient);
                     }
                     if (recipe.getIngredients().isEmpty()) {
                         recipe.addIngredient(createEmptyTradeItem());

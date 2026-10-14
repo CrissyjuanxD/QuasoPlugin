@@ -5,12 +5,7 @@ import Dificultades.ExtraChanges;
 import Dificultades.OneChanges;
 import Dificultades.ThreeChanges;
 import Dificultades.TwoChanges;
-import net.md_5.bungee.api.ChatColor;
-import org.bukkit.Bukkit;
-import org.bukkit.Sound;
-import org.bukkit.SoundCategory;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
@@ -69,26 +64,7 @@ public class ChangesHandler {
         if (change.isApplied()) return false;
         change.apply();
         save();
-        anunciar(change);
         return true;
-    }
-
-    // Al activar una etapa se avisa en el chat lo que cambia (al prender el server no, solo cuando un admin la activa)
-    private static void anunciar(Change change) {
-        if (change.tituloAnuncio() == null) return;
-        for (String linea : lineasAnuncio(change)) Bukkit.broadcastMessage(linea);
-        for (Player player : Bukkit.getOnlinePlayers()) {
-            player.playSound(player.getLocation(), Sound.UI_TOAST_CHALLENGE_COMPLETE, SoundCategory.MASTER, 0.8f, 1f);
-        }
-    }
-
-    static List<String> lineasAnuncio(Change change) {
-        List<String> lineas = new ArrayList<>();
-        lineas.add("");
-        lineas.add(ChatColor.of("#EFDC93") + "۞ " + ChatColor.of("#FFCC80") + ChatColor.BOLD + change.tituloAnuncio());
-        for (String cambio : change.anuncio()) lineas.add(ChatColor.of("#EFDC93") + " » " + ChatColor.of("#F3EBD3") + cambio);
-        lineas.add("");
-        return lineas;
     }
 
     public boolean deactivate(Change change) {

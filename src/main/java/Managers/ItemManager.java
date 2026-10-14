@@ -26,7 +26,6 @@ public class ItemManager {
     private final AmuletInmortal amuletInmortal;
     private final LifeCampfire lifeCampfire;
     private final IceBowItem iceBowItem;
-    private final HappyGhastEnchant happyGhastEnchant;
     private final ItemsEventos itemsEventos;
     private final KeepInventoryLiquido keepInventoryLiquido;
     private final EstatuaProtectora estatuaProtectora;
@@ -49,7 +48,6 @@ public class ItemManager {
         this.amuletInmortal = new AmuletInmortal(plugin);
         this.lifeCampfire = new LifeCampfire(plugin);
         this.iceBowItem = new IceBowItem(plugin);
-        this.happyGhastEnchant = new HappyGhastEnchant(plugin);
         this.itemsEventos = new ItemsEventos(plugin);
         this.keepInventoryLiquido = new KeepInventoryLiquido(plugin);
         this.estatuaProtectora = new EstatuaProtectora(plugin);
@@ -165,8 +163,8 @@ public class ItemManager {
             case "special_totem": item = ItemsTotems.createSpecialTotem(); break;
             case "cristal_hielo": item = ItemsTotems.createIceCrystal(); break;
             case "arco_hielo": item = iceBowItem.createIceBow(); break;
-            case "happy_ghast_enchant": item = happyGhastEnchant.createFastFlightBook(1); break;
-            case "happy_ghast_enchant_2": item = happyGhastEnchant.createFastFlightBook(2); break;
+            case "happy_ghast_enchant": item = QuasoEnchant.VUELO_RAPIDO.book(1); break;
+            case "happy_ghast_enchant_2": item = QuasoEnchant.VUELO_RAPIDO.book(2); break;
             case "perla_infinita": item = InfinitePearl.createPearl(); break;
             case "retorno_warden": item = WardenReturnItem.create(); break;
             case "tarta_calabaza_mejorada": item = OneChanges.improvedPumpkinPie(); break;

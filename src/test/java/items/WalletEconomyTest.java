@@ -338,13 +338,14 @@ class WalletEconomyTest {
         when(database.getPlayerBackpacks(playerId)).thenReturn(List.of(new DatabaseManager.BackpackInfo("wallet", "Monedero", 6, "")));
         ItemStack[] contents = new ItemStack[18];
         Arrays.fill(contents, item(Material.GOLD_NUGGET, 2010, 64));
-        contents[0] = item(Material.SUNFLOWER, 2000, 63);
+        contents[0] = item(Material.SUNFLOWER, 2000, 98);
         functions.updateBackpackContents("wallet", contents);
         try (MockedStatic<Bukkit> bukkit = mockStatic(Bukkit.class)) {
             DinoCoinsManager manager = manager(bukkit);
+            // Las DinoCoins se apilan de a 99
             assertFalse(manager.addPhysicalDinoCoins(player, 2));
-            assertEquals(64, functions.getBackpackContents("wallet")[0].getAmount());
-            assertTrue(manager.removePhysicalDinoCoins(player, 64));
+            assertEquals(99, functions.getBackpackContents("wallet")[0].getAmount());
+            assertTrue(manager.removePhysicalDinoCoins(player, 99));
             assertNull(functions.getBackpackContents("wallet")[0]);
             assertEquals(17 * 64, manager.calculatePhysicalDinoFichas(player));
             assertFalse(manager.removePhysicalDinoCoins(player, 1));

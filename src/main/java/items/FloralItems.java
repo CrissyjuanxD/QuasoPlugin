@@ -47,7 +47,7 @@ public final class FloralItems {
         PANTALON("pantalon_floral", "Pantalón Floral", Material.NETHERITE_LEGGINGS, 6),
         BOTAS("botas_floral", "Botas Florales", Material.NETHERITE_BOOTS, 3);
 
-        public static final double DUREZA = 3.5;
+        public static final double DUREZA = 4.0;
         public static final double VIDA = 2;
         public static final double SIN_DESGASTE = 0.15;
 
@@ -169,8 +169,8 @@ public final class FloralItems {
         if (pieza.minado > 0) {
             atributos.add(new EquipoLore.Atributo(EquipoLore.MINADO, "Pica " + Math.round(pieza.minado * 100) + "% más rápido que Netherite"));
         }
-        if (pieza == Pieza.PICO) atributos.add(new EquipoLore.Atributo(EquipoLore.ESPECIAL, "Rompe los minerales de la Warden Cave"));
-        if (pieza == Pieza.HACHA) atributos.add(new EquipoLore.Atributo(EquipoLore.ESPECIAL, "Ataca más rápido que la de Netherite"));
+        if (pieza == Pieza.PICO) atributos.add(new EquipoLore.Atributo(EquipoLore.MINADO, "Rompe los minerales de la Warden Cave"));
+        if (pieza == Pieza.HACHA) atributos.add(new EquipoLore.Atributo(EquipoLore.VELOCIDAD, "Ataca más rápido que la de Netherite"));
         return atributos;
     }
 
@@ -178,8 +178,8 @@ public final class FloralItems {
     private static List<EquipoLore.Atributo> escudo(ItemMeta meta) {
         meta.setUnbreakable(true);
         meta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
-        return List.of(new EquipoLore.Atributo("∞", "Irrompible"),
-                new EquipoLore.Atributo(EquipoLore.ESPECIAL, "Bloquea como un escudo normal"));
+        return List.of(new EquipoLore.Atributo(EquipoLore.IRROMPIBLE, "Irrompible"),
+                new EquipoLore.Atributo(EquipoLore.BLOQUEO, "Bloquea como un escudo normal"));
     }
 
     private static List<EquipoLore.Atributo> armadura(ItemMeta meta, Pieza pieza) {

@@ -1,15 +1,19 @@
 package Dificultades;
 
 import Dificultades.CustomMobs.Bombita;
+import Dificultades.CustomMobs.CorruptedBee;
 import Dificultades.CustomMobs.CorruptedSpider;
 import Dificultades.CustomMobs.CorruptedZombies;
 import org.bukkit.World;
+import org.bukkit.entity.Bee;
 import org.bukkit.entity.Creeper;
+import org.bukkit.entity.Husk;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Skeleton;
 import org.bukkit.entity.Spider;
 import org.bukkit.entity.Zombie;
 import org.bukkit.event.entity.CreatureSpawnEvent;
+import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockedConstruction;
@@ -24,23 +28,43 @@ class ExtraChangesTest {
     @Test
     void aQuarterOfZombiesAndSpidersAndAFifthOfCreepersTurnFloral() {
         assertEquals(ZOMBIE, ExtraChanges.floral(EntityType.ZOMBIE, true, 24));
-        assertEquals(NINGUNO, ExtraChanges.floral(EntityType.ZOMBIE, true, 25));
-        assertEquals(NINGUNO, ExtraChanges.floral(EntityType.ZOMBIE, false, 0));
+        assertEquals(NINGUNO, ExtraChanges.floral(EntityType.ZOMBIE, true, 35));
         assertEquals(SPIDER, ExtraChanges.floral(EntityType.SPIDER, true, 24));
-        assertEquals(NINGUNO, ExtraChanges.floral(EntityType.SPIDER, true, 25));
+        assertEquals(NINGUNO, ExtraChanges.floral(EntityType.SPIDER, true, 35));
         assertEquals(BOMBITA, ExtraChanges.floral(EntityType.CREEPER, true, 19));
-        assertEquals(NINGUNO, ExtraChanges.floral(EntityType.CREEPER, true, 20));
-        for (EntityType otro : new EntityType[]{EntityType.HUSK, EntityType.DROWNED, EntityType.CAVE_SPIDER, EntityType.SKELETON}) {
+        assertEquals(NINGUNO, ExtraChanges.floral(EntityType.CREEPER, true, 30));
+        for (EntityType otro : new EntityType[]{EntityType.HUSK, EntityType.DROWNED, EntityType.CAVE_SPIDER}) {
             assertEquals(NINGUNO, ExtraChanges.floral(otro, true, 0), otro.name());
         }
+    }
+
+    // Después de la franja floral, 10 de cada 100 salen como Mini Abeja Floral (también desde esqueletos y zombies bebé)
+    @Test
+    void aTenthOfTheRestBecomeMiniFloralBees() {
+        assertEquals(ABEJA, ExtraChanges.floral(EntityType.ZOMBIE, true, 25));
+        assertEquals(ABEJA, ExtraChanges.floral(EntityType.ZOMBIE, true, 34));
+        assertEquals(ABEJA, ExtraChanges.floral(EntityType.ZOMBIE, false, 0));
+        assertEquals(NINGUNO, ExtraChanges.floral(EntityType.ZOMBIE, false, 10));
+        assertEquals(ABEJA, ExtraChanges.floral(EntityType.SPIDER, true, 25));
+        assertEquals(ABEJA, ExtraChanges.floral(EntityType.CREEPER, true, 29));
+        assertEquals(ABEJA, ExtraChanges.floral(EntityType.SKELETON, true, 9));
+        assertEquals(NINGUNO, ExtraChanges.floral(EntityType.SKELETON, true, 10));
     }
 
     @Test
     void onlyNaturalOverworldSpawnsAreConverted() {
         try (MockedConstruction<CorruptedZombies> zombies = mockConstruction(CorruptedZombies.class);
              MockedConstruction<CorruptedSpider> spiders = mockConstruction(CorruptedSpider.class);
-             MockedConstruction<Bombita> bombitas = mockConstruction(Bombita.class)) {
-            ExtraChanges extra = spy(new ExtraChanges(mock(JavaPlugin.class)));
+             MockedConstruction<Bombita> bombitas = mockConstruction(Bombita.class);
+             MockedConstruction<CorruptedBee> abejas = mockConstruction(CorruptedBee.class, (abeja, context) -> {
+                 Bee bee = mock(Bee.class);
+                 when(bee.getPersistentDataContainer()).thenReturn(mock(PersistentDataContainer.class));
+                 when(abeja.spawnCorruptedBee(any())).thenReturn(bee);
+             })) {
+            JavaPlugin plugin = mock(JavaPlugin.class);
+            when(plugin.getName()).thenReturn("QuasoPlugin");
+            when(plugin.namespace()).thenReturn("quasoplugin");
+            ExtraChanges extra = spy(new ExtraChanges(plugin));
             assertEquals("extra", extra.id());
 
             World overworld = world("world", World.Environment.NORMAL);
@@ -48,8 +72,8 @@ class ExtraChangesTest {
             extra.onNaturalSpawn(spawn(mock(Zombie.class), world("wardencave", World.Environment.NORMAL), CreatureSpawnEvent.SpawnReason.NATURAL));
             extra.onNaturalSpawn(spawn(mock(Zombie.class), world("world_nether", World.Environment.NETHER), CreatureSpawnEvent.SpawnReason.NATURAL));
             verify(extra, never()).convertir(any(), anyInt());
-            // Bebé: se tira la suerte pero nunca se convierte, así no cambia lo que se verifica abajo
-            Zombie natural = mob(Zombie.class, EntityType.ZOMBIE);
+            // Un husk: se tira la suerte pero nunca se convierte, así no cambia lo que se verifica abajo
+            Husk natural = mob(Husk.class, EntityType.HUSK);
             extra.onNaturalSpawn(spawn(natural, overworld, CreatureSpawnEvent.SpawnReason.NATURAL));
             verify(extra).convertir(eq(natural), anyInt());
 
@@ -59,11 +83,20 @@ class ExtraChangesTest {
             Spider spider = mob(Spider.class, EntityType.SPIDER);
             Creeper creeper = mob(Creeper.class, EntityType.CREEPER);
             extra.convertir(adulto, 0);
-            extra.convertir(bebe, 0);
+            extra.convertir(bebe, 50);
             extra.convertir(spider, 0);
             extra.convertir(creeper, 0);
-            extra.convertir(mob(Skeleton.class, EntityType.SKELETON), 0);
+            extra.convertir(mob(Skeleton.class, EntityType.SKELETON), 50);
             extra.convertir(mob(Spider.class, EntityType.SPIDER), 99);
+
+            // La abeja sale en el lugar del mob y no se guarda al descargarse el chunk
+            Skeleton esqueleto = mob(Skeleton.class, EntityType.SKELETON);
+            org.bukkit.Location lugar = mock(org.bukkit.Location.class);
+            when(lugar.add(anyDouble(), anyDouble(), anyDouble())).thenReturn(lugar);
+            when(esqueleto.getLocation()).thenReturn(lugar);
+            assertEquals(ABEJA, extra.convertir(esqueleto, 5));
+            verify(abejas.constructed().getFirst()).spawnCorruptedBee(lugar);
+            verify(abejas.constructed().getFirst().spawnCorruptedBee(lugar)).setPersistent(false);
 
             verify(zombies.constructed().getFirst()).transformToCorruptedZombie(adulto);
             verify(zombies.constructed().getFirst(), never()).transformToCorruptedZombie(bebe);

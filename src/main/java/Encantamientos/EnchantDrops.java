@@ -2,8 +2,6 @@ package Encantamientos;
 
 import imp.crissyjuanxd.QuasoPlugin;
 import org.bukkit.NamespacedKey;
-import org.bukkit.World;
-import org.bukkit.entity.Enemy;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -19,12 +17,11 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.util.Random;
 import java.util.Set;
 
-// De dónde salen los libros: los jefes de la Warden Cave y del End dan uno seguro, los mobs de cada lugar un 1%
-// y los cofres de las Ancient City de la Warden Cave y de las End City un 25%
+// De dónde salen los libros: los jefes de la Warden Cave y del End dan uno seguro y los cofres de las Ancient City de la
+// Warden Cave y de las End City un 40%. Los mobs comunes no sueltan libros
 public class EnchantDrops implements Listener {
 
-    private static final double MOB_CHANCE = 0.01;
-    private static final double CHEST_CHANCE = 0.25;
+    static final double CHEST_CHANCE = 0.40;
     private static final Set<String> WARDEN_CAVE_BOSSES = Set.of("infested_warden_boss", "ultra_warden");
     private static final Set<String> END_BOSSES = Set.of("rey_ender");
 
@@ -44,14 +41,6 @@ public class EnchantDrops implements Listener {
             add(e, QuasoEnchant.randomBook(QuasoEnchant.Group.WARDEN_CAVE, random, 0.5));
         } else if (entity.getType() == EntityType.ENDER_DRAGON || (bossId != null && END_BOSSES.contains(bossId))) {
             give(e, QuasoEnchant.randomBook(QuasoEnchant.Group.END, random, 0.5));
-        } else if (entity instanceof Enemy && entity.getKiller() != null && random.nextDouble() < MOB_CHANCE) {
-            World world = entity.getWorld();
-            if (world.getName().equals(QuasoPlugin.WORLD_NAME)) {
-                add(e, QuasoEnchant.randomBook(QuasoEnchant.Group.WARDEN_CAVE, random, 0.3));
-            } else if (world.getEnvironment() == World.Environment.THE_END && entity.getType() != EntityType.ENDERMAN) {
-                // Los Enderman no: con las granjas saldrían cientos
-                add(e, QuasoEnchant.randomBook(QuasoEnchant.Group.END, random, 0.3));
-            }
         }
     }
 

@@ -188,7 +188,7 @@ public class WardenArmor implements Listener {
                 new EquipoLore.Atributo(EquipoLore.VIDA, "+2 corazones"),
                 new EquipoLore.Atributo(EquipoLore.DESGASTE, "30% de no gastarse"),
                 new EquipoLore.Atributo(EquipoLore.EMPUJE, "10% menos empuje")));
-        if (alado) atributos.add(new EquipoLore.Atributo("✈", "Planea como unas Elytras"));
+        if (alado) atributos.add(new EquipoLore.Atributo(EquipoLore.PLANEO, "Planea como unas Elytras"));
         return EquipoLore.lore(bioma.color(), List.of("Forjada en la profunda oscuridad,", "resuena con las almas del abismo.",
                 "Pieza " + bioma.biome() + "."), true, atributos, EquipoLore.Rango.WARDEN);
     }

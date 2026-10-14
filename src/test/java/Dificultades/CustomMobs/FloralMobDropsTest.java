@@ -26,7 +26,7 @@ class FloralMobDropsTest {
         return plugin;
     }
 
-    @Test void eachMarkedMobHasOneDropBelowThirtyPercentAndNoDropAtTheBoundary() {
+    @Test void eachMarkedMobHasOneDropBelowFortyPercentAndNoDropAtTheBoundary() {
         try (var factories = mockStatic(FloralMobItems.class)) {
             ItemStack flesh=mock(ItemStack.class), eye=mock(ItemStack.class), powder=mock(ItemStack.class);
             factories.when(FloralMobItems::createFlesh).thenReturn(flesh);
@@ -44,10 +44,10 @@ class FloralMobDropsTest {
                 List<ItemStack> drops = new ArrayList<>();
                 ItemStack vanillaDrop=mock(ItemStack.class); drops.add(vanillaDrop);
                 when(event.getDrops()).thenReturn(drops);
-                new FloralMobDrops(plugin(),()->.299999).onDeath(event);
+                new FloralMobDrops(plugin(),()->.399999).onDeath(event);
                 assertEquals(List.of(vanillaDrop,expected.get(i)),drops);
                 drops.clear();
-                new FloralMobDrops(plugin(),()->.30).onDeath(event);
+                new FloralMobDrops(plugin(),()->.40).onDeath(event);
                 assertTrue(drops.isEmpty());
             }
         }
@@ -73,6 +73,19 @@ class FloralMobDropsTest {
             new FloralMobDrops(plugin(), () -> 0).onDeath(event);
             assertTrue(drops.isEmpty());
         }
+    }
+
+    // Sin Saqueo o con I sale 1; con II de 1 a 2 y con III de 1 a 3
+    @Test void lootingGivesUpToItsLevelOnceTheFortyPercentPasses() {
+        for (int saqueo = 0; saqueo <= 1; saqueo++) {
+            assertEquals(1, FloralMobDrops.cantidad(saqueo, 0));
+            assertEquals(1, FloralMobDrops.cantidad(saqueo, .999));
+        }
+        assertEquals(1, FloralMobDrops.cantidad(2, .49));
+        assertEquals(2, FloralMobDrops.cantidad(2, .5));
+        assertEquals(1, FloralMobDrops.cantidad(3, .2));
+        assertEquals(2, FloralMobDrops.cantidad(3, .5));
+        assertEquals(3, FloralMobDrops.cantidad(3, .999));
     }
 
     @Test void vanillaMobsWithTheSameDisplayNameDoNotGetFloralDrops() {

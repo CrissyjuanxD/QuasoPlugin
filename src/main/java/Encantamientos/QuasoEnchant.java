@@ -13,9 +13,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-// Los encantamientos del datapack (data/quaso/enchantment): 3 de la Warden Cave, 2 del End y 7 de los trabajos (uno
-// por trabajo y Veta, el segundo de Minería). No salen en la mesa de encantamientos ni con aldeanos: los de la Warden Cave y el End salen en libros
-// que sueltan los jefes, los mobs y los cofres (EnchantDrops) y los de trabajo al subir de nivel (TrabajosManager)
+// Los encantamientos del datapack (data/quaso/enchantment): 3 de la Warden Cave, 2 del End, 7 de los trabajos (uno
+// por trabajo y Veta, el segundo de Minería) y Vuelo Rápido (arnés del Happy Ghast). No salen en la mesa de
+// encantamientos ni con aldeanos: los de la Warden Cave y el End salen en libros de los jefes y de los cofres de las
+// Ancient City y las End City (EnchantDrops), los de trabajo al subir de nivel (TrabajosManager) y Vuelo Rápido en la
+// tienda y las misiones
 public enum QuasoEnchant {
     PASO_IGNEO("paso_igneo", 2, Group.WARDEN_CAVE,
             "Caminas sobre la lava: se vuelve obsidiana,",
@@ -52,9 +54,12 @@ public enum QuasoEnchant {
             "+1 bloque de alcance por nivel."),
     VIGOR_DE_BATALLA("vigor_de_batalla", 3, "#D98C7A",
             "Al matar un monstruo te curas",
-            "1 corazón por nivel.");
+            "1 corazón por nivel."),
+    VUELO_RAPIDO("vuelo_rapido", 2, Group.TIENDA, "#AEECEF", new String[]{
+            "En el arnés: el Happy Ghast vuela",
+            "50% más rápido por nivel."});
 
-    public enum Group { WARDEN_CAVE, END, TRABAJO }
+    public enum Group { WARDEN_CAVE, END, TRABAJO, TIENDA }
 
     private final NamespacedKey key;
     // El mismo max_level del JSON
@@ -122,7 +127,7 @@ public enum QuasoEnchant {
         List<String> lore = new ArrayList<>();
         for (String line : description) lore.add(ChatColor.of(color) + line);
         meta.setLore(lore);
-        meta.setItemModel(NamespacedKey.minecraft("libro_" + key.getKey()));
+        meta.setItemModel(NamespacedKey.minecraft(this == VUELO_RAPIDO ? "happy_ghast_enchant" : "libro_" + key.getKey()));
         book.setItemMeta(meta);
         return book;
     }

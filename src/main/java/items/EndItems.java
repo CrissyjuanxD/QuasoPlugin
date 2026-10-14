@@ -148,12 +148,12 @@ public final class EndItems {
             atributos.add(new EquipoLore.Atributo(EquipoLore.MINADO, "Pica " + Math.round(tool.mining * 100) + "% más rápido que Netherite"));
         }
         if (tool == Tool.ESPADA) {
-            atributos.add(new EquipoLore.Atributo(EquipoLore.ESPECIAL, "Doble de daño a los mobs del End"));
-            atributos.add(new EquipoLore.Atributo(EquipoLore.ESPECIAL, "Doble de daño al Rey Ender"));
+            atributos.add(new EquipoLore.Atributo(EquipoLore.CONTRA, "Doble de daño a los mobs del End"));
+            atributos.add(new EquipoLore.Atributo(EquipoLore.CONTRA, "Doble de daño al Rey Ender"));
         } else if (tool.weapon) {
-            atributos.add(new EquipoLore.Atributo(EquipoLore.ESPECIAL, "+50% de daño al Rey Ender"));
+            atributos.add(new EquipoLore.Atributo(EquipoLore.CONTRA, "+50% de daño al Rey Ender"));
         }
-        if (tool == Tool.PICO) atributos.add(new EquipoLore.Atributo(EquipoLore.ESPECIAL, "18% de Cristal en los racimos"));
+        if (tool == Tool.PICO) atributos.add(new EquipoLore.Atributo(EquipoLore.CRISTAL, "18% de Cristal en los racimos"));
         meta.addItemFlags(org.bukkit.inventory.ItemFlag.HIDE_ATTRIBUTES);
         meta.setLore(EquipoLore.lore(CELESTE, List.of("Forjada con los cristales", "del End."), false, atributos, EquipoLore.Rango.CELESTITA));
         item.setItemMeta(meta);

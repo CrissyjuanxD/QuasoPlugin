@@ -1,0 +1,35 @@
+{
+  "anvil_cost": 4,
+  "description": {
+    "text": "Vuelo Rápido",
+    "color": "#AEECEF"
+  },
+  "effects": {
+    "minecraft:attributes": [
+      {
+        "amount": {
+          "type": "minecraft:linear",
+          "base": 0.5,
+          "per_level_above_first": 0.5
+        },
+        "attribute": "minecraft:flying_speed",
+        "id": "quaso:enchantment.vuelo_rapido",
+        "operation": "add_multiplied_base"
+      }
+    ]
+  },
+  "max_cost": {
+    "base": 25,
+    "per_level_above_first": 10
+  },
+  "max_level": 2,
+  "min_cost": {
+    "base": 10,
+    "per_level_above_first": 10
+  },
+  "slots": [
+    "body"
+  ],
+  "supported_items": "#minecraft:harnesses",
+  "weight": 1
+}

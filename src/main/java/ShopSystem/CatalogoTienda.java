@@ -61,15 +61,19 @@ public final class CatalogoTienda {
                 vende("bar_sake", 1, 1, 3));
         tienda("utilidad", "&b&lUtilidad", "toolsmith",
                 vende("artefacto_nivel_1", 1, 10, 1),
-                vende("totem_of_undying", 1, 12, 1),
-                vende("flytotem", 1, 15, 1),
-                vende("icetotem", 1, 20, 1),
                 vende("life_campfire", 1, 20, 1),
                 vende("fuel_campfire", 2, 4, 1),
                 vende("gancho", 1, 20, 1),
                 vende("enderbag", 1, 25, 1),
-                vende("artefacto_nivel_2", 1, 30, 2),
-                vende("doubletotem", 1, 45, 2));
+                vende("artefacto_nivel_2", 1, 30, 2));
+        // Todos los tótems juntos: el Sculk con la Warden Cave (día 20) y el Ender con el End (día 30)
+        tienda("totems", "&e&lTótems", "armorer",
+                vende("totem_of_undying", 1, 12, 1),
+                vende("flytotem", 1, 15, 1),
+                vende("icetotem", 1, 20, 1),
+                vende("doubletotem", 1, 45, 2),
+                vende("sculk_totem", 1, 35, 2),
+                vende("ender_totem", 1, 55, 3));
         tienda("mochilas", "&a&lMochilas y Amuletos", "leatherworker",
                 vende("mochila_nivel_1", 1, 15, 1),
                 vende("mochila_nivel_2", 1, 30, 1),

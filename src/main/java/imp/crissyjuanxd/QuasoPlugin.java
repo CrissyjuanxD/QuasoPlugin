@@ -133,7 +133,6 @@ public class QuasoPlugin extends JavaPlugin implements Listener {
     private BloodMoon bloodMoon;
     private AmuletInmortal amuletInmortal;
     private LifeCampfire lifeCampfire;
-    private HappyGhastEnchant happyGhastEnchant;
     private ItemsEventos itemsEventos;
     private InvulnerableItemProtection invulnerableItemProtection;
     private AmuletInvisibility amuletInvisibility;
@@ -349,7 +348,6 @@ public class QuasoPlugin extends JavaPlugin implements Listener {
         amuletBloodM = new AmuletBloodM(this, bloodMoon);
         amuletInmortal = new AmuletInmortal(this);
         lifeCampfire = new LifeCampfire(this);
-        happyGhastEnchant = new HappyGhastEnchant(this);
         itemsEventos = new ItemsEventos(this);
         Bukkit.getPluginManager().registerEvents(new KeepInventoryLiquido(this), this);
         Bukkit.getPluginManager().registerEvents(new EstatuaProtectora(this), this);
@@ -369,7 +367,6 @@ public class QuasoPlugin extends JavaPlugin implements Listener {
         Bukkit.getPluginManager().registerEvents(amuletBloodM, this);
         Bukkit.getPluginManager().registerEvents(amuletInmortal, this);
         Bukkit.getPluginManager().registerEvents(lifeCampfire, this);
-        Bukkit.getPluginManager().registerEvents(happyGhastEnchant, this);
         Bukkit.getPluginManager().registerEvents(itemsEventos, this);
         Bukkit.getPluginManager().registerEvents(amuletInvisibility, this);
         Bukkit.getPluginManager().registerEvents(explosiveBow, this);
@@ -750,6 +747,7 @@ public class QuasoPlugin extends JavaPlugin implements Listener {
         getServer().getPluginManager().registerEvents(new Veta(this), this);
         getServer().getPluginManager().registerEvents(new Cosecha(this), this);
         getServer().getPluginManager().registerEvents(new VigorDeBatalla(), this);
+        getServer().getPluginManager().registerEvents(new VueloRapido(this), this);
         if (!QuasoEnchant.allLoaded()) {
             getLogger().warning("Los encantamientos del datapack no están cargados todavía: reinicia el server.");
         }

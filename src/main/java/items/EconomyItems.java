@@ -27,6 +27,31 @@ public class EconomyItems {
         meta.getPersistentDataContainer().set(unstackableKey, PersistentDataType.STRING, UUID.randomUUID().toString());
     }
 
+    // Las DinoCoins y las DinoFichas se apilan de a 99 (el juego no deja más de 99 por stack)
+    public static final int STACK_MONEDA = 99;
+
+    // Las monedas de antes (de a 64) se pasan a las de 99 cuando se tocan: si no, no se apilarían con las nuevas ni
+    // servirían en la tienda, que pide la moneda exacta. true si cambió
+    public static boolean normalizarMoneda(ItemStack item) {
+        if (!EconomyItemsFunctions.isDinoCoin(item) && !EconomyItemsFunctions.isDinoFicha(item)) return false;
+        ItemMeta meta = item.getItemMeta();
+        if (meta.hasMaxStackSize() && meta.getMaxStackSize() == STACK_MONEDA) return false;
+        meta.setMaxStackSize(STACK_MONEDA);
+        item.setItemMeta(meta);
+        return true;
+    }
+
+    // Las mochilas y el monedero ya no brillan: también se le quita a los que ya existían. true si cambió
+    public static boolean quitarBrillo(ItemStack item) {
+        ItemMeta meta = item == null ? null : item.getItemMeta();
+        if (meta == null) return false;
+        boolean brilla = meta.hasEnchantmentGlintOverride() ? meta.getEnchantmentGlintOverride() : meta.hasEnchants();
+        if (!brilla) return false;
+        meta.setEnchantmentGlintOverride(false);
+        item.setItemMeta(meta);
+        return true;
+    }
+
     public static ItemStack createVithiumCoin() {
         ItemStack item = new ItemStack(Material.SUNFLOWER);
         ItemMeta meta = item.getItemMeta();
@@ -44,6 +69,7 @@ public class EconomyItems {
         meta.setLore(lore);
         meta.setRarity(ItemRarity.EPIC);
         meta.setEnchantmentGlintOverride(false);
+        meta.setMaxStackSize(STACK_MONEDA);
 
         meta.setItemModel(NamespacedKey.minecraft("dinocoins"));
         item.setItemMeta(meta);
@@ -67,6 +93,7 @@ public class EconomyItems {
         meta.setLore(lore);
         meta.setRarity(ItemRarity.EPIC);
         meta.setEnchantmentGlintOverride(false);
+        meta.setMaxStackSize(STACK_MONEDA);
 
         meta.setItemModel(NamespacedKey.minecraft("dinofichas"));
         item.setItemMeta(meta);
@@ -112,8 +139,6 @@ public class EconomyItems {
 
         meta.setLore(lore);
         meta.setRarity(ItemRarity.EPIC);
-        meta.addEnchant(Enchantment.UNBREAKING, 1, true);
-        meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
         makeUnstackable(meta);
 
         meta.setItemModel(NamespacedKey.minecraft("mochila_nivel_1"));
@@ -137,8 +162,6 @@ public class EconomyItems {
 
         meta.setLore(lore);
         meta.setRarity(ItemRarity.EPIC);
-        meta.addEnchant(Enchantment.UNBREAKING, 1, true);
-        meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
         makeUnstackable(meta);
 
         meta.setItemModel(NamespacedKey.minecraft("mochila_nivel_2"));
@@ -162,8 +185,6 @@ public class EconomyItems {
 
         meta.setLore(lore);
         meta.setRarity(ItemRarity.EPIC);
-        meta.addEnchant(Enchantment.UNBREAKING, 1, true);
-        meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
         makeUnstackable(meta);
 
         meta.setItemModel(NamespacedKey.minecraft("mochila_nivel_3"));
@@ -187,8 +208,6 @@ public class EconomyItems {
 
         meta.setLore(lore);
         meta.setRarity(ItemRarity.EPIC);
-        meta.addEnchant(Enchantment.UNBREAKING, 1, true);
-        meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
         makeUnstackable(meta);
 
         meta.setItemModel(NamespacedKey.minecraft("mochila_nivel_4"));
@@ -212,8 +231,6 @@ public class EconomyItems {
 
         meta.setLore(lore);
         meta.setRarity(ItemRarity.EPIC);
-        meta.addEnchant(Enchantment.UNBREAKING, 1, true);
-        meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
         makeUnstackable(meta);
 
         meta.setItemModel(NamespacedKey.minecraft("mochila_nivel_5"));
@@ -239,8 +256,6 @@ public class EconomyItems {
 
         meta.setLore(lore);
         meta.setRarity(ItemRarity.EPIC);
-        meta.setEnchantmentGlintOverride(true);
-        meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
         meta.setMaxStackSize(1);
         makeUnstackable(meta);
         meta.setItemModel(NamespacedKey.minecraft("monedero"));

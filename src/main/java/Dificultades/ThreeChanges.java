@@ -72,20 +72,7 @@ public class ThreeChanges implements Listener, Change {
         return isApplied;
     }
 
-    @Override
-    public String tituloAnuncio() {
-        return "¡El End cambió!";
-    }
 
-    @Override
-    public List<String> anuncio() {
-        return List.of(
-                "Biomas nuevos en las islas de afuera: Bosque Prismático, Páramo Marchito y Picos Helados.",
-                "Ender Blaze, Ender Creeper, Ender Spider, Ender Insect y el Shulker Negro.",
-                "Celestita: los racimos de amatista del Bosque Prismático dan Cristales para el lingote y las 6 herramientas (salen de las florales).",
-                "El Rey Ender se invoca con su ojo en un Santuario Marchito y suelta la EnderKing Pearl (Peto de Warden Alado).",
-                "Libros de Anclaje y Retorno del Vacío en las End Cities y los jefes.");
-    }
 
     // Abre la etapa del End: los mobs del End spawnean en sus biomas, los shulkers cambian, salen las drops del End,
     // las recetas de la Celestita y el altar del Rey Ender

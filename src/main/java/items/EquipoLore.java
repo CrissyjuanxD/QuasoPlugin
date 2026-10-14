@@ -37,7 +37,12 @@ public final class EquipoLore {
     public static final String VIDA = "❤";
     public static final String DESGASTE = "✚";
     public static final String EMPUJE = "⚓";
-    public static final String ESPECIAL = "✦";
+    // Contra un enemigo en especial (los mobs del End, el Rey Ender)
+    public static final String CONTRA = "☠";
+    public static final String CRISTAL = "◇";
+    public static final String BLOQUEO = "⛨";
+    public static final String IRROMPIBLE = "∞";
+    public static final String PLANEO = "✈";
 
     private EquipoLore() {}
 

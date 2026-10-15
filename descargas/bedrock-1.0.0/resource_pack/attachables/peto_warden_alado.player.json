@@ -1,0 +1,45 @@
+{
+  "format_version": "1.10.0",
+  "minecraft:attachable": {
+    "description": {
+      "identifier": "quaso:peto_warden_alado.player",
+      "item": {
+        "quaso:peto_warden_alado": "query.owner_identifier == 'minecraft:player'"
+      },
+      "materials": {
+        "default": "armor",
+        "enchanted": "armor_enchanted",
+        "wings": "elytra"
+      },
+      "textures": {
+        "default": "textures/models/armor/quaso/humanoid/warden_alado",
+        "enchanted": "textures/misc/enchanted_actor_glint",
+        "wings": "textures/models/armor/quaso/warden_alado_wings"
+      },
+      "geometry": {
+        "default": "geometry.player.armor.chestplate",
+        "wings": "geometry.elytra"
+      },
+      "scripts": {
+        "parent_setup": "variable.chest_layer_visible = 0.0;",
+        "animate": [
+          "offset",
+          "default_controller"
+        ]
+      },
+      "animations": {
+        "offset": "animation.armor.chestplate.offset",
+        "default_controller": "controller.animation.elytra.default",
+        "default": "animation.elytra.default",
+        "gliding": "animation.elytra.gliding",
+        "sneaking": "animation.elytra.sneaking",
+        "sleeping": "animation.elytra.sleeping",
+        "swimming": "animation.elytra.swimming"
+      },
+      "render_controllers": [
+        "controller.render.quaso.armor",
+        "controller.render.quaso.wings"
+      ]
+    }
+  }
+}

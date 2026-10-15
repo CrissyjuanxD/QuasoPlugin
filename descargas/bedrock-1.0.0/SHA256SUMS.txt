@@ -1,0 +1,3 @@
+d509d138282786262016112b9ce25d2199f61980be0bf7ad0d9c599a6ba639e4  packs/QuasoTextures-1.0.0.mcpack
+1ab47740084b334db6a9cf8c948678a581ae46f23368d6440af4ca9ff719fda0  opcional_mobs/QuasoMobs-1.0.0.mcpack
+b7f9534309309631387d0c12e65eb16d010911207b06d236c483c5c2c3ab8cce  custom_mappings/quaso_items.json

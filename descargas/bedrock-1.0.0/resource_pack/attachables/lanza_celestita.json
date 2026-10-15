@@ -1,0 +1,32 @@
+{
+  "format_version": "1.10.0",
+  "minecraft:attachable": {
+    "description": {
+      "identifier": "quaso:lanza_celestita",
+      "materials": {
+        "default": "entity_alphatest",
+        "enchanted": "entity_alphatest_glint"
+      },
+      "textures": {
+        "default": "textures/items/quaso/lanza_celestita_in_hand",
+        "enchanted": "textures/misc/enchanted_item_glint"
+      },
+      "geometry": {
+        "default": "geometry.spear"
+      },
+      "render_controllers": [
+        "controller.render.item_default"
+      ],
+      "animations": {
+        "held": "controller.animation.spear.held",
+        "held_first_person": "animation.spear.held_first_person",
+        "held_third_person": "animation.spear.held_third_person"
+      },
+      "scripts": {
+        "animate": [
+          "held"
+        ]
+      }
+    }
+  }
+}

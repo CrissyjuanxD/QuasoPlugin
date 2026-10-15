@@ -1,0 +1,19 @@
+{
+  "java_zip": "QuasoTextures.zip",
+  "sha256": "513ca2a0519a93c14638cf1104afeb0261eb76691c942ecea8240fc58ef0eeca",
+  "minecraft_java": "26.2",
+  "geyser": "2.12.0-b1256 (fc2170c)",
+  "bedrock_principal_min": [
+    1,
+    26,
+    30
+  ],
+  "bedrock_mobs_min": [
+    1,
+    26,
+    50
+  ],
+  "fecha": "2026-10-15",
+  "plantillas_bedrock": "https://github.com/Mojang/bedrock-samples",
+  "modificacion_posterior_java": "Correcci\u00f3n de copper_golem2.jem, commit 0da7623"
+}

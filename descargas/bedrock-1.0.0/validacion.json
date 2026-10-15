@@ -1,0 +1,16 @@
+{
+  "checks": [
+    "JSON sin claves duplicadas y PNG válidos en ambos packs",
+    "313 mappings únicos: material + item_model, iconos existentes y límite Bedrock de 64",
+    "30 attachables con texturas y geometrías propias resueltas",
+    "Armaduras floral, Warden y peto alado; segunda capa floral y alas presentes",
+    "Estatua Bedrock: base Y=0, altura visible 4,40 bloques con escala 4,5 del plugin",
+    "15 variantes: condición por nombre y conservación del renderizado vanilla para otros mobs",
+    "23 códigos de fuente y siete GUIs conservando las cuadrículas de interacción"
+  ],
+  "items": 313,
+  "attachables": 30,
+  "mobs": 15,
+  "visual_client_tested": false,
+  "server_startup_test": "Geyser Standalone 2.12.0-b1256; misma implementación de custom_mappings que Geyser-Spigot. No equivale a una conexión de cliente."
+}

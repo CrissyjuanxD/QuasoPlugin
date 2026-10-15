@@ -1,0 +1,183 @@
+{
+  "originales": [
+    {
+      "code": "U+E900",
+      "character": "",
+      "source": "minecraft:croissants_scoreboard.png",
+      "java_height": 58,
+      "java_ascent": 40
+    },
+    {
+      "code": "U+E906",
+      "character": "",
+      "source": "minecraft:croissants_tablist.png",
+      "java_height": 60,
+      "java_ascent": 28
+    },
+    {
+      "code": "U+E904",
+      "character": "",
+      "source": "minecraft:dinocoins.png",
+      "java_height": 14,
+      "java_ascent": 10
+    },
+    {
+      "code": "U+E901",
+      "character": "",
+      "source": "minecraft:usuario.png",
+      "java_height": 14,
+      "java_ascent": 10
+    },
+    {
+      "code": "U+E902",
+      "character": "",
+      "source": "minecraft:rango.png",
+      "java_height": 14,
+      "java_ascent": 10
+    },
+    {
+      "code": "U+E903",
+      "character": "",
+      "source": "minecraft:misiones.png",
+      "java_height": 14,
+      "java_ascent": 10
+    },
+    {
+      "code": "U+E905",
+      "character": "",
+      "source": "minecraft:trabajo.png",
+      "java_height": 14,
+      "java_ascent": 10
+    },
+    {
+      "code": "U+EB87",
+      "character": "",
+      "source": "theranks:ranks/admin.png",
+      "java_height": 8,
+      "java_ascent": 8
+    },
+    {
+      "code": "U+EB88",
+      "character": "",
+      "source": "theranks:ranks/mod.png",
+      "java_height": 8,
+      "java_ascent": 8
+    },
+    {
+      "code": "U+EB89",
+      "character": "",
+      "source": "theranks:ranks/helper.png",
+      "java_height": 8,
+      "java_ascent": 8
+    },
+    {
+      "code": "U+EB8A",
+      "character": "",
+      "source": "theranks:ranks/dinonugget.png",
+      "java_height": 8,
+      "java_ascent": 8
+    },
+    {
+      "code": "U+EB8B",
+      "character": "",
+      "source": "theranks:ranks/dinonugget_plus.png",
+      "java_height": 8,
+      "java_ascent": 8
+    },
+    {
+      "code": "U+EB8C",
+      "character": "",
+      "source": "theranks:ranks/dinoleyenda.png",
+      "java_height": 8,
+      "java_ascent": 8
+    },
+    {
+      "code": "U+EB8D",
+      "character": "",
+      "source": "theranks:ranks/dinosub.png",
+      "java_height": 8,
+      "java_ascent": 8
+    },
+    {
+      "code": "U+EB8E",
+      "character": "",
+      "source": "theranks:ranks/dinovip.png",
+      "java_height": 8,
+      "java_ascent": 8
+    },
+    {
+      "code": "U+EB8F",
+      "character": "",
+      "source": "theranks:ranks/admin_tab.png",
+      "java_height": 8,
+      "java_ascent": 8
+    },
+    {
+      "code": "U+EB90",
+      "character": "",
+      "source": "theranks:ranks/mod_tab.png",
+      "java_height": 8,
+      "java_ascent": 8
+    },
+    {
+      "code": "U+EB91",
+      "character": "",
+      "source": "theranks:ranks/helper_tab.png",
+      "java_height": 8,
+      "java_ascent": 8
+    },
+    {
+      "code": "U+EB92",
+      "character": "",
+      "source": "theranks:ranks/dinonugget_tab.png",
+      "java_height": 8,
+      "java_ascent": 8
+    },
+    {
+      "code": "U+EB93",
+      "character": "",
+      "source": "theranks:ranks/dinonugget_plus_tab.png",
+      "java_height": 8,
+      "java_ascent": 8
+    },
+    {
+      "code": "U+EB94",
+      "character": "",
+      "source": "theranks:ranks/dinoleyenda_tab.png",
+      "java_height": 8,
+      "java_ascent": 8
+    },
+    {
+      "code": "U+EB95",
+      "character": "",
+      "source": "theranks:ranks/dinosub_tab.png",
+      "java_height": 8,
+      "java_ascent": 8
+    },
+    {
+      "code": "U+EB96",
+      "character": "",
+      "source": "theranks:ranks/dinovip_tab.png",
+      "java_height": 8,
+      "java_ascent": 8
+    }
+  ],
+  "rangos_anchos_bedrock": {
+    "admin": "",
+    "mod": "",
+    "helper": "",
+    "dinonugget": "",
+    "dinonugget_plus": "",
+    "dinoleyenda": "",
+    "dinosub": "",
+    "dinovip": "",
+    "admin_tab": "",
+    "mod_tab": "",
+    "helper_tab": "",
+    "dinonugget_tab": "",
+    "dinonugget_plus_tab": "",
+    "dinoleyenda_tab": "",
+    "dinosub_tab": "",
+    "dinovip_tab": ""
+  }
+}

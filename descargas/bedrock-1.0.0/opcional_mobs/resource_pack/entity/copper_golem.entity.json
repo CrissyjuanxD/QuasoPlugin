@@ -1,0 +1,105 @@
+{
+  "format_version": "1.10.0",
+  "minecraft:client_entity": {
+    "description": {
+      "identifier": "minecraft:copper_golem",
+      "min_engine_version": "1.12.0",
+      "materials": {
+        "default": "copper_golem",
+        "eyes": "copper_golem_eyes",
+        "flower": "copper_golem_flower",
+        "quaso": "entity_alphatest",
+        "quaso_glow": "entity_emissive_alpha"
+      },
+      "textures": {
+        "default": "textures/entity/copper_golem/copper_golem",
+        "exposed": "textures/entity/copper_golem/copper_golem_exposed",
+        "weathered": "textures/entity/copper_golem/copper_golem_weathered",
+        "oxidized": "textures/entity/copper_golem/copper_golem_oxidized",
+        "eyes_default": "textures/entity/copper_golem/copper_golem_eyes",
+        "eyes_exposed": "textures/entity/copper_golem/copper_golem_eyes_exposed",
+        "eyes_weathered": "textures/entity/copper_golem/copper_golem_eyes_weathered",
+        "eyes_oxidized": "textures/entity/copper_golem/copper_golem_eyes_oxidized",
+        "flower": "textures/entity/copper_golem/copper_golem_flower",
+        "copper_golem2": "textures/entity/quaso/copper_golem2",
+        "copper_golem2_e": "textures/entity/quaso/copper_golem2_e"
+      },
+      "geometry": {
+        "default": "geometry.copper_golem",
+        "flower": "geometry.copper_golem.flower",
+        "standing": "geometry.copper_golem",
+        "sitting": "geometry.copper_golem.sitting",
+        "running": "geometry.copper_golem.running",
+        "star": "geometry.copper_golem.star",
+        "copper_golem2": "geometry.quaso.copper_golem2"
+      },
+      "animations": {
+        "look_at_target": "animation.common.look_at_target",
+        "walk": "animation.copper_golem.walk",
+        "walk_holding_item": "animation.copper_golem.walk_holding_item",
+        "spin": "animation.copper_golem.spin",
+        "spin_weathered": "animation.copper_golem.spin.weathered",
+        "spin_oxidized": "animation.copper_golem.spin.oxidized",
+        "walk_controller": "controller.animation.copper_golem.walk",
+        "hold_item": "animation.copper_golem.hold_item",
+        "idle_controller": "controller.animation.copper_golem.idle",
+        "chest_interaction_controller": "controller.animation.copper_golem.chest_interaction",
+        "chest_interaction.put_item": "animation.copper_golem.chest_interaction.put_item",
+        "chest_interaction.put_item_fail": "animation.copper_golem.chest_interaction.put_item_fail",
+        "chest_interaction.take_item": "animation.copper_golem.chest_interaction.take_item",
+        "chest_interaction.take_item_fail": "animation.copper_golem.chest_interaction.take_item_fail"
+      },
+      "scripts": {
+        "pre_animation": [
+          "v.oxidation = query.property('minecraft:oxidation_level');",
+          "v.index = (v.oxidation == 'unoxidized') ? 0 : ((v.oxidation == 'exposed') ? 1 : ((v.oxidation == 'weathered') ? 2 : 3 ));",
+          "v.walking = query.modified_move_speed > 0.01;",
+          "v.chest_interaction = query.property('minecraft:chest_interaction');",
+          "variable.quaso_copper_golem2 = query.is_name_any('Estatua de Recompensas', '§rEstatua de Recompensas', 'Estatua de Recompensas§r', '§lEstatua de Recompensas', '§r§lEstatua de Recompensas', '§lEstatua de Recompensas§r', '§0Estatua de Recompensas', '§r§0Estatua de Recompensas', '§0Estatua de Recompensas§r', '§0§lEstatua de Recompensas', '§r§0§lEstatua de Recompensas', '§0§lEstatua de Recompensas§r', '§1Estatua de Recompensas', '§r§1Estatua de Recompensas', '§1Estatua de Recompensas§r', '§1§lEstatua de Recompensas', '§r§1§lEstatua de Recompensas', '§1§lEstatua de Recompensas§r', '§2Estatua de Recompensas', '§r§2Estatua de Recompensas', '§2Estatua de Recompensas§r', '§2§lEstatua de Recompensas', '§r§2§lEstatua de Recompensas', '§2§lEstatua de Recompensas§r', '§3Estatua de Recompensas', '§r§3Estatua de Recompensas', '§3Estatua de Recompensas§r', '§3§lEstatua de Recompensas', '§r§3§lEstatua de Recompensas', '§3§lEstatua de Recompensas§r', '§4Estatua de Recompensas', '§r§4Estatua de Recompensas', '§4Estatua de Recompensas§r', '§4§lEstatua de Recompensas', '§r§4§lEstatua de Recompensas', '§4§lEstatua de Recompensas§r', '§5Estatua de Recompensas', '§r§5Estatua de Recompensas', '§5Estatua de Recompensas§r', '§5§lEstatua de Recompensas', '§r§5§lEstatua de Recompensas', '§5§lEstatua de Recompensas§r', '§6Estatua de Recompensas', '§r§6Estatua de Recompensas', '§6Estatua de Recompensas§r', '§6§lEstatua de Recompensas', '§r§6§lEstatua de Recompensas', '§6§lEstatua de Recompensas§r', '§7Estatua de Recompensas', '§r§7Estatua de Recompensas', '§7Estatua de Recompensas§r', '§7§lEstatua de Recompensas', '§r§7§lEstatua de Recompensas', '§7§lEstatua de Recompensas§r', '§8Estatua de Recompensas', '§r§8Estatua de Recompensas', '§8Estatua de Recompensas§r', '§8§lEstatua de Recompensas', '§r§8§lEstatua de Recompensas', '§8§lEstatua de Recompensas§r', '§9Estatua de Recompensas', '§r§9Estatua de Recompensas', '§9Estatua de Recompensas§r', '§9§lEstatua de Recompensas', '§r§9§lEstatua de Recompensas', '§9§lEstatua de Recompensas§r', '§aEstatua de Recompensas', '§r§aEstatua de Recompensas', '§aEstatua de Recompensas§r', '§a§lEstatua de Recompensas', '§r§a§lEstatua de Recompensas', '§a§lEstatua de Recompensas§r', '§bEstatua de Recompensas', '§r§bEstatua de Recompensas', '§bEstatua de Recompensas§r', '§b§lEstatua de Recompensas', '§r§b§lEstatua de Recompensas', '§b§lEstatua de Recompensas§r', '§cEstatua de Recompensas', '§r§cEstatua de Recompensas', '§cEstatua de Recompensas§r', '§c§lEstatua de Recompensas', '§r§c§lEstatua de Recompensas', '§c§lEstatua de Recompensas§r', '§dEstatua de Recompensas', '§r§dEstatua de Recompensas', '§dEstatua de Recompensas§r', '§d§lEstatua de Recompensas', '§r§d§lEstatua de Recompensas', '§d§lEstatua de Recompensas§r', '§eEstatua de Recompensas', '§r§eEstatua de Recompensas', '§eEstatua de Recompensas§r', '§e§lEstatua de Recompensas', '§r§e§lEstatua de Recompensas', '§e§lEstatua de Recompensas§r', '§fEstatua de Recompensas', '§r§fEstatua de Recompensas', '§fEstatua de Recompensas§r', '§f§lEstatua de Recompensas', '§r§f§lEstatua de Recompensas', '§f§lEstatua de Recompensas§r', '§gEstatua de Recompensas', '§r§gEstatua de Recompensas', '§gEstatua de Recompensas§r', '§g§lEstatua de Recompensas', '§r§g§lEstatua de Recompensas', '§g§lEstatua de Recompensas§r', '§hEstatua de Recompensas', '§r§hEstatua de Recompensas', '§hEstatua de Recompensas§r', '§h§lEstatua de Recompensas', '§r§h§lEstatua de Recompensas', '§h§lEstatua de Recompensas§r', '§iEstatua de Recompensas', '§r§iEstatua de Recompensas', '§iEstatua de Recompensas§r', '§i§lEstatua de Recompensas', '§r§i§lEstatua de Recompensas', '§i§lEstatua de Recompensas§r', '§jEstatua de Recompensas', '§r§jEstatua de Recompensas', '§jEstatua de Recompensas§r', '§j§lEstatua de Recompensas', '§r§j§lEstatua de Recompensas', '§j§lEstatua de Recompensas§r', '§mEstatua de Recompensas', '§r§mEstatua de Recompensas', '§mEstatua de Recompensas§r', '§m§lEstatua de Recompensas', '§r§m§lEstatua de Recompensas', '§m§lEstatua de Recompensas§r', '§nEstatua de Recompensas', '§r§nEstatua de Recompensas', '§nEstatua de Recompensas§r', '§n§lEstatua de Recompensas', '§r§n§lEstatua de Recompensas', '§n§lEstatua de Recompensas§r', '§pEstatua de Recompensas', '§r§pEstatua de Recompensas', '§pEstatua de Recompensas§r', '§p§lEstatua de Recompensas', '§r§p§lEstatua de Recompensas', '§p§lEstatua de Recompensas§r', '§qEstatua de Recompensas', '§r§qEstatua de Recompensas', '§qEstatua de Recompensas§r', '§q§lEstatua de Recompensas', '§r§q§lEstatua de Recompensas', '§q§lEstatua de Recompensas§r', '§sEstatua de Recompensas', '§r§sEstatua de Recompensas', '§sEstatua de Recompensas§r', '§s§lEstatua de Recompensas', '§r§s§lEstatua de Recompensas', '§s§lEstatua de Recompensas§r', '§tEstatua de Recompensas', '§r§tEstatua de Recompensas', '§tEstatua de Recompensas§r', '§t§lEstatua de Recompensas', '§r§t§lEstatua de Recompensas', '§t§lEstatua de Recompensas§r', '§uEstatua de Recompensas', '§r§uEstatua de Recompensas', '§uEstatua de Recompensas§r', '§u§lEstatua de Recompensas', '§r§u§lEstatua de Recompensas', '§u§lEstatua de Recompensas§r');",
+          "variable.quaso_custom = variable.quaso_copper_golem2;"
+        ],
+        "animate": [
+          "look_at_target",
+          {
+            "walk_controller": "query.property('minecraft:chest_interaction') == 'none'"
+          },
+          {
+            "idle_controller": "query.property('minecraft:chest_interaction') == 'none'"
+          },
+          "chest_interaction_controller"
+        ],
+        "should_update_effects_offscreen": "1.0"
+      },
+      "sound_effects": {
+        "spin": "mob.copper_golem.spin",
+        "spin_weathered": "mob.copper_golem.weathered.spin",
+        "spin_oxidized": "mob.copper_golem.oxidized.spin",
+        "put_item": "mob.copper_golem.chest_interaction.put_item",
+        "put_item_fail": "mob.copper_golem.chest_interaction.put_item_fail",
+        "take_item": "mob.copper_golem.chest_interaction.take_item",
+        "take_item_fail": "mob.copper_golem.chest_interaction.take_item_fail"
+      },
+      "render_controllers": [
+        {
+          "controller.render.copper_golem_flower": "!variable.quaso_custom"
+        },
+        {
+          "controller.render.copper_golem": "!variable.quaso_custom"
+        },
+        {
+          "controller.render.copper_golem_eyes": "!variable.quaso_custom"
+        },
+        {
+          "controller.render.quaso.copper_golem2": "variable.quaso_copper_golem2"
+        },
+        {
+          "controller.render.quaso.copper_golem2_e": "variable.quaso_copper_golem2"
+        }
+      ],
+      "spawn_egg": {
+        "texture": "spawn_egg_copper_golem"
+      },
+      "enable_attachables": true
+    }
+  }
+}

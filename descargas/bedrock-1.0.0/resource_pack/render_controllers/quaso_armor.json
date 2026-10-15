@@ -1,0 +1,39 @@
+{
+  "format_version": "1.8.0",
+  "render_controllers": {
+    "controller.render.quaso.armor": {
+      "geometry": "Geometry.default",
+      "materials": [
+        {
+          "*": "variable.is_enchanted ? Material.enchanted : Material.default"
+        }
+      ],
+      "textures": [
+        "Texture.default",
+        "Texture.enchanted"
+      ]
+    },
+    "controller.render.quaso.flowers": {
+      "geometry": "Geometry.flowers",
+      "materials": [
+        {
+          "*": "Material.default"
+        }
+      ],
+      "textures": [
+        "Texture.flowers"
+      ]
+    },
+    "controller.render.quaso.wings": {
+      "geometry": "Geometry.wings",
+      "materials": [
+        {
+          "*": "Material.wings"
+        }
+      ],
+      "textures": [
+        "Texture.wings"
+      ]
+    }
+  }
+}

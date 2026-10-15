@@ -1,0 +1,16 @@
+[
+  {
+    "model": "map",
+    "java_item": "minecraft:map",
+    "evidence": "factory_ItemManager",
+    "display_name": "Misiones",
+    "command": "misiones"
+  },
+  {
+    "model": "recovery_compass",
+    "java_item": "minecraft:recovery_compass",
+    "evidence": "factory_ItemManager",
+    "display_name": "Brújula de Retorno",
+    "command": "retorno_warden"
+  }
+]

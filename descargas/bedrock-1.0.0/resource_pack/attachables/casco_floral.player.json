@@ -1,0 +1,37 @@
+{
+  "format_version": "1.10.0",
+  "minecraft:attachable": {
+    "description": {
+      "identifier": "quaso:casco_floral.player",
+      "item": {
+        "quaso:casco_floral": "query.owner_identifier == 'minecraft:player'"
+      },
+      "materials": {
+        "default": "armor",
+        "enchanted": "armor_enchanted"
+      },
+      "textures": {
+        "default": "textures/models/armor/quaso/humanoid/floral",
+        "enchanted": "textures/misc/enchanted_actor_glint",
+        "flowers": "textures/models/armor/quaso/humanoid/floral_flores"
+      },
+      "geometry": {
+        "default": "geometry.player.armor.helmet",
+        "flowers": "geometry.quaso.flowers.helmet.player"
+      },
+      "scripts": {
+        "parent_setup": "variable.helmet_layer_visible = 0.0;",
+        "animate": [
+          "offset"
+        ]
+      },
+      "animations": {
+        "offset": "animation.armor.helmet.offset"
+      },
+      "render_controllers": [
+        "controller.render.quaso.armor",
+        "controller.render.quaso.flowers"
+      ]
+    }
+  }
+}

@@ -1,0 +1,1880 @@
+[
+  {
+    "model": "abono_concentrado",
+    "java_item": "minecraft:glowstone_dust",
+    "bedrock_identifier": "quaso:abono_concentrado",
+    "source_texture": "assets/minecraft/textures/item/custom/abono_concentrado.png"
+  },
+  {
+    "model": "aguijon_floral",
+    "java_item": "minecraft:prismarine_shard",
+    "bedrock_identifier": "quaso:aguijon_floral",
+    "source_texture": "assets/minecraft/textures/item/custom/aguijon_floral.png"
+  },
+  {
+    "model": "air",
+    "java_item": "minecraft:paper",
+    "bedrock_identifier": "quaso:air",
+    "source_texture": null
+  },
+  {
+    "model": "algodon_azucar",
+    "java_item": "minecraft:string",
+    "bedrock_identifier": "quaso:algodon_azucar",
+    "source_texture": "assets/minecraft/textures/item/custom/algodon_azucar.png"
+  },
+  {
+    "model": "alma_infested_cave_spider",
+    "java_item": "minecraft:echo_shard",
+    "bedrock_identifier": "quaso:alma_infested_cave_spider",
+    "source_texture": "assets/minecraft/textures/item/custom/alma_infested_cave_spider.png"
+  },
+  {
+    "model": "alma_infested_creeper",
+    "java_item": "minecraft:echo_shard",
+    "bedrock_identifier": "quaso:alma_infested_creeper",
+    "source_texture": "assets/minecraft/textures/item/custom/alma_infested_creeper.png"
+  },
+  {
+    "model": "alma_infested_ghast",
+    "java_item": "minecraft:echo_shard",
+    "bedrock_identifier": "quaso:alma_infested_ghast",
+    "source_texture": "assets/minecraft/textures/item/custom/alma_infested_ghast.png"
+  },
+  {
+    "model": "alma_infested_skeleton",
+    "java_item": "minecraft:echo_shard",
+    "bedrock_identifier": "quaso:alma_infested_skeleton",
+    "source_texture": "assets/minecraft/textures/item/custom/alma_infested_skeleton.png"
+  },
+  {
+    "model": "amulet_bloodmoon",
+    "java_item": "minecraft:torchflower_seeds",
+    "bedrock_identifier": "quaso:amulet_bloodmoon",
+    "source_texture": "assets/minecraft/textures/item/custom/amulet_bloodmoon.png"
+  },
+  {
+    "model": "amuleto_esperanza",
+    "java_item": "minecraft:echo_shard",
+    "bedrock_identifier": "quaso:amuleto_esperanza",
+    "source_texture": "assets/minecraft/textures/item/custom/amuleto_esperanza.png"
+  },
+  {
+    "model": "amuleto_invisibilidad",
+    "java_item": "minecraft:glow_squid_spawn_egg",
+    "bedrock_identifier": "quaso:amuleto_invisibilidad",
+    "source_texture": "assets/minecraft/textures/item/custom/amuleto_invisibilidad.png"
+  },
+  {
+    "model": "antidoto",
+    "java_item": "minecraft:potion",
+    "bedrock_identifier": "quaso:antidoto",
+    "source_texture": "assets/minecraft/textures/item/custom/antidoto.png"
+  },
+  {
+    "model": "arco_hielo",
+    "java_item": "minecraft:bow",
+    "bedrock_identifier": "quaso:arco_hielo",
+    "source_texture": "assets/minecraft/textures/item/custom/arco_hielo.png"
+  },
+  {
+    "model": "arco_mejorado",
+    "java_item": "minecraft:bow",
+    "bedrock_identifier": "quaso:arco_mejorado",
+    "source_texture": "assets/minecraft/textures/item/custom/arco_mejorado.png"
+  },
+  {
+    "model": "arco_nivel1",
+    "java_item": "minecraft:bow",
+    "bedrock_identifier": "quaso:arco_nivel1",
+    "source_texture": "assets/minecraft/textures/item/custom/arco_nivel1.png"
+  },
+  {
+    "model": "arco_nivel2",
+    "java_item": "minecraft:bow",
+    "bedrock_identifier": "quaso:arco_nivel2",
+    "source_texture": "assets/minecraft/textures/item/custom/arco_nivel2.png"
+  },
+  {
+    "model": "arco_nivel3",
+    "java_item": "minecraft:bow",
+    "bedrock_identifier": "quaso:arco_nivel3",
+    "source_texture": "assets/minecraft/textures/item/custom/arco_nivel3.png"
+  },
+  {
+    "model": "arco_sculk",
+    "java_item": "minecraft:bow",
+    "bedrock_identifier": "quaso:arco_sculk",
+    "source_texture": "assets/minecraft/textures/item/custom/arco_sculk.png"
+  },
+  {
+    "model": "azada_celestita",
+    "java_item": "minecraft:netherite_hoe",
+    "bedrock_identifier": "quaso:azada_celestita",
+    "source_texture": "assets/minecraft/textures/item/custom/azada_celestita.png"
+  },
+  {
+    "model": "azada_floral",
+    "java_item": "minecraft:netherite_hoe",
+    "bedrock_identifier": "quaso:azada_floral",
+    "source_texture": "assets/minecraft/textures/item/custom/azada_floral.png"
+  },
+  {
+    "model": "bar_azulito",
+    "java_item": "minecraft:potion",
+    "bedrock_identifier": "quaso:bar_azulito",
+    "source_texture": "assets/minecraft/textures/item/custom/bar_azulito.png"
+  },
+  {
+    "model": "bar_cerveza",
+    "java_item": "minecraft:potion",
+    "bedrock_identifier": "quaso:bar_cerveza",
+    "source_texture": "assets/minecraft/textures/item/custom/bar_cerveza.png"
+  },
+  {
+    "model": "bar_ginebra",
+    "java_item": "minecraft:potion",
+    "bedrock_identifier": "quaso:bar_ginebra",
+    "source_texture": "assets/minecraft/textures/item/custom/bar_ginebra.png"
+  },
+  {
+    "model": "bar_margarita",
+    "java_item": "minecraft:potion",
+    "bedrock_identifier": "quaso:bar_margarita",
+    "source_texture": "assets/minecraft/textures/item/custom/bar_margarita.png"
+  },
+  {
+    "model": "bar_mezcal",
+    "java_item": "minecraft:potion",
+    "bedrock_identifier": "quaso:bar_mezcal",
+    "source_texture": "assets/minecraft/textures/item/custom/bar_mezcal.png"
+  },
+  {
+    "model": "bar_michelada",
+    "java_item": "minecraft:potion",
+    "bedrock_identifier": "quaso:bar_michelada",
+    "source_texture": "assets/minecraft/textures/item/custom/bar_michelada.png"
+  },
+  {
+    "model": "bar_pulque",
+    "java_item": "minecraft:potion",
+    "bedrock_identifier": "quaso:bar_pulque",
+    "source_texture": "assets/minecraft/textures/item/custom/bar_pulque.png"
+  },
+  {
+    "model": "bar_ron",
+    "java_item": "minecraft:potion",
+    "bedrock_identifier": "quaso:bar_ron",
+    "source_texture": "assets/minecraft/textures/item/custom/bar_ron.png"
+  },
+  {
+    "model": "bar_sake",
+    "java_item": "minecraft:potion",
+    "bedrock_identifier": "quaso:bar_sake",
+    "source_texture": "assets/minecraft/textures/item/custom/bar_sake.png"
+  },
+  {
+    "model": "bar_tequila",
+    "java_item": "minecraft:potion",
+    "bedrock_identifier": "quaso:bar_tequila",
+    "source_texture": "assets/minecraft/textures/item/custom/bar_tequila.png"
+  },
+  {
+    "model": "bar_vodka",
+    "java_item": "minecraft:potion",
+    "bedrock_identifier": "quaso:bar_vodka",
+    "source_texture": "assets/minecraft/textures/item/custom/bar_vodka.png"
+  },
+  {
+    "model": "bar_whisky",
+    "java_item": "minecraft:potion",
+    "bedrock_identifier": "quaso:bar_whisky",
+    "source_texture": "assets/minecraft/textures/item/custom/bar_whisky.png"
+  },
+  {
+    "model": "barco_custom",
+    "java_item": "minecraft:echo_shard",
+    "bedrock_identifier": "quaso:barco_custom",
+    "source_texture": "assets/minecraft/textures/item/custom/barco_custom.png"
+  },
+  {
+    "model": "baya_luminosa",
+    "java_item": "minecraft:glow_berries",
+    "bedrock_identifier": "quaso:baya_luminosa",
+    "source_texture": "assets/minecraft/textures/item/custom/baya_luminosa.png"
+  },
+  {
+    "model": "baya_sculk",
+    "java_item": "minecraft:sweet_berries",
+    "bedrock_identifier": "quaso:baya_sculk",
+    "source_texture": "assets/minecraft/textures/item/custom/baya_sculk.png"
+  },
+  {
+    "model": "bengala_sculk",
+    "java_item": "minecraft:snowball",
+    "bedrock_identifier": "quaso:bengala_sculk",
+    "source_texture": "assets/minecraft/textures/item/custom/bengala_sculk.png"
+  },
+  {
+    "model": "blood_fragment",
+    "java_item": "minecraft:copper_nugget",
+    "bedrock_identifier": "quaso:blood_fragment",
+    "source_texture": "assets/minecraft/textures/item/custom/blood_fragment.png"
+  },
+  {
+    "model": "bloque_oro_apilado",
+    "java_item": "minecraft:gold_block",
+    "bedrock_identifier": "quaso:bloque_oro_apilado",
+    "source_texture": "assets/minecraft/textures/item/custom/bloque_oro_apilado.png"
+  },
+  {
+    "model": "bomba_humo",
+    "java_item": "minecraft:snowball",
+    "bedrock_identifier": "quaso:bomba_humo",
+    "source_texture": "assets/minecraft/textures/item/custom/bomba_humo.png"
+  },
+  {
+    "model": "bota_warden",
+    "java_item": "minecraft:netherite_boots",
+    "bedrock_identifier": "quaso:bota_warden",
+    "source_texture": "assets/minecraft/textures/item/custom/bota_warden.png"
+  },
+  {
+    "model": "botas_floral",
+    "java_item": "minecraft:netherite_boots",
+    "bedrock_identifier": "quaso:botas_floral",
+    "source_texture": "assets/minecraft/textures/item/custom/botas_floral.png"
+  },
+  {
+    "model": "botas_warden_escaladoras",
+    "java_item": "minecraft:netherite_boots",
+    "bedrock_identifier": "quaso:botas_warden_escaladoras",
+    "source_texture": "assets/minecraft/textures/item/custom/botas_warden_escaladoras.png"
+  },
+  {
+    "model": "botiquin",
+    "java_item": "minecraft:paper",
+    "bedrock_identifier": "quaso:botiquin",
+    "source_texture": "assets/minecraft/textures/item/custom/botiquin.png"
+  },
+  {
+    "model": "brujula_explorador",
+    "java_item": "minecraft:compass",
+    "bedrock_identifier": "quaso:brujula_explorador",
+    "source_texture": "assets/minecraft/textures/item/custom/brujula_explorador.png"
+  },
+  {
+    "model": "caja_misteriosa",
+    "java_item": "minecraft:chest",
+    "bedrock_identifier": "quaso:caja_misteriosa",
+    "source_texture": "assets/minecraft/textures/item/custom/caja_misteriosa.png"
+  },
+  {
+    "model": "caldo_profundo",
+    "java_item": "minecraft:mushroom_stew",
+    "bedrock_identifier": "quaso:caldo_profundo",
+    "source_texture": "assets/minecraft/textures/item/custom/caldo_profundo.png"
+  },
+  {
+    "model": "caramelo",
+    "java_item": "minecraft:sugar",
+    "bedrock_identifier": "quaso:caramelo",
+    "source_texture": "assets/minecraft/textures/item/custom/caramelo.png"
+  },
+  {
+    "model": "carne_podrida_floral",
+    "java_item": "minecraft:rotten_flesh",
+    "bedrock_identifier": "quaso:carne_podrida_floral",
+    "source_texture": "assets/minecraft/textures/item/custom/carne_podrida_floral.png"
+  },
+  {
+    "model": "carta_5000",
+    "java_item": "minecraft:paper",
+    "bedrock_identifier": "quaso:carta_5000",
+    "source_texture": "assets/minecraft/textures/item/custom/carta_5000.png"
+  },
+  {
+    "model": "carta_5001",
+    "java_item": "minecraft:paper",
+    "bedrock_identifier": "quaso:carta_5001",
+    "source_texture": "assets/minecraft/textures/item/custom/carta_5001.png"
+  },
+  {
+    "model": "carta_5002",
+    "java_item": "minecraft:paper",
+    "bedrock_identifier": "quaso:carta_5002",
+    "source_texture": "assets/minecraft/textures/item/custom/carta_5002.png"
+  },
+  {
+    "model": "carta_5003",
+    "java_item": "minecraft:paper",
+    "bedrock_identifier": "quaso:carta_5003",
+    "source_texture": "assets/minecraft/textures/item/custom/carta_5003.png"
+  },
+  {
+    "model": "carta_5004",
+    "java_item": "minecraft:paper",
+    "bedrock_identifier": "quaso:carta_5004",
+    "source_texture": "assets/minecraft/textures/item/custom/carta_5004.png"
+  },
+  {
+    "model": "carta_5005",
+    "java_item": "minecraft:paper",
+    "bedrock_identifier": "quaso:carta_5005",
+    "source_texture": "assets/minecraft/textures/item/custom/carta_5005.png"
+  },
+  {
+    "model": "carta_5006",
+    "java_item": "minecraft:paper",
+    "bedrock_identifier": "quaso:carta_5006",
+    "source_texture": "assets/minecraft/textures/item/custom/carta_5006.png"
+  },
+  {
+    "model": "carta_5007",
+    "java_item": "minecraft:paper",
+    "bedrock_identifier": "quaso:carta_5007",
+    "source_texture": "assets/minecraft/textures/item/custom/carta_5007.png"
+  },
+  {
+    "model": "carta_5008",
+    "java_item": "minecraft:paper",
+    "bedrock_identifier": "quaso:carta_5008",
+    "source_texture": "assets/minecraft/textures/item/custom/carta_5008.png"
+  },
+  {
+    "model": "carta_5009",
+    "java_item": "minecraft:paper",
+    "bedrock_identifier": "quaso:carta_5009",
+    "source_texture": "assets/minecraft/textures/item/custom/carta_5009.png"
+  },
+  {
+    "model": "carta_5010",
+    "java_item": "minecraft:paper",
+    "bedrock_identifier": "quaso:carta_5010",
+    "source_texture": "assets/minecraft/textures/item/custom/carta_5010.png"
+  },
+  {
+    "model": "carta_5011",
+    "java_item": "minecraft:paper",
+    "bedrock_identifier": "quaso:carta_5011",
+    "source_texture": "assets/minecraft/textures/item/custom/carta_5011.png"
+  },
+  {
+    "model": "carta_5012",
+    "java_item": "minecraft:paper",
+    "bedrock_identifier": "quaso:carta_5012",
+    "source_texture": "assets/minecraft/textures/item/custom/carta_5012.png"
+  },
+  {
+    "model": "carta_5013",
+    "java_item": "minecraft:mojang_banner_pattern",
+    "bedrock_identifier": "quaso:carta_5013",
+    "source_texture": "assets/minecraft/textures/item/custom/carta_5013.png"
+  },
+  {
+    "model": "carta_5014",
+    "java_item": "minecraft:mojang_banner_pattern",
+    "bedrock_identifier": "quaso:carta_5014",
+    "source_texture": "assets/minecraft/textures/item/custom/carta_5014.png"
+  },
+  {
+    "model": "carta_5015",
+    "java_item": "minecraft:mojang_banner_pattern",
+    "bedrock_identifier": "quaso:carta_5015",
+    "source_texture": "assets/minecraft/textures/item/custom/carta_5015.png"
+  },
+  {
+    "model": "carta_5016",
+    "java_item": "minecraft:mojang_banner_pattern",
+    "bedrock_identifier": "quaso:carta_5016",
+    "source_texture": "assets/minecraft/textures/item/custom/carta_5016.png"
+  },
+  {
+    "model": "carta_5017",
+    "java_item": "minecraft:mojang_banner_pattern",
+    "bedrock_identifier": "quaso:carta_5017",
+    "source_texture": "assets/minecraft/textures/item/custom/carta_5017.png"
+  },
+  {
+    "model": "carta_5018",
+    "java_item": "minecraft:mojang_banner_pattern",
+    "bedrock_identifier": "quaso:carta_5018",
+    "source_texture": "assets/minecraft/textures/item/custom/carta_5018.png"
+  },
+  {
+    "model": "carta_5019",
+    "java_item": "minecraft:mojang_banner_pattern",
+    "bedrock_identifier": "quaso:carta_5019",
+    "source_texture": "assets/minecraft/textures/item/custom/carta_5019.png"
+  },
+  {
+    "model": "carta_5020",
+    "java_item": "minecraft:mojang_banner_pattern",
+    "bedrock_identifier": "quaso:carta_5020",
+    "source_texture": "assets/minecraft/textures/item/custom/carta_5020.png"
+  },
+  {
+    "model": "carta_5021",
+    "java_item": "minecraft:mojang_banner_pattern",
+    "bedrock_identifier": "quaso:carta_5021",
+    "source_texture": "assets/minecraft/textures/item/custom/carta_5021.png"
+  },
+  {
+    "model": "carta_5022",
+    "java_item": "minecraft:mojang_banner_pattern",
+    "bedrock_identifier": "quaso:carta_5022",
+    "source_texture": "assets/minecraft/textures/item/custom/carta_5022.png"
+  },
+  {
+    "model": "carta_5023",
+    "java_item": "minecraft:mojang_banner_pattern",
+    "bedrock_identifier": "quaso:carta_5023",
+    "source_texture": "assets/minecraft/textures/item/custom/carta_5023.png"
+  },
+  {
+    "model": "carta_5024",
+    "java_item": "minecraft:mojang_banner_pattern",
+    "bedrock_identifier": "quaso:carta_5024",
+    "source_texture": "assets/minecraft/textures/item/custom/carta_5024.png"
+  },
+  {
+    "model": "carta_5025",
+    "java_item": "minecraft:mojang_banner_pattern",
+    "bedrock_identifier": "quaso:carta_5025",
+    "source_texture": "assets/minecraft/textures/item/custom/carta_5025.png"
+  },
+  {
+    "model": "carta_5026",
+    "java_item": "minecraft:globe_banner_pattern",
+    "bedrock_identifier": "quaso:carta_5026",
+    "source_texture": "assets/minecraft/textures/item/custom/carta_5026.png"
+  },
+  {
+    "model": "carta_5027",
+    "java_item": "minecraft:globe_banner_pattern",
+    "bedrock_identifier": "quaso:carta_5027",
+    "source_texture": "assets/minecraft/textures/item/custom/carta_5027.png"
+  },
+  {
+    "model": "carta_5028",
+    "java_item": "minecraft:globe_banner_pattern",
+    "bedrock_identifier": "quaso:carta_5028",
+    "source_texture": "assets/minecraft/textures/item/custom/carta_5028.png"
+  },
+  {
+    "model": "carta_5029",
+    "java_item": "minecraft:globe_banner_pattern",
+    "bedrock_identifier": "quaso:carta_5029",
+    "source_texture": "assets/minecraft/textures/item/custom/carta_5029.png"
+  },
+  {
+    "model": "carta_5030",
+    "java_item": "minecraft:globe_banner_pattern",
+    "bedrock_identifier": "quaso:carta_5030",
+    "source_texture": "assets/minecraft/textures/item/custom/carta_5030.png"
+  },
+  {
+    "model": "carta_5031",
+    "java_item": "minecraft:globe_banner_pattern",
+    "bedrock_identifier": "quaso:carta_5031",
+    "source_texture": "assets/minecraft/textures/item/custom/carta_5031.png"
+  },
+  {
+    "model": "carta_5032",
+    "java_item": "minecraft:globe_banner_pattern",
+    "bedrock_identifier": "quaso:carta_5032",
+    "source_texture": "assets/minecraft/textures/item/custom/carta_5032.png"
+  },
+  {
+    "model": "carta_5033",
+    "java_item": "minecraft:globe_banner_pattern",
+    "bedrock_identifier": "quaso:carta_5033",
+    "source_texture": "assets/minecraft/textures/item/custom/carta_5033.png"
+  },
+  {
+    "model": "carta_5034",
+    "java_item": "minecraft:globe_banner_pattern",
+    "bedrock_identifier": "quaso:carta_5034",
+    "source_texture": "assets/minecraft/textures/item/custom/carta_5034.png"
+  },
+  {
+    "model": "carta_5035",
+    "java_item": "minecraft:globe_banner_pattern",
+    "bedrock_identifier": "quaso:carta_5035",
+    "source_texture": "assets/minecraft/textures/item/custom/carta_5035.png"
+  },
+  {
+    "model": "carta_5036",
+    "java_item": "minecraft:globe_banner_pattern",
+    "bedrock_identifier": "quaso:carta_5036",
+    "source_texture": "assets/minecraft/textures/item/custom/carta_5036.png"
+  },
+  {
+    "model": "carta_5037",
+    "java_item": "minecraft:globe_banner_pattern",
+    "bedrock_identifier": "quaso:carta_5037",
+    "source_texture": "assets/minecraft/textures/item/custom/carta_5037.png"
+  },
+  {
+    "model": "carta_5038",
+    "java_item": "minecraft:globe_banner_pattern",
+    "bedrock_identifier": "quaso:carta_5038",
+    "source_texture": "assets/minecraft/textures/item/custom/carta_5038.png"
+  },
+  {
+    "model": "carta_5039",
+    "java_item": "minecraft:creeper_banner_pattern",
+    "bedrock_identifier": "quaso:carta_5039",
+    "source_texture": "assets/minecraft/textures/item/custom/carta_5039.png"
+  },
+  {
+    "model": "carta_5040",
+    "java_item": "minecraft:creeper_banner_pattern",
+    "bedrock_identifier": "quaso:carta_5040",
+    "source_texture": "assets/minecraft/textures/item/custom/carta_5040.png"
+  },
+  {
+    "model": "carta_5041",
+    "java_item": "minecraft:creeper_banner_pattern",
+    "bedrock_identifier": "quaso:carta_5041",
+    "source_texture": "assets/minecraft/textures/item/custom/carta_5041.png"
+  },
+  {
+    "model": "carta_5042",
+    "java_item": "minecraft:creeper_banner_pattern",
+    "bedrock_identifier": "quaso:carta_5042",
+    "source_texture": "assets/minecraft/textures/item/custom/carta_5042.png"
+  },
+  {
+    "model": "carta_5043",
+    "java_item": "minecraft:creeper_banner_pattern",
+    "bedrock_identifier": "quaso:carta_5043",
+    "source_texture": "assets/minecraft/textures/item/custom/carta_5043.png"
+  },
+  {
+    "model": "carta_5044",
+    "java_item": "minecraft:creeper_banner_pattern",
+    "bedrock_identifier": "quaso:carta_5044",
+    "source_texture": "assets/minecraft/textures/item/custom/carta_5044.png"
+  },
+  {
+    "model": "carta_5045",
+    "java_item": "minecraft:creeper_banner_pattern",
+    "bedrock_identifier": "quaso:carta_5045",
+    "source_texture": "assets/minecraft/textures/item/custom/carta_5045.png"
+  },
+  {
+    "model": "carta_5046",
+    "java_item": "minecraft:creeper_banner_pattern",
+    "bedrock_identifier": "quaso:carta_5046",
+    "source_texture": "assets/minecraft/textures/item/custom/carta_5046.png"
+  },
+  {
+    "model": "carta_5047",
+    "java_item": "minecraft:creeper_banner_pattern",
+    "bedrock_identifier": "quaso:carta_5047",
+    "source_texture": "assets/minecraft/textures/item/custom/carta_5047.png"
+  },
+  {
+    "model": "carta_5048",
+    "java_item": "minecraft:creeper_banner_pattern",
+    "bedrock_identifier": "quaso:carta_5048",
+    "source_texture": "assets/minecraft/textures/item/custom/carta_5048.png"
+  },
+  {
+    "model": "carta_5049",
+    "java_item": "minecraft:creeper_banner_pattern",
+    "bedrock_identifier": "quaso:carta_5049",
+    "source_texture": "assets/minecraft/textures/item/custom/carta_5049.png"
+  },
+  {
+    "model": "carta_5050",
+    "java_item": "minecraft:creeper_banner_pattern",
+    "bedrock_identifier": "quaso:carta_5050",
+    "source_texture": "assets/minecraft/textures/item/custom/carta_5050.png"
+  },
+  {
+    "model": "carta_5051",
+    "java_item": "minecraft:creeper_banner_pattern",
+    "bedrock_identifier": "quaso:carta_5051",
+    "source_texture": "assets/minecraft/textures/item/custom/carta_5051.png"
+  },
+  {
+    "model": "carta_oculta",
+    "java_item": "minecraft:paper",
+    "bedrock_identifier": "quaso:carta_oculta",
+    "source_texture": "assets/minecraft/textures/item/custom/carta_oculta.png"
+  },
+  {
+    "model": "casco_floral",
+    "java_item": "minecraft:netherite_helmet",
+    "bedrock_identifier": "quaso:casco_floral",
+    "source_texture": "assets/minecraft/textures/item/custom/casco_floral.png"
+  },
+  {
+    "model": "casco_warden",
+    "java_item": "minecraft:netherite_helmet",
+    "bedrock_identifier": "quaso:casco_warden",
+    "source_texture": "assets/minecraft/textures/item/custom/casco_warden.png"
+  },
+  {
+    "model": "casino_cerrar",
+    "java_item": "minecraft:barrier",
+    "bedrock_identifier": "quaso:casino_cerrar",
+    "source_texture": "assets/minecraft/textures/item/custom/casino_cerrar.png"
+  },
+  {
+    "model": "casino_fondo",
+    "java_item": "minecraft:black_dye",
+    "bedrock_identifier": "quaso:casino_fondo",
+    "source_texture": "assets/minecraft/textures/item/custom/casino_fondo.png"
+  },
+  {
+    "model": "casino_girar",
+    "java_item": "minecraft:lever",
+    "bedrock_identifier": "quaso:casino_girar",
+    "source_texture": "assets/minecraft/textures/item/custom/casino_girar.png"
+  },
+  {
+    "model": "casino_linea_derecha",
+    "java_item": "minecraft:red_dye",
+    "bedrock_identifier": "quaso:casino_linea_derecha",
+    "source_texture": "assets/minecraft/textures/item/custom/casino_linea_derecha.png"
+  },
+  {
+    "model": "casino_linea_izquierda",
+    "java_item": "minecraft:red_dye",
+    "bedrock_identifier": "quaso:casino_linea_izquierda",
+    "source_texture": "assets/minecraft/textures/item/custom/casino_linea_izquierda.png"
+  },
+  {
+    "model": "chatarra",
+    "java_item": "minecraft:iron_nugget",
+    "bedrock_identifier": "quaso:chatarra",
+    "source_texture": "assets/minecraft/textures/item/custom/chatarra.png"
+  },
+  {
+    "model": "combustible_barco",
+    "java_item": "minecraft:echo_shard",
+    "bedrock_identifier": "quaso:combustible_barco",
+    "source_texture": "assets/minecraft/textures/item/custom/combustible_barco.png"
+  },
+  {
+    "model": "corazon_warden_boss",
+    "java_item": "minecraft:heart_of_the_sea",
+    "bedrock_identifier": "quaso:corazon_warden_boss",
+    "source_texture": "assets/minecraft/textures/item/custom/corazon_warden_boss.png"
+  },
+  {
+    "model": "corrupted_golden_apple",
+    "java_item": "minecraft:golden_apple",
+    "bedrock_identifier": "quaso:corrupted_golden_apple",
+    "source_texture": "assets/minecraft/textures/item/custom/corrupted_golden_apple.png"
+  },
+  {
+    "model": "corrupted_steak",
+    "java_item": "minecraft:cooked_beef",
+    "bedrock_identifier": "quaso:corrupted_steak",
+    "source_texture": "assets/minecraft/textures/item/custom/corrupted_steak.png"
+  },
+  {
+    "model": "cristal_celestita",
+    "java_item": "minecraft:prismarine_crystals",
+    "bedrock_identifier": "quaso:cristal_celestita",
+    "source_texture": "assets/minecraft/textures/item/custom/cristal_celestita.png"
+  },
+  {
+    "model": "cristal_eco",
+    "java_item": "minecraft:amethyst_shard",
+    "bedrock_identifier": "quaso:cristal_eco",
+    "source_texture": "assets/minecraft/textures/item/custom/cristal_eco.png"
+  },
+  {
+    "model": "cristal_hielo",
+    "java_item": "minecraft:amethyst_shard",
+    "bedrock_identifier": "quaso:cristal_hielo",
+    "source_texture": "assets/minecraft/textures/item/custom/cristal_hielo.png"
+  },
+  {
+    "model": "dinocoins",
+    "java_item": "minecraft:sunflower",
+    "bedrock_identifier": "quaso:dinocoins",
+    "source_texture": "assets/minecraft/textures/item/custom/dinocoins.png"
+  },
+  {
+    "model": "dinofichas",
+    "java_item": "minecraft:gold_nugget",
+    "bedrock_identifier": "quaso:dinofichas",
+    "source_texture": "assets/minecraft/textures/item/custom/dinofichas.png"
+  },
+  {
+    "model": "elixir_abisal",
+    "java_item": "minecraft:potion",
+    "bedrock_identifier": "quaso:elixir_abisal",
+    "source_texture": "assets/minecraft/textures/item/custom/elixir_abisal.png"
+  },
+  {
+    "model": "elixir_agilidad",
+    "java_item": "minecraft:potion",
+    "bedrock_identifier": "quaso:elixir_agilidad",
+    "source_texture": "assets/minecraft/textures/item/custom/elixir_agilidad.png"
+  },
+  {
+    "model": "elixir_coloso",
+    "java_item": "minecraft:potion",
+    "bedrock_identifier": "quaso:elixir_coloso",
+    "source_texture": "assets/minecraft/textures/item/custom/elixir_coloso.png"
+  },
+  {
+    "model": "elixir_furia",
+    "java_item": "minecraft:potion",
+    "bedrock_identifier": "quaso:elixir_furia",
+    "source_texture": "assets/minecraft/textures/item/custom/elixir_furia.png"
+  },
+  {
+    "model": "elixir_igneo",
+    "java_item": "minecraft:potion",
+    "bedrock_identifier": "quaso:elixir_igneo",
+    "source_texture": "assets/minecraft/textures/item/custom/elixir_igneo.png"
+  },
+  {
+    "model": "elixir_minero",
+    "java_item": "minecraft:potion",
+    "bedrock_identifier": "quaso:elixir_minero",
+    "source_texture": "assets/minecraft/textures/item/custom/elixir_minero.png"
+  },
+  {
+    "model": "ender_bag",
+    "java_item": "minecraft:endermite_spawn_egg",
+    "bedrock_identifier": "quaso:ender_bag",
+    "source_texture": "assets/minecraft/textures/item/custom/ender_bag.png"
+  },
+  {
+    "model": "ender_totem",
+    "java_item": "minecraft:totem_of_undying",
+    "bedrock_identifier": "quaso:ender_totem",
+    "source_texture": "assets/minecraft/textures/item/custom/ender_totem.png"
+  },
+  {
+    "model": "enderking_pearl",
+    "java_item": "minecraft:heart_of_the_sea",
+    "bedrock_identifier": "quaso:enderking_pearl",
+    "source_texture": "assets/minecraft/textures/item/custom/enderking_pearl.png"
+  },
+  {
+    "model": "energia_warden",
+    "java_item": "minecraft:echo_shard",
+    "bedrock_identifier": "quaso:energia_warden",
+    "source_texture": "assets/minecraft/textures/item/custom/energia_warden.png"
+  },
+  {
+    "model": "escudo_floral",
+    "java_item": "minecraft:shield",
+    "bedrock_identifier": "quaso:escudo_floral",
+    "source_texture": "assets/minecraft/textures/item/custom/escudo_floral.png"
+  },
+  {
+    "model": "esencia_floral",
+    "java_item": "minecraft:firework_star",
+    "bedrock_identifier": "quaso:esencia_floral",
+    "source_texture": "assets/minecraft/textures/item/custom/esencia_floral.png"
+  },
+  {
+    "model": "esencia_marchita",
+    "java_item": "minecraft:black_dye",
+    "bedrock_identifier": "quaso:esencia_marchita",
+    "source_texture": "assets/minecraft/textures/item/custom/esencia_marchita.png"
+  },
+  {
+    "model": "espada_celestita",
+    "java_item": "minecraft:netherite_sword",
+    "bedrock_identifier": "quaso:espada_celestita",
+    "source_texture": "assets/minecraft/textures/item/custom/espada_celestita.png"
+  },
+  {
+    "model": "espada_floral",
+    "java_item": "minecraft:netherite_sword",
+    "bedrock_identifier": "quaso:espada_floral",
+    "source_texture": "assets/minecraft/textures/item/custom/espada_floral.png"
+  },
+  {
+    "model": "estandarte_guerra",
+    "java_item": "minecraft:red_banner",
+    "bedrock_identifier": "quaso:estandarte_guerra",
+    "source_texture": "assets/minecraft/textures/item/custom/estandarte_guerra.png"
+  },
+  {
+    "model": "excavator_pickaxe",
+    "java_item": "minecraft:netherite_pickaxe",
+    "bedrock_identifier": "quaso:excavator_pickaxe",
+    "source_texture": "assets/minecraft/textures/item/custom/excavator_pickaxe.png"
+  },
+  {
+    "model": "ficha_mision",
+    "java_item": "minecraft:popped_chorus_fruit",
+    "bedrock_identifier": "quaso:ficha_mision",
+    "source_texture": "assets/minecraft/textures/item/custom/ficha_mision.png"
+  },
+  {
+    "model": "flecha_derecha",
+    "java_item": "minecraft:spectral_arrow",
+    "bedrock_identifier": "quaso:flecha_derecha",
+    "source_texture": "assets/minecraft/textures/item/custom/flecha_derecha.png"
+  },
+  {
+    "model": "flecha_izquierda",
+    "java_item": "minecraft:spectral_arrow",
+    "bedrock_identifier": "quaso:flecha_izquierda",
+    "source_texture": "assets/minecraft/textures/item/custom/flecha_izquierda.png"
+  },
+  {
+    "model": "flytotem",
+    "java_item": "minecraft:totem_of_undying",
+    "bedrock_identifier": "quaso:flytotem",
+    "source_texture": "assets/minecraft/textures/item/custom/flytotem.png"
+  },
+  {
+    "model": "fosiles_pequenos",
+    "java_item": "minecraft:iron_nugget",
+    "bedrock_identifier": "quaso:fosiles_pequenos",
+    "source_texture": "assets/minecraft/textures/item/custom/fosiles_pequenos.png"
+  },
+  {
+    "model": "fragmento_astral",
+    "java_item": "minecraft:firework_star",
+    "bedrock_identifier": "quaso:fragmento_astral",
+    "source_texture": "assets/minecraft/textures/item/custom/fragmento_astral.png"
+  },
+  {
+    "model": "fragmento_profundo_cian",
+    "java_item": "minecraft:copper_nugget",
+    "bedrock_identifier": "quaso:fragmento_profundo_cian",
+    "source_texture": "assets/minecraft/textures/item/custom/fragmento_profundo_cian.png"
+  },
+  {
+    "model": "fragmento_profundo_gris",
+    "java_item": "minecraft:copper_nugget",
+    "bedrock_identifier": "quaso:fragmento_profundo_gris",
+    "source_texture": "assets/minecraft/textures/item/custom/fragmento_profundo_gris.png"
+  },
+  {
+    "model": "fragmento_profundo_morado",
+    "java_item": "minecraft:copper_nugget",
+    "bedrock_identifier": "quaso:fragmento_profundo_morado",
+    "source_texture": "assets/minecraft/textures/item/custom/fragmento_profundo_morado.png"
+  },
+  {
+    "model": "fragmento_profundo_verde",
+    "java_item": "minecraft:copper_nugget",
+    "bedrock_identifier": "quaso:fragmento_profundo_verde",
+    "source_texture": "assets/minecraft/textures/item/custom/fragmento_profundo_verde.png"
+  },
+  {
+    "model": "fragmentos_ambar",
+    "java_item": "minecraft:iron_nugget",
+    "bedrock_identifier": "quaso:fragmentos_ambar",
+    "source_texture": "assets/minecraft/textures/item/custom/fragmentos_ambar.png"
+  },
+  {
+    "model": "frasco_de_velocidad",
+    "java_item": "minecraft:honey_bottle",
+    "bedrock_identifier": "quaso:frasco_de_velocidad",
+    "source_texture": "assets/minecraft/textures/item/custom/frasco_de_velocidad.png"
+  },
+  {
+    "model": "frasco_sabiduria",
+    "java_item": "minecraft:potion",
+    "bedrock_identifier": "quaso:frasco_sabiduria",
+    "source_texture": "assets/minecraft/textures/item/custom/frasco_sabiduria.png"
+  },
+  {
+    "model": "fruta_abisal",
+    "java_item": "minecraft:beetroot",
+    "bedrock_identifier": "quaso:fruta_abisal",
+    "source_texture": "assets/minecraft/textures/item/custom/fruta_abisal.png"
+  },
+  {
+    "model": "fuel_campfire",
+    "java_item": "minecraft:torchflower",
+    "bedrock_identifier": "quaso:fuel_campfire",
+    "source_texture": "assets/minecraft/textures/item/custom/fuel_campfire.png"
+  },
+  {
+    "model": "galleta_fortuna",
+    "java_item": "minecraft:cookie",
+    "bedrock_identifier": "quaso:galleta_fortuna",
+    "source_texture": "assets/minecraft/textures/item/custom/galleta_fortuna.png"
+  },
+  {
+    "model": "gancho",
+    "java_item": "minecraft:fishing_rod",
+    "bedrock_identifier": "quaso:gancho",
+    "source_texture": "assets/minecraft/textures/item/custom/gancho_2d.png"
+  },
+  {
+    "model": "granada_sonica",
+    "java_item": "minecraft:snowball",
+    "bedrock_identifier": "quaso:granada_sonica",
+    "source_texture": "assets/minecraft/textures/item/custom/granada_sonica.png"
+  },
+  {
+    "model": "habilidad_agilidad_1_off",
+    "java_item": "minecraft:flow_banner_pattern",
+    "bedrock_identifier": "quaso:habilidad_agilidad_1_off",
+    "source_texture": "assets/minecraft/textures/item/custom/habilidad_agilidad_1_off.png"
+  },
+  {
+    "model": "habilidad_agilidad_1_on",
+    "java_item": "minecraft:flow_banner_pattern",
+    "bedrock_identifier": "quaso:habilidad_agilidad_1_on",
+    "source_texture": "assets/minecraft/textures/item/custom/habilidad_agilidad_1_on.png"
+  },
+  {
+    "model": "habilidad_agilidad_2_off",
+    "java_item": "minecraft:flow_banner_pattern",
+    "bedrock_identifier": "quaso:habilidad_agilidad_2_off",
+    "source_texture": "assets/minecraft/textures/item/custom/habilidad_agilidad_2_off.png"
+  },
+  {
+    "model": "habilidad_agilidad_2_on",
+    "java_item": "minecraft:flow_banner_pattern",
+    "bedrock_identifier": "quaso:habilidad_agilidad_2_on",
+    "source_texture": "assets/minecraft/textures/item/custom/habilidad_agilidad_2_on.png"
+  },
+  {
+    "model": "habilidad_agilidad_3_off",
+    "java_item": "minecraft:flow_banner_pattern",
+    "bedrock_identifier": "quaso:habilidad_agilidad_3_off",
+    "source_texture": "assets/minecraft/textures/item/custom/habilidad_agilidad_3_off.png"
+  },
+  {
+    "model": "habilidad_agilidad_3_on",
+    "java_item": "minecraft:flow_banner_pattern",
+    "bedrock_identifier": "quaso:habilidad_agilidad_3_on",
+    "source_texture": "assets/minecraft/textures/item/custom/habilidad_agilidad_3_on.png"
+  },
+  {
+    "model": "habilidad_agilidad_4_off",
+    "java_item": "minecraft:flow_banner_pattern",
+    "bedrock_identifier": "quaso:habilidad_agilidad_4_off",
+    "source_texture": "assets/minecraft/textures/item/custom/habilidad_agilidad_4_off.png"
+  },
+  {
+    "model": "habilidad_agilidad_4_on",
+    "java_item": "minecraft:flow_banner_pattern",
+    "bedrock_identifier": "quaso:habilidad_agilidad_4_on",
+    "source_texture": "assets/minecraft/textures/item/custom/habilidad_agilidad_4_on.png"
+  },
+  {
+    "model": "habilidad_agilidad_5_off",
+    "java_item": "minecraft:flow_banner_pattern",
+    "bedrock_identifier": "quaso:habilidad_agilidad_5_off",
+    "source_texture": "assets/minecraft/textures/item/custom/habilidad_agilidad_5_off.png"
+  },
+  {
+    "model": "habilidad_agilidad_5_on",
+    "java_item": "minecraft:flow_banner_pattern",
+    "bedrock_identifier": "quaso:habilidad_agilidad_5_on",
+    "source_texture": "assets/minecraft/textures/item/custom/habilidad_agilidad_5_on.png"
+  },
+  {
+    "model": "habilidad_agilidad_6_off",
+    "java_item": "minecraft:flow_banner_pattern",
+    "bedrock_identifier": "quaso:habilidad_agilidad_6_off",
+    "source_texture": "assets/minecraft/textures/item/custom/habilidad_agilidad_6_off.png"
+  },
+  {
+    "model": "habilidad_agilidad_6_on",
+    "java_item": "minecraft:flow_banner_pattern",
+    "bedrock_identifier": "quaso:habilidad_agilidad_6_on",
+    "source_texture": "assets/minecraft/textures/item/custom/habilidad_agilidad_6_on.png"
+  },
+  {
+    "model": "habilidad_agilidad_7_off",
+    "java_item": "minecraft:flow_banner_pattern",
+    "bedrock_identifier": "quaso:habilidad_agilidad_7_off",
+    "source_texture": "assets/minecraft/textures/item/custom/habilidad_agilidad_7_off.png"
+  },
+  {
+    "model": "habilidad_agilidad_7_on",
+    "java_item": "minecraft:flow_banner_pattern",
+    "bedrock_identifier": "quaso:habilidad_agilidad_7_on",
+    "source_texture": "assets/minecraft/textures/item/custom/habilidad_agilidad_7_on.png"
+  },
+  {
+    "model": "habilidad_agilidad_8_off",
+    "java_item": "minecraft:flow_banner_pattern",
+    "bedrock_identifier": "quaso:habilidad_agilidad_8_off",
+    "source_texture": "assets/minecraft/textures/item/custom/habilidad_agilidad_8_off.png"
+  },
+  {
+    "model": "habilidad_agilidad_8_on",
+    "java_item": "minecraft:flow_banner_pattern",
+    "bedrock_identifier": "quaso:habilidad_agilidad_8_on",
+    "source_texture": "assets/minecraft/textures/item/custom/habilidad_agilidad_8_on.png"
+  },
+  {
+    "model": "habilidad_resistencia_1_off",
+    "java_item": "minecraft:creeper_banner_pattern",
+    "bedrock_identifier": "quaso:habilidad_resistencia_1_off",
+    "source_texture": "assets/minecraft/textures/item/custom/habilidad_resistencia_1_off.png"
+  },
+  {
+    "model": "habilidad_resistencia_1_on",
+    "java_item": "minecraft:creeper_banner_pattern",
+    "bedrock_identifier": "quaso:habilidad_resistencia_1_on",
+    "source_texture": "assets/minecraft/textures/item/custom/habilidad_resistencia_1_on.png"
+  },
+  {
+    "model": "habilidad_resistencia_2_off",
+    "java_item": "minecraft:creeper_banner_pattern",
+    "bedrock_identifier": "quaso:habilidad_resistencia_2_off",
+    "source_texture": "assets/minecraft/textures/item/custom/habilidad_resistencia_2_off.png"
+  },
+  {
+    "model": "habilidad_resistencia_2_on",
+    "java_item": "minecraft:creeper_banner_pattern",
+    "bedrock_identifier": "quaso:habilidad_resistencia_2_on",
+    "source_texture": "assets/minecraft/textures/item/custom/habilidad_resistencia_2_on.png"
+  },
+  {
+    "model": "habilidad_resistencia_3_off",
+    "java_item": "minecraft:creeper_banner_pattern",
+    "bedrock_identifier": "quaso:habilidad_resistencia_3_off",
+    "source_texture": "assets/minecraft/textures/item/custom/habilidad_resistencia_3_off.png"
+  },
+  {
+    "model": "habilidad_resistencia_3_on",
+    "java_item": "minecraft:creeper_banner_pattern",
+    "bedrock_identifier": "quaso:habilidad_resistencia_3_on",
+    "source_texture": "assets/minecraft/textures/item/custom/habilidad_resistencia_3_on.png"
+  },
+  {
+    "model": "habilidad_resistencia_4_off",
+    "java_item": "minecraft:creeper_banner_pattern",
+    "bedrock_identifier": "quaso:habilidad_resistencia_4_off",
+    "source_texture": "assets/minecraft/textures/item/custom/habilidad_resistencia_4_off.png"
+  },
+  {
+    "model": "habilidad_resistencia_4_on",
+    "java_item": "minecraft:creeper_banner_pattern",
+    "bedrock_identifier": "quaso:habilidad_resistencia_4_on",
+    "source_texture": "assets/minecraft/textures/item/custom/habilidad_resistencia_4_on.png"
+  },
+  {
+    "model": "habilidad_resistencia_5_off",
+    "java_item": "minecraft:creeper_banner_pattern",
+    "bedrock_identifier": "quaso:habilidad_resistencia_5_off",
+    "source_texture": "assets/minecraft/textures/item/custom/habilidad_resistencia_5_off.png"
+  },
+  {
+    "model": "habilidad_resistencia_5_on",
+    "java_item": "minecraft:creeper_banner_pattern",
+    "bedrock_identifier": "quaso:habilidad_resistencia_5_on",
+    "source_texture": "assets/minecraft/textures/item/custom/habilidad_resistencia_5_on.png"
+  },
+  {
+    "model": "habilidad_resistencia_6_off",
+    "java_item": "minecraft:creeper_banner_pattern",
+    "bedrock_identifier": "quaso:habilidad_resistencia_6_off",
+    "source_texture": "assets/minecraft/textures/item/custom/habilidad_resistencia_6_off.png"
+  },
+  {
+    "model": "habilidad_resistencia_6_on",
+    "java_item": "minecraft:creeper_banner_pattern",
+    "bedrock_identifier": "quaso:habilidad_resistencia_6_on",
+    "source_texture": "assets/minecraft/textures/item/custom/habilidad_resistencia_6_on.png"
+  },
+  {
+    "model": "habilidad_resistencia_7_off",
+    "java_item": "minecraft:creeper_banner_pattern",
+    "bedrock_identifier": "quaso:habilidad_resistencia_7_off",
+    "source_texture": "assets/minecraft/textures/item/custom/habilidad_resistencia_7_off.png"
+  },
+  {
+    "model": "habilidad_resistencia_7_on",
+    "java_item": "minecraft:creeper_banner_pattern",
+    "bedrock_identifier": "quaso:habilidad_resistencia_7_on",
+    "source_texture": "assets/minecraft/textures/item/custom/habilidad_resistencia_7_on.png"
+  },
+  {
+    "model": "habilidad_resistencia_8_off",
+    "java_item": "minecraft:creeper_banner_pattern",
+    "bedrock_identifier": "quaso:habilidad_resistencia_8_off",
+    "source_texture": "assets/minecraft/textures/item/custom/habilidad_resistencia_8_off.png"
+  },
+  {
+    "model": "habilidad_resistencia_8_on",
+    "java_item": "minecraft:creeper_banner_pattern",
+    "bedrock_identifier": "quaso:habilidad_resistencia_8_on",
+    "source_texture": "assets/minecraft/textures/item/custom/habilidad_resistencia_8_on.png"
+  },
+  {
+    "model": "habilidad_vitalidad_1_off",
+    "java_item": "minecraft:flower_banner_pattern",
+    "bedrock_identifier": "quaso:habilidad_vitalidad_1_off",
+    "source_texture": "assets/minecraft/textures/item/custom/habilidad_vitalidad_1_off.png"
+  },
+  {
+    "model": "habilidad_vitalidad_1_on",
+    "java_item": "minecraft:flower_banner_pattern",
+    "bedrock_identifier": "quaso:habilidad_vitalidad_1_on",
+    "source_texture": "assets/minecraft/textures/item/custom/habilidad_vitalidad_1_on.png"
+  },
+  {
+    "model": "habilidad_vitalidad_2_off",
+    "java_item": "minecraft:flower_banner_pattern",
+    "bedrock_identifier": "quaso:habilidad_vitalidad_2_off",
+    "source_texture": "assets/minecraft/textures/item/custom/habilidad_vitalidad_2_off.png"
+  },
+  {
+    "model": "habilidad_vitalidad_2_on",
+    "java_item": "minecraft:flower_banner_pattern",
+    "bedrock_identifier": "quaso:habilidad_vitalidad_2_on",
+    "source_texture": "assets/minecraft/textures/item/custom/habilidad_vitalidad_2_on.png"
+  },
+  {
+    "model": "habilidad_vitalidad_3_off",
+    "java_item": "minecraft:flower_banner_pattern",
+    "bedrock_identifier": "quaso:habilidad_vitalidad_3_off",
+    "source_texture": "assets/minecraft/textures/item/custom/habilidad_vitalidad_3_off.png"
+  },
+  {
+    "model": "habilidad_vitalidad_3_on",
+    "java_item": "minecraft:flower_banner_pattern",
+    "bedrock_identifier": "quaso:habilidad_vitalidad_3_on",
+    "source_texture": "assets/minecraft/textures/item/custom/habilidad_vitalidad_3_on.png"
+  },
+  {
+    "model": "habilidad_vitalidad_4_off",
+    "java_item": "minecraft:flower_banner_pattern",
+    "bedrock_identifier": "quaso:habilidad_vitalidad_4_off",
+    "source_texture": "assets/minecraft/textures/item/custom/habilidad_vitalidad_4_off.png"
+  },
+  {
+    "model": "habilidad_vitalidad_4_on",
+    "java_item": "minecraft:flower_banner_pattern",
+    "bedrock_identifier": "quaso:habilidad_vitalidad_4_on",
+    "source_texture": "assets/minecraft/textures/item/custom/habilidad_vitalidad_4_on.png"
+  },
+  {
+    "model": "habilidad_vitalidad_5_off",
+    "java_item": "minecraft:flower_banner_pattern",
+    "bedrock_identifier": "quaso:habilidad_vitalidad_5_off",
+    "source_texture": "assets/minecraft/textures/item/custom/habilidad_vitalidad_5_off.png"
+  },
+  {
+    "model": "habilidad_vitalidad_5_on",
+    "java_item": "minecraft:flower_banner_pattern",
+    "bedrock_identifier": "quaso:habilidad_vitalidad_5_on",
+    "source_texture": "assets/minecraft/textures/item/custom/habilidad_vitalidad_5_on.png"
+  },
+  {
+    "model": "habilidad_vitalidad_6_off",
+    "java_item": "minecraft:flower_banner_pattern",
+    "bedrock_identifier": "quaso:habilidad_vitalidad_6_off",
+    "source_texture": "assets/minecraft/textures/item/custom/habilidad_vitalidad_6_off.png"
+  },
+  {
+    "model": "habilidad_vitalidad_6_on",
+    "java_item": "minecraft:flower_banner_pattern",
+    "bedrock_identifier": "quaso:habilidad_vitalidad_6_on",
+    "source_texture": "assets/minecraft/textures/item/custom/habilidad_vitalidad_6_on.png"
+  },
+  {
+    "model": "habilidad_vitalidad_7_off",
+    "java_item": "minecraft:flower_banner_pattern",
+    "bedrock_identifier": "quaso:habilidad_vitalidad_7_off",
+    "source_texture": "assets/minecraft/textures/item/custom/habilidad_vitalidad_7_off.png"
+  },
+  {
+    "model": "habilidad_vitalidad_7_on",
+    "java_item": "minecraft:flower_banner_pattern",
+    "bedrock_identifier": "quaso:habilidad_vitalidad_7_on",
+    "source_texture": "assets/minecraft/textures/item/custom/habilidad_vitalidad_7_on.png"
+  },
+  {
+    "model": "habilidad_vitalidad_8_off",
+    "java_item": "minecraft:flower_banner_pattern",
+    "bedrock_identifier": "quaso:habilidad_vitalidad_8_off",
+    "source_texture": "assets/minecraft/textures/item/custom/habilidad_vitalidad_8_off.png"
+  },
+  {
+    "model": "habilidad_vitalidad_8_on",
+    "java_item": "minecraft:flower_banner_pattern",
+    "bedrock_identifier": "quaso:habilidad_vitalidad_8_on",
+    "source_texture": "assets/minecraft/textures/item/custom/habilidad_vitalidad_8_on.png"
+  },
+  {
+    "model": "hacha_celestita",
+    "java_item": "minecraft:netherite_axe",
+    "bedrock_identifier": "quaso:hacha_celestita",
+    "source_texture": "assets/minecraft/textures/item/custom/hacha_celestita.png"
+  },
+  {
+    "model": "hacha_floral",
+    "java_item": "minecraft:netherite_axe",
+    "bedrock_identifier": "quaso:hacha_floral",
+    "source_texture": "assets/minecraft/textures/item/custom/hacha_floral.png"
+  },
+  {
+    "model": "happy_ghast_enchant",
+    "java_item": "minecraft:enchanted_book",
+    "bedrock_identifier": "quaso:happy_ghast_enchant",
+    "source_texture": "assets/minecraft/textures/item/custom/happy_ghast_enchant.png"
+  },
+  {
+    "model": "icetotem",
+    "java_item": "minecraft:totem_of_undying",
+    "bedrock_identifier": "quaso:icetotem",
+    "source_texture": "assets/minecraft/textures/item/custom/icetotem.png"
+  },
+  {
+    "model": "iman_botin",
+    "java_item": "minecraft:iron_nugget",
+    "bedrock_identifier": "quaso:iman_botin",
+    "source_texture": "assets/minecraft/textures/item/custom/iman_botin.png"
+  },
+  {
+    "model": "immunity",
+    "java_item": "minecraft:allay_spawn_egg",
+    "bedrock_identifier": "quaso:immunity",
+    "source_texture": "assets/minecraft/textures/item/custom/immunity.png"
+  },
+  {
+    "model": "incienso_ahuyentador",
+    "java_item": "minecraft:blaze_powder",
+    "bedrock_identifier": "quaso:incienso_ahuyentador",
+    "source_texture": "assets/minecraft/textures/item/custom/incienso_ahuyentador.png"
+  },
+  {
+    "model": "keep_inv_liquido",
+    "java_item": "minecraft:golden_apple",
+    "bedrock_identifier": "quaso:keep_inv_liquido",
+    "source_texture": "assets/minecraft/textures/item/custom/keep_inv_liquido.png"
+  },
+  {
+    "model": "lanza_celestita",
+    "java_item": "minecraft:netherite_spear",
+    "bedrock_identifier": "quaso:lanza_celestita",
+    "source_texture": "assets/minecraft/textures/item/custom/lanza_celestita.png"
+  },
+  {
+    "model": "lanza_floral",
+    "java_item": "minecraft:netherite_spear",
+    "bedrock_identifier": "quaso:lanza_floral",
+    "source_texture": "assets/minecraft/textures/item/custom/lanza_floral.png"
+  },
+  {
+    "model": "libro_alcance",
+    "java_item": "minecraft:enchanted_book",
+    "bedrock_identifier": "quaso:libro_alcance",
+    "source_texture": "assets/minecraft/textures/item/custom/libro_alcance.png"
+  },
+  {
+    "model": "libro_anclaje",
+    "java_item": "minecraft:enchanted_book",
+    "bedrock_identifier": "quaso:libro_anclaje",
+    "source_texture": "assets/minecraft/textures/item/custom/libro_anclaje.png"
+  },
+  {
+    "model": "libro_anzuelo_veloz",
+    "java_item": "minecraft:enchanted_book",
+    "bedrock_identifier": "quaso:libro_anzuelo_veloz",
+    "source_texture": "assets/minecraft/textures/item/custom/libro_anzuelo_veloz.png"
+  },
+  {
+    "model": "libro_cosecha",
+    "java_item": "minecraft:enchanted_book",
+    "bedrock_identifier": "quaso:libro_cosecha",
+    "source_texture": "assets/minecraft/textures/item/custom/libro_cosecha.png"
+  },
+  {
+    "model": "libro_fervor_minero",
+    "java_item": "minecraft:enchanted_book",
+    "bedrock_identifier": "quaso:libro_fervor_minero",
+    "source_texture": "assets/minecraft/textures/item/custom/libro_fervor_minero.png"
+  },
+  {
+    "model": "libro_habilidades",
+    "java_item": "minecraft:knowledge_book",
+    "bedrock_identifier": "quaso:libro_habilidades",
+    "source_texture": "assets/minecraft/textures/item/custom/libro_habilidades.png"
+  },
+  {
+    "model": "libro_paso_igneo",
+    "java_item": "minecraft:enchanted_book",
+    "bedrock_identifier": "quaso:libro_paso_igneo",
+    "source_texture": "assets/minecraft/textures/item/custom/libro_paso_igneo.png"
+  },
+  {
+    "model": "libro_purificacion",
+    "java_item": "minecraft:enchanted_book",
+    "bedrock_identifier": "quaso:libro_purificacion",
+    "source_texture": "assets/minecraft/textures/item/custom/libro_purificacion.png"
+  },
+  {
+    "model": "libro_retorno_del_vacio",
+    "java_item": "minecraft:enchanted_book",
+    "bedrock_identifier": "quaso:libro_retorno_del_vacio",
+    "source_texture": "assets/minecraft/textures/item/custom/libro_retorno_del_vacio.png"
+  },
+  {
+    "model": "libro_talador",
+    "java_item": "minecraft:enchanted_book",
+    "bedrock_identifier": "quaso:libro_talador",
+    "source_texture": "assets/minecraft/textures/item/custom/libro_talador.png"
+  },
+  {
+    "model": "libro_veta",
+    "java_item": "minecraft:enchanted_book",
+    "bedrock_identifier": "quaso:libro_veta",
+    "source_texture": "assets/minecraft/textures/item/custom/libro_veta.png"
+  },
+  {
+    "model": "libro_vigor_de_batalla",
+    "java_item": "minecraft:enchanted_book",
+    "bedrock_identifier": "quaso:libro_vigor_de_batalla",
+    "source_texture": "assets/minecraft/textures/item/custom/libro_vigor_de_batalla.png"
+  },
+  {
+    "model": "libro_vision_abisal",
+    "java_item": "minecraft:enchanted_book",
+    "bedrock_identifier": "quaso:libro_vision_abisal",
+    "source_texture": "assets/minecraft/textures/item/custom/libro_vision_abisal.png"
+  },
+  {
+    "model": "life_campfire",
+    "java_item": "minecraft:campfire",
+    "bedrock_identifier": "quaso:life_campfire",
+    "source_texture": "assets/minecraft/textures/item/custom/life_campfire.png"
+  },
+  {
+    "model": "lingote_celestita",
+    "java_item": "minecraft:copper_ingot",
+    "bedrock_identifier": "quaso:lingote_celestita",
+    "source_texture": "assets/minecraft/textures/item/custom/lingote_celestita.png"
+  },
+  {
+    "model": "lingote_platino",
+    "java_item": "minecraft:iron_nugget",
+    "bedrock_identifier": "quaso:lingote_platino",
+    "source_texture": "assets/minecraft/textures/item/custom/lingote_platino.png"
+  },
+  {
+    "model": "lingote_profundo",
+    "java_item": "minecraft:copper_ingot",
+    "bedrock_identifier": "quaso:lingote_profundo",
+    "source_texture": "assets/minecraft/textures/item/custom/lingote_profundo.png"
+  },
+  {
+    "model": "lingote_profundo_cian",
+    "java_item": "minecraft:copper_ingot",
+    "bedrock_identifier": "quaso:lingote_profundo_cian",
+    "source_texture": "assets/minecraft/textures/item/custom/lingote_profundo_cian.png"
+  },
+  {
+    "model": "lingote_profundo_gris",
+    "java_item": "minecraft:copper_ingot",
+    "bedrock_identifier": "quaso:lingote_profundo_gris",
+    "source_texture": "assets/minecraft/textures/item/custom/lingote_profundo_gris.png"
+  },
+  {
+    "model": "lingote_profundo_morado",
+    "java_item": "minecraft:copper_ingot",
+    "bedrock_identifier": "quaso:lingote_profundo_morado",
+    "source_texture": "assets/minecraft/textures/item/custom/lingote_profundo_morado.png"
+  },
+  {
+    "model": "lingote_profundo_verde",
+    "java_item": "minecraft:copper_ingot",
+    "bedrock_identifier": "quaso:lingote_profundo_verde",
+    "source_texture": "assets/minecraft/textures/item/custom/lingote_profundo_verde.png"
+  },
+  {
+    "model": "linterna_almas",
+    "java_item": "minecraft:soul_lantern",
+    "bedrock_identifier": "quaso:linterna_almas",
+    "source_texture": "assets/minecraft/textures/item/custom/linterna_almas.png"
+  },
+  {
+    "model": "logro_borde",
+    "java_item": "minecraft:gray_stained_glass_pane",
+    "bedrock_identifier": "quaso:logro_borde",
+    "source_texture": "assets/minecraft/textures/item/custom/logro_borde.png"
+  },
+  {
+    "model": "logro_completado",
+    "java_item": "minecraft:paper",
+    "bedrock_identifier": "quaso:logro_completado",
+    "source_texture": "assets/minecraft/textures/item/custom/logro_completado.png"
+  },
+  {
+    "model": "logro_pendiente",
+    "java_item": "minecraft:paper",
+    "bedrock_identifier": "quaso:logro_pendiente",
+    "source_texture": "assets/minecraft/textures/item/custom/logro_pendiente.png"
+  },
+  {
+    "model": "manzana_podrida",
+    "java_item": "minecraft:iron_nugget",
+    "bedrock_identifier": "quaso:manzana_podrida",
+    "source_texture": "assets/minecraft/textures/item/custom/manzana_podrida.png"
+  },
+  {
+    "model": "manzana_vida",
+    "java_item": "minecraft:apple",
+    "bedrock_identifier": "quaso:manzana_vida",
+    "source_texture": "assets/minecraft/textures/item/custom/manzana_vida.png"
+  },
+  {
+    "model": "mejora_bota_warden",
+    "java_item": "minecraft:echo_shard",
+    "bedrock_identifier": "quaso:mejora_bota_warden",
+    "source_texture": "assets/minecraft/textures/item/custom/mejora_bota_warden.png"
+  },
+  {
+    "model": "mejora_casco_warden",
+    "java_item": "minecraft:echo_shard",
+    "bedrock_identifier": "quaso:mejora_casco_warden",
+    "source_texture": "assets/minecraft/textures/item/custom/mejora_casco_warden.png"
+  },
+  {
+    "model": "mejora_floral",
+    "java_item": "minecraft:netherite_upgrade_smithing_template",
+    "bedrock_identifier": "quaso:mejora_floral",
+    "source_texture": "assets/minecraft/textures/item/custom/mejora_floral.png"
+  },
+  {
+    "model": "mejora_pantalon_warden",
+    "java_item": "minecraft:echo_shard",
+    "bedrock_identifier": "quaso:mejora_pantalon_warden",
+    "source_texture": "assets/minecraft/textures/item/custom/mejora_pantalon_warden.png"
+  },
+  {
+    "model": "mejora_peto_warden",
+    "java_item": "minecraft:echo_shard",
+    "bedrock_identifier": "quaso:mejora_peto_warden",
+    "source_texture": "assets/minecraft/textures/item/custom/mejora_peto_warden.png"
+  },
+  {
+    "model": "mineral_crudo_cian",
+    "java_item": "minecraft:prismarine_shard",
+    "bedrock_identifier": "quaso:mineral_crudo_cian",
+    "source_texture": "assets/minecraft/textures/item/custom/mineral_crudo_cian.png"
+  },
+  {
+    "model": "mineral_crudo_gris",
+    "java_item": "minecraft:prismarine_shard",
+    "bedrock_identifier": "quaso:mineral_crudo_gris",
+    "source_texture": "assets/minecraft/textures/item/custom/mineral_crudo_gris.png"
+  },
+  {
+    "model": "mineral_crudo_morado",
+    "java_item": "minecraft:prismarine_shard",
+    "bedrock_identifier": "quaso:mineral_crudo_morado",
+    "source_texture": "assets/minecraft/textures/item/custom/mineral_crudo_morado.png"
+  },
+  {
+    "model": "mineral_crudo_verde",
+    "java_item": "minecraft:prismarine_shard",
+    "bedrock_identifier": "quaso:mineral_crudo_verde",
+    "source_texture": "assets/minecraft/textures/item/custom/mineral_crudo_verde.png"
+  },
+  {
+    "model": "mision_activa",
+    "java_item": "minecraft:paper",
+    "bedrock_identifier": "quaso:mision_activa",
+    "source_texture": "assets/minecraft/textures/item/custom/mision_activa.png"
+  },
+  {
+    "model": "mision_completada",
+    "java_item": "minecraft:paper",
+    "bedrock_identifier": "quaso:mision_completada",
+    "source_texture": "assets/minecraft/textures/item/custom/mision_completada.png"
+  },
+  {
+    "model": "mision_inactiva",
+    "java_item": "minecraft:paper",
+    "bedrock_identifier": "quaso:mision_inactiva",
+    "source_texture": "assets/minecraft/textures/item/custom/mision_inactiva.png"
+  },
+  {
+    "model": "mochila_nivel_1",
+    "java_item": "minecraft:echo_shard",
+    "bedrock_identifier": "quaso:mochila_nivel_1",
+    "source_texture": "assets/minecraft/textures/item/custom/mochila_nivel_1.png"
+  },
+  {
+    "model": "mochila_nivel_2",
+    "java_item": "minecraft:echo_shard",
+    "bedrock_identifier": "quaso:mochila_nivel_2",
+    "source_texture": "assets/minecraft/textures/item/custom/mochila_nivel_2.png"
+  },
+  {
+    "model": "mochila_nivel_3",
+    "java_item": "minecraft:echo_shard",
+    "bedrock_identifier": "quaso:mochila_nivel_3",
+    "source_texture": "assets/minecraft/textures/item/custom/mochila_nivel_3.png"
+  },
+  {
+    "model": "mochila_nivel_4",
+    "java_item": "minecraft:echo_shard",
+    "bedrock_identifier": "quaso:mochila_nivel_4",
+    "source_texture": "assets/minecraft/textures/item/custom/mochila_nivel_4.png"
+  },
+  {
+    "model": "mochila_nivel_5",
+    "java_item": "minecraft:echo_shard",
+    "bedrock_identifier": "quaso:mochila_nivel_5",
+    "source_texture": "assets/minecraft/textures/item/custom/mochila_nivel_5.png"
+  },
+  {
+    "model": "monedero",
+    "java_item": "minecraft:echo_shard",
+    "bedrock_identifier": "quaso:monedero",
+    "source_texture": "assets/minecraft/textures/item/custom/monedero.png"
+  },
+  {
+    "model": "nucleo_sonico",
+    "java_item": "minecraft:nether_star",
+    "bedrock_identifier": "quaso:nucleo_sonico",
+    "source_texture": "assets/minecraft/textures/item/custom/nucleo_sonico.png"
+  },
+  {
+    "model": "ojo_arana_floral",
+    "java_item": "minecraft:spider_eye",
+    "bedrock_identifier": "quaso:ojo_arana_floral",
+    "source_texture": "assets/minecraft/textures/item/custom/ojo_arana_floral.png"
+  },
+  {
+    "model": "ojo_rey_ender",
+    "java_item": "minecraft:ender_eye",
+    "bedrock_identifier": "quaso:ojo_rey_ender",
+    "source_texture": "assets/minecraft/textures/item/custom/ojo_rey_ender.png"
+  },
+  {
+    "model": "pala_celestita",
+    "java_item": "minecraft:netherite_shovel",
+    "bedrock_identifier": "quaso:pala_celestita",
+    "source_texture": "assets/minecraft/textures/item/custom/pala_celestita.png"
+  },
+  {
+    "model": "pala_floral",
+    "java_item": "minecraft:netherite_shovel",
+    "bedrock_identifier": "quaso:pala_floral",
+    "source_texture": "assets/minecraft/textures/item/custom/pala_floral.png"
+  },
+  {
+    "model": "panic_apple",
+    "java_item": "minecraft:apple",
+    "bedrock_identifier": "quaso:panic_apple",
+    "source_texture": "assets/minecraft/textures/item/custom/panic_apple.png"
+  },
+  {
+    "model": "pantalon_floral",
+    "java_item": "minecraft:netherite_leggings",
+    "bedrock_identifier": "quaso:pantalon_floral",
+    "source_texture": "assets/minecraft/textures/item/custom/pantalon_floral.png"
+  },
+  {
+    "model": "pantalon_warden",
+    "java_item": "minecraft:netherite_leggings",
+    "bedrock_identifier": "quaso:pantalon_warden",
+    "source_texture": "assets/minecraft/textures/item/custom/pantalon_warden.png"
+  },
+  {
+    "model": "pepitas_diamante",
+    "java_item": "minecraft:iron_nugget",
+    "bedrock_identifier": "quaso:pepitas_diamante",
+    "source_texture": "assets/minecraft/textures/item/custom/pepitas_diamante.png"
+  },
+  {
+    "model": "pepitas_hierro_oxidadas",
+    "java_item": "minecraft:iron_nugget",
+    "bedrock_identifier": "quaso:pepitas_hierro_oxidadas",
+    "source_texture": "assets/minecraft/textures/item/custom/pepitas_hierro_oxidadas.png"
+  },
+  {
+    "model": "perla_infinita",
+    "java_item": "minecraft:ender_pearl",
+    "bedrock_identifier": "quaso:perla_infinita",
+    "source_texture": "assets/minecraft/textures/item/custom/perla_infinita.png"
+  },
+  {
+    "model": "peto_floral",
+    "java_item": "minecraft:netherite_chestplate",
+    "bedrock_identifier": "quaso:peto_floral",
+    "source_texture": "assets/minecraft/textures/item/custom/peto_floral.png"
+  },
+  {
+    "model": "peto_warden",
+    "java_item": "minecraft:netherite_chestplate",
+    "bedrock_identifier": "quaso:peto_warden",
+    "source_texture": "assets/minecraft/textures/item/custom/peto_warden.png"
+  },
+  {
+    "model": "peto_warden_alado",
+    "java_item": "minecraft:netherite_chestplate",
+    "bedrock_identifier": "quaso:peto_warden_alado",
+    "source_texture": "assets/minecraft/textures/item/custom/peto_warden_alado.png"
+  },
+  {
+    "model": "pico_celestita",
+    "java_item": "minecraft:netherite_pickaxe",
+    "bedrock_identifier": "quaso:pico_celestita",
+    "source_texture": "assets/minecraft/textures/item/custom/pico_celestita.png"
+  },
+  {
+    "model": "pico_floral",
+    "java_item": "minecraft:netherite_pickaxe",
+    "bedrock_identifier": "quaso:pico_floral",
+    "source_texture": "assets/minecraft/textures/item/custom/pico_floral.png"
+  },
+  {
+    "model": "piruleta",
+    "java_item": "minecraft:paper",
+    "bedrock_identifier": "quaso:piruleta",
+    "source_texture": "assets/minecraft/textures/item/custom/piruleta.png"
+  },
+  {
+    "model": "plantilla_celestita",
+    "java_item": "minecraft:netherite_upgrade_smithing_template",
+    "bedrock_identifier": "quaso:plantilla_celestita",
+    "source_texture": "assets/minecraft/textures/item/custom/plantilla_celestita.png"
+  },
+  {
+    "model": "pluma_levi",
+    "java_item": "minecraft:feather",
+    "bedrock_identifier": "quaso:pluma_levi",
+    "source_texture": "assets/minecraft/textures/item/custom/pluma_levi.png"
+  },
+  {
+    "model": "pluma_levi_mejorada",
+    "java_item": "minecraft:feather",
+    "bedrock_identifier": "quaso:pluma_levi_mejorada",
+    "source_texture": "assets/minecraft/textures/item/custom/pluma_levi_mejorada.png"
+  },
+  {
+    "model": "pluma_vacio",
+    "java_item": "minecraft:feather",
+    "bedrock_identifier": "quaso:pluma_vacio",
+    "source_texture": "assets/minecraft/textures/item/custom/pluma_vacio.png"
+  },
+  {
+    "model": "polvo_silencioso",
+    "java_item": "minecraft:flint",
+    "bedrock_identifier": "quaso:polvo_silencioso",
+    "source_texture": "assets/minecraft/textures/item/custom/polvo_silencioso.png"
+  },
+  {
+    "model": "polvora_floral",
+    "java_item": "minecraft:gunpowder",
+    "bedrock_identifier": "quaso:polvora_floral",
+    "source_texture": "assets/minecraft/textures/item/custom/polvora_floral.png"
+  },
+  {
+    "model": "potion_haste_2",
+    "java_item": "minecraft:potion",
+    "bedrock_identifier": "quaso:potion_haste_2",
+    "source_texture": "assets/minecraft/textures/item/custom/potion_haste_2.png"
+  },
+  {
+    "model": "potion_haste_3",
+    "java_item": "minecraft:potion",
+    "bedrock_identifier": "quaso:potion_haste_3",
+    "source_texture": "assets/minecraft/textures/item/custom/potion_haste_3.png"
+  },
+  {
+    "model": "potion_resistance_2",
+    "java_item": "minecraft:potion",
+    "bedrock_identifier": "quaso:potion_resistance_2",
+    "source_texture": "assets/minecraft/textures/item/custom/potion_resistance_2.png"
+  },
+  {
+    "model": "potion_slow_falling",
+    "java_item": "minecraft:potion",
+    "bedrock_identifier": "quaso:potion_slow_falling",
+    "source_texture": "assets/minecraft/textures/item/custom/potion_slow_falling.png"
+  },
+  {
+    "model": "propulsor_estelar",
+    "java_item": "minecraft:firework_rocket",
+    "bedrock_identifier": "quaso:propulsor_estelar",
+    "source_texture": "assets/minecraft/textures/item/custom/propulsor_estelar.png"
+  },
+  {
+    "model": "quaso_ticket",
+    "java_item": "minecraft:paper",
+    "bedrock_identifier": "quaso:quaso_ticket",
+    "source_texture": "assets/minecraft/textures/item/custom/quaso_ticket.png"
+  },
+  {
+    "model": "racion_viaje",
+    "java_item": "minecraft:bread",
+    "bedrock_identifier": "quaso:racion_viaje",
+    "source_texture": "assets/minecraft/textures/item/custom/racion_viaje.png"
+  },
+  {
+    "model": "radar_minerales",
+    "java_item": "minecraft:clock",
+    "bedrock_identifier": "quaso:radar_minerales",
+    "source_texture": "assets/minecraft/textures/item/custom/radar_minerales.png"
+  },
+  {
+    "model": "red_animales",
+    "java_item": "minecraft:phantom_membrane",
+    "bedrock_identifier": "quaso:red_animales",
+    "source_texture": "assets/minecraft/textures/item/custom/red_animales.png"
+  },
+  {
+    "model": "rep_hierro",
+    "java_item": "minecraft:skeleton_horse_spawn_egg",
+    "bedrock_identifier": "quaso:rep_hierro",
+    "source_texture": "assets/minecraft/textures/item/custom/rep_hierro.png"
+  },
+  {
+    "model": "rep_oro",
+    "java_item": "minecraft:blaze_spawn_egg",
+    "bedrock_identifier": "quaso:rep_oro",
+    "source_texture": "assets/minecraft/textures/item/custom/rep_oro.png"
+  },
+  {
+    "model": "sculk_totem",
+    "java_item": "minecraft:totem_of_undying",
+    "bedrock_identifier": "quaso:sculk_totem",
+    "source_texture": "assets/minecraft/textures/item/custom/sculk_totem.png"
+  },
+  {
+    "model": "soda",
+    "java_item": "minecraft:honey_bottle",
+    "bedrock_identifier": "quaso:soda",
+    "source_texture": "assets/minecraft/textures/item/custom/soda.png"
+  },
+  {
+    "model": "spawner_custom",
+    "java_item": "minecraft:spawner",
+    "bedrock_identifier": "quaso:spawner_custom",
+    "source_texture": "assets/minecraft/textures/item/custom/spawner_custom.png"
+  },
+  {
+    "model": "special_totem",
+    "java_item": "minecraft:totem_of_undying",
+    "bedrock_identifier": "quaso:special_totem",
+    "source_texture": "assets/minecraft/textures/item/custom/special_totem.png"
+  },
+  {
+    "model": "splash_absorption_10",
+    "java_item": "minecraft:splash_potion",
+    "bedrock_identifier": "quaso:splash_absorption_10",
+    "source_texture": "assets/minecraft/textures/item/custom/splash_absorption_10.png"
+  },
+  {
+    "model": "splash_regeneration_3",
+    "java_item": "minecraft:splash_potion",
+    "bedrock_identifier": "quaso:splash_regeneration_3",
+    "source_texture": "assets/minecraft/textures/item/custom/splash_regeneration_3.png"
+  },
+  {
+    "model": "splash_resistance_3",
+    "java_item": "minecraft:splash_potion",
+    "bedrock_identifier": "quaso:splash_resistance_3",
+    "source_texture": "assets/minecraft/textures/item/custom/splash_resistance_3.png"
+  },
+  {
+    "model": "statue_effect",
+    "java_item": "minecraft:armor_stand",
+    "bedrock_identifier": "quaso:statue_effect",
+    "source_texture": "assets/minecraft/textures/item/custom/statue_effect.png"
+  },
+  {
+    "model": "statue_pr",
+    "java_item": "minecraft:armor_stand",
+    "bedrock_identifier": "quaso:statue_pr",
+    "source_texture": "assets/minecraft/textures/item/custom/statue_pr.png"
+  },
+  {
+    "model": "talisman_botin",
+    "java_item": "minecraft:nautilus_shell",
+    "bedrock_identifier": "quaso:talisman_botin",
+    "source_texture": "assets/minecraft/textures/item/custom/talisman_botin.png"
+  },
+  {
+    "model": "tarta_calabaza_mejorada",
+    "java_item": "minecraft:pumpkin_pie",
+    "bedrock_identifier": "quaso:tarta_calabaza_mejorada",
+    "source_texture": "assets/minecraft/textures/item/custom/tarta_calabaza_mejorada.png"
+  },
+  {
+    "model": "tejido_sculk",
+    "java_item": "minecraft:rabbit_hide",
+    "bedrock_identifier": "quaso:tejido_sculk",
+    "source_texture": "assets/minecraft/textures/item/custom/tejido_sculk.png"
+  },
+  {
+    "model": "tonico_antilevitacion",
+    "java_item": "minecraft:potion",
+    "bedrock_identifier": "quaso:tonico_antilevitacion",
+    "source_texture": "assets/minecraft/textures/item/custom/tonico_antilevitacion.png"
+  },
+  {
+    "model": "totem_doble1",
+    "java_item": "minecraft:totem_of_undying",
+    "bedrock_identifier": "quaso:totem_doble1",
+    "source_texture": "assets/minecraft/textures/item/custom/totem_doble1.png"
+  },
+  {
+    "model": "totem_doble2",
+    "java_item": "minecraft:totem_of_undying",
+    "bedrock_identifier": "quaso:totem_doble2",
+    "source_texture": "assets/minecraft/textures/item/custom/totem_doble2.png"
+  },
+  {
+    "model": "trabajo_constructor",
+    "java_item": "minecraft:paper",
+    "bedrock_identifier": "quaso:trabajo_constructor",
+    "source_texture": "assets/minecraft/textures/item/custom/trabajo_constructor.png"
+  },
+  {
+    "model": "trabajo_granjero",
+    "java_item": "minecraft:paper",
+    "bedrock_identifier": "quaso:trabajo_granjero",
+    "source_texture": "assets/minecraft/textures/item/custom/trabajo_granjero.png"
+  },
+  {
+    "model": "trabajo_guerrero",
+    "java_item": "minecraft:paper",
+    "bedrock_identifier": "quaso:trabajo_guerrero",
+    "source_texture": "assets/minecraft/textures/item/custom/trabajo_guerrero.png"
+  },
+  {
+    "model": "trabajo_lenador",
+    "java_item": "minecraft:paper",
+    "bedrock_identifier": "quaso:trabajo_lenador",
+    "source_texture": "assets/minecraft/textures/item/custom/trabajo_lenador.png"
+  },
+  {
+    "model": "trabajo_mineria",
+    "java_item": "minecraft:paper",
+    "bedrock_identifier": "quaso:trabajo_mineria",
+    "source_texture": "assets/minecraft/textures/item/custom/trabajo_mineria.png"
+  },
+  {
+    "model": "trabajo_pescador",
+    "java_item": "minecraft:paper",
+    "bedrock_identifier": "quaso:trabajo_pescador",
+    "source_texture": "assets/minecraft/textures/item/custom/trabajo_pescador.png"
+  },
+  {
+    "model": "warden_gun",
+    "java_item": "minecraft:echo_shard",
+    "bedrock_identifier": "quaso:warden_gun",
+    "source_texture": "assets/minecraft/textures/item/custom/warden_gun.png"
+  },
+  {
+    "model": "zanahoria_encantada",
+    "java_item": "minecraft:iron_nugget",
+    "bedrock_identifier": "quaso:zanahoria_encantada",
+    "source_texture": "assets/minecraft/textures/item/custom/zanahoria_encantada.png"
+  }
+]

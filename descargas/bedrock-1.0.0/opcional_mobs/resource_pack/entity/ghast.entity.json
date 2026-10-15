@@ -1,0 +1,58 @@
+{
+  "format_version": "1.8.0",
+  "minecraft:client_entity": {
+    "description": {
+      "identifier": "minecraft:ghast",
+      "materials": {
+        "default": "ghast",
+        "quaso": "entity_alphatest",
+        "quaso_glow": "entity_emissive_alpha"
+      },
+      "textures": {
+        "default": "textures/entity/ghast/ghast",
+        "shooting": "textures/entity/ghast/ghast_shooting",
+        "ghast3": "textures/entity/quaso/ghast3",
+        "ghast3_e": "textures/entity/quaso/ghast3_e"
+      },
+      "geometry": {
+        "default": "geometry.ghast",
+        "ghast3": "geometry.quaso.ghast3"
+      },
+      "spawn_egg": {
+        "texture": "spawn_egg_ghast"
+      },
+      "animations": {
+        "move": "animation.ghast.move",
+        "scale": "animation.ghast.scale",
+        "ghast3": "animation.quaso.ghast3"
+      },
+      "animation_controllers": [
+        {
+          "move": "controller.animation.ghast.move"
+        }
+      ],
+      "render_controllers": [
+        {
+          "controller.render.ghast": "!variable.quaso_custom"
+        },
+        {
+          "controller.render.quaso.ghast3": "variable.quaso_ghast3"
+        },
+        {
+          "controller.render.quaso.ghast3_e": "variable.quaso_ghast3"
+        }
+      ],
+      "scripts": {
+        "pre_animation": [
+          "variable.quaso_ghast3 = query.is_name_any('Infested Ghast', '§rInfested Ghast', 'Infested Ghast§r', '§lInfested Ghast', '§r§lInfested Ghast', '§lInfested Ghast§r', '§0Infested Ghast', '§r§0Infested Ghast', '§0Infested Ghast§r', '§0§lInfested Ghast', '§r§0§lInfested Ghast', '§0§lInfested Ghast§r', '§1Infested Ghast', '§r§1Infested Ghast', '§1Infested Ghast§r', '§1§lInfested Ghast', '§r§1§lInfested Ghast', '§1§lInfested Ghast§r', '§2Infested Ghast', '§r§2Infested Ghast', '§2Infested Ghast§r', '§2§lInfested Ghast', '§r§2§lInfested Ghast', '§2§lInfested Ghast§r', '§3Infested Ghast', '§r§3Infested Ghast', '§3Infested Ghast§r', '§3§lInfested Ghast', '§r§3§lInfested Ghast', '§3§lInfested Ghast§r', '§4Infested Ghast', '§r§4Infested Ghast', '§4Infested Ghast§r', '§4§lInfested Ghast', '§r§4§lInfested Ghast', '§4§lInfested Ghast§r', '§5Infested Ghast', '§r§5Infested Ghast', '§5Infested Ghast§r', '§5§lInfested Ghast', '§r§5§lInfested Ghast', '§5§lInfested Ghast§r', '§6Infested Ghast', '§r§6Infested Ghast', '§6Infested Ghast§r', '§6§lInfested Ghast', '§r§6§lInfested Ghast', '§6§lInfested Ghast§r', '§7Infested Ghast', '§r§7Infested Ghast', '§7Infested Ghast§r', '§7§lInfested Ghast', '§r§7§lInfested Ghast', '§7§lInfested Ghast§r', '§8Infested Ghast', '§r§8Infested Ghast', '§8Infested Ghast§r', '§8§lInfested Ghast', '§r§8§lInfested Ghast', '§8§lInfested Ghast§r', '§9Infested Ghast', '§r§9Infested Ghast', '§9Infested Ghast§r', '§9§lInfested Ghast', '§r§9§lInfested Ghast', '§9§lInfested Ghast§r', '§aInfested Ghast', '§r§aInfested Ghast', '§aInfested Ghast§r', '§a§lInfested Ghast', '§r§a§lInfested Ghast', '§a§lInfested Ghast§r', '§bInfested Ghast', '§r§bInfested Ghast', '§bInfested Ghast§r', '§b§lInfested Ghast', '§r§b§lInfested Ghast', '§b§lInfested Ghast§r', '§cInfested Ghast', '§r§cInfested Ghast', '§cInfested Ghast§r', '§c§lInfested Ghast', '§r§c§lInfested Ghast', '§c§lInfested Ghast§r', '§dInfested Ghast', '§r§dInfested Ghast', '§dInfested Ghast§r', '§d§lInfested Ghast', '§r§d§lInfested Ghast', '§d§lInfested Ghast§r', '§eInfested Ghast', '§r§eInfested Ghast', '§eInfested Ghast§r', '§e§lInfested Ghast', '§r§e§lInfested Ghast', '§e§lInfested Ghast§r', '§fInfested Ghast', '§r§fInfested Ghast', '§fInfested Ghast§r', '§f§lInfested Ghast', '§r§f§lInfested Ghast', '§f§lInfested Ghast§r', '§gInfested Ghast', '§r§gInfested Ghast', '§gInfested Ghast§r', '§g§lInfested Ghast', '§r§g§lInfested Ghast', '§g§lInfested Ghast§r', '§hInfested Ghast', '§r§hInfested Ghast', '§hInfested Ghast§r', '§h§lInfested Ghast', '§r§h§lInfested Ghast', '§h§lInfested Ghast§r', '§iInfested Ghast', '§r§iInfested Ghast', '§iInfested Ghast§r', '§i§lInfested Ghast', '§r§i§lInfested Ghast', '§i§lInfested Ghast§r', '§jInfested Ghast', '§r§jInfested Ghast', '§jInfested Ghast§r', '§j§lInfested Ghast', '§r§j§lInfested Ghast', '§j§lInfested Ghast§r', '§mInfested Ghast', '§r§mInfested Ghast', '§mInfested Ghast§r', '§m§lInfested Ghast', '§r§m§lInfested Ghast', '§m§lInfested Ghast§r', '§nInfested Ghast', '§r§nInfested Ghast', '§nInfested Ghast§r', '§n§lInfested Ghast', '§r§n§lInfested Ghast', '§n§lInfested Ghast§r', '§pInfested Ghast', '§r§pInfested Ghast', '§pInfested Ghast§r', '§p§lInfested Ghast', '§r§p§lInfested Ghast', '§p§lInfested Ghast§r', '§qInfested Ghast', '§r§qInfested Ghast', '§qInfested Ghast§r', '§q§lInfested Ghast', '§r§q§lInfested Ghast', '§q§lInfested Ghast§r', '§sInfested Ghast', '§r§sInfested Ghast', '§sInfested Ghast§r', '§s§lInfested Ghast', '§r§s§lInfested Ghast', '§s§lInfested Ghast§r', '§tInfested Ghast', '§r§tInfested Ghast', '§tInfested Ghast§r', '§t§lInfested Ghast', '§r§t§lInfested Ghast', '§t§lInfested Ghast§r', '§uInfested Ghast', '§r§uInfested Ghast', '§uInfested Ghast§r', '§u§lInfested Ghast', '§r§u§lInfested Ghast', '§u§lInfested Ghast§r');",
+          "variable.quaso_custom = variable.quaso_ghast3;"
+        ],
+        "animate": [
+          {
+            "ghast3": "variable.quaso_ghast3"
+          }
+        ]
+      }
+    }
+  }
+}

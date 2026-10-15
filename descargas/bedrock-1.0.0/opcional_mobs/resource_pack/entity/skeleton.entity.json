@@ -1,0 +1,132 @@
+{
+  "format_version": "1.8.0",
+  "minecraft:client_entity": {
+    "description": {
+      "identifier": "minecraft:skeleton",
+      "min_engine_version": "1.8.0",
+      "materials": {
+        "default": "skeleton",
+        "quaso": "entity_alphatest",
+        "quaso_glow": "entity_emissive_alpha"
+      },
+      "textures": {
+        "default": "textures/entity/skeleton/skeleton",
+        "skeleton3": "textures/entity/quaso/skeleton3",
+        "skeleton3_e": "textures/entity/quaso/skeleton3_e",
+        "skeleton4": "textures/entity/quaso/skeleton4",
+        "skeleton4_e": "textures/entity/quaso/skeleton4_e"
+      },
+      "geometry": {
+        "default": "geometry.skeleton.v1.8",
+        "skeleton3": "geometry.quaso.skeleton3",
+        "skeleton4": "geometry.quaso.skeleton4"
+      },
+      "spawn_egg": {
+        "texture": "spawn_egg_skeleton"
+      },
+      "scripts": {
+        "pre_animation": [
+          "variable.tcos0 = (Math.cos(query.modified_distance_moved * 38.17) * query.modified_move_speed / variable.gliding_speed_value) * 57.3;",
+          "variable.riding_y_offset_with_respect_to_player = 0.5;",
+          "variable.riding_y_offset_on_vehicle_where_other_entites_can_stand = query.is_riding_any_entity_of_type('minecraft:minecart', 'minecraft:boat', 'minecraft:chest_boat') ? -3.0 : 0.0;",
+          "variable.riding_y_offset = variable.riding_y_offset_with_respect_to_player + variable.riding_y_offset_on_vehicle_where_other_entites_can_stand;",
+          "variable.quaso_skeleton3 = query.is_name_any('Infested Skeleton', '§rInfested Skeleton', 'Infested Skeleton§r', '§lInfested Skeleton', '§r§lInfested Skeleton', '§lInfested Skeleton§r', '§0Infested Skeleton', '§r§0Infested Skeleton', '§0Infested Skeleton§r', '§0§lInfested Skeleton', '§r§0§lInfested Skeleton', '§0§lInfested Skeleton§r', '§1Infested Skeleton', '§r§1Infested Skeleton', '§1Infested Skeleton§r', '§1§lInfested Skeleton', '§r§1§lInfested Skeleton', '§1§lInfested Skeleton§r', '§2Infested Skeleton', '§r§2Infested Skeleton', '§2Infested Skeleton§r', '§2§lInfested Skeleton', '§r§2§lInfested Skeleton', '§2§lInfested Skeleton§r', '§3Infested Skeleton', '§r§3Infested Skeleton', '§3Infested Skeleton§r', '§3§lInfested Skeleton', '§r§3§lInfested Skeleton', '§3§lInfested Skeleton§r', '§4Infested Skeleton', '§r§4Infested Skeleton', '§4Infested Skeleton§r', '§4§lInfested Skeleton', '§r§4§lInfested Skeleton', '§4§lInfested Skeleton§r', '§5Infested Skeleton', '§r§5Infested Skeleton', '§5Infested Skeleton§r', '§5§lInfested Skeleton', '§r§5§lInfested Skeleton', '§5§lInfested Skeleton§r', '§6Infested Skeleton', '§r§6Infested Skeleton', '§6Infested Skeleton§r', '§6§lInfested Skeleton', '§r§6§lInfested Skeleton', '§6§lInfested Skeleton§r', '§7Infested Skeleton', '§r§7Infested Skeleton', '§7Infested Skeleton§r', '§7§lInfested Skeleton', '§r§7§lInfested Skeleton', '§7§lInfested Skeleton§r', '§8Infested Skeleton', '§r§8Infested Skeleton', '§8Infested Skeleton§r', '§8§lInfested Skeleton', '§r§8§lInfested Skeleton', '§8§lInfested Skeleton§r', '§9Infested Skeleton', '§r§9Infested Skeleton', '§9Infested Skeleton§r', '§9§lInfested Skeleton', '§r§9§lInfested Skeleton', '§9§lInfested Skeleton§r', '§aInfested Skeleton', '§r§aInfested Skeleton', '§aInfested Skeleton§r', '§a§lInfested Skeleton', '§r§a§lInfested Skeleton', '§a§lInfested Skeleton§r', '§bInfested Skeleton', '§r§bInfested Skeleton', '§bInfested Skeleton§r', '§b§lInfested Skeleton', '§r§b§lInfested Skeleton', '§b§lInfested Skeleton§r', '§cInfested Skeleton', '§r§cInfested Skeleton', '§cInfested Skeleton§r', '§c§lInfested Skeleton', '§r§c§lInfested Skeleton', '§c§lInfested Skeleton§r', '§dInfested Skeleton', '§r§dInfested Skeleton', '§dInfested Skeleton§r', '§d§lInfested Skeleton', '§r§d§lInfested Skeleton', '§d§lInfested Skeleton§r', '§eInfested Skeleton', '§r§eInfested Skeleton', '§eInfested Skeleton§r', '§e§lInfested Skeleton', '§r§e§lInfested Skeleton', '§e§lInfested Skeleton§r', '§fInfested Skeleton', '§r§fInfested Skeleton', '§fInfested Skeleton§r', '§f§lInfested Skeleton', '§r§f§lInfested Skeleton', '§f§lInfested Skeleton§r', '§gInfested Skeleton', '§r§gInfested Skeleton', '§gInfested Skeleton§r', '§g§lInfested Skeleton', '§r§g§lInfested Skeleton', '§g§lInfested Skeleton§r', '§hInfested Skeleton', '§r§hInfested Skeleton', '§hInfested Skeleton§r', '§h§lInfested Skeleton', '§r§h§lInfested Skeleton', '§h§lInfested Skeleton§r', '§iInfested Skeleton', '§r§iInfested Skeleton', '§iInfested Skeleton§r', '§i§lInfested Skeleton', '§r§i§lInfested Skeleton', '§i§lInfested Skeleton§r', '§jInfested Skeleton', '§r§jInfested Skeleton', '§jInfested Skeleton§r', '§j§lInfested Skeleton', '§r§j§lInfested Skeleton', '§j§lInfested Skeleton§r', '§mInfested Skeleton', '§r§mInfested Skeleton', '§mInfested Skeleton§r', '§m§lInfested Skeleton', '§r§m§lInfested Skeleton', '§m§lInfested Skeleton§r', '§nInfested Skeleton', '§r§nInfested Skeleton', '§nInfested Skeleton§r', '§n§lInfested Skeleton', '§r§n§lInfested Skeleton', '§n§lInfested Skeleton§r', '§pInfested Skeleton', '§r§pInfested Skeleton', '§pInfested Skeleton§r', '§p§lInfested Skeleton', '§r§p§lInfested Skeleton', '§p§lInfested Skeleton§r', '§qInfested Skeleton', '§r§qInfested Skeleton', '§qInfested Skeleton§r', '§q§lInfested Skeleton', '§r§q§lInfested Skeleton', '§q§lInfested Skeleton§r', '§sInfested Skeleton', '§r§sInfested Skeleton', '§sInfested Skeleton§r', '§s§lInfested Skeleton', '§r§s§lInfested Skeleton', '§s§lInfested Skeleton§r', '§tInfested Skeleton', '§r§tInfested Skeleton', '§tInfested Skeleton§r', '§t§lInfested Skeleton', '§r§t§lInfested Skeleton', '§t§lInfested Skeleton§r', '§uInfested Skeleton', '§r§uInfested Skeleton', '§uInfested Skeleton§r', '§u§lInfested Skeleton', '§r§u§lInfested Skeleton', '§u§lInfested Skeleton§r');",
+          "variable.quaso_skeleton4 = query.is_name_any('Esqueleto BloodMoon', '§rEsqueleto BloodMoon', 'Esqueleto BloodMoon§r', '§lEsqueleto BloodMoon', '§r§lEsqueleto BloodMoon', '§lEsqueleto BloodMoon§r', '§0Esqueleto BloodMoon', '§r§0Esqueleto BloodMoon', '§0Esqueleto BloodMoon§r', '§0§lEsqueleto BloodMoon', '§r§0§lEsqueleto BloodMoon', '§0§lEsqueleto BloodMoon§r', '§1Esqueleto BloodMoon', '§r§1Esqueleto BloodMoon', '§1Esqueleto BloodMoon§r', '§1§lEsqueleto BloodMoon', '§r§1§lEsqueleto BloodMoon', '§1§lEsqueleto BloodMoon§r', '§2Esqueleto BloodMoon', '§r§2Esqueleto BloodMoon', '§2Esqueleto BloodMoon§r', '§2§lEsqueleto BloodMoon', '§r§2§lEsqueleto BloodMoon', '§2§lEsqueleto BloodMoon§r', '§3Esqueleto BloodMoon', '§r§3Esqueleto BloodMoon', '§3Esqueleto BloodMoon§r', '§3§lEsqueleto BloodMoon', '§r§3§lEsqueleto BloodMoon', '§3§lEsqueleto BloodMoon§r', '§4Esqueleto BloodMoon', '§r§4Esqueleto BloodMoon', '§4Esqueleto BloodMoon§r', '§4§lEsqueleto BloodMoon', '§r§4§lEsqueleto BloodMoon', '§4§lEsqueleto BloodMoon§r', '§5Esqueleto BloodMoon', '§r§5Esqueleto BloodMoon', '§5Esqueleto BloodMoon§r', '§5§lEsqueleto BloodMoon', '§r§5§lEsqueleto BloodMoon', '§5§lEsqueleto BloodMoon§r', '§6Esqueleto BloodMoon', '§r§6Esqueleto BloodMoon', '§6Esqueleto BloodMoon§r', '§6§lEsqueleto BloodMoon', '§r§6§lEsqueleto BloodMoon', '§6§lEsqueleto BloodMoon§r', '§7Esqueleto BloodMoon', '§r§7Esqueleto BloodMoon', '§7Esqueleto BloodMoon§r', '§7§lEsqueleto BloodMoon', '§r§7§lEsqueleto BloodMoon', '§7§lEsqueleto BloodMoon§r', '§8Esqueleto BloodMoon', '§r§8Esqueleto BloodMoon', '§8Esqueleto BloodMoon§r', '§8§lEsqueleto BloodMoon', '§r§8§lEsqueleto BloodMoon', '§8§lEsqueleto BloodMoon§r', '§9Esqueleto BloodMoon', '§r§9Esqueleto BloodMoon', '§9Esqueleto BloodMoon§r', '§9§lEsqueleto BloodMoon', '§r§9§lEsqueleto BloodMoon', '§9§lEsqueleto BloodMoon§r', '§aEsqueleto BloodMoon', '§r§aEsqueleto BloodMoon', '§aEsqueleto BloodMoon§r', '§a§lEsqueleto BloodMoon', '§r§a§lEsqueleto BloodMoon', '§a§lEsqueleto BloodMoon§r', '§bEsqueleto BloodMoon', '§r§bEsqueleto BloodMoon', '§bEsqueleto BloodMoon§r', '§b§lEsqueleto BloodMoon', '§r§b§lEsqueleto BloodMoon', '§b§lEsqueleto BloodMoon§r', '§cEsqueleto BloodMoon', '§r§cEsqueleto BloodMoon', '§cEsqueleto BloodMoon§r', '§c§lEsqueleto BloodMoon', '§r§c§lEsqueleto BloodMoon', '§c§lEsqueleto BloodMoon§r', '§dEsqueleto BloodMoon', '§r§dEsqueleto BloodMoon', '§dEsqueleto BloodMoon§r', '§d§lEsqueleto BloodMoon', '§r§d§lEsqueleto BloodMoon', '§d§lEsqueleto BloodMoon§r', '§eEsqueleto BloodMoon', '§r§eEsqueleto BloodMoon', '§eEsqueleto BloodMoon§r', '§e§lEsqueleto BloodMoon', '§r§e§lEsqueleto BloodMoon', '§e§lEsqueleto BloodMoon§r', '§fEsqueleto BloodMoon', '§r§fEsqueleto BloodMoon', '§fEsqueleto BloodMoon§r', '§f§lEsqueleto BloodMoon', '§r§f§lEsqueleto BloodMoon', '§f§lEsqueleto BloodMoon§r', '§gEsqueleto BloodMoon', '§r§gEsqueleto BloodMoon', '§gEsqueleto BloodMoon§r', '§g§lEsqueleto BloodMoon', '§r§g§lEsqueleto BloodMoon', '§g§lEsqueleto BloodMoon§r', '§hEsqueleto BloodMoon', '§r§hEsqueleto BloodMoon', '§hEsqueleto BloodMoon§r', '§h§lEsqueleto BloodMoon', '§r§h§lEsqueleto BloodMoon', '§h§lEsqueleto BloodMoon§r', '§iEsqueleto BloodMoon', '§r§iEsqueleto BloodMoon', '§iEsqueleto BloodMoon§r', '§i§lEsqueleto BloodMoon', '§r§i§lEsqueleto BloodMoon', '§i§lEsqueleto BloodMoon§r', '§jEsqueleto BloodMoon', '§r§jEsqueleto BloodMoon', '§jEsqueleto BloodMoon§r', '§j§lEsqueleto BloodMoon', '§r§j§lEsqueleto BloodMoon', '§j§lEsqueleto BloodMoon§r', '§mEsqueleto BloodMoon', '§r§mEsqueleto BloodMoon', '§mEsqueleto BloodMoon§r', '§m§lEsqueleto BloodMoon', '§r§m§lEsqueleto BloodMoon', '§m§lEsqueleto BloodMoon§r', '§nEsqueleto BloodMoon', '§r§nEsqueleto BloodMoon', '§nEsqueleto BloodMoon§r', '§n§lEsqueleto BloodMoon', '§r§n§lEsqueleto BloodMoon', '§n§lEsqueleto BloodMoon§r', '§pEsqueleto BloodMoon', '§r§pEsqueleto BloodMoon', '§pEsqueleto BloodMoon§r', '§p§lEsqueleto BloodMoon', '§r§p§lEsqueleto BloodMoon', '§p§lEsqueleto BloodMoon§r', '§qEsqueleto BloodMoon', '§r§qEsqueleto BloodMoon', '§qEsqueleto BloodMoon§r', '§q§lEsqueleto BloodMoon', '§r§q§lEsqueleto BloodMoon', '§q§lEsqueleto BloodMoon§r', '§sEsqueleto BloodMoon', '§r§sEsqueleto BloodMoon', '§sEsqueleto BloodMoon§r', '§s§lEsqueleto BloodMoon', '§r§s§lEsqueleto BloodMoon', '§s§lEsqueleto BloodMoon§r', '§tEsqueleto BloodMoon', '§r§tEsqueleto BloodMoon', '§tEsqueleto BloodMoon§r', '§t§lEsqueleto BloodMoon', '§r§t§lEsqueleto BloodMoon', '§t§lEsqueleto BloodMoon§r', '§uEsqueleto BloodMoon', '§r§uEsqueleto BloodMoon', '§uEsqueleto BloodMoon§r', '§u§lEsqueleto BloodMoon', '§r§u§lEsqueleto BloodMoon', '§u§lEsqueleto BloodMoon§r');",
+          "variable.quaso_custom = variable.quaso_skeleton3 || variable.quaso_skeleton4;"
+        ],
+        "animate": [
+          {
+            "skeleton3": "variable.quaso_skeleton3"
+          },
+          {
+            "skeleton4": "variable.quaso_skeleton4"
+          }
+        ]
+      },
+      "animations": {
+        "look_at_target_default": "animation.humanoid.look_at_target.default",
+        "look_at_target_gliding": "animation.humanoid.look_at_target.gliding",
+        "look_at_target_swimming": "animation.humanoid.look_at_target.swimming",
+        "move": "animation.humanoid.move",
+        "riding.arms": "animation.humanoid.riding.arms",
+        "riding.legs": "animation.humanoid.riding.legs",
+        "holding": "animation.humanoid.holding",
+        "brandish_spear": "animation.humanoid.brandish_spear",
+        "charging": "animation.humanoid.charging",
+        "attack.rotations": "animation.humanoid.attack.rotations",
+        "sneaking": "animation.humanoid.sneaking",
+        "bob": "animation.humanoid.bob",
+        "damage_nearby_mobs": "animation.humanoid.damage_nearby_mobs",
+        "bow_and_arrow": "animation.humanoid.bow_and_arrow",
+        "swimming": "animation.zombie.swimming",
+        "use_item_progress": "animation.humanoid.use_item_progress",
+        "skeleton_attack": "animation.skeleton.attack",
+        "riding.body": "animation.humanoid.riding.body",
+        "skeleton3": "animation.quaso.skeleton3",
+        "skeleton4": "animation.quaso.skeleton4"
+      },
+      "animation_controllers": [
+        {
+          "look_at_target": "controller.animation.humanoid.look_at_target"
+        },
+        {
+          "move": "controller.animation.humanoid.move"
+        },
+        {
+          "riding": "controller.animation.humanoid.riding"
+        },
+        {
+          "holding": "controller.animation.humanoid.holding"
+        },
+        {
+          "brandish_spear": "controller.animation.humanoid.brandish_spear"
+        },
+        {
+          "charging": "controller.animation.humanoid.charging"
+        },
+        {
+          "attack": "controller.animation.humanoid.attack"
+        },
+        {
+          "sneaking": "controller.animation.humanoid.sneaking"
+        },
+        {
+          "bob": "controller.animation.humanoid.bob"
+        },
+        {
+          "damage_nearby_mobs": "controller.animation.humanoid.damage_nearby_mobs"
+        },
+        {
+          "bow_and_arrow": "controller.animation.humanoid.bow_and_arrow"
+        },
+        {
+          "swimming": "controller.animation.zombie.swimming"
+        },
+        {
+          "use_item_progress": "controller.animation.humanoid.use_item_progress"
+        },
+        {
+          "skeleton_attack": "controller.animation.skeleton.attack"
+        }
+      ],
+      "render_controllers": [
+        {
+          "controller.render.skeleton": "!variable.quaso_custom"
+        },
+        {
+          "controller.render.quaso.skeleton3": "variable.quaso_skeleton3"
+        },
+        {
+          "controller.render.quaso.skeleton3_e": "variable.quaso_skeleton3"
+        },
+        {
+          "controller.render.quaso.skeleton4": "variable.quaso_skeleton4"
+        },
+        {
+          "controller.render.quaso.skeleton4_e": "variable.quaso_skeleton4"
+        }
+      ],
+      "enable_attachables": true
+    }
+  }
+}

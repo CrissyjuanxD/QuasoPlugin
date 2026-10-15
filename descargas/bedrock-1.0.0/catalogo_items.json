@@ -1,0 +1,1864 @@
+[
+  {
+    "model": "abono_concentrado",
+    "java_item": "minecraft:glowstone_dust",
+    "evidence": "factory_ItemManager",
+    "display_name": "Abono Concentrado",
+    "command": "abono_concentrado"
+  },
+  {
+    "model": "aguijon_floral",
+    "java_item": "minecraft:prismarine_shard",
+    "evidence": "factory_ItemManager",
+    "display_name": "Aguijón Floral",
+    "command": "aguijon_floral"
+  },
+  {
+    "model": "air",
+    "java_item": "minecraft:paper",
+    "evidence": "revision_codigo"
+  },
+  {
+    "model": "algodon_azucar",
+    "java_item": "minecraft:string",
+    "evidence": "revision_codigo"
+  },
+  {
+    "model": "alma_infested_cave_spider",
+    "java_item": "minecraft:echo_shard",
+    "evidence": "factory_ItemManager",
+    "display_name": "Alma de Infested Cave Spider",
+    "command": "alma_infested_cave_spider"
+  },
+  {
+    "model": "alma_infested_creeper",
+    "java_item": "minecraft:echo_shard",
+    "evidence": "factory_ItemManager",
+    "display_name": "Alma de Infested Creeper",
+    "command": "alma_infested_creeper"
+  },
+  {
+    "model": "alma_infested_ghast",
+    "java_item": "minecraft:echo_shard",
+    "evidence": "factory_ItemManager",
+    "display_name": "Alma de Infested Ghast",
+    "command": "alma_infested_ghast"
+  },
+  {
+    "model": "alma_infested_skeleton",
+    "java_item": "minecraft:echo_shard",
+    "evidence": "factory_ItemManager",
+    "display_name": "Alma de Infested Skeletons",
+    "command": "alma_infested_skeleton"
+  },
+  {
+    "model": "amulet_bloodmoon",
+    "java_item": "minecraft:torchflower_seeds",
+    "evidence": "factory_ItemManager",
+    "display_name": "Amuleto Luna de Sangre",
+    "command": "amulet_bloodmoon"
+  },
+  {
+    "model": "amuleto_esperanza",
+    "java_item": "minecraft:echo_shard",
+    "evidence": "factory_ItemManager",
+    "display_name": "Amuleto de la Última Esperanza",
+    "command": "amuleto_ultima_esperanza"
+  },
+  {
+    "model": "amuleto_invisibilidad",
+    "java_item": "minecraft:glow_squid_spawn_egg",
+    "evidence": "factory_ItemManager",
+    "display_name": "Amuleto de Invisibilidad",
+    "command": "amuleto_invisiblidad"
+  },
+  {
+    "model": "antidoto",
+    "java_item": "minecraft:potion",
+    "evidence": "factory_ItemManager",
+    "display_name": "Antídoto Universal",
+    "command": "antidoto"
+  },
+  {
+    "model": "arco_hielo",
+    "java_item": "minecraft:bow",
+    "evidence": "factory_ItemManager",
+    "display_name": "Arco de Hielo",
+    "command": "arco_hielo"
+  },
+  {
+    "model": "arco_mejorado",
+    "java_item": "minecraft:bow",
+    "evidence": "factory_ItemManager",
+    "display_name": "Arco Mejorado",
+    "command": "arco_mejorado"
+  },
+  {
+    "model": "arco_nivel1",
+    "java_item": "minecraft:bow",
+    "evidence": "factory_ItemManager",
+    "display_name": "Arco Explosivo Nvl 1",
+    "command": "arco_nivel1"
+  },
+  {
+    "model": "arco_nivel2",
+    "java_item": "minecraft:bow",
+    "evidence": "factory_ItemManager",
+    "display_name": "Arco Explosivo Nvl 2",
+    "command": "arco_nivel2"
+  },
+  {
+    "model": "arco_nivel3",
+    "java_item": "minecraft:bow",
+    "evidence": "factory_ItemManager",
+    "display_name": "Arco Explosivo Nvl 3",
+    "command": "arco_nivel3"
+  },
+  {
+    "model": "arco_sculk",
+    "java_item": "minecraft:bow",
+    "evidence": "factory_ItemManager",
+    "display_name": "Arco de Sculk",
+    "command": "arco_sculk"
+  },
+  {
+    "model": "azada_celestita",
+    "java_item": "minecraft:netherite_hoe",
+    "evidence": "revision_codigo"
+  },
+  {
+    "model": "azada_floral",
+    "java_item": "minecraft:netherite_hoe",
+    "evidence": "revision_codigo"
+  },
+  {
+    "model": "bar_azulito",
+    "java_item": "minecraft:potion",
+    "evidence": "revision_codigo"
+  },
+  {
+    "model": "bar_cerveza",
+    "java_item": "minecraft:potion",
+    "evidence": "revision_codigo"
+  },
+  {
+    "model": "bar_ginebra",
+    "java_item": "minecraft:potion",
+    "evidence": "revision_codigo"
+  },
+  {
+    "model": "bar_margarita",
+    "java_item": "minecraft:potion",
+    "evidence": "revision_codigo"
+  },
+  {
+    "model": "bar_mezcal",
+    "java_item": "minecraft:potion",
+    "evidence": "revision_codigo"
+  },
+  {
+    "model": "bar_michelada",
+    "java_item": "minecraft:potion",
+    "evidence": "revision_codigo"
+  },
+  {
+    "model": "bar_pulque",
+    "java_item": "minecraft:potion",
+    "evidence": "revision_codigo"
+  },
+  {
+    "model": "bar_ron",
+    "java_item": "minecraft:potion",
+    "evidence": "revision_codigo"
+  },
+  {
+    "model": "bar_sake",
+    "java_item": "minecraft:potion",
+    "evidence": "revision_codigo"
+  },
+  {
+    "model": "bar_tequila",
+    "java_item": "minecraft:potion",
+    "evidence": "revision_codigo"
+  },
+  {
+    "model": "bar_vodka",
+    "java_item": "minecraft:potion",
+    "evidence": "revision_codigo"
+  },
+  {
+    "model": "bar_whisky",
+    "java_item": "minecraft:potion",
+    "evidence": "revision_codigo"
+  },
+  {
+    "model": "barco_custom",
+    "java_item": "minecraft:echo_shard",
+    "evidence": "revision_codigo"
+  },
+  {
+    "model": "baya_luminosa",
+    "java_item": "minecraft:glow_berries",
+    "evidence": "factory_ItemManager",
+    "display_name": "Baya Regenerativa",
+    "command": "baya_luminosa"
+  },
+  {
+    "model": "baya_sculk",
+    "java_item": "minecraft:sweet_berries",
+    "evidence": "factory_ItemManager",
+    "display_name": "Baya Sculk",
+    "command": "baya_sculk"
+  },
+  {
+    "model": "bengala_sculk",
+    "java_item": "minecraft:snowball",
+    "evidence": "factory_ItemManager",
+    "display_name": "Bengala de Sculk",
+    "command": "bengala_sculk"
+  },
+  {
+    "model": "blood_fragment",
+    "java_item": "minecraft:copper_nugget",
+    "evidence": "factory_ItemManager",
+    "display_name": "Fragmento de BloodMoon",
+    "command": "blood_fragment"
+  },
+  {
+    "model": "bloque_oro_apilado",
+    "java_item": "minecraft:gold_block",
+    "evidence": "factory_ItemManager",
+    "display_name": "Bloque de Oro Apilado",
+    "command": "bloque_oro_apilado"
+  },
+  {
+    "model": "bomba_humo",
+    "java_item": "minecraft:snowball",
+    "evidence": "factory_ItemManager",
+    "display_name": "Bomba de Humo",
+    "command": "bomba_humo"
+  },
+  {
+    "model": "bota_warden",
+    "java_item": "minecraft:netherite_boots",
+    "evidence": "factory_ItemManager",
+    "display_name": "Botas de Warden",
+    "command": "bota_warden"
+  },
+  {
+    "model": "botas_floral",
+    "java_item": "minecraft:netherite_boots",
+    "evidence": "factory_ItemManager",
+    "display_name": "Botas Florales",
+    "command": "botas_floral"
+  },
+  {
+    "model": "botas_warden_escaladoras",
+    "java_item": "minecraft:netherite_boots",
+    "evidence": "factory_ItemManager",
+    "display_name": "Botas de Warden Escaladoras",
+    "command": "botas_warden_escaladoras"
+  },
+  {
+    "model": "botiquin",
+    "java_item": "minecraft:paper",
+    "evidence": "factory_ItemManager",
+    "display_name": "Botiquín",
+    "command": "botiquin"
+  },
+  {
+    "model": "brujula_explorador",
+    "java_item": "minecraft:compass",
+    "evidence": "factory_ItemManager",
+    "display_name": "Brújula del Explorador",
+    "max_stack_size": 1,
+    "command": "brujula_explorador"
+  },
+  {
+    "model": "caja_misteriosa",
+    "java_item": "minecraft:chest",
+    "evidence": "factory_ItemManager",
+    "display_name": "Caja Misteriosa",
+    "command": "caja_misteriosa"
+  },
+  {
+    "model": "caldo_profundo",
+    "java_item": "minecraft:mushroom_stew",
+    "evidence": "factory_ItemManager",
+    "display_name": "Caldo Profundo",
+    "command": "caldo_profundo"
+  },
+  {
+    "model": "caramelo",
+    "java_item": "minecraft:sugar",
+    "evidence": "revision_codigo"
+  },
+  {
+    "model": "carne_podrida_floral",
+    "java_item": "minecraft:rotten_flesh",
+    "evidence": "factory_ItemManager",
+    "display_name": "Carne Podrida Floral",
+    "command": "carne_podrida_floral"
+  },
+  {
+    "model": "carta_5000",
+    "java_item": "minecraft:paper",
+    "evidence": "revision_codigo"
+  },
+  {
+    "model": "carta_5001",
+    "java_item": "minecraft:paper",
+    "evidence": "revision_codigo"
+  },
+  {
+    "model": "carta_5002",
+    "java_item": "minecraft:paper",
+    "evidence": "revision_codigo"
+  },
+  {
+    "model": "carta_5003",
+    "java_item": "minecraft:paper",
+    "evidence": "revision_codigo"
+  },
+  {
+    "model": "carta_5004",
+    "java_item": "minecraft:paper",
+    "evidence": "revision_codigo"
+  },
+  {
+    "model": "carta_5005",
+    "java_item": "minecraft:paper",
+    "evidence": "revision_codigo"
+  },
+  {
+    "model": "carta_5006",
+    "java_item": "minecraft:paper",
+    "evidence": "revision_codigo"
+  },
+  {
+    "model": "carta_5007",
+    "java_item": "minecraft:paper",
+    "evidence": "revision_codigo"
+  },
+  {
+    "model": "carta_5008",
+    "java_item": "minecraft:paper",
+    "evidence": "revision_codigo"
+  },
+  {
+    "model": "carta_5009",
+    "java_item": "minecraft:paper",
+    "evidence": "revision_codigo"
+  },
+  {
+    "model": "carta_5010",
+    "java_item": "minecraft:paper",
+    "evidence": "revision_codigo"
+  },
+  {
+    "model": "carta_5011",
+    "java_item": "minecraft:paper",
+    "evidence": "revision_codigo"
+  },
+  {
+    "model": "carta_5012",
+    "java_item": "minecraft:paper",
+    "evidence": "revision_codigo"
+  },
+  {
+    "model": "carta_5013",
+    "java_item": "minecraft:mojang_banner_pattern",
+    "evidence": "revision_codigo"
+  },
+  {
+    "model": "carta_5014",
+    "java_item": "minecraft:mojang_banner_pattern",
+    "evidence": "revision_codigo"
+  },
+  {
+    "model": "carta_5015",
+    "java_item": "minecraft:mojang_banner_pattern",
+    "evidence": "revision_codigo"
+  },
+  {
+    "model": "carta_5016",
+    "java_item": "minecraft:mojang_banner_pattern",
+    "evidence": "revision_codigo"
+  },
+  {
+    "model": "carta_5017",
+    "java_item": "minecraft:mojang_banner_pattern",
+    "evidence": "revision_codigo"
+  },
+  {
+    "model": "carta_5018",
+    "java_item": "minecraft:mojang_banner_pattern",
+    "evidence": "revision_codigo"
+  },
+  {
+    "model": "carta_5019",
+    "java_item": "minecraft:mojang_banner_pattern",
+    "evidence": "revision_codigo"
+  },
+  {
+    "model": "carta_5020",
+    "java_item": "minecraft:mojang_banner_pattern",
+    "evidence": "revision_codigo"
+  },
+  {
+    "model": "carta_5021",
+    "java_item": "minecraft:mojang_banner_pattern",
+    "evidence": "revision_codigo"
+  },
+  {
+    "model": "carta_5022",
+    "java_item": "minecraft:mojang_banner_pattern",
+    "evidence": "revision_codigo"
+  },
+  {
+    "model": "carta_5023",
+    "java_item": "minecraft:mojang_banner_pattern",
+    "evidence": "revision_codigo"
+  },
+  {
+    "model": "carta_5024",
+    "java_item": "minecraft:mojang_banner_pattern",
+    "evidence": "revision_codigo"
+  },
+  {
+    "model": "carta_5025",
+    "java_item": "minecraft:mojang_banner_pattern",
+    "evidence": "revision_codigo"
+  },
+  {
+    "model": "carta_5026",
+    "java_item": "minecraft:globe_banner_pattern",
+    "evidence": "revision_codigo"
+  },
+  {
+    "model": "carta_5027",
+    "java_item": "minecraft:globe_banner_pattern",
+    "evidence": "revision_codigo"
+  },
+  {
+    "model": "carta_5028",
+    "java_item": "minecraft:globe_banner_pattern",
+    "evidence": "revision_codigo"
+  },
+  {
+    "model": "carta_5029",
+    "java_item": "minecraft:globe_banner_pattern",
+    "evidence": "revision_codigo"
+  },
+  {
+    "model": "carta_5030",
+    "java_item": "minecraft:globe_banner_pattern",
+    "evidence": "revision_codigo"
+  },
+  {
+    "model": "carta_5031",
+    "java_item": "minecraft:globe_banner_pattern",
+    "evidence": "revision_codigo"
+  },
+  {
+    "model": "carta_5032",
+    "java_item": "minecraft:globe_banner_pattern",
+    "evidence": "revision_codigo"
+  },
+  {
+    "model": "carta_5033",
+    "java_item": "minecraft:globe_banner_pattern",
+    "evidence": "revision_codigo"
+  },
+  {
+    "model": "carta_5034",
+    "java_item": "minecraft:globe_banner_pattern",
+    "evidence": "revision_codigo"
+  },
+  {
+    "model": "carta_5035",
+    "java_item": "minecraft:globe_banner_pattern",
+    "evidence": "revision_codigo"
+  },
+  {
+    "model": "carta_5036",
+    "java_item": "minecraft:globe_banner_pattern",
+    "evidence": "revision_codigo"
+  },
+  {
+    "model": "carta_5037",
+    "java_item": "minecraft:globe_banner_pattern",
+    "evidence": "revision_codigo"
+  },
+  {
+    "model": "carta_5038",
+    "java_item": "minecraft:globe_banner_pattern",
+    "evidence": "revision_codigo"
+  },
+  {
+    "model": "carta_5039",
+    "java_item": "minecraft:creeper_banner_pattern",
+    "evidence": "revision_codigo"
+  },
+  {
+    "model": "carta_5040",
+    "java_item": "minecraft:creeper_banner_pattern",
+    "evidence": "revision_codigo"
+  },
+  {
+    "model": "carta_5041",
+    "java_item": "minecraft:creeper_banner_pattern",
+    "evidence": "revision_codigo"
+  },
+  {
+    "model": "carta_5042",
+    "java_item": "minecraft:creeper_banner_pattern",
+    "evidence": "revision_codigo"
+  },
+  {
+    "model": "carta_5043",
+    "java_item": "minecraft:creeper_banner_pattern",
+    "evidence": "revision_codigo"
+  },
+  {
+    "model": "carta_5044",
+    "java_item": "minecraft:creeper_banner_pattern",
+    "evidence": "revision_codigo"
+  },
+  {
+    "model": "carta_5045",
+    "java_item": "minecraft:creeper_banner_pattern",
+    "evidence": "revision_codigo"
+  },
+  {
+    "model": "carta_5046",
+    "java_item": "minecraft:creeper_banner_pattern",
+    "evidence": "revision_codigo"
+  },
+  {
+    "model": "carta_5047",
+    "java_item": "minecraft:creeper_banner_pattern",
+    "evidence": "revision_codigo"
+  },
+  {
+    "model": "carta_5048",
+    "java_item": "minecraft:creeper_banner_pattern",
+    "evidence": "revision_codigo"
+  },
+  {
+    "model": "carta_5049",
+    "java_item": "minecraft:creeper_banner_pattern",
+    "evidence": "revision_codigo"
+  },
+  {
+    "model": "carta_5050",
+    "java_item": "minecraft:creeper_banner_pattern",
+    "evidence": "revision_codigo"
+  },
+  {
+    "model": "carta_5051",
+    "java_item": "minecraft:creeper_banner_pattern",
+    "evidence": "revision_codigo"
+  },
+  {
+    "model": "carta_oculta",
+    "java_item": "minecraft:paper",
+    "evidence": "revision_codigo"
+  },
+  {
+    "model": "casco_floral",
+    "java_item": "minecraft:netherite_helmet",
+    "evidence": "factory_ItemManager",
+    "display_name": "Casco Floral",
+    "command": "casco_floral"
+  },
+  {
+    "model": "casco_warden",
+    "java_item": "minecraft:netherite_helmet",
+    "evidence": "factory_ItemManager",
+    "display_name": "Casco de Warden",
+    "command": "casco_warden"
+  },
+  {
+    "model": "casino_cerrar",
+    "java_item": "minecraft:barrier",
+    "evidence": "revision_codigo"
+  },
+  {
+    "model": "casino_fondo",
+    "java_item": "minecraft:black_dye",
+    "evidence": "revision_codigo"
+  },
+  {
+    "model": "casino_girar",
+    "java_item": "minecraft:lever",
+    "evidence": "revision_codigo"
+  },
+  {
+    "model": "casino_linea_derecha",
+    "java_item": "minecraft:red_dye",
+    "evidence": "revision_codigo"
+  },
+  {
+    "model": "casino_linea_izquierda",
+    "java_item": "minecraft:red_dye",
+    "evidence": "revision_codigo"
+  },
+  {
+    "model": "chatarra",
+    "java_item": "minecraft:iron_nugget",
+    "evidence": "factory_ItemManager",
+    "display_name": "Chatarra",
+    "command": "chatarra"
+  },
+  {
+    "model": "combustible_barco",
+    "java_item": "minecraft:echo_shard",
+    "evidence": "revision_codigo"
+  },
+  {
+    "model": "corazon_warden_boss",
+    "java_item": "minecraft:heart_of_the_sea",
+    "evidence": "factory_ItemManager",
+    "display_name": "Corazón de Warden Boss",
+    "command": "corazon_warden_boss"
+  },
+  {
+    "model": "corrupted_golden_apple",
+    "java_item": "minecraft:golden_apple",
+    "evidence": "factory_ItemManager",
+    "display_name": "Corrupted Golden Apple",
+    "command": "corrupted_golden_apple"
+  },
+  {
+    "model": "corrupted_steak",
+    "java_item": "minecraft:cooked_beef",
+    "evidence": "factory_ItemManager",
+    "display_name": "Carne Corrupta",
+    "command": "corrupted_steak"
+  },
+  {
+    "model": "cristal_celestita",
+    "java_item": "minecraft:prismarine_crystals",
+    "evidence": "factory_ItemManager",
+    "display_name": "Cristal de Celestita",
+    "command": "cristal_celestita"
+  },
+  {
+    "model": "cristal_eco",
+    "java_item": "minecraft:amethyst_shard",
+    "evidence": "factory_ItemManager",
+    "display_name": "Cristal de Eco",
+    "max_stack_size": 1,
+    "command": "cristal_eco"
+  },
+  {
+    "model": "cristal_hielo",
+    "java_item": "minecraft:amethyst_shard",
+    "evidence": "factory_ItemManager",
+    "display_name": "Cristal de Hielo",
+    "command": "cristal_hielo"
+  },
+  {
+    "model": "dinocoins",
+    "java_item": "minecraft:sunflower",
+    "evidence": "factory_ItemManager",
+    "display_name": "DinoCoins ۞",
+    "max_stack_size": 99,
+    "command": "dinocoins"
+  },
+  {
+    "model": "dinofichas",
+    "java_item": "minecraft:gold_nugget",
+    "evidence": "factory_ItemManager",
+    "display_name": "DinoFichas ۞",
+    "max_stack_size": 99,
+    "command": "dinofichas"
+  },
+  {
+    "model": "elixir_abisal",
+    "java_item": "minecraft:potion",
+    "evidence": "factory_ItemManager",
+    "display_name": "Elixir Abisal",
+    "command": "elixir_abisal"
+  },
+  {
+    "model": "elixir_agilidad",
+    "java_item": "minecraft:potion",
+    "evidence": "factory_ItemManager",
+    "display_name": "Elixir de Agilidad",
+    "command": "elixir_agilidad"
+  },
+  {
+    "model": "elixir_coloso",
+    "java_item": "minecraft:potion",
+    "evidence": "factory_ItemManager",
+    "display_name": "Elixir del Coloso",
+    "command": "elixir_coloso"
+  },
+  {
+    "model": "elixir_furia",
+    "java_item": "minecraft:potion",
+    "evidence": "factory_ItemManager",
+    "display_name": "Elixir de Furia",
+    "command": "elixir_furia"
+  },
+  {
+    "model": "elixir_igneo",
+    "java_item": "minecraft:potion",
+    "evidence": "factory_ItemManager",
+    "display_name": "Elixir Ígneo",
+    "command": "elixir_igneo"
+  },
+  {
+    "model": "elixir_minero",
+    "java_item": "minecraft:potion",
+    "evidence": "factory_ItemManager",
+    "display_name": "Elixir del Minero",
+    "command": "elixir_minero"
+  },
+  {
+    "model": "ender_bag",
+    "java_item": "minecraft:endermite_spawn_egg",
+    "evidence": "factory_ItemManager",
+    "display_name": "Ender Bag",
+    "command": "enderbag"
+  },
+  {
+    "model": "ender_totem",
+    "java_item": "minecraft:totem_of_undying",
+    "evidence": "factory_ItemManager",
+    "display_name": "Ender Totem",
+    "command": "ender_totem"
+  },
+  {
+    "model": "enderking_pearl",
+    "java_item": "minecraft:heart_of_the_sea",
+    "evidence": "factory_ItemManager",
+    "display_name": "EnderKing Pearl",
+    "command": "enderking_pearl"
+  },
+  {
+    "model": "energia_warden",
+    "java_item": "minecraft:echo_shard",
+    "evidence": "factory_ItemManager",
+    "display_name": "Energía de Warden",
+    "command": "energia_warden"
+  },
+  {
+    "model": "escudo_floral",
+    "java_item": "minecraft:shield",
+    "evidence": "factory_ItemManager",
+    "display_name": "Escudo Floral",
+    "command": "escudo_floral"
+  },
+  {
+    "model": "esencia_floral",
+    "java_item": "minecraft:firework_star",
+    "evidence": "factory_ItemManager",
+    "display_name": "Esencia Floral",
+    "command": "esencia_floral"
+  },
+  {
+    "model": "esencia_marchita",
+    "java_item": "minecraft:black_dye",
+    "evidence": "factory_ItemManager",
+    "display_name": "Esencia Marchita",
+    "command": "esencia_marchita"
+  },
+  {
+    "model": "espada_celestita",
+    "java_item": "minecraft:netherite_sword",
+    "evidence": "revision_codigo"
+  },
+  {
+    "model": "espada_floral",
+    "java_item": "minecraft:netherite_sword",
+    "evidence": "revision_codigo"
+  },
+  {
+    "model": "estandarte_guerra",
+    "java_item": "minecraft:red_banner",
+    "evidence": "factory_ItemManager",
+    "display_name": "Estandarte de Guerra",
+    "command": "estandarte_guerra"
+  },
+  {
+    "model": "excavator_pickaxe",
+    "java_item": "minecraft:netherite_pickaxe",
+    "evidence": "factory_ItemManager",
+    "display_name": "La Excavadora",
+    "command": "excavator_pickaxe"
+  },
+  {
+    "model": "ficha_mision",
+    "java_item": "minecraft:popped_chorus_fruit",
+    "evidence": "revision_codigo"
+  },
+  {
+    "model": "flecha_derecha",
+    "java_item": "minecraft:spectral_arrow",
+    "evidence": "revision_codigo"
+  },
+  {
+    "model": "flecha_izquierda",
+    "java_item": "minecraft:spectral_arrow",
+    "evidence": "revision_codigo"
+  },
+  {
+    "model": "flytotem",
+    "java_item": "minecraft:totem_of_undying",
+    "evidence": "factory_ItemManager",
+    "display_name": "Fly Totem",
+    "command": "flytotem"
+  },
+  {
+    "model": "fosiles_pequenos",
+    "java_item": "minecraft:iron_nugget",
+    "evidence": "factory_ItemManager",
+    "display_name": "Fósiles Pequeños",
+    "command": "fosiles_pequenos"
+  },
+  {
+    "model": "fragmento_astral",
+    "java_item": "minecraft:firework_star",
+    "evidence": "factory_ItemManager",
+    "display_name": "Fragmento Astral",
+    "command": "fragmento_astral"
+  },
+  {
+    "model": "fragmento_profundo_cian",
+    "java_item": "minecraft:copper_nugget",
+    "evidence": "factory_ItemManager",
+    "display_name": "Fragmento Profundo Cian",
+    "command": "fragmento_profundo_cian"
+  },
+  {
+    "model": "fragmento_profundo_gris",
+    "java_item": "minecraft:copper_nugget",
+    "evidence": "factory_ItemManager",
+    "display_name": "Fragmento Profundo Gris",
+    "command": "fragmento_profundo_gris"
+  },
+  {
+    "model": "fragmento_profundo_morado",
+    "java_item": "minecraft:copper_nugget",
+    "evidence": "factory_ItemManager",
+    "display_name": "Fragmento Profundo Morado",
+    "command": "fragmento_profundo_morado"
+  },
+  {
+    "model": "fragmento_profundo_verde",
+    "java_item": "minecraft:copper_nugget",
+    "evidence": "factory_ItemManager",
+    "display_name": "Fragmento Profundo Verde",
+    "command": "fragmento_profundo_verde"
+  },
+  {
+    "model": "fragmentos_ambar",
+    "java_item": "minecraft:iron_nugget",
+    "evidence": "factory_ItemManager",
+    "display_name": "Fragmentos de Ámbar",
+    "command": "fragmentos_ambar"
+  },
+  {
+    "model": "frasco_de_velocidad",
+    "java_item": "minecraft:honey_bottle",
+    "evidence": "factory_ItemManager",
+    "display_name": "Frasco de Velocidad",
+    "command": "frasco_de_velocidad"
+  },
+  {
+    "model": "frasco_sabiduria",
+    "java_item": "minecraft:potion",
+    "evidence": "factory_ItemManager",
+    "display_name": "Frasco de Sabiduría",
+    "command": "frasco_sabiduria"
+  },
+  {
+    "model": "fruta_abisal",
+    "java_item": "minecraft:beetroot",
+    "evidence": "factory_ItemManager",
+    "display_name": "Fruta Abisal",
+    "command": "fruta_abisal"
+  },
+  {
+    "model": "fuel_campfire",
+    "java_item": "minecraft:torchflower",
+    "evidence": "factory_ItemManager",
+    "display_name": "Combustible",
+    "command": "fuel_campfire"
+  },
+  {
+    "model": "galleta_fortuna",
+    "java_item": "minecraft:cookie",
+    "evidence": "factory_ItemManager",
+    "display_name": "Galleta de la Fortuna",
+    "command": "galleta_fortuna"
+  },
+  {
+    "model": "gancho",
+    "java_item": "minecraft:fishing_rod",
+    "evidence": "factory_ItemManager",
+    "display_name": "Gancho",
+    "command": "gancho"
+  },
+  {
+    "model": "granada_sonica",
+    "java_item": "minecraft:snowball",
+    "evidence": "factory_ItemManager",
+    "display_name": "Granada Sónica",
+    "command": "granada_sonica"
+  },
+  {
+    "model": "habilidad_agilidad_1_off",
+    "java_item": "minecraft:flow_banner_pattern",
+    "evidence": "revision_codigo"
+  },
+  {
+    "model": "habilidad_agilidad_1_on",
+    "java_item": "minecraft:flow_banner_pattern",
+    "evidence": "revision_codigo"
+  },
+  {
+    "model": "habilidad_agilidad_2_off",
+    "java_item": "minecraft:flow_banner_pattern",
+    "evidence": "revision_codigo"
+  },
+  {
+    "model": "habilidad_agilidad_2_on",
+    "java_item": "minecraft:flow_banner_pattern",
+    "evidence": "revision_codigo"
+  },
+  {
+    "model": "habilidad_agilidad_3_off",
+    "java_item": "minecraft:flow_banner_pattern",
+    "evidence": "revision_codigo"
+  },
+  {
+    "model": "habilidad_agilidad_3_on",
+    "java_item": "minecraft:flow_banner_pattern",
+    "evidence": "revision_codigo"
+  },
+  {
+    "model": "habilidad_agilidad_4_off",
+    "java_item": "minecraft:flow_banner_pattern",
+    "evidence": "revision_codigo"
+  },
+  {
+    "model": "habilidad_agilidad_4_on",
+    "java_item": "minecraft:flow_banner_pattern",
+    "evidence": "revision_codigo"
+  },
+  {
+    "model": "habilidad_agilidad_5_off",
+    "java_item": "minecraft:flow_banner_pattern",
+    "evidence": "revision_codigo"
+  },
+  {
+    "model": "habilidad_agilidad_5_on",
+    "java_item": "minecraft:flow_banner_pattern",
+    "evidence": "revision_codigo"
+  },
+  {
+    "model": "habilidad_agilidad_6_off",
+    "java_item": "minecraft:flow_banner_pattern",
+    "evidence": "revision_codigo"
+  },
+  {
+    "model": "habilidad_agilidad_6_on",
+    "java_item": "minecraft:flow_banner_pattern",
+    "evidence": "revision_codigo"
+  },
+  {
+    "model": "habilidad_agilidad_7_off",
+    "java_item": "minecraft:flow_banner_pattern",
+    "evidence": "revision_codigo"
+  },
+  {
+    "model": "habilidad_agilidad_7_on",
+    "java_item": "minecraft:flow_banner_pattern",
+    "evidence": "revision_codigo"
+  },
+  {
+    "model": "habilidad_agilidad_8_off",
+    "java_item": "minecraft:flow_banner_pattern",
+    "evidence": "revision_codigo"
+  },
+  {
+    "model": "habilidad_agilidad_8_on",
+    "java_item": "minecraft:flow_banner_pattern",
+    "evidence": "revision_codigo"
+  },
+  {
+    "model": "habilidad_resistencia_1_off",
+    "java_item": "minecraft:creeper_banner_pattern",
+    "evidence": "revision_codigo"
+  },
+  {
+    "model": "habilidad_resistencia_1_on",
+    "java_item": "minecraft:creeper_banner_pattern",
+    "evidence": "revision_codigo"
+  },
+  {
+    "model": "habilidad_resistencia_2_off",
+    "java_item": "minecraft:creeper_banner_pattern",
+    "evidence": "revision_codigo"
+  },
+  {
+    "model": "habilidad_resistencia_2_on",
+    "java_item": "minecraft:creeper_banner_pattern",
+    "evidence": "revision_codigo"
+  },
+  {
+    "model": "habilidad_resistencia_3_off",
+    "java_item": "minecraft:creeper_banner_pattern",
+    "evidence": "revision_codigo"
+  },
+  {
+    "model": "habilidad_resistencia_3_on",
+    "java_item": "minecraft:creeper_banner_pattern",
+    "evidence": "revision_codigo"
+  },
+  {
+    "model": "habilidad_resistencia_4_off",
+    "java_item": "minecraft:creeper_banner_pattern",
+    "evidence": "revision_codigo"
+  },
+  {
+    "model": "habilidad_resistencia_4_on",
+    "java_item": "minecraft:creeper_banner_pattern",
+    "evidence": "revision_codigo"
+  },
+  {
+    "model": "habilidad_resistencia_5_off",
+    "java_item": "minecraft:creeper_banner_pattern",
+    "evidence": "revision_codigo"
+  },
+  {
+    "model": "habilidad_resistencia_5_on",
+    "java_item": "minecraft:creeper_banner_pattern",
+    "evidence": "revision_codigo"
+  },
+  {
+    "model": "habilidad_resistencia_6_off",
+    "java_item": "minecraft:creeper_banner_pattern",
+    "evidence": "revision_codigo"
+  },
+  {
+    "model": "habilidad_resistencia_6_on",
+    "java_item": "minecraft:creeper_banner_pattern",
+    "evidence": "revision_codigo"
+  },
+  {
+    "model": "habilidad_resistencia_7_off",
+    "java_item": "minecraft:creeper_banner_pattern",
+    "evidence": "revision_codigo"
+  },
+  {
+    "model": "habilidad_resistencia_7_on",
+    "java_item": "minecraft:creeper_banner_pattern",
+    "evidence": "revision_codigo"
+  },
+  {
+    "model": "habilidad_resistencia_8_off",
+    "java_item": "minecraft:creeper_banner_pattern",
+    "evidence": "revision_codigo"
+  },
+  {
+    "model": "habilidad_resistencia_8_on",
+    "java_item": "minecraft:creeper_banner_pattern",
+    "evidence": "revision_codigo"
+  },
+  {
+    "model": "habilidad_vitalidad_1_off",
+    "java_item": "minecraft:flower_banner_pattern",
+    "evidence": "revision_codigo"
+  },
+  {
+    "model": "habilidad_vitalidad_1_on",
+    "java_item": "minecraft:flower_banner_pattern",
+    "evidence": "revision_codigo"
+  },
+  {
+    "model": "habilidad_vitalidad_2_off",
+    "java_item": "minecraft:flower_banner_pattern",
+    "evidence": "revision_codigo"
+  },
+  {
+    "model": "habilidad_vitalidad_2_on",
+    "java_item": "minecraft:flower_banner_pattern",
+    "evidence": "revision_codigo"
+  },
+  {
+    "model": "habilidad_vitalidad_3_off",
+    "java_item": "minecraft:flower_banner_pattern",
+    "evidence": "revision_codigo"
+  },
+  {
+    "model": "habilidad_vitalidad_3_on",
+    "java_item": "minecraft:flower_banner_pattern",
+    "evidence": "revision_codigo"
+  },
+  {
+    "model": "habilidad_vitalidad_4_off",
+    "java_item": "minecraft:flower_banner_pattern",
+    "evidence": "revision_codigo"
+  },
+  {
+    "model": "habilidad_vitalidad_4_on",
+    "java_item": "minecraft:flower_banner_pattern",
+    "evidence": "revision_codigo"
+  },
+  {
+    "model": "habilidad_vitalidad_5_off",
+    "java_item": "minecraft:flower_banner_pattern",
+    "evidence": "revision_codigo"
+  },
+  {
+    "model": "habilidad_vitalidad_5_on",
+    "java_item": "minecraft:flower_banner_pattern",
+    "evidence": "revision_codigo"
+  },
+  {
+    "model": "habilidad_vitalidad_6_off",
+    "java_item": "minecraft:flower_banner_pattern",
+    "evidence": "revision_codigo"
+  },
+  {
+    "model": "habilidad_vitalidad_6_on",
+    "java_item": "minecraft:flower_banner_pattern",
+    "evidence": "revision_codigo"
+  },
+  {
+    "model": "habilidad_vitalidad_7_off",
+    "java_item": "minecraft:flower_banner_pattern",
+    "evidence": "revision_codigo"
+  },
+  {
+    "model": "habilidad_vitalidad_7_on",
+    "java_item": "minecraft:flower_banner_pattern",
+    "evidence": "revision_codigo"
+  },
+  {
+    "model": "habilidad_vitalidad_8_off",
+    "java_item": "minecraft:flower_banner_pattern",
+    "evidence": "revision_codigo"
+  },
+  {
+    "model": "habilidad_vitalidad_8_on",
+    "java_item": "minecraft:flower_banner_pattern",
+    "evidence": "revision_codigo"
+  },
+  {
+    "model": "hacha_celestita",
+    "java_item": "minecraft:netherite_axe",
+    "evidence": "revision_codigo"
+  },
+  {
+    "model": "hacha_floral",
+    "java_item": "minecraft:netherite_axe",
+    "evidence": "revision_codigo"
+  },
+  {
+    "model": "happy_ghast_enchant",
+    "java_item": "minecraft:enchanted_book",
+    "evidence": "revision_codigo"
+  },
+  {
+    "model": "icetotem",
+    "java_item": "minecraft:totem_of_undying",
+    "evidence": "factory_ItemManager",
+    "display_name": "Ice Totem",
+    "command": "icetotem"
+  },
+  {
+    "model": "iman_botin",
+    "java_item": "minecraft:iron_nugget",
+    "evidence": "factory_ItemManager",
+    "display_name": "Imán de Botín",
+    "command": "iman_botin"
+  },
+  {
+    "model": "immunity",
+    "java_item": "minecraft:allay_spawn_egg",
+    "evidence": "factory_ItemManager",
+    "display_name": "Amuleto de la Inmortalidad",
+    "command": "amuleto_inmortalidad"
+  },
+  {
+    "model": "incienso_ahuyentador",
+    "java_item": "minecraft:blaze_powder",
+    "evidence": "factory_ItemManager",
+    "display_name": "Incienso Ahuyentador",
+    "command": "incienso_ahuyentador"
+  },
+  {
+    "model": "keep_inv_liquido",
+    "java_item": "minecraft:golden_apple",
+    "evidence": "revision_codigo"
+  },
+  {
+    "model": "lanza_celestita",
+    "java_item": "minecraft:netherite_spear",
+    "evidence": "revision_codigo"
+  },
+  {
+    "model": "lanza_floral",
+    "java_item": "minecraft:netherite_spear",
+    "evidence": "revision_codigo"
+  },
+  {
+    "model": "libro_alcance",
+    "java_item": "minecraft:enchanted_book",
+    "evidence": "revision_codigo"
+  },
+  {
+    "model": "libro_anclaje",
+    "java_item": "minecraft:enchanted_book",
+    "evidence": "revision_codigo"
+  },
+  {
+    "model": "libro_anzuelo_veloz",
+    "java_item": "minecraft:enchanted_book",
+    "evidence": "revision_codigo"
+  },
+  {
+    "model": "libro_cosecha",
+    "java_item": "minecraft:enchanted_book",
+    "evidence": "revision_codigo"
+  },
+  {
+    "model": "libro_fervor_minero",
+    "java_item": "minecraft:enchanted_book",
+    "evidence": "revision_codigo"
+  },
+  {
+    "model": "libro_habilidades",
+    "java_item": "minecraft:knowledge_book",
+    "evidence": "factory_ItemManager",
+    "display_name": "Libro de Habilidades",
+    "command": "libro_habilidades"
+  },
+  {
+    "model": "libro_paso_igneo",
+    "java_item": "minecraft:enchanted_book",
+    "evidence": "revision_codigo"
+  },
+  {
+    "model": "libro_purificacion",
+    "java_item": "minecraft:enchanted_book",
+    "evidence": "revision_codigo"
+  },
+  {
+    "model": "libro_retorno_del_vacio",
+    "java_item": "minecraft:enchanted_book",
+    "evidence": "revision_codigo"
+  },
+  {
+    "model": "libro_talador",
+    "java_item": "minecraft:enchanted_book",
+    "evidence": "revision_codigo"
+  },
+  {
+    "model": "libro_veta",
+    "java_item": "minecraft:enchanted_book",
+    "evidence": "revision_codigo"
+  },
+  {
+    "model": "libro_vigor_de_batalla",
+    "java_item": "minecraft:enchanted_book",
+    "evidence": "revision_codigo"
+  },
+  {
+    "model": "libro_vision_abisal",
+    "java_item": "minecraft:enchanted_book",
+    "evidence": "revision_codigo"
+  },
+  {
+    "model": "life_campfire",
+    "java_item": "minecraft:campfire",
+    "evidence": "factory_ItemManager",
+    "display_name": "Fogata de la Vida",
+    "command": "life_campfire"
+  },
+  {
+    "model": "lingote_celestita",
+    "java_item": "minecraft:copper_ingot",
+    "evidence": "factory_ItemManager",
+    "display_name": "Lingote de Celestita",
+    "command": "lingote_celestita"
+  },
+  {
+    "model": "lingote_platino",
+    "java_item": "minecraft:iron_nugget",
+    "evidence": "factory_ItemManager",
+    "display_name": "Lingote de Platino",
+    "command": "lingote_platino"
+  },
+  {
+    "model": "lingote_profundo",
+    "java_item": "minecraft:copper_ingot",
+    "evidence": "factory_ItemManager",
+    "display_name": "Lingote Profundo",
+    "command": "lingote_profundo"
+  },
+  {
+    "model": "lingote_profundo_cian",
+    "java_item": "minecraft:copper_ingot",
+    "evidence": "factory_ItemManager",
+    "display_name": "Lingote Profundo Cian",
+    "command": "lingote_profundo_cian"
+  },
+  {
+    "model": "lingote_profundo_gris",
+    "java_item": "minecraft:copper_ingot",
+    "evidence": "factory_ItemManager",
+    "display_name": "Lingote Profundo Gris",
+    "command": "lingote_profundo_gris"
+  },
+  {
+    "model": "lingote_profundo_morado",
+    "java_item": "minecraft:copper_ingot",
+    "evidence": "factory_ItemManager",
+    "display_name": "Lingote Profundo Morado",
+    "command": "lingote_profundo_morado"
+  },
+  {
+    "model": "lingote_profundo_verde",
+    "java_item": "minecraft:copper_ingot",
+    "evidence": "factory_ItemManager",
+    "display_name": "Lingote Profundo Verde",
+    "command": "lingote_profundo_verde"
+  },
+  {
+    "model": "linterna_almas",
+    "java_item": "minecraft:soul_lantern",
+    "evidence": "factory_ItemManager",
+    "display_name": "Linterna de Almas",
+    "command": "linterna_almas"
+  },
+  {
+    "model": "logro_borde",
+    "java_item": "minecraft:gray_stained_glass_pane",
+    "evidence": "revision_codigo"
+  },
+  {
+    "model": "logro_completado",
+    "java_item": "minecraft:paper",
+    "evidence": "revision_codigo"
+  },
+  {
+    "model": "logro_pendiente",
+    "java_item": "minecraft:paper",
+    "evidence": "revision_codigo"
+  },
+  {
+    "model": "manzana_podrida",
+    "java_item": "minecraft:iron_nugget",
+    "evidence": "factory_ItemManager",
+    "display_name": "Manzana Podrida",
+    "command": "manzana_podrida"
+  },
+  {
+    "model": "manzana_vida",
+    "java_item": "minecraft:apple",
+    "evidence": "factory_ItemManager",
+    "display_name": "Manzana de la Vida",
+    "command": "manzana_vida"
+  },
+  {
+    "model": "mejora_bota_warden",
+    "java_item": "minecraft:echo_shard",
+    "evidence": "factory_ItemManager",
+    "display_name": "Mejora de Botas Warden",
+    "command": "mejora_bota_warden"
+  },
+  {
+    "model": "mejora_casco_warden",
+    "java_item": "minecraft:echo_shard",
+    "evidence": "factory_ItemManager",
+    "display_name": "Mejora de Casco Warden",
+    "command": "mejora_casco_warden"
+  },
+  {
+    "model": "mejora_floral",
+    "java_item": "minecraft:netherite_upgrade_smithing_template",
+    "evidence": "factory_ItemManager",
+    "display_name": "Mejora Floral",
+    "command": "mejora_floral"
+  },
+  {
+    "model": "mejora_pantalon_warden",
+    "java_item": "minecraft:echo_shard",
+    "evidence": "factory_ItemManager",
+    "display_name": "Mejora de Pantalón Warden",
+    "command": "mejora_pantalon_warden"
+  },
+  {
+    "model": "mejora_peto_warden",
+    "java_item": "minecraft:echo_shard",
+    "evidence": "factory_ItemManager",
+    "display_name": "Mejora de Peto Warden",
+    "command": "mejora_peto_warden"
+  },
+  {
+    "model": "mineral_crudo_cian",
+    "java_item": "minecraft:prismarine_shard",
+    "evidence": "factory_ItemManager",
+    "display_name": "Mineral Crudo Cian",
+    "command": "mineral_crudo_cian"
+  },
+  {
+    "model": "mineral_crudo_gris",
+    "java_item": "minecraft:prismarine_shard",
+    "evidence": "factory_ItemManager",
+    "display_name": "Mineral Crudo Gris",
+    "command": "mineral_crudo_gris"
+  },
+  {
+    "model": "mineral_crudo_morado",
+    "java_item": "minecraft:prismarine_shard",
+    "evidence": "factory_ItemManager",
+    "display_name": "Mineral Crudo Morado",
+    "command": "mineral_crudo_morado"
+  },
+  {
+    "model": "mineral_crudo_verde",
+    "java_item": "minecraft:prismarine_shard",
+    "evidence": "factory_ItemManager",
+    "display_name": "Mineral Crudo Verde",
+    "command": "mineral_crudo_verde"
+  },
+  {
+    "model": "mision_activa",
+    "java_item": "minecraft:paper",
+    "evidence": "revision_codigo"
+  },
+  {
+    "model": "mision_completada",
+    "java_item": "minecraft:paper",
+    "evidence": "revision_codigo"
+  },
+  {
+    "model": "mision_inactiva",
+    "java_item": "minecraft:paper",
+    "evidence": "revision_codigo"
+  },
+  {
+    "model": "mochila_nivel_1",
+    "java_item": "minecraft:echo_shard",
+    "evidence": "factory_ItemManager",
+    "display_name": "Mochila Nivel 1",
+    "command": "mochila_nivel_1"
+  },
+  {
+    "model": "mochila_nivel_2",
+    "java_item": "minecraft:echo_shard",
+    "evidence": "factory_ItemManager",
+    "display_name": "Mochila Nivel 2",
+    "command": "mochila_nivel_2"
+  },
+  {
+    "model": "mochila_nivel_3",
+    "java_item": "minecraft:echo_shard",
+    "evidence": "factory_ItemManager",
+    "display_name": "Mochila Nivel 3",
+    "command": "mochila_nivel_3"
+  },
+  {
+    "model": "mochila_nivel_4",
+    "java_item": "minecraft:echo_shard",
+    "evidence": "factory_ItemManager",
+    "display_name": "Mochila Nivel 4",
+    "command": "mochila_nivel_4"
+  },
+  {
+    "model": "mochila_nivel_5",
+    "java_item": "minecraft:echo_shard",
+    "evidence": "factory_ItemManager",
+    "display_name": "Mochila Nivel 5",
+    "command": "mochila_nivel_5"
+  },
+  {
+    "model": "monedero",
+    "java_item": "minecraft:echo_shard",
+    "evidence": "factory_ItemManager",
+    "display_name": "Monedero",
+    "max_stack_size": 1,
+    "command": "monedero"
+  },
+  {
+    "model": "nucleo_sonico",
+    "java_item": "minecraft:nether_star",
+    "evidence": "factory_ItemManager",
+    "display_name": "Núcleo Sónico",
+    "command": "nucleo_sonico"
+  },
+  {
+    "model": "ojo_arana_floral",
+    "java_item": "minecraft:spider_eye",
+    "evidence": "factory_ItemManager",
+    "display_name": "Ojo de Araña Floral",
+    "command": "ojo_arana_floral"
+  },
+  {
+    "model": "ojo_rey_ender",
+    "java_item": "minecraft:ender_eye",
+    "evidence": "factory_ItemManager",
+    "display_name": "Ojo del Rey Ender",
+    "command": "ojo_rey_ender"
+  },
+  {
+    "model": "pala_celestita",
+    "java_item": "minecraft:netherite_shovel",
+    "evidence": "revision_codigo"
+  },
+  {
+    "model": "pala_floral",
+    "java_item": "minecraft:netherite_shovel",
+    "evidence": "revision_codigo"
+  },
+  {
+    "model": "panic_apple",
+    "java_item": "minecraft:apple",
+    "evidence": "factory_ItemManager",
+    "display_name": "Manzana del Pánico",
+    "command": "panic_apple"
+  },
+  {
+    "model": "pantalon_floral",
+    "java_item": "minecraft:netherite_leggings",
+    "evidence": "factory_ItemManager",
+    "display_name": "Pantalón Floral",
+    "command": "pantalon_floral"
+  },
+  {
+    "model": "pantalon_warden",
+    "java_item": "minecraft:netherite_leggings",
+    "evidence": "factory_ItemManager",
+    "display_name": "Pantalón de Warden",
+    "command": "pantalon_warden"
+  },
+  {
+    "model": "pepitas_diamante",
+    "java_item": "minecraft:iron_nugget",
+    "evidence": "factory_ItemManager",
+    "display_name": "Pepitas de Diamante",
+    "command": "pepitas_diamante"
+  },
+  {
+    "model": "pepitas_hierro_oxidadas",
+    "java_item": "minecraft:iron_nugget",
+    "evidence": "factory_ItemManager",
+    "display_name": "Pepitas de Hierro Oxidadas",
+    "command": "pepitas_hierro_oxidadas"
+  },
+  {
+    "model": "perla_infinita",
+    "java_item": "minecraft:ender_pearl",
+    "evidence": "factory_ItemManager",
+    "display_name": "Perla Infinita",
+    "max_stack_size": 1,
+    "command": "perla_infinita"
+  },
+  {
+    "model": "peto_floral",
+    "java_item": "minecraft:netherite_chestplate",
+    "evidence": "factory_ItemManager",
+    "display_name": "Peto Floral",
+    "command": "peto_floral"
+  },
+  {
+    "model": "peto_warden",
+    "java_item": "minecraft:netherite_chestplate",
+    "evidence": "factory_ItemManager",
+    "display_name": "Peto de Warden",
+    "command": "peto_warden"
+  },
+  {
+    "model": "peto_warden_alado",
+    "java_item": "minecraft:netherite_chestplate",
+    "evidence": "factory_ItemManager",
+    "display_name": "Peto de Warden Alado",
+    "glider": true,
+    "command": "peto_warden_alado"
+  },
+  {
+    "model": "pico_celestita",
+    "java_item": "minecraft:netherite_pickaxe",
+    "evidence": "revision_codigo"
+  },
+  {
+    "model": "pico_floral",
+    "java_item": "minecraft:netherite_pickaxe",
+    "evidence": "revision_codigo"
+  },
+  {
+    "model": "piruleta",
+    "java_item": "minecraft:paper",
+    "evidence": "revision_codigo"
+  },
+  {
+    "model": "plantilla_celestita",
+    "java_item": "minecraft:netherite_upgrade_smithing_template",
+    "evidence": "factory_ItemManager",
+    "display_name": "Plantilla de Celestita",
+    "command": "plantilla_celestita"
+  },
+  {
+    "model": "pluma_levi",
+    "java_item": "minecraft:feather",
+    "evidence": "factory_ItemManager",
+    "display_name": "Pluma de Levitación",
+    "command": "pluma_levitacion"
+  },
+  {
+    "model": "pluma_levi_mejorada",
+    "java_item": "minecraft:feather",
+    "evidence": "factory_ItemManager",
+    "display_name": "Pluma de Levitación Mejorada",
+    "command": "pluma_levitacion_mejorada"
+  },
+  {
+    "model": "pluma_vacio",
+    "java_item": "minecraft:feather",
+    "evidence": "factory_ItemManager",
+    "display_name": "Pluma del Vacío",
+    "command": "pluma_vacio"
+  },
+  {
+    "model": "polvo_silencioso",
+    "java_item": "minecraft:flint",
+    "evidence": "factory_ItemManager",
+    "display_name": "Polvo Silencioso",
+    "command": "polvo_silencioso"
+  },
+  {
+    "model": "polvora_floral",
+    "java_item": "minecraft:gunpowder",
+    "evidence": "factory_ItemManager",
+    "display_name": "Pólvora Floral",
+    "command": "polvora_floral"
+  },
+  {
+    "model": "potion_haste_2",
+    "java_item": "minecraft:potion",
+    "evidence": "factory_ItemManager",
+    "display_name": "Poción de Prisa Minera II",
+    "command": "potion_haste_2"
+  },
+  {
+    "model": "potion_haste_3",
+    "java_item": "minecraft:potion",
+    "evidence": "factory_ItemManager",
+    "display_name": "Poción de Prisa Minera III",
+    "command": "potion_haste_3"
+  },
+  {
+    "model": "potion_resistance_2",
+    "java_item": "minecraft:potion",
+    "evidence": "factory_ItemManager",
+    "display_name": "Poción de Resistencia II",
+    "command": "potion_resistance_2"
+  },
+  {
+    "model": "potion_slow_falling",
+    "java_item": "minecraft:potion",
+    "evidence": "factory_ItemManager",
+    "display_name": "Poción de Caída Lenta",
+    "command": "potion_slow_falling"
+  },
+  {
+    "model": "propulsor_estelar",
+    "java_item": "minecraft:firework_rocket",
+    "evidence": "factory_ItemManager",
+    "display_name": "Propulsor Estelar",
+    "max_stack_size": 1,
+    "command": "propulsor_estelar"
+  },
+  {
+    "model": "quaso_ticket",
+    "java_item": "minecraft:paper",
+    "evidence": "revision_codigo"
+  },
+  {
+    "model": "racion_viaje",
+    "java_item": "minecraft:bread",
+    "evidence": "factory_ItemManager",
+    "display_name": "Ración de Viaje",
+    "command": "racion_viaje"
+  },
+  {
+    "model": "radar_minerales",
+    "java_item": "minecraft:clock",
+    "evidence": "factory_ItemManager",
+    "display_name": "Radar de Minerales",
+    "max_stack_size": 1,
+    "command": "radar_minerales"
+  },
+  {
+    "model": "red_animales",
+    "java_item": "minecraft:phantom_membrane",
+    "evidence": "factory_ItemManager",
+    "display_name": "Red Atrapa-Animales",
+    "max_stack_size": 1,
+    "command": "red_animales"
+  },
+  {
+    "model": "rep_hierro",
+    "java_item": "minecraft:skeleton_horse_spawn_egg",
+    "evidence": "factory_ItemManager",
+    "display_name": "Artefacto de Hierro Reparador",
+    "command": "artefacto_nivel_1"
+  },
+  {
+    "model": "rep_oro",
+    "java_item": "minecraft:blaze_spawn_egg",
+    "evidence": "factory_ItemManager",
+    "display_name": "Artefacto de Oro Reparador",
+    "command": "artefacto_nivel_2"
+  },
+  {
+    "model": "sculk_totem",
+    "java_item": "minecraft:totem_of_undying",
+    "evidence": "factory_ItemManager",
+    "display_name": "Sculk Totem",
+    "command": "sculk_totem"
+  },
+  {
+    "model": "soda",
+    "java_item": "minecraft:honey_bottle",
+    "evidence": "revision_codigo"
+  },
+  {
+    "model": "spawner_custom",
+    "java_item": "minecraft:spawner",
+    "evidence": "revision_codigo"
+  },
+  {
+    "model": "special_totem",
+    "java_item": "minecraft:totem_of_undying",
+    "evidence": "factory_ItemManager",
+    "display_name": "Totem Especial",
+    "command": "special_totem"
+  },
+  {
+    "model": "splash_absorption_10",
+    "java_item": "minecraft:splash_potion",
+    "evidence": "factory_ItemManager",
+    "display_name": "Poción de Absorción X",
+    "command": "splash_absorption_10"
+  },
+  {
+    "model": "splash_regeneration_3",
+    "java_item": "minecraft:splash_potion",
+    "evidence": "factory_ItemManager",
+    "display_name": "Poción de Regeneración III",
+    "command": "splash_regeneration_3"
+  },
+  {
+    "model": "splash_resistance_3",
+    "java_item": "minecraft:splash_potion",
+    "evidence": "factory_ItemManager",
+    "display_name": "Poción de Resistencia III",
+    "command": "splash_resistance_3"
+  },
+  {
+    "model": "statue_effect",
+    "java_item": "minecraft:armor_stand",
+    "evidence": "revision_codigo"
+  },
+  {
+    "model": "statue_pr",
+    "java_item": "minecraft:armor_stand",
+    "evidence": "factory_ItemManager",
+    "display_name": "Estatua Protectora",
+    "command": "estatua_protectora"
+  },
+  {
+    "model": "talisman_botin",
+    "java_item": "minecraft:nautilus_shell",
+    "evidence": "factory_ItemManager",
+    "display_name": "Talismán del Botín",
+    "command": "talisman_botin"
+  },
+  {
+    "model": "tarta_calabaza_mejorada",
+    "java_item": "minecraft:pumpkin_pie",
+    "evidence": "factory_ItemManager",
+    "display_name": "Tarta de Calabaza Mejorada",
+    "command": "tarta_calabaza_mejorada"
+  },
+  {
+    "model": "tejido_sculk",
+    "java_item": "minecraft:rabbit_hide",
+    "evidence": "factory_ItemManager",
+    "display_name": "Tejido Sculk",
+    "command": "tejido_sculk"
+  },
+  {
+    "model": "tonico_antilevitacion",
+    "java_item": "minecraft:potion",
+    "evidence": "factory_ItemManager",
+    "display_name": "Tónico Antilevitación",
+    "command": "tonico_antilevitacion"
+  },
+  {
+    "model": "totem_doble1",
+    "java_item": "minecraft:totem_of_undying",
+    "evidence": "revision_codigo"
+  },
+  {
+    "model": "totem_doble2",
+    "java_item": "minecraft:totem_of_undying",
+    "evidence": "factory_ItemManager",
+    "display_name": "Tótem de Doble Vida",
+    "command": "doubletotem"
+  },
+  {
+    "model": "trabajo_constructor",
+    "java_item": "minecraft:paper",
+    "evidence": "revision_codigo"
+  },
+  {
+    "model": "trabajo_granjero",
+    "java_item": "minecraft:paper",
+    "evidence": "revision_codigo"
+  },
+  {
+    "model": "trabajo_guerrero",
+    "java_item": "minecraft:paper",
+    "evidence": "revision_codigo"
+  },
+  {
+    "model": "trabajo_lenador",
+    "java_item": "minecraft:paper",
+    "evidence": "revision_codigo"
+  },
+  {
+    "model": "trabajo_mineria",
+    "java_item": "minecraft:paper",
+    "evidence": "revision_codigo"
+  },
+  {
+    "model": "trabajo_pescador",
+    "java_item": "minecraft:paper",
+    "evidence": "revision_codigo"
+  },
+  {
+    "model": "warden_gun",
+    "java_item": "minecraft:echo_shard",
+    "evidence": "factory_ItemManager",
+    "display_name": "Warden Gun",
+    "max_stack_size": 1,
+    "command": "warden_gun"
+  },
+  {
+    "model": "zanahoria_encantada",
+    "java_item": "minecraft:iron_nugget",
+    "evidence": "factory_ItemManager",
+    "display_name": "Zanahoria Encantada",
+    "command": "zanahoria_encantada"
+  }
+]

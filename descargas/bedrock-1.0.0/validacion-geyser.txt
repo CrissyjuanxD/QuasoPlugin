@@ -1,0 +1,8 @@
+Prueba local de registro de mappings. Sin cliente Bedrock conectado.
+[23:08:22.454 main/INFO] Loading Geyser version 2.12.0-b1256 (git-master-fc2170c)
+[23:08:27.941 main/INFO] Registered 314 custom items
+[23:08:28.656 GeyserServer-2-1/INFO] Started Geyser on 127.0.0.1:19139
+[23:08:28.664 main/INFO] Done (6.21s)! Run /geyser help for help!
+[23:10:13.147 Geyser Scheduled Thread-1-1/INFO] Geyser shutdown successfully.
+
+SHA-256 del mapping probado: b7f9534309309631387d0c12e65eb16d010911207b06d236c483c5c2c3ab8cce

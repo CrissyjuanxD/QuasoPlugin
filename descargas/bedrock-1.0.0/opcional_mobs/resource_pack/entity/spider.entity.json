@@ -1,0 +1,70 @@
+{
+  "format_version": "1.8.0",
+  "minecraft:client_entity": {
+    "description": {
+      "identifier": "minecraft:spider",
+      "min_engine_version": "1.8.0",
+      "materials": {
+        "default": "spider",
+        "invisible": "spider_invisible",
+        "quaso": "entity_alphatest",
+        "quaso_glow": "entity_emissive_alpha"
+      },
+      "textures": {
+        "default": "textures/entity/spider/spider",
+        "spider2": "textures/entity/quaso/spider2",
+        "spider4": "textures/entity/quaso/spider4",
+        "spider4_e": "textures/entity/quaso/spider4_e"
+      },
+      "geometry": {
+        "default": "geometry.spider.v1.8",
+        "spider2": "geometry.quaso.spider2",
+        "spider4": "geometry.quaso.spider4"
+      },
+      "animations": {
+        "default_leg_pose": "animation.spider.default_leg_pose",
+        "look_at_target": "animation.spider.look_at_target",
+        "walk": "animation.spider.walk",
+        "spider2": "animation.quaso.spider2",
+        "spider4": "animation.quaso.spider4"
+      },
+      "animation_controllers": [
+        {
+          "move": "controller.animation.spider.move"
+        }
+      ],
+      "render_controllers": [
+        {
+          "controller.render.spider": "!variable.quaso_custom"
+        },
+        {
+          "controller.render.quaso.spider2": "variable.quaso_spider2"
+        },
+        {
+          "controller.render.quaso.spider4": "variable.quaso_spider4"
+        },
+        {
+          "controller.render.quaso.spider4_e": "variable.quaso_spider4"
+        }
+      ],
+      "spawn_egg": {
+        "texture": "spawn_egg_spider"
+      },
+      "scripts": {
+        "pre_animation": [
+          "variable.quaso_spider2 = query.is_name_any('Spider Floral', '§rSpider Floral', 'Spider Floral§r', '§lSpider Floral', '§r§lSpider Floral', '§lSpider Floral§r', '§0Spider Floral', '§r§0Spider Floral', '§0Spider Floral§r', '§0§lSpider Floral', '§r§0§lSpider Floral', '§0§lSpider Floral§r', '§1Spider Floral', '§r§1Spider Floral', '§1Spider Floral§r', '§1§lSpider Floral', '§r§1§lSpider Floral', '§1§lSpider Floral§r', '§2Spider Floral', '§r§2Spider Floral', '§2Spider Floral§r', '§2§lSpider Floral', '§r§2§lSpider Floral', '§2§lSpider Floral§r', '§3Spider Floral', '§r§3Spider Floral', '§3Spider Floral§r', '§3§lSpider Floral', '§r§3§lSpider Floral', '§3§lSpider Floral§r', '§4Spider Floral', '§r§4Spider Floral', '§4Spider Floral§r', '§4§lSpider Floral', '§r§4§lSpider Floral', '§4§lSpider Floral§r', '§5Spider Floral', '§r§5Spider Floral', '§5Spider Floral§r', '§5§lSpider Floral', '§r§5§lSpider Floral', '§5§lSpider Floral§r', '§6Spider Floral', '§r§6Spider Floral', '§6Spider Floral§r', '§6§lSpider Floral', '§r§6§lSpider Floral', '§6§lSpider Floral§r', '§7Spider Floral', '§r§7Spider Floral', '§7Spider Floral§r', '§7§lSpider Floral', '§r§7§lSpider Floral', '§7§lSpider Floral§r', '§8Spider Floral', '§r§8Spider Floral', '§8Spider Floral§r', '§8§lSpider Floral', '§r§8§lSpider Floral', '§8§lSpider Floral§r', '§9Spider Floral', '§r§9Spider Floral', '§9Spider Floral§r', '§9§lSpider Floral', '§r§9§lSpider Floral', '§9§lSpider Floral§r', '§aSpider Floral', '§r§aSpider Floral', '§aSpider Floral§r', '§a§lSpider Floral', '§r§a§lSpider Floral', '§a§lSpider Floral§r', '§bSpider Floral', '§r§bSpider Floral', '§bSpider Floral§r', '§b§lSpider Floral', '§r§b§lSpider Floral', '§b§lSpider Floral§r', '§cSpider Floral', '§r§cSpider Floral', '§cSpider Floral§r', '§c§lSpider Floral', '§r§c§lSpider Floral', '§c§lSpider Floral§r', '§dSpider Floral', '§r§dSpider Floral', '§dSpider Floral§r', '§d§lSpider Floral', '§r§d§lSpider Floral', '§d§lSpider Floral§r', '§eSpider Floral', '§r§eSpider Floral', '§eSpider Floral§r', '§e§lSpider Floral', '§r§e§lSpider Floral', '§e§lSpider Floral§r', '§fSpider Floral', '§r§fSpider Floral', '§fSpider Floral§r', '§f§lSpider Floral', '§r§f§lSpider Floral', '§f§lSpider Floral§r', '§gSpider Floral', '§r§gSpider Floral', '§gSpider Floral§r', '§g§lSpider Floral', '§r§g§lSpider Floral', '§g§lSpider Floral§r', '§hSpider Floral', '§r§hSpider Floral', '§hSpider Floral§r', '§h§lSpider Floral', '§r§h§lSpider Floral', '§h§lSpider Floral§r', '§iSpider Floral', '§r§iSpider Floral', '§iSpider Floral§r', '§i§lSpider Floral', '§r§i§lSpider Floral', '§i§lSpider Floral§r', '§jSpider Floral', '§r§jSpider Floral', '§jSpider Floral§r', '§j§lSpider Floral', '§r§j§lSpider Floral', '§j§lSpider Floral§r', '§mSpider Floral', '§r§mSpider Floral', '§mSpider Floral§r', '§m§lSpider Floral', '§r§m§lSpider Floral', '§m§lSpider Floral§r', '§nSpider Floral', '§r§nSpider Floral', '§nSpider Floral§r', '§n§lSpider Floral', '§r§n§lSpider Floral', '§n§lSpider Floral§r', '§pSpider Floral', '§r§pSpider Floral', '§pSpider Floral§r', '§p§lSpider Floral', '§r§p§lSpider Floral', '§p§lSpider Floral§r', '§qSpider Floral', '§r§qSpider Floral', '§qSpider Floral§r', '§q§lSpider Floral', '§r§q§lSpider Floral', '§q§lSpider Floral§r', '§sSpider Floral', '§r§sSpider Floral', '§sSpider Floral§r', '§s§lSpider Floral', '§r§s§lSpider Floral', '§s§lSpider Floral§r', '§tSpider Floral', '§r§tSpider Floral', '§tSpider Floral§r', '§t§lSpider Floral', '§r§t§lSpider Floral', '§t§lSpider Floral§r', '§uSpider Floral', '§r§uSpider Floral', '§uSpider Floral§r', '§u§lSpider Floral', '§r§u§lSpider Floral', '§u§lSpider Floral§r', 'Araña Floral', '§rAraña Floral', 'Araña Floral§r', '§lAraña Floral', '§r§lAraña Floral', '§lAraña Floral§r', '§0Araña Floral', '§r§0Araña Floral', '§0Araña Floral§r', '§0§lAraña Floral', '§r§0§lAraña Floral', '§0§lAraña Floral§r', '§1Araña Floral', '§r§1Araña Floral', '§1Araña Floral§r', '§1§lAraña Floral', '§r§1§lAraña Floral', '§1§lAraña Floral§r', '§2Araña Floral', '§r§2Araña Floral', '§2Araña Floral§r', '§2§lAraña Floral', '§r§2§lAraña Floral', '§2§lAraña Floral§r', '§3Araña Floral', '§r§3Araña Floral', '§3Araña Floral§r', '§3§lAraña Floral', '§r§3§lAraña Floral', '§3§lAraña Floral§r', '§4Araña Floral', '§r§4Araña Floral', '§4Araña Floral§r', '§4§lAraña Floral', '§r§4§lAraña Floral', '§4§lAraña Floral§r', '§5Araña Floral', '§r§5Araña Floral', '§5Araña Floral§r', '§5§lAraña Floral', '§r§5§lAraña Floral', '§5§lAraña Floral§r', '§6Araña Floral', '§r§6Araña Floral', '§6Araña Floral§r', '§6§lAraña Floral', '§r§6§lAraña Floral', '§6§lAraña Floral§r', '§7Araña Floral', '§r§7Araña Floral', '§7Araña Floral§r', '§7§lAraña Floral', '§r§7§lAraña Floral', '§7§lAraña Floral§r', '§8Araña Floral', '§r§8Araña Floral', '§8Araña Floral§r', '§8§lAraña Floral', '§r§8§lAraña Floral', '§8§lAraña Floral§r', '§9Araña Floral', '§r§9Araña Floral', '§9Araña Floral§r', '§9§lAraña Floral', '§r§9§lAraña Floral', '§9§lAraña Floral§r', '§aAraña Floral', '§r§aAraña Floral', '§aAraña Floral§r', '§a§lAraña Floral', '§r§a§lAraña Floral', '§a§lAraña Floral§r', '§bAraña Floral', '§r§bAraña Floral', '§bAraña Floral§r', '§b§lAraña Floral', '§r§b§lAraña Floral', '§b§lAraña Floral§r', '§cAraña Floral', '§r§cAraña Floral', '§cAraña Floral§r', '§c§lAraña Floral', '§r§c§lAraña Floral', '§c§lAraña Floral§r', '§dAraña Floral', '§r§dAraña Floral', '§dAraña Floral§r', '§d§lAraña Floral', '§r§d§lAraña Floral', '§d§lAraña Floral§r', '§eAraña Floral', '§r§eAraña Floral', '§eAraña Floral§r', '§e§lAraña Floral', '§r§e§lAraña Floral', '§e§lAraña Floral§r', '§fAraña Floral', '§r§fAraña Floral', '§fAraña Floral§r', '§f§lAraña Floral', '§r§f§lAraña Floral', '§f§lAraña Floral§r', '§gAraña Floral', '§r§gAraña Floral', '§gAraña Floral§r', '§g§lAraña Floral', '§r§g§lAraña Floral', '§g§lAraña Floral§r', '§hAraña Floral', '§r§hAraña Floral', '§hAraña Floral§r', '§h§lAraña Floral', '§r§h§lAraña Floral', '§h§lAraña Floral§r', '§iAraña Floral', '§r§iAraña Floral', '§iAraña Floral§r', '§i§lAraña Floral', '§r§i§lAraña Floral', '§i§lAraña Floral§r', '§jAraña Floral', '§r§jAraña Floral', '§jAraña Floral§r', '§j§lAraña Floral', '§r§j§lAraña Floral', '§j§lAraña Floral§r', '§mAraña Floral', '§r§mAraña Floral', '§mAraña Floral§r', '§m§lAraña Floral', '§r§m§lAraña Floral', '§m§lAraña Floral§r', '§nAraña Floral', '§r§nAraña Floral', '§nAraña Floral§r', '§n§lAraña Floral', '§r§n§lAraña Floral', '§n§lAraña Floral§r', '§pAraña Floral', '§r§pAraña Floral', '§pAraña Floral§r', '§p§lAraña Floral', '§r§p§lAraña Floral', '§p§lAraña Floral§r', '§qAraña Floral', '§r§qAraña Floral', '§qAraña Floral§r', '§q§lAraña Floral', '§r§q§lAraña Floral', '§q§lAraña Floral§r', '§sAraña Floral', '§r§sAraña Floral', '§sAraña Floral§r', '§s§lAraña Floral', '§r§s§lAraña Floral', '§s§lAraña Floral§r', '§tAraña Floral', '§r§tAraña Floral', '§tAraña Floral§r', '§t§lAraña Floral', '§r§t§lAraña Floral', '§t§lAraña Floral§r', '§uAraña Floral', '§r§uAraña Floral', '§uAraña Floral§r', '§u§lAraña Floral', '§r§u§lAraña Floral', '§u§lAraña Floral§r');",
+          "variable.quaso_spider4 = query.is_name_any('Araña BloodMoon', '§rAraña BloodMoon', 'Araña BloodMoon§r', '§lAraña BloodMoon', '§r§lAraña BloodMoon', '§lAraña BloodMoon§r', '§0Araña BloodMoon', '§r§0Araña BloodMoon', '§0Araña BloodMoon§r', '§0§lAraña BloodMoon', '§r§0§lAraña BloodMoon', '§0§lAraña BloodMoon§r', '§1Araña BloodMoon', '§r§1Araña BloodMoon', '§1Araña BloodMoon§r', '§1§lAraña BloodMoon', '§r§1§lAraña BloodMoon', '§1§lAraña BloodMoon§r', '§2Araña BloodMoon', '§r§2Araña BloodMoon', '§2Araña BloodMoon§r', '§2§lAraña BloodMoon', '§r§2§lAraña BloodMoon', '§2§lAraña BloodMoon§r', '§3Araña BloodMoon', '§r§3Araña BloodMoon', '§3Araña BloodMoon§r', '§3§lAraña BloodMoon', '§r§3§lAraña BloodMoon', '§3§lAraña BloodMoon§r', '§4Araña BloodMoon', '§r§4Araña BloodMoon', '§4Araña BloodMoon§r', '§4§lAraña BloodMoon', '§r§4§lAraña BloodMoon', '§4§lAraña BloodMoon§r', '§5Araña BloodMoon', '§r§5Araña BloodMoon', '§5Araña BloodMoon§r', '§5§lAraña BloodMoon', '§r§5§lAraña BloodMoon', '§5§lAraña BloodMoon§r', '§6Araña BloodMoon', '§r§6Araña BloodMoon', '§6Araña BloodMoon§r', '§6§lAraña BloodMoon', '§r§6§lAraña BloodMoon', '§6§lAraña BloodMoon§r', '§7Araña BloodMoon', '§r§7Araña BloodMoon', '§7Araña BloodMoon§r', '§7§lAraña BloodMoon', '§r§7§lAraña BloodMoon', '§7§lAraña BloodMoon§r', '§8Araña BloodMoon', '§r§8Araña BloodMoon', '§8Araña BloodMoon§r', '§8§lAraña BloodMoon', '§r§8§lAraña BloodMoon', '§8§lAraña BloodMoon§r', '§9Araña BloodMoon', '§r§9Araña BloodMoon', '§9Araña BloodMoon§r', '§9§lAraña BloodMoon', '§r§9§lAraña BloodMoon', '§9§lAraña BloodMoon§r', '§aAraña BloodMoon', '§r§aAraña BloodMoon', '§aAraña BloodMoon§r', '§a§lAraña BloodMoon', '§r§a§lAraña BloodMoon', '§a§lAraña BloodMoon§r', '§bAraña BloodMoon', '§r§bAraña BloodMoon', '§bAraña BloodMoon§r', '§b§lAraña BloodMoon', '§r§b§lAraña BloodMoon', '§b§lAraña BloodMoon§r', '§cAraña BloodMoon', '§r§cAraña BloodMoon', '§cAraña BloodMoon§r', '§c§lAraña BloodMoon', '§r§c§lAraña BloodMoon', '§c§lAraña BloodMoon§r', '§dAraña BloodMoon', '§r§dAraña BloodMoon', '§dAraña BloodMoon§r', '§d§lAraña BloodMoon', '§r§d§lAraña BloodMoon', '§d§lAraña BloodMoon§r', '§eAraña BloodMoon', '§r§eAraña BloodMoon', '§eAraña BloodMoon§r', '§e§lAraña BloodMoon', '§r§e§lAraña BloodMoon', '§e§lAraña BloodMoon§r', '§fAraña BloodMoon', '§r§fAraña BloodMoon', '§fAraña BloodMoon§r', '§f§lAraña BloodMoon', '§r§f§lAraña BloodMoon', '§f§lAraña BloodMoon§r', '§gAraña BloodMoon', '§r§gAraña BloodMoon', '§gAraña BloodMoon§r', '§g§lAraña BloodMoon', '§r§g§lAraña BloodMoon', '§g§lAraña BloodMoon§r', '§hAraña BloodMoon', '§r§hAraña BloodMoon', '§hAraña BloodMoon§r', '§h§lAraña BloodMoon', '§r§h§lAraña BloodMoon', '§h§lAraña BloodMoon§r', '§iAraña BloodMoon', '§r§iAraña BloodMoon', '§iAraña BloodMoon§r', '§i§lAraña BloodMoon', '§r§i§lAraña BloodMoon', '§i§lAraña BloodMoon§r', '§jAraña BloodMoon', '§r§jAraña BloodMoon', '§jAraña BloodMoon§r', '§j§lAraña BloodMoon', '§r§j§lAraña BloodMoon', '§j§lAraña BloodMoon§r', '§mAraña BloodMoon', '§r§mAraña BloodMoon', '§mAraña BloodMoon§r', '§m§lAraña BloodMoon', '§r§m§lAraña BloodMoon', '§m§lAraña BloodMoon§r', '§nAraña BloodMoon', '§r§nAraña BloodMoon', '§nAraña BloodMoon§r', '§n§lAraña BloodMoon', '§r§n§lAraña BloodMoon', '§n§lAraña BloodMoon§r', '§pAraña BloodMoon', '§r§pAraña BloodMoon', '§pAraña BloodMoon§r', '§p§lAraña BloodMoon', '§r§p§lAraña BloodMoon', '§p§lAraña BloodMoon§r', '§qAraña BloodMoon', '§r§qAraña BloodMoon', '§qAraña BloodMoon§r', '§q§lAraña BloodMoon', '§r§q§lAraña BloodMoon', '§q§lAraña BloodMoon§r', '§sAraña BloodMoon', '§r§sAraña BloodMoon', '§sAraña BloodMoon§r', '§s§lAraña BloodMoon', '§r§s§lAraña BloodMoon', '§s§lAraña BloodMoon§r', '§tAraña BloodMoon', '§r§tAraña BloodMoon', '§tAraña BloodMoon§r', '§t§lAraña BloodMoon', '§r§t§lAraña BloodMoon', '§t§lAraña BloodMoon§r', '§uAraña BloodMoon', '§r§uAraña BloodMoon', '§uAraña BloodMoon§r', '§u§lAraña BloodMoon', '§r§u§lAraña BloodMoon', '§u§lAraña BloodMoon§r');",
+          "variable.quaso_custom = variable.quaso_spider2 || variable.quaso_spider4;"
+        ],
+        "animate": [
+          {
+            "spider2": "variable.quaso_spider2"
+          },
+          {
+            "spider4": "variable.quaso_spider4"
+          }
+        ]
+      }
+    }
+  }
+}

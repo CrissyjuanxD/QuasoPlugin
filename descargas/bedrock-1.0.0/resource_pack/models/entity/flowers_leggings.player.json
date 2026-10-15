@@ -1,0 +1,19 @@
+{
+  "format_version": "1.8.0",
+  "geometry.quaso.flowers.leggings.player:geometry.player.armor.leggings": {
+    "bones": [
+      {
+        "name": "body",
+        "inflate": 0.65
+      },
+      {
+        "name": "leftLeg",
+        "inflate": 0.65
+      },
+      {
+        "name": "rightLeg",
+        "inflate": 0.65
+      }
+    ]
+  }
+}

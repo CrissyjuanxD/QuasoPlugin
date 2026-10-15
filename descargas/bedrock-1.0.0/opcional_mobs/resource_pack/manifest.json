@@ -1,0 +1,39 @@
+{
+  "format_version": 2,
+  "header": {
+    "name": "Quaso · Mobs por nombre 1.0.0 (opcional)",
+    "description": "Modelos florales, Warden Cave, BloodMoon y estatua. Requiere comprobar renderizado en el cliente.",
+    "uuid": "cde1d0a2-1b87-5ef1-b26b-23623b38470b",
+    "version": [
+      1,
+      0,
+      0
+    ],
+    "min_engine_version": [
+      1,
+      26,
+      50
+    ]
+  },
+  "modules": [
+    {
+      "type": "resources",
+      "uuid": "a569216f-acc9-5d51-a748-58a14407d2ee",
+      "version": [
+        1,
+        0,
+        0
+      ]
+    }
+  ],
+  "dependencies": [
+    {
+      "uuid": "1a5b1be9-b1a4-537f-91d9-4ccbce20733e",
+      "version": [
+        1,
+        0,
+        0
+      ]
+    }
+  ]
+}

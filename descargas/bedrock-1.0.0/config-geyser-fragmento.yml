@@ -1,0 +1,5 @@
+# Integra estas opciones en la sección gameplay EXISTENTE de Geyser-Spigot/config.yml.
+# Este archivo es una referencia; no reemplaza el config completo de Geyser.
+gameplay:
+  enable-custom-content: true
+  force-resource-packs: true

@@ -1,0 +1,86 @@
+{
+  "format_version": "1.10.0",
+  "minecraft:client_entity": {
+    "description": {
+      "identifier": "minecraft:bee",
+      "materials": {
+        "default": "bee",
+        "quaso": "entity_alphatest",
+        "quaso_glow": "entity_emissive_alpha"
+      },
+      "textures": {
+        "default": "textures/entity/bee/bee",
+        "angry": "textures/entity/bee/bee_angry",
+        "nectar": "textures/entity/bee/bee_nectar",
+        "angry_nectar": "textures/entity/bee/bee_angry_nectar",
+        "baby_default": "textures/entity/bee/bee_baby",
+        "baby_angry": "textures/entity/bee/bee_angry_baby",
+        "baby_nectar": "textures/entity/bee/bee_nectar_baby",
+        "baby_angry_nectar": "textures/entity/bee/bee_angry_nectar_baby",
+        "bee2": "textures/entity/quaso/bee2",
+        "bee2_nectar": "textures/entity/quaso/bee2_nectar",
+        "bee2_angry": "textures/entity/quaso/bee2_angry",
+        "bee2_angry_nectar": "textures/entity/quaso/bee2_angry_nectar",
+        "bee3": "textures/entity/quaso/bee3",
+        "bee3_e": "textures/entity/quaso/bee3_e"
+      },
+      "geometry": {
+        "default": "geometry.bee",
+        "baby": "geometry.bee.baby",
+        "bee2": "geometry.quaso.bee2",
+        "bee3": "geometry.quaso.bee3"
+      },
+      "animations": {
+        "flying": "animation.bee.flying",
+        "drip": "controller.animation.bee.drip",
+        "controller_bee_sting": "controller.animation.bee.sting",
+        "bee_sting": "animation.bee.sting",
+        "bee_no_stinger": "animation.bee.no_stinger",
+        "bee_fly_bobbing": "animation.bee.fly.bobbing",
+        "bee_root_controller": "controller.animation.bee.root",
+        "bee2": "animation.quaso.bee2",
+        "bee3": "animation.quaso.bee3"
+      },
+      "particle_effects": {
+        "nectar_dripping": "minecraft:nectar_drip_particle"
+      },
+      "scripts": {
+        "animate": [
+          "bee_root_controller",
+          {
+            "bee_no_stinger": "query.mark_variant == 1"
+          },
+          {
+            "bee2": "variable.quaso_bee2"
+          },
+          {
+            "bee3": "variable.quaso_bee3"
+          }
+        ],
+        "scale": "query.is_baby ? 2.0 : 1.0",
+        "pre_animation": [
+          "variable.quaso_bee2 = query.is_name_any('Abeja Floral', '§rAbeja Floral', 'Abeja Floral§r', '§lAbeja Floral', '§r§lAbeja Floral', '§lAbeja Floral§r', '§0Abeja Floral', '§r§0Abeja Floral', '§0Abeja Floral§r', '§0§lAbeja Floral', '§r§0§lAbeja Floral', '§0§lAbeja Floral§r', '§1Abeja Floral', '§r§1Abeja Floral', '§1Abeja Floral§r', '§1§lAbeja Floral', '§r§1§lAbeja Floral', '§1§lAbeja Floral§r', '§2Abeja Floral', '§r§2Abeja Floral', '§2Abeja Floral§r', '§2§lAbeja Floral', '§r§2§lAbeja Floral', '§2§lAbeja Floral§r', '§3Abeja Floral', '§r§3Abeja Floral', '§3Abeja Floral§r', '§3§lAbeja Floral', '§r§3§lAbeja Floral', '§3§lAbeja Floral§r', '§4Abeja Floral', '§r§4Abeja Floral', '§4Abeja Floral§r', '§4§lAbeja Floral', '§r§4§lAbeja Floral', '§4§lAbeja Floral§r', '§5Abeja Floral', '§r§5Abeja Floral', '§5Abeja Floral§r', '§5§lAbeja Floral', '§r§5§lAbeja Floral', '§5§lAbeja Floral§r', '§6Abeja Floral', '§r§6Abeja Floral', '§6Abeja Floral§r', '§6§lAbeja Floral', '§r§6§lAbeja Floral', '§6§lAbeja Floral§r', '§7Abeja Floral', '§r§7Abeja Floral', '§7Abeja Floral§r', '§7§lAbeja Floral', '§r§7§lAbeja Floral', '§7§lAbeja Floral§r', '§8Abeja Floral', '§r§8Abeja Floral', '§8Abeja Floral§r', '§8§lAbeja Floral', '§r§8§lAbeja Floral', '§8§lAbeja Floral§r', '§9Abeja Floral', '§r§9Abeja Floral', '§9Abeja Floral§r', '§9§lAbeja Floral', '§r§9§lAbeja Floral', '§9§lAbeja Floral§r', '§aAbeja Floral', '§r§aAbeja Floral', '§aAbeja Floral§r', '§a§lAbeja Floral', '§r§a§lAbeja Floral', '§a§lAbeja Floral§r', '§bAbeja Floral', '§r§bAbeja Floral', '§bAbeja Floral§r', '§b§lAbeja Floral', '§r§b§lAbeja Floral', '§b§lAbeja Floral§r', '§cAbeja Floral', '§r§cAbeja Floral', '§cAbeja Floral§r', '§c§lAbeja Floral', '§r§c§lAbeja Floral', '§c§lAbeja Floral§r', '§dAbeja Floral', '§r§dAbeja Floral', '§dAbeja Floral§r', '§d§lAbeja Floral', '§r§d§lAbeja Floral', '§d§lAbeja Floral§r', '§eAbeja Floral', '§r§eAbeja Floral', '§eAbeja Floral§r', '§e§lAbeja Floral', '§r§e§lAbeja Floral', '§e§lAbeja Floral§r', '§fAbeja Floral', '§r§fAbeja Floral', '§fAbeja Floral§r', '§f§lAbeja Floral', '§r§f§lAbeja Floral', '§f§lAbeja Floral§r', '§gAbeja Floral', '§r§gAbeja Floral', '§gAbeja Floral§r', '§g§lAbeja Floral', '§r§g§lAbeja Floral', '§g§lAbeja Floral§r', '§hAbeja Floral', '§r§hAbeja Floral', '§hAbeja Floral§r', '§h§lAbeja Floral', '§r§h§lAbeja Floral', '§h§lAbeja Floral§r', '§iAbeja Floral', '§r§iAbeja Floral', '§iAbeja Floral§r', '§i§lAbeja Floral', '§r§i§lAbeja Floral', '§i§lAbeja Floral§r', '§jAbeja Floral', '§r§jAbeja Floral', '§jAbeja Floral§r', '§j§lAbeja Floral', '§r§j§lAbeja Floral', '§j§lAbeja Floral§r', '§mAbeja Floral', '§r§mAbeja Floral', '§mAbeja Floral§r', '§m§lAbeja Floral', '§r§m§lAbeja Floral', '§m§lAbeja Floral§r', '§nAbeja Floral', '§r§nAbeja Floral', '§nAbeja Floral§r', '§n§lAbeja Floral', '§r§n§lAbeja Floral', '§n§lAbeja Floral§r', '§pAbeja Floral', '§r§pAbeja Floral', '§pAbeja Floral§r', '§p§lAbeja Floral', '§r§p§lAbeja Floral', '§p§lAbeja Floral§r', '§qAbeja Floral', '§r§qAbeja Floral', '§qAbeja Floral§r', '§q§lAbeja Floral', '§r§q§lAbeja Floral', '§q§lAbeja Floral§r', '§sAbeja Floral', '§r§sAbeja Floral', '§sAbeja Floral§r', '§s§lAbeja Floral', '§r§s§lAbeja Floral', '§s§lAbeja Floral§r', '§tAbeja Floral', '§r§tAbeja Floral', '§tAbeja Floral§r', '§t§lAbeja Floral', '§r§t§lAbeja Floral', '§t§lAbeja Floral§r', '§uAbeja Floral', '§r§uAbeja Floral', '§uAbeja Floral§r', '§u§lAbeja Floral', '§r§u§lAbeja Floral', '§u§lAbeja Floral§r');",
+          "variable.quaso_bee3 = query.is_name_any('Mini Abeja Floral', '§rMini Abeja Floral', 'Mini Abeja Floral§r', '§lMini Abeja Floral', '§r§lMini Abeja Floral', '§lMini Abeja Floral§r', '§0Mini Abeja Floral', '§r§0Mini Abeja Floral', '§0Mini Abeja Floral§r', '§0§lMini Abeja Floral', '§r§0§lMini Abeja Floral', '§0§lMini Abeja Floral§r', '§1Mini Abeja Floral', '§r§1Mini Abeja Floral', '§1Mini Abeja Floral§r', '§1§lMini Abeja Floral', '§r§1§lMini Abeja Floral', '§1§lMini Abeja Floral§r', '§2Mini Abeja Floral', '§r§2Mini Abeja Floral', '§2Mini Abeja Floral§r', '§2§lMini Abeja Floral', '§r§2§lMini Abeja Floral', '§2§lMini Abeja Floral§r', '§3Mini Abeja Floral', '§r§3Mini Abeja Floral', '§3Mini Abeja Floral§r', '§3§lMini Abeja Floral', '§r§3§lMini Abeja Floral', '§3§lMini Abeja Floral§r', '§4Mini Abeja Floral', '§r§4Mini Abeja Floral', '§4Mini Abeja Floral§r', '§4§lMini Abeja Floral', '§r§4§lMini Abeja Floral', '§4§lMini Abeja Floral§r', '§5Mini Abeja Floral', '§r§5Mini Abeja Floral', '§5Mini Abeja Floral§r', '§5§lMini Abeja Floral', '§r§5§lMini Abeja Floral', '§5§lMini Abeja Floral§r', '§6Mini Abeja Floral', '§r§6Mini Abeja Floral', '§6Mini Abeja Floral§r', '§6§lMini Abeja Floral', '§r§6§lMini Abeja Floral', '§6§lMini Abeja Floral§r', '§7Mini Abeja Floral', '§r§7Mini Abeja Floral', '§7Mini Abeja Floral§r', '§7§lMini Abeja Floral', '§r§7§lMini Abeja Floral', '§7§lMini Abeja Floral§r', '§8Mini Abeja Floral', '§r§8Mini Abeja Floral', '§8Mini Abeja Floral§r', '§8§lMini Abeja Floral', '§r§8§lMini Abeja Floral', '§8§lMini Abeja Floral§r', '§9Mini Abeja Floral', '§r§9Mini Abeja Floral', '§9Mini Abeja Floral§r', '§9§lMini Abeja Floral', '§r§9§lMini Abeja Floral', '§9§lMini Abeja Floral§r', '§aMini Abeja Floral', '§r§aMini Abeja Floral', '§aMini Abeja Floral§r', '§a§lMini Abeja Floral', '§r§a§lMini Abeja Floral', '§a§lMini Abeja Floral§r', '§bMini Abeja Floral', '§r§bMini Abeja Floral', '§bMini Abeja Floral§r', '§b§lMini Abeja Floral', '§r§b§lMini Abeja Floral', '§b§lMini Abeja Floral§r', '§cMini Abeja Floral', '§r§cMini Abeja Floral', '§cMini Abeja Floral§r', '§c§lMini Abeja Floral', '§r§c§lMini Abeja Floral', '§c§lMini Abeja Floral§r', '§dMini Abeja Floral', '§r§dMini Abeja Floral', '§dMini Abeja Floral§r', '§d§lMini Abeja Floral', '§r§d§lMini Abeja Floral', '§d§lMini Abeja Floral§r', '§eMini Abeja Floral', '§r§eMini Abeja Floral', '§eMini Abeja Floral§r', '§e§lMini Abeja Floral', '§r§e§lMini Abeja Floral', '§e§lMini Abeja Floral§r', '§fMini Abeja Floral', '§r§fMini Abeja Floral', '§fMini Abeja Floral§r', '§f§lMini Abeja Floral', '§r§f§lMini Abeja Floral', '§f§lMini Abeja Floral§r', '§gMini Abeja Floral', '§r§gMini Abeja Floral', '§gMini Abeja Floral§r', '§g§lMini Abeja Floral', '§r§g§lMini Abeja Floral', '§g§lMini Abeja Floral§r', '§hMini Abeja Floral', '§r§hMini Abeja Floral', '§hMini Abeja Floral§r', '§h§lMini Abeja Floral', '§r§h§lMini Abeja Floral', '§h§lMini Abeja Floral§r', '§iMini Abeja Floral', '§r§iMini Abeja Floral', '§iMini Abeja Floral§r', '§i§lMini Abeja Floral', '§r§i§lMini Abeja Floral', '§i§lMini Abeja Floral§r', '§jMini Abeja Floral', '§r§jMini Abeja Floral', '§jMini Abeja Floral§r', '§j§lMini Abeja Floral', '§r§j§lMini Abeja Floral', '§j§lMini Abeja Floral§r', '§mMini Abeja Floral', '§r§mMini Abeja Floral', '§mMini Abeja Floral§r', '§m§lMini Abeja Floral', '§r§m§lMini Abeja Floral', '§m§lMini Abeja Floral§r', '§nMini Abeja Floral', '§r§nMini Abeja Floral', '§nMini Abeja Floral§r', '§n§lMini Abeja Floral', '§r§n§lMini Abeja Floral', '§n§lMini Abeja Floral§r', '§pMini Abeja Floral', '§r§pMini Abeja Floral', '§pMini Abeja Floral§r', '§p§lMini Abeja Floral', '§r§p§lMini Abeja Floral', '§p§lMini Abeja Floral§r', '§qMini Abeja Floral', '§r§qMini Abeja Floral', '§qMini Abeja Floral§r', '§q§lMini Abeja Floral', '§r§q§lMini Abeja Floral', '§q§lMini Abeja Floral§r', '§sMini Abeja Floral', '§r§sMini Abeja Floral', '§sMini Abeja Floral§r', '§s§lMini Abeja Floral', '§r§s§lMini Abeja Floral', '§s§lMini Abeja Floral§r', '§tMini Abeja Floral', '§r§tMini Abeja Floral', '§tMini Abeja Floral§r', '§t§lMini Abeja Floral', '§r§t§lMini Abeja Floral', '§t§lMini Abeja Floral§r', '§uMini Abeja Floral', '§r§uMini Abeja Floral', '§uMini Abeja Floral§r', '§u§lMini Abeja Floral', '§r§u§lMini Abeja Floral', '§u§lMini Abeja Floral§r', 'Corrupted Bee', '§rCorrupted Bee', 'Corrupted Bee§r', '§lCorrupted Bee', '§r§lCorrupted Bee', '§lCorrupted Bee§r', '§0Corrupted Bee', '§r§0Corrupted Bee', '§0Corrupted Bee§r', '§0§lCorrupted Bee', '§r§0§lCorrupted Bee', '§0§lCorrupted Bee§r', '§1Corrupted Bee', '§r§1Corrupted Bee', '§1Corrupted Bee§r', '§1§lCorrupted Bee', '§r§1§lCorrupted Bee', '§1§lCorrupted Bee§r', '§2Corrupted Bee', '§r§2Corrupted Bee', '§2Corrupted Bee§r', '§2§lCorrupted Bee', '§r§2§lCorrupted Bee', '§2§lCorrupted Bee§r', '§3Corrupted Bee', '§r§3Corrupted Bee', '§3Corrupted Bee§r', '§3§lCorrupted Bee', '§r§3§lCorrupted Bee', '§3§lCorrupted Bee§r', '§4Corrupted Bee', '§r§4Corrupted Bee', '§4Corrupted Bee§r', '§4§lCorrupted Bee', '§r§4§lCorrupted Bee', '§4§lCorrupted Bee§r', '§5Corrupted Bee', '§r§5Corrupted Bee', '§5Corrupted Bee§r', '§5§lCorrupted Bee', '§r§5§lCorrupted Bee', '§5§lCorrupted Bee§r', '§6Corrupted Bee', '§r§6Corrupted Bee', '§6Corrupted Bee§r', '§6§lCorrupted Bee', '§r§6§lCorrupted Bee', '§6§lCorrupted Bee§r', '§7Corrupted Bee', '§r§7Corrupted Bee', '§7Corrupted Bee§r', '§7§lCorrupted Bee', '§r§7§lCorrupted Bee', '§7§lCorrupted Bee§r', '§8Corrupted Bee', '§r§8Corrupted Bee', '§8Corrupted Bee§r', '§8§lCorrupted Bee', '§r§8§lCorrupted Bee', '§8§lCorrupted Bee§r', '§9Corrupted Bee', '§r§9Corrupted Bee', '§9Corrupted Bee§r', '§9§lCorrupted Bee', '§r§9§lCorrupted Bee', '§9§lCorrupted Bee§r', '§aCorrupted Bee', '§r§aCorrupted Bee', '§aCorrupted Bee§r', '§a§lCorrupted Bee', '§r§a§lCorrupted Bee', '§a§lCorrupted Bee§r', '§bCorrupted Bee', '§r§bCorrupted Bee', '§bCorrupted Bee§r', '§b§lCorrupted Bee', '§r§b§lCorrupted Bee', '§b§lCorrupted Bee§r', '§cCorrupted Bee', '§r§cCorrupted Bee', '§cCorrupted Bee§r', '§c§lCorrupted Bee', '§r§c§lCorrupted Bee', '§c§lCorrupted Bee§r', '§dCorrupted Bee', '§r§dCorrupted Bee', '§dCorrupted Bee§r', '§d§lCorrupted Bee', '§r§d§lCorrupted Bee', '§d§lCorrupted Bee§r', '§eCorrupted Bee', '§r§eCorrupted Bee', '§eCorrupted Bee§r', '§e§lCorrupted Bee', '§r§e§lCorrupted Bee', '§e§lCorrupted Bee§r', '§fCorrupted Bee', '§r§fCorrupted Bee', '§fCorrupted Bee§r', '§f§lCorrupted Bee', '§r§f§lCorrupted Bee', '§f§lCorrupted Bee§r', '§gCorrupted Bee', '§r§gCorrupted Bee', '§gCorrupted Bee§r', '§g§lCorrupted Bee', '§r§g§lCorrupted Bee', '§g§lCorrupted Bee§r', '§hCorrupted Bee', '§r§hCorrupted Bee', '§hCorrupted Bee§r', '§h§lCorrupted Bee', '§r§h§lCorrupted Bee', '§h§lCorrupted Bee§r', '§iCorrupted Bee', '§r§iCorrupted Bee', '§iCorrupted Bee§r', '§i§lCorrupted Bee', '§r§i§lCorrupted Bee', '§i§lCorrupted Bee§r', '§jCorrupted Bee', '§r§jCorrupted Bee', '§jCorrupted Bee§r', '§j§lCorrupted Bee', '§r§j§lCorrupted Bee', '§j§lCorrupted Bee§r', '§mCorrupted Bee', '§r§mCorrupted Bee', '§mCorrupted Bee§r', '§m§lCorrupted Bee', '§r§m§lCorrupted Bee', '§m§lCorrupted Bee§r', '§nCorrupted Bee', '§r§nCorrupted Bee', '§nCorrupted Bee§r', '§n§lCorrupted Bee', '§r§n§lCorrupted Bee', '§n§lCorrupted Bee§r', '§pCorrupted Bee', '§r§pCorrupted Bee', '§pCorrupted Bee§r', '§p§lCorrupted Bee', '§r§p§lCorrupted Bee', '§p§lCorrupted Bee§r', '§qCorrupted Bee', '§r§qCorrupted Bee', '§qCorrupted Bee§r', '§q§lCorrupted Bee', '§r§q§lCorrupted Bee', '§q§lCorrupted Bee§r', '§sCorrupted Bee', '§r§sCorrupted Bee', '§sCorrupted Bee§r', '§s§lCorrupted Bee', '§r§s§lCorrupted Bee', '§s§lCorrupted Bee§r', '§tCorrupted Bee', '§r§tCorrupted Bee', '§tCorrupted Bee§r', '§t§lCorrupted Bee', '§r§t§lCorrupted Bee', '§t§lCorrupted Bee§r', '§uCorrupted Bee', '§r§uCorrupted Bee', '§uCorrupted Bee§r', '§u§lCorrupted Bee', '§r§u§lCorrupted Bee', '§u§lCorrupted Bee§r');",
+          "variable.quaso_custom = variable.quaso_bee2 || variable.quaso_bee3;"
+        ]
+      },
+      "render_controllers": [
+        {
+          "controller.render.bee.v2": "!variable.quaso_custom"
+        },
+        {
+          "controller.render.quaso.bee2": "variable.quaso_bee2"
+        },
+        {
+          "controller.render.quaso.bee3": "variable.quaso_bee3"
+        },
+        {
+          "controller.render.quaso.bee3_e": "variable.quaso_bee3"
+        }
+      ],
+      "spawn_egg": {
+        "texture": "spawn_egg_bee"
+      }
+    }
+  }
+}

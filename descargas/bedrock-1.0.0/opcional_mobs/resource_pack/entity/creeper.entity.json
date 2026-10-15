@@ -1,0 +1,106 @@
+{
+  "format_version": "1.10.0",
+  "minecraft:client_entity": {
+    "description": {
+      "identifier": "minecraft:creeper",
+      "min_engine_version": "1.8.0",
+      "materials": {
+        "default": "creeper",
+        "charged": "charged_creeper",
+        "quaso": "entity_alphatest",
+        "quaso_glow": "entity_emissive_alpha"
+      },
+      "textures": {
+        "default": "textures/entity/creeper/creeper",
+        "charged": "textures/entity/creeper/creeper_armor",
+        "creeper2": "textures/entity/quaso/creeper2",
+        "creeper3": "textures/entity/quaso/creeper3",
+        "creeper3_e": "textures/entity/quaso/creeper3_e",
+        "creeper4": "textures/entity/quaso/creeper4",
+        "creeper4_e": "textures/entity/quaso/creeper4_e"
+      },
+      "geometry": {
+        "default": "geometry.creeper.v1.8",
+        "charged": "geometry.creeper.charged.v1.8",
+        "creeper2": "geometry.quaso.creeper2",
+        "creeper3": "geometry.quaso.creeper3",
+        "creeper4": "geometry.quaso.creeper4"
+      },
+      "spawn_egg": {
+        "texture": "spawn_egg_creeper"
+      },
+      "scripts": {
+        "pre_animation": [
+          "variable.wobble = Math.sin(query.swell_amount * 5730) * query.swell_amount * 0.01 + 1.0;",
+          "variable.swelling_scale1 = (Math.pow(Math.clamp(query.swell_amount, 0.0, 1.0), 4.0) * 0.4 + 1.0) * variable.wobble;",
+          "variable.swelling_scale2 = (Math.pow(Math.clamp(query.swell_amount, 0.0, 1.0), 4.0) * 0.1 + 1.0) / variable.wobble;",
+          "variable.leg_rot = Math.cos(query.modified_distance_moved * 38.17326) * 80.22 * query.modified_move_speed;",
+          "variable.flash = Math.mod(Math.Round(query.swell_amount * 10.0), 2.0);",
+          "variable.quaso_creeper2 = query.is_name_any('Creeper Floral', '§rCreeper Floral', 'Creeper Floral§r', '§lCreeper Floral', '§r§lCreeper Floral', '§lCreeper Floral§r', '§0Creeper Floral', '§r§0Creeper Floral', '§0Creeper Floral§r', '§0§lCreeper Floral', '§r§0§lCreeper Floral', '§0§lCreeper Floral§r', '§1Creeper Floral', '§r§1Creeper Floral', '§1Creeper Floral§r', '§1§lCreeper Floral', '§r§1§lCreeper Floral', '§1§lCreeper Floral§r', '§2Creeper Floral', '§r§2Creeper Floral', '§2Creeper Floral§r', '§2§lCreeper Floral', '§r§2§lCreeper Floral', '§2§lCreeper Floral§r', '§3Creeper Floral', '§r§3Creeper Floral', '§3Creeper Floral§r', '§3§lCreeper Floral', '§r§3§lCreeper Floral', '§3§lCreeper Floral§r', '§4Creeper Floral', '§r§4Creeper Floral', '§4Creeper Floral§r', '§4§lCreeper Floral', '§r§4§lCreeper Floral', '§4§lCreeper Floral§r', '§5Creeper Floral', '§r§5Creeper Floral', '§5Creeper Floral§r', '§5§lCreeper Floral', '§r§5§lCreeper Floral', '§5§lCreeper Floral§r', '§6Creeper Floral', '§r§6Creeper Floral', '§6Creeper Floral§r', '§6§lCreeper Floral', '§r§6§lCreeper Floral', '§6§lCreeper Floral§r', '§7Creeper Floral', '§r§7Creeper Floral', '§7Creeper Floral§r', '§7§lCreeper Floral', '§r§7§lCreeper Floral', '§7§lCreeper Floral§r', '§8Creeper Floral', '§r§8Creeper Floral', '§8Creeper Floral§r', '§8§lCreeper Floral', '§r§8§lCreeper Floral', '§8§lCreeper Floral§r', '§9Creeper Floral', '§r§9Creeper Floral', '§9Creeper Floral§r', '§9§lCreeper Floral', '§r§9§lCreeper Floral', '§9§lCreeper Floral§r', '§aCreeper Floral', '§r§aCreeper Floral', '§aCreeper Floral§r', '§a§lCreeper Floral', '§r§a§lCreeper Floral', '§a§lCreeper Floral§r', '§bCreeper Floral', '§r§bCreeper Floral', '§bCreeper Floral§r', '§b§lCreeper Floral', '§r§b§lCreeper Floral', '§b§lCreeper Floral§r', '§cCreeper Floral', '§r§cCreeper Floral', '§cCreeper Floral§r', '§c§lCreeper Floral', '§r§c§lCreeper Floral', '§c§lCreeper Floral§r', '§dCreeper Floral', '§r§dCreeper Floral', '§dCreeper Floral§r', '§d§lCreeper Floral', '§r§d§lCreeper Floral', '§d§lCreeper Floral§r', '§eCreeper Floral', '§r§eCreeper Floral', '§eCreeper Floral§r', '§e§lCreeper Floral', '§r§e§lCreeper Floral', '§e§lCreeper Floral§r', '§fCreeper Floral', '§r§fCreeper Floral', '§fCreeper Floral§r', '§f§lCreeper Floral', '§r§f§lCreeper Floral', '§f§lCreeper Floral§r', '§gCreeper Floral', '§r§gCreeper Floral', '§gCreeper Floral§r', '§g§lCreeper Floral', '§r§g§lCreeper Floral', '§g§lCreeper Floral§r', '§hCreeper Floral', '§r§hCreeper Floral', '§hCreeper Floral§r', '§h§lCreeper Floral', '§r§h§lCreeper Floral', '§h§lCreeper Floral§r', '§iCreeper Floral', '§r§iCreeper Floral', '§iCreeper Floral§r', '§i§lCreeper Floral', '§r§i§lCreeper Floral', '§i§lCreeper Floral§r', '§jCreeper Floral', '§r§jCreeper Floral', '§jCreeper Floral§r', '§j§lCreeper Floral', '§r§j§lCreeper Floral', '§j§lCreeper Floral§r', '§mCreeper Floral', '§r§mCreeper Floral', '§mCreeper Floral§r', '§m§lCreeper Floral', '§r§m§lCreeper Floral', '§m§lCreeper Floral§r', '§nCreeper Floral', '§r§nCreeper Floral', '§nCreeper Floral§r', '§n§lCreeper Floral', '§r§n§lCreeper Floral', '§n§lCreeper Floral§r', '§pCreeper Floral', '§r§pCreeper Floral', '§pCreeper Floral§r', '§p§lCreeper Floral', '§r§p§lCreeper Floral', '§p§lCreeper Floral§r', '§qCreeper Floral', '§r§qCreeper Floral', '§qCreeper Floral§r', '§q§lCreeper Floral', '§r§q§lCreeper Floral', '§q§lCreeper Floral§r', '§sCreeper Floral', '§r§sCreeper Floral', '§sCreeper Floral§r', '§s§lCreeper Floral', '§r§s§lCreeper Floral', '§s§lCreeper Floral§r', '§tCreeper Floral', '§r§tCreeper Floral', '§tCreeper Floral§r', '§t§lCreeper Floral', '§r§t§lCreeper Floral', '§t§lCreeper Floral§r', '§uCreeper Floral', '§r§uCreeper Floral', '§uCreeper Floral§r', '§u§lCreeper Floral', '§r§u§lCreeper Floral', '§u§lCreeper Floral§r');",
+          "variable.quaso_creeper3 = query.is_name_any('Infested Creeper', '§rInfested Creeper', 'Infested Creeper§r', '§lInfested Creeper', '§r§lInfested Creeper', '§lInfested Creeper§r', '§0Infested Creeper', '§r§0Infested Creeper', '§0Infested Creeper§r', '§0§lInfested Creeper', '§r§0§lInfested Creeper', '§0§lInfested Creeper§r', '§1Infested Creeper', '§r§1Infested Creeper', '§1Infested Creeper§r', '§1§lInfested Creeper', '§r§1§lInfested Creeper', '§1§lInfested Creeper§r', '§2Infested Creeper', '§r§2Infested Creeper', '§2Infested Creeper§r', '§2§lInfested Creeper', '§r§2§lInfested Creeper', '§2§lInfested Creeper§r', '§3Infested Creeper', '§r§3Infested Creeper', '§3Infested Creeper§r', '§3§lInfested Creeper', '§r§3§lInfested Creeper', '§3§lInfested Creeper§r', '§4Infested Creeper', '§r§4Infested Creeper', '§4Infested Creeper§r', '§4§lInfested Creeper', '§r§4§lInfested Creeper', '§4§lInfested Creeper§r', '§5Infested Creeper', '§r§5Infested Creeper', '§5Infested Creeper§r', '§5§lInfested Creeper', '§r§5§lInfested Creeper', '§5§lInfested Creeper§r', '§6Infested Creeper', '§r§6Infested Creeper', '§6Infested Creeper§r', '§6§lInfested Creeper', '§r§6§lInfested Creeper', '§6§lInfested Creeper§r', '§7Infested Creeper', '§r§7Infested Creeper', '§7Infested Creeper§r', '§7§lInfested Creeper', '§r§7§lInfested Creeper', '§7§lInfested Creeper§r', '§8Infested Creeper', '§r§8Infested Creeper', '§8Infested Creeper§r', '§8§lInfested Creeper', '§r§8§lInfested Creeper', '§8§lInfested Creeper§r', '§9Infested Creeper', '§r§9Infested Creeper', '§9Infested Creeper§r', '§9§lInfested Creeper', '§r§9§lInfested Creeper', '§9§lInfested Creeper§r', '§aInfested Creeper', '§r§aInfested Creeper', '§aInfested Creeper§r', '§a§lInfested Creeper', '§r§a§lInfested Creeper', '§a§lInfested Creeper§r', '§bInfested Creeper', '§r§bInfested Creeper', '§bInfested Creeper§r', '§b§lInfested Creeper', '§r§b§lInfested Creeper', '§b§lInfested Creeper§r', '§cInfested Creeper', '§r§cInfested Creeper', '§cInfested Creeper§r', '§c§lInfested Creeper', '§r§c§lInfested Creeper', '§c§lInfested Creeper§r', '§dInfested Creeper', '§r§dInfested Creeper', '§dInfested Creeper§r', '§d§lInfested Creeper', '§r§d§lInfested Creeper', '§d§lInfested Creeper§r', '§eInfested Creeper', '§r§eInfested Creeper', '§eInfested Creeper§r', '§e§lInfested Creeper', '§r§e§lInfested Creeper', '§e§lInfested Creeper§r', '§fInfested Creeper', '§r§fInfested Creeper', '§fInfested Creeper§r', '§f§lInfested Creeper', '§r§f§lInfested Creeper', '§f§lInfested Creeper§r', '§gInfested Creeper', '§r§gInfested Creeper', '§gInfested Creeper§r', '§g§lInfested Creeper', '§r§g§lInfested Creeper', '§g§lInfested Creeper§r', '§hInfested Creeper', '§r§hInfested Creeper', '§hInfested Creeper§r', '§h§lInfested Creeper', '§r§h§lInfested Creeper', '§h§lInfested Creeper§r', '§iInfested Creeper', '§r§iInfested Creeper', '§iInfested Creeper§r', '§i§lInfested Creeper', '§r§i§lInfested Creeper', '§i§lInfested Creeper§r', '§jInfested Creeper', '§r§jInfested Creeper', '§jInfested Creeper§r', '§j§lInfested Creeper', '§r§j§lInfested Creeper', '§j§lInfested Creeper§r', '§mInfested Creeper', '§r§mInfested Creeper', '§mInfested Creeper§r', '§m§lInfested Creeper', '§r§m§lInfested Creeper', '§m§lInfested Creeper§r', '§nInfested Creeper', '§r§nInfested Creeper', '§nInfested Creeper§r', '§n§lInfested Creeper', '§r§n§lInfested Creeper', '§n§lInfested Creeper§r', '§pInfested Creeper', '§r§pInfested Creeper', '§pInfested Creeper§r', '§p§lInfested Creeper', '§r§p§lInfested Creeper', '§p§lInfested Creeper§r', '§qInfested Creeper', '§r§qInfested Creeper', '§qInfested Creeper§r', '§q§lInfested Creeper', '§r§q§lInfested Creeper', '§q§lInfested Creeper§r', '§sInfested Creeper', '§r§sInfested Creeper', '§sInfested Creeper§r', '§s§lInfested Creeper', '§r§s§lInfested Creeper', '§s§lInfested Creeper§r', '§tInfested Creeper', '§r§tInfested Creeper', '§tInfested Creeper§r', '§t§lInfested Creeper', '§r§t§lInfested Creeper', '§t§lInfested Creeper§r', '§uInfested Creeper', '§r§uInfested Creeper', '§uInfested Creeper§r', '§u§lInfested Creeper', '§r§u§lInfested Creeper', '§u§lInfested Creeper§r');",
+          "variable.quaso_creeper4 = query.is_name_any('Creeper BloodMoon', '§rCreeper BloodMoon', 'Creeper BloodMoon§r', '§lCreeper BloodMoon', '§r§lCreeper BloodMoon', '§lCreeper BloodMoon§r', '§0Creeper BloodMoon', '§r§0Creeper BloodMoon', '§0Creeper BloodMoon§r', '§0§lCreeper BloodMoon', '§r§0§lCreeper BloodMoon', '§0§lCreeper BloodMoon§r', '§1Creeper BloodMoon', '§r§1Creeper BloodMoon', '§1Creeper BloodMoon§r', '§1§lCreeper BloodMoon', '§r§1§lCreeper BloodMoon', '§1§lCreeper BloodMoon§r', '§2Creeper BloodMoon', '§r§2Creeper BloodMoon', '§2Creeper BloodMoon§r', '§2§lCreeper BloodMoon', '§r§2§lCreeper BloodMoon', '§2§lCreeper BloodMoon§r', '§3Creeper BloodMoon', '§r§3Creeper BloodMoon', '§3Creeper BloodMoon§r', '§3§lCreeper BloodMoon', '§r§3§lCreeper BloodMoon', '§3§lCreeper BloodMoon§r', '§4Creeper BloodMoon', '§r§4Creeper BloodMoon', '§4Creeper BloodMoon§r', '§4§lCreeper BloodMoon', '§r§4§lCreeper BloodMoon', '§4§lCreeper BloodMoon§r', '§5Creeper BloodMoon', '§r§5Creeper BloodMoon', '§5Creeper BloodMoon§r', '§5§lCreeper BloodMoon', '§r§5§lCreeper BloodMoon', '§5§lCreeper BloodMoon§r', '§6Creeper BloodMoon', '§r§6Creeper BloodMoon', '§6Creeper BloodMoon§r', '§6§lCreeper BloodMoon', '§r§6§lCreeper BloodMoon', '§6§lCreeper BloodMoon§r', '§7Creeper BloodMoon', '§r§7Creeper BloodMoon', '§7Creeper BloodMoon§r', '§7§lCreeper BloodMoon', '§r§7§lCreeper BloodMoon', '§7§lCreeper BloodMoon§r', '§8Creeper BloodMoon', '§r§8Creeper BloodMoon', '§8Creeper BloodMoon§r', '§8§lCreeper BloodMoon', '§r§8§lCreeper BloodMoon', '§8§lCreeper BloodMoon§r', '§9Creeper BloodMoon', '§r§9Creeper BloodMoon', '§9Creeper BloodMoon§r', '§9§lCreeper BloodMoon', '§r§9§lCreeper BloodMoon', '§9§lCreeper BloodMoon§r', '§aCreeper BloodMoon', '§r§aCreeper BloodMoon', '§aCreeper BloodMoon§r', '§a§lCreeper BloodMoon', '§r§a§lCreeper BloodMoon', '§a§lCreeper BloodMoon§r', '§bCreeper BloodMoon', '§r§bCreeper BloodMoon', '§bCreeper BloodMoon§r', '§b§lCreeper BloodMoon', '§r§b§lCreeper BloodMoon', '§b§lCreeper BloodMoon§r', '§cCreeper BloodMoon', '§r§cCreeper BloodMoon', '§cCreeper BloodMoon§r', '§c§lCreeper BloodMoon', '§r§c§lCreeper BloodMoon', '§c§lCreeper BloodMoon§r', '§dCreeper BloodMoon', '§r§dCreeper BloodMoon', '§dCreeper BloodMoon§r', '§d§lCreeper BloodMoon', '§r§d§lCreeper BloodMoon', '§d§lCreeper BloodMoon§r', '§eCreeper BloodMoon', '§r§eCreeper BloodMoon', '§eCreeper BloodMoon§r', '§e§lCreeper BloodMoon', '§r§e§lCreeper BloodMoon', '§e§lCreeper BloodMoon§r', '§fCreeper BloodMoon', '§r§fCreeper BloodMoon', '§fCreeper BloodMoon§r', '§f§lCreeper BloodMoon', '§r§f§lCreeper BloodMoon', '§f§lCreeper BloodMoon§r', '§gCreeper BloodMoon', '§r§gCreeper BloodMoon', '§gCreeper BloodMoon§r', '§g§lCreeper BloodMoon', '§r§g§lCreeper BloodMoon', '§g§lCreeper BloodMoon§r', '§hCreeper BloodMoon', '§r§hCreeper BloodMoon', '§hCreeper BloodMoon§r', '§h§lCreeper BloodMoon', '§r§h§lCreeper BloodMoon', '§h§lCreeper BloodMoon§r', '§iCreeper BloodMoon', '§r§iCreeper BloodMoon', '§iCreeper BloodMoon§r', '§i§lCreeper BloodMoon', '§r§i§lCreeper BloodMoon', '§i§lCreeper BloodMoon§r', '§jCreeper BloodMoon', '§r§jCreeper BloodMoon', '§jCreeper BloodMoon§r', '§j§lCreeper BloodMoon', '§r§j§lCreeper BloodMoon', '§j§lCreeper BloodMoon§r', '§mCreeper BloodMoon', '§r§mCreeper BloodMoon', '§mCreeper BloodMoon§r', '§m§lCreeper BloodMoon', '§r§m§lCreeper BloodMoon', '§m§lCreeper BloodMoon§r', '§nCreeper BloodMoon', '§r§nCreeper BloodMoon', '§nCreeper BloodMoon§r', '§n§lCreeper BloodMoon', '§r§n§lCreeper BloodMoon', '§n§lCreeper BloodMoon§r', '§pCreeper BloodMoon', '§r§pCreeper BloodMoon', '§pCreeper BloodMoon§r', '§p§lCreeper BloodMoon', '§r§p§lCreeper BloodMoon', '§p§lCreeper BloodMoon§r', '§qCreeper BloodMoon', '§r§qCreeper BloodMoon', '§qCreeper BloodMoon§r', '§q§lCreeper BloodMoon', '§r§q§lCreeper BloodMoon', '§q§lCreeper BloodMoon§r', '§sCreeper BloodMoon', '§r§sCreeper BloodMoon', '§sCreeper BloodMoon§r', '§s§lCreeper BloodMoon', '§r§s§lCreeper BloodMoon', '§s§lCreeper BloodMoon§r', '§tCreeper BloodMoon', '§r§tCreeper BloodMoon', '§tCreeper BloodMoon§r', '§t§lCreeper BloodMoon', '§r§t§lCreeper BloodMoon', '§t§lCreeper BloodMoon§r', '§uCreeper BloodMoon', '§r§uCreeper BloodMoon', '§uCreeper BloodMoon§r', '§u§lCreeper BloodMoon', '§r§u§lCreeper BloodMoon', '§u§lCreeper BloodMoon§r');",
+          "variable.quaso_custom = variable.quaso_creeper2 || variable.quaso_creeper3 || variable.quaso_creeper4;"
+        ],
+        "animate": [
+          "creeper_head_controller",
+          "creeper_legs_controller",
+          "creeper_swelling_controller",
+          {
+            "creeper2": "variable.quaso_creeper2"
+          },
+          {
+            "creeper3": "variable.quaso_creeper3"
+          },
+          {
+            "creeper4": "variable.quaso_creeper4"
+          }
+        ]
+      },
+      "animations": {
+        "creeper_head": "animation.common.look_at_target",
+        "creeper_legs": "animation.creeper.legs",
+        "creeper_swelling": "animation.creeper.swelling",
+        "creeper_head_controller": "controller.animation.creeper.head",
+        "creeper_legs_controller": "controller.animation.creeper.legs",
+        "creeper_swelling_controller": "controller.animation.creeper.swelling",
+        "creeper2": "animation.quaso.creeper2",
+        "creeper3": "animation.quaso.creeper3",
+        "creeper4": "animation.quaso.creeper4"
+      },
+      "animation_controllers": [
+        {
+          "creeper_head": "controller.animation.creeper.head"
+        },
+        {
+          "creeper_legs": "controller.animation.creeper.legs"
+        },
+        {
+          "creeper_swelling": "controller.animation.creeper.swelling"
+        }
+      ],
+      "render_controllers": [
+        {
+          "controller.render.creeper": "!variable.quaso_custom"
+        },
+        {
+          "controller.render.creeper_armor": "(query.is_powered) && !variable.quaso_custom"
+        },
+        {
+          "controller.render.quaso.creeper2": "variable.quaso_creeper2"
+        },
+        {
+          "controller.render.quaso.creeper3": "variable.quaso_creeper3"
+        },
+        {
+          "controller.render.quaso.creeper3_e": "variable.quaso_creeper3"
+        },
+        {
+          "controller.render.quaso.creeper4": "variable.quaso_creeper4"
+        },
+        {
+          "controller.render.quaso.creeper4_e": "variable.quaso_creeper4"
+        }
+      ]
+    }
+  }
+}

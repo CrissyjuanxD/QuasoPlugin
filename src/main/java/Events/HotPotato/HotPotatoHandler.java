@@ -1,5 +1,6 @@
 package Events.HotPotato;
 
+import Managers.Mundos;
 import Commands.TiempoCommand;
 import Habilidades.HabilidadesEffects;
 import Habilidades.HabilidadesManager;
@@ -192,7 +193,7 @@ public class HotPotatoHandler implements Listener {
         double espX = config.getDouble("espectadores.x", 21000.5);
         double espY = config.getDouble("espectadores.y", 100.0);
         double espZ = config.getDouble("espectadores.z", 21000.5);
-        this.zonaEspectadores = new Location(Bukkit.getWorld("world"), espX, espY, espZ);
+        this.zonaEspectadores = new Location(Mundos.mundoEventos(), espX, espY, espZ);
     }
 
     private boolean isInsideArena(Location loc) {
@@ -270,7 +271,7 @@ public class HotPotatoHandler implements Listener {
             aplicarTeamHotPotato(p);
         }
 
-        World world = Bukkit.getWorld("world");
+        World world = Mundos.mundoEventos();
         if (world != null) world.setGameRule(GameRules.SEND_COMMAND_FEEDBACK, false);
 
         int totalSeconds = parseTimeToSeconds(timerStart);
@@ -301,7 +302,7 @@ public class HotPotatoHandler implements Listener {
                 participantes.add(p.getName());
                 aplicarTeamHotPotato(p);
             }
-            World world = Bukkit.getWorld("world");
+            World world = Mundos.mundoEventos();
             if (world != null) world.setGameRule(GameRules.SEND_COMMAND_FEEDBACK, false);
         }
 
@@ -315,7 +316,7 @@ public class HotPotatoHandler implements Listener {
     // Les limpia el inventario, desactiva sus habilidades y los tepea de a uno con /magictp
     private void teletransportarJugadores() {
         tpRealizado = true;
-        World world = Bukkit.getWorld("world");
+        World world = Mundos.mundoEventos();
         eliminarMobsExistentes();
 
         int i = 0;
@@ -1099,7 +1100,7 @@ public class HotPotatoHandler implements Listener {
         }
         playerScoreboards.clear();
 
-        World world = Bukkit.getWorld("world");
+        World world = Mundos.mundoEventos();
         if (world != null) {
             world.setGameRule(GameRules.SEND_COMMAND_FEEDBACK, true);
         }
@@ -1282,7 +1283,7 @@ public class HotPotatoHandler implements Listener {
     }
 
     private void spawnParticleIfClose(List<Player> players, Particle p, int x, int y, int z) {
-        Location loc = new Location(Bukkit.getWorld("world"), x + 0.5, y + 0.5, z + 0.5);
+        Location loc = new Location(Mundos.mundoEventos(), x + 0.5, y + 0.5, z + 0.5);
         for (Player player : players) {
             if (player.getLocation().distanceSquared(loc) < 1600) {
                 player.spawnParticle(p, loc, 1, 0, 0, 0, 0);
@@ -1342,7 +1343,7 @@ public class HotPotatoHandler implements Listener {
                     this.cancel();
                     return;
                 }
-                World world = Bukkit.getWorld("world");
+                World world = Mundos.mundoEventos();
                 if (world != null) {
                     for (Entity entity : world.getEntities()) {
                         if (entity instanceof Mob && isInsideArena(entity.getLocation())) {
@@ -1357,7 +1358,7 @@ public class HotPotatoHandler implements Listener {
 
     private void spawnRandomPowerup() {
         if (!enBatalla) return;
-        World w = Bukkit.getWorld("world");
+        World w = Mundos.mundoEventos();
         Location loc = getSafeLocation(w);
 
         if(loc.getBlockX() < minX || loc.getBlockX() > maxX || loc.getBlockZ() < minZ || loc.getBlockZ() > maxZ) return;

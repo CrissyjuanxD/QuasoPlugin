@@ -175,7 +175,7 @@ public class AmuletoUltimaEsperanza implements Listener {
             return respawn;
         }
 
-        World overworld = Bukkit.getWorlds().get(0);
+        World overworld = Managers.Mundos.mundoPrincipal();
         return overworld.getSpawnLocation();
     }
 

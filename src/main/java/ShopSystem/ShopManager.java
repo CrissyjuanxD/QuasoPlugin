@@ -115,7 +115,10 @@ public class ShopManager {
             return invMeta != null && invMeta.hasDisplayName() && invMeta.getDisplayName().equals(reqMeta.getDisplayName());
         }
 
-        return true;
+        // Si se pide un item vanilla (un bundle, un tótem, un arco...) no cuenta un item custom del mismo material ni uno
+        // encantado o con nombre: así no se cobra una mochila (echo shard) o un tótem custom por error
+        return invMeta == null || (!invMeta.hasCustomModelData() && !invMeta.hasDisplayName() && !invMeta.hasEnchants()
+                && invMeta.getPersistentDataContainer().isEmpty());
     }
 
     // Cambia un ingrediente o el producto de un tradeo desde el menú de configuración
@@ -331,7 +334,7 @@ public class ShopManager {
         for (int i = 0; i < 10; i++) {
             CatalogoTienda.Oferta oferta = i < tienda.ofertas().size() ? tienda.ofertas().get(i) : null;
             MerchantRecipe recipe = oferta != null && CatalogoTienda.abierta(oferta, seccion)
-                    ? tradeo(oferta, CatalogoTienda.precioFinal(oferta, seccion, manuales.get(oferta.producto()), ajuste)) : null;
+                    ? tradeo(oferta, seccion, CatalogoTienda.precioFinal(oferta, seccion, manuales.get(oferta.producto()), ajuste)) : null;
             if (recipe == null) {
                 recipe = new MerchantRecipe(createEmptyTradeItem(), 9999);
                 recipe.addIngredient(createEmptyTradeItem());
@@ -343,17 +346,20 @@ public class ShopManager {
         if (villager != null) villager.setRecipes(recipes);
     }
 
-    // Precio de más de 64 DinoCoins: un stack en el primer lugar y el resto en el segundo
-    private MerchantRecipe tradeo(CatalogoTienda.Oferta oferta, int precio) {
+    // Las DinoCoins van en el primer lugar y el item extra en el segundo. Si el precio pasa de 64 (o ya es el día 50)
+    // el extra se quita y el resto de las DinoCoins va en el segundo lugar
+    private MerchantRecipe tradeo(CatalogoTienda.Oferta oferta, int seccion, int precio) {
         ItemStack producto = CustomItemRegistry.getCustomItem(oferta.producto(), oferta.cantidadProducto());
         ItemStack pago = CustomItemRegistry.getCustomItem(oferta.pago(), Math.min(64, precio));
-        if (producto == null || pago == null) {
-            plugin.getLogger().warning("Catálogo de la tienda: no existe el item " + (producto == null ? oferta.producto() : oferta.pago()));
+        ItemStack extra = CatalogoTienda.conExtra(oferta, seccion, precio) ? CustomItemRegistry.getCustomItem(oferta.extra(), oferta.cantidadExtra()) : null;
+        if (producto == null || pago == null || (CatalogoTienda.conExtra(oferta, seccion, precio) && extra == null)) {
+            plugin.getLogger().warning("Catálogo de la tienda: no existe el item " + (producto == null ? oferta.producto() : pago == null ? oferta.pago() : oferta.extra()));
             return null;
         }
         MerchantRecipe recipe = new MerchantRecipe(producto, 9999);
         recipe.addIngredient(pago);
-        if (precio > 64) recipe.addIngredient(CustomItemRegistry.getCustomItem(oferta.pago(), precio - 64));
+        if (extra != null) recipe.addIngredient(extra);
+        else if (precio > 64) recipe.addIngredient(CustomItemRegistry.getCustomItem(oferta.pago(), precio - 64));
         return recipe;
     }
 

@@ -1,7 +1,6 @@
 package ShopSystem;
 
 import net.md_5.bungee.api.ChatColor;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.NamespacedKey;
 import org.bukkit.Registry;
@@ -74,8 +73,8 @@ public class TiendaCommand implements CommandExecutor, TabCompleter {
         return true;
     }
 
+    // Ya no se anuncia en el chat: el anuncio lo hace el admin a mano
     private void cambiarSeccion(CommandSender sender, int seccion) {
-        int antes = shopManager.getSeccion();
         shopManager.setSeccion(seccion);
         int actualizadas = 0;
         for (Map.Entry<String, String> entrada : shopManager.getCatalogos().entrySet()) {
@@ -86,10 +85,6 @@ public class TiendaCommand implements CommandExecutor, TabCompleter {
         }
         sender.sendMessage(PREFIJO + "Sección " + BLANCO + seccion + GRIS + " (día " + CatalogoTienda.diaDeLaSeccion(seccion) + ")"
                 + ChatColor.of("#F5EBDD") + ": " + BLANCO + actualizadas + ChatColor.of("#F5EBDD") + " aldeanos actualizados.");
-        if (seccion > antes) {
-            Bukkit.broadcastMessage(PREFIJO + DORADO + "¡La tienda del spawn se actualizó!" + ChatColor.of("#F5EBDD")
-                    + " Hay items nuevos y lo que ya estaba subió de precio. " + GRIS + "/tiendas");
-        }
     }
 
     // Aparece un aldeano nuevo donde estás, con el nombre y los tradeos de esa tienda del catálogo
@@ -254,7 +249,9 @@ public class TiendaCommand implements CommandExecutor, TabCompleter {
             if (!CatalogoTienda.abierta(oferta, seccion)) {
                 linea += GRIS + "(día " + CatalogoTienda.diaDeLaSeccion(oferta.seccion()) + ")";
             } else {
-                linea += DORADO + "" + CatalogoTienda.precioFinal(oferta, seccion, manuales.get(oferta.producto()), ajuste) + " " + oferta.pago()
+                int precio = CatalogoTienda.precioFinal(oferta, seccion, manuales.get(oferta.producto()), ajuste);
+                linea += DORADO + "" + precio + " " + oferta.pago()
+                        + (CatalogoTienda.conExtra(oferta, seccion, precio) ? BLANCO + " + " + oferta.cantidadExtra() + " " + oferta.extra() : "")
                         + (manuales.containsKey(oferta.producto()) ? GRIS + " (a mano)" : "");
             }
             sender.sendMessage(linea);

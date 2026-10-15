@@ -1,0 +1,10 @@
+# Nombres de los mundos del server. Después de cambiarlos reinicia el server.
+
+# El mundo principal (el Overworld). En el server real se llama Crossiants.
+principal: Crossiants
+
+# Donde se juegan los eventos (Hot Potato, Skybattle y Build Battle). Si lo borras usa el principal.
+eventos: Crossiants
+
+# La dimensión de la Warden Cave. Si la cambias se crea una carpeta de mundo nueva con ese nombre.
+warden_cave: wardencave

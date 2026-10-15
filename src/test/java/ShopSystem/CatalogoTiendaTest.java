@@ -34,6 +34,7 @@ class CatalogoTiendaTest {
             for (CatalogoTienda.Oferta oferta : tienda.ofertas()) {
                 assertTrue(existe(oferta.producto()), oferta.producto());
                 assertTrue(existe(oferta.pago()), oferta.pago());
+                if (oferta.extra() != null) assertTrue(existe(oferta.extra()), oferta.extra());
                 assertTrue(oferta.seccion() >= 1 && oferta.seccion() <= CatalogoTienda.DIAS.length);
             }
         }
@@ -47,7 +48,10 @@ class CatalogoTiendaTest {
                 "fragmento_profundo_cian", "fragmento_profundo_verde", "fragmento_profundo_morado", "fragmento_profundo_gris",
                 "lingote_profundo", "cristal_celestita", "lingote_celestita", "plantilla_celestita", "enderking_pearl",
                 "espada_celestita", "hacha_celestita", "lanza_celestita", "pico_celestita", "pala_celestita",
-                "azada_celestita", "peto_warden_alado");
+                "azada_celestita", "peto_warden_alado", "alma_infested_skeleton", "alma_infested_ghast",
+                "alma_infested_creeper", "alma_infested_cave_spider", "energia_warden", "tejido_sculk", "nucleo_sonico",
+                "corazon_warden_boss", "ojo_rey_ender", "fragmento_astral", "esencia_marchita", "baya_sculk",
+                "fruta_abisal", "baya_luminosa");
         for (CatalogoTienda.Tienda tienda : CatalogoTienda.tiendas()) {
             for (CatalogoTienda.Oferta oferta : tienda.ofertas()) {
                 assertFalse(prohibidos.contains(oferta.producto()), oferta.producto());
@@ -86,6 +90,38 @@ class CatalogoTiendaTest {
         assertEquals(7, CatalogoTienda.precioFinal(mochila, 3, 7, 50));
         assertEquals(1, CatalogoTienda.precioFinal(mochila, 1, null, -99));
         assertEquals(CatalogoTienda.PRECIO_MAXIMO, CatalogoTienda.precioFinal(mochila, 6, null, 300));
+    }
+
+    @Test
+    void theExtraGoesInTheSecondSlotUntilThePriceNeedsItOrDayFifty() {
+        CatalogoTienda.Oferta mochila = new CatalogoTienda.Oferta("mochila_nivel_1", 1, "dinocoins", 15, 1, false).con("bundle", 1);
+        assertTrue(CatalogoTienda.conExtra(mochila, 1, 15));
+        assertTrue(CatalogoTienda.conExtra(mochila, 4, 64));
+        assertFalse(CatalogoTienda.conExtra(mochila, 4, 65));
+        assertFalse(CatalogoTienda.conExtra(mochila, CatalogoTienda.SIN_EXTRAS_DESDE, 20));
+        assertFalse(CatalogoTienda.conExtra(new CatalogoTienda.Oferta("bar_tequila", 1, "dinocoins", 1, 1, false), 1, 1));
+
+        int conExtra = 0, total = 0;
+        for (CatalogoTienda.Tienda tienda : CatalogoTienda.tiendas()) {
+            for (CatalogoTienda.Oferta oferta : tienda.ofertas()) {
+                if (oferta.fijo()) continue;
+                total++;
+                if (oferta.extra() != null) conExtra++;
+            }
+        }
+        assertTrue(conExtra * 2 > total, conExtra + " de " + total);
+    }
+
+    @Test
+    void backpacksOneToThreeOnDayOneFourThenFive() {
+        CatalogoTienda.Tienda mochilas = CatalogoTienda.tienda("mochilas");
+        Map<String, Integer> seccion = new HashMap<>();
+        for (CatalogoTienda.Oferta oferta : mochilas.ofertas()) seccion.put(oferta.producto(), oferta.seccion());
+        assertEquals(1, seccion.get("mochila_nivel_1"));
+        assertEquals(1, seccion.get("mochila_nivel_2"));
+        assertEquals(1, seccion.get("mochila_nivel_3"));
+        assertEquals(2, seccion.get("mochila_nivel_4"));
+        assertEquals(3, seccion.get("mochila_nivel_5"));
     }
 
     @Test

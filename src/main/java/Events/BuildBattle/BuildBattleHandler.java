@@ -1,5 +1,6 @@
 package Events.BuildBattle;
 
+import Managers.Mundos;
 import Commands.TiempoCommand;
 import Handlers.EventInventoryManager;
 import Handlers.Teams.TeamType;
@@ -253,7 +254,7 @@ public class BuildBattleHandler implements Listener {
         if (!dataFile.exists()) {
             try { dataFile.createNewFile(); } catch (IOException ignored) {}
             data = YamlConfiguration.loadConfiguration(dataFile);
-            World mundoPrincipal = Bukkit.getWorlds().get(0);
+            World mundoPrincipal = Mundos.mundoEventos();
             data.set("centro", new Location(mundoPrincipal, 22000, 101, 22000));
             try { data.save(dataFile); } catch (IOException ignored) {}
         } else {
@@ -386,7 +387,7 @@ public class BuildBattleHandler implements Listener {
         puntajesConfig.set("puntajes", null);
         try { puntajesConfig.save(puntajesFile); } catch (IOException ignored) {}
 
-        World w = Bukkit.getWorlds().get(0);
+        World w = Mundos.mundoEventos();
         if (w != null) w.setGameRule(GameRules.SEND_COMMAND_FEEDBACK, false);
 
         inicializarTeam();
@@ -405,7 +406,7 @@ public class BuildBattleHandler implements Listener {
 
         entityCleanupTask = Bukkit.getScheduler().runTaskTimer(plugin, () -> {
             if (!eventoIniciado) return;
-            World world = centroMapa != null ? centroMapa.getWorld() : Bukkit.getWorlds().get(0);
+            World world = centroMapa != null ? centroMapa.getWorld() : Mundos.mundoEventos();
             if (world != null) {
                 for (Entity ent : world.getEntities()) {
                     if (ent instanceof Player || ent instanceof TextDisplay || ent instanceof Painting || ent instanceof ItemFrame || ent instanceof ArmorStand) continue;
@@ -521,7 +522,7 @@ public class BuildBattleHandler implements Listener {
             public void run() {
                 tiempoCommand.removeBossBar("bb_timer");
                 tpRealizado = true;
-                Location center = centroMapa != null ? centroMapa.clone().add(0, 2, 0) : Bukkit.getWorlds().get(0).getSpawnLocation();
+                Location center = centroMapa != null ? centroMapa.clone().add(0, 2, 0) : Mundos.mundoPrincipal().getSpawnLocation();
                 realizarTpProgresivo(center);
             }
         }.runTaskLater(plugin, delay * 20L);
@@ -890,7 +891,7 @@ public class BuildBattleHandler implements Listener {
                     p.updateTextDisplay();
                 }
 
-                World world = centroMapa != null ? centroMapa.getWorld() : Bukkit.getWorlds().get(0);
+                World world = centroMapa != null ? centroMapa.getWorld() : Mundos.mundoEventos();
                 if (world != null) {
                     for (Entity ent : world.getEntities()) {
                         if (isInsideArenaFast(ent.getLocation())) {
@@ -1098,7 +1099,7 @@ public class BuildBattleHandler implements Listener {
             parcel.resetOwnerAndPoints();
         }
 
-        World world = Bukkit.getWorld("world");
+        World world = Mundos.mundoEventos();
         if (world != null) {
             for (Entity entity : world.getEntities()) {
                 if (isInsideArenaFast(entity.getLocation())) {
@@ -1126,7 +1127,7 @@ public class BuildBattleHandler implements Listener {
         tiempoCommand.removeBossBar("bb_timer");
         cancelarTareasActivas();
 
-        World w = Bukkit.getWorlds().get(0);
+        World w = Mundos.mundoEventos();
         if (w != null) w.setGameRule(GameRules.SEND_COMMAND_FEEDBACK, true);
 
         pendingTpFinal.clear();
@@ -1184,7 +1185,7 @@ public class BuildBattleHandler implements Listener {
             parcel.resetOwnerAndPoints();
         }
 
-        World worldToClean = Bukkit.getWorld("world");
+        World worldToClean = Mundos.mundoEventos();
         if (worldToClean != null) {
             for (Entity entity : worldToClean.getEntitiesByClass(TextDisplay.class)) {
                 if (isInsideArenaFast(entity.getLocation())) {
@@ -1203,7 +1204,7 @@ public class BuildBattleHandler implements Listener {
         }
         for (String name : pendingTpFinal) {
             Player p = Bukkit.getPlayer(name);
-            if (p != null) teleportMagico(p, p.getRespawnLocation() != null ? p.getRespawnLocation() : Bukkit.getWorlds().get(0).getSpawnLocation());
+            if (p != null) teleportMagico(p, p.getRespawnLocation() != null ? p.getRespawnLocation() : Mundos.mundoPrincipal().getSpawnLocation());
         }
         pendingTpFinal.clear();
         broadcastEventZona(cPrimary + "Todos han sido teletransportados a sus bases.");
@@ -1557,7 +1558,7 @@ public class BuildBattleHandler implements Listener {
     }
 
     public void eliminarMobsExistentes() {
-        World world = Bukkit.getWorld("world");
+        World world = Mundos.mundoEventos();
         if (world != null) {
             for (Entity entity : world.getEntities()) {
                 if (entity instanceof Monster mob && isInsideArenaFast(entity.getLocation())) mob.remove();
@@ -1572,7 +1573,7 @@ public class BuildBattleHandler implements Listener {
             restaurarTeamOriginal(p.getName());
             restoreInventorySafe(p);
             if (isInsideArenaFast(p.getLocation())) {
-                p.teleportAsync(p.getRespawnLocation() != null ? p.getRespawnLocation() : Bukkit.getWorlds().get(0).getSpawnLocation());
+                p.teleportAsync(p.getRespawnLocation() != null ? p.getRespawnLocation() : Mundos.mundoPrincipal().getSpawnLocation());
             }
             if (p.getGameMode() == GameMode.CREATIVE || p.getGameMode() == GameMode.ADVENTURE) p.setGameMode(GameMode.SURVIVAL);
         } else {
@@ -2162,7 +2163,7 @@ public class BuildBattleHandler implements Listener {
                 p.setAllowFlight(false);
                 p.setFlying(false);
                 p.setScoreboard(Bukkit.getScoreboardManager().getMainScoreboard());
-                Location spawn = p.getRespawnLocation() != null ? p.getRespawnLocation() : Bukkit.getWorlds().get(0).getSpawnLocation();
+                Location spawn = p.getRespawnLocation() != null ? p.getRespawnLocation() : Mundos.mundoPrincipal().getSpawnLocation();
                 p.teleport(spawn);
             }
         }
@@ -2211,7 +2212,7 @@ public class BuildBattleHandler implements Listener {
                 p.setAllowFlight(false);
                 p.setFlying(false);
                 p.setScoreboard(Bukkit.getScoreboardManager().getMainScoreboard());
-                Location spawn = p.getRespawnLocation() != null ? p.getRespawnLocation() : Bukkit.getWorlds().get(0).getSpawnLocation();
+                Location spawn = p.getRespawnLocation() != null ? p.getRespawnLocation() : Mundos.mundoPrincipal().getSpawnLocation();
                 p.teleport(spawn);
             }
         }
@@ -2290,7 +2291,7 @@ public class BuildBattleHandler implements Listener {
                 p.setAllowFlight(false);
                 p.setFlying(false);
 
-                Location spawn = p.getRespawnLocation() != null ? p.getRespawnLocation() : Bukkit.getWorlds().get(0).getSpawnLocation();
+                Location spawn = p.getRespawnLocation() != null ? p.getRespawnLocation() : Mundos.mundoPrincipal().getSpawnLocation();
                 p.teleport(spawn);
 
                 p.setScoreboard(Bukkit.getScoreboardManager().getMainScoreboard());

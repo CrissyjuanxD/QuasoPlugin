@@ -139,7 +139,7 @@ public final class WebSync implements CommandExecutor, TabCompleter {
         }
         github = new GitHubLive(repo, rama.isEmpty() ? "main" : rama, token, ntfy);
         if (jugadoresWeb == null) {
-            World mundo = Bukkit.getWorlds().isEmpty() ? null : Bukkit.getWorlds().get(0);
+            World mundo = Bukkit.getWorlds().isEmpty() ? null : Managers.Mundos.mundoPrincipal();
             jugadoresWeb = new JugadoresWeb(mundo == null ? null : new File(mundo.getWorldFolder(), "stats"));
         }
         tareaEstado = Bukkit.getScheduler().runTaskTimer(plugin, this::revisarEstado, 20L * 10, 20L * segundosEstado);

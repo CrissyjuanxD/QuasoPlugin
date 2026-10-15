@@ -191,7 +191,7 @@ public class GravesPublicCommand implements CommandExecutor, TabCompleter {
         return switch (world.getEnvironment()) {
             case NETHER -> "Nether";
             case THE_END -> "End";
-            default -> world.getName().equalsIgnoreCase("wardencave") ? "Warden Cave" : world.getName().equals("world") ? "Overworld" : world.getName();
+            default -> world.getName().equalsIgnoreCase(Managers.Mundos.wardenCave()) ? "Warden Cave" : world.getName().equals(Managers.Mundos.principal()) ? "Overworld" : world.getName();
         };
     }
 

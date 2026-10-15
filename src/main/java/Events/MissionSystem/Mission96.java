@@ -41,7 +41,7 @@ public class Mission96 extends BaseMission {
     // Al terminar la BloodMoon suma una si el jugador la aguantó entera sin morir
     @Override
     protected void tick(Player player) {
-        World world = Bukkit.getWorlds().get(0);
+        World world = Managers.Mundos.mundoPrincipal();
         UUID id = player.getUniqueId();
         if (MissionUtils.isBloodMoon(world)) {
             long night = MissionUtils.dayId(world);
@@ -54,7 +54,7 @@ public class Mission96 extends BaseMission {
     @EventHandler
     public void onDeath(PlayerDeathEvent event) {
         Player player = event.getEntity();
-        World world = Bukkit.getWorlds().get(0);
+        World world = Managers.Mundos.mundoPrincipal();
         if (!tracking(player) || !MissionUtils.isBloodMoon(world)) return;
 
         died.put(player.getUniqueId(), MissionUtils.dayId(world));

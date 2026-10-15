@@ -49,7 +49,7 @@ public class SpawnMobs implements CommandExecutor, TabCompleter {
 
         if (args.length >= 4) {
             try {
-                World world = sender instanceof Player ? ((Player) sender).getWorld() : Bukkit.getWorlds().get(0);
+                World world = sender instanceof Player ? ((Player) sender).getWorld() : Managers.Mundos.mundoPrincipal();
                 double x = Double.parseDouble(args[args.length - 3]);
                 double y = Double.parseDouble(args[args.length - 2]);
                 double z = Double.parseDouble(args[args.length - 1]);

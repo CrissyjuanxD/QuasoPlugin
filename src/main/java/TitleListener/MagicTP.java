@@ -50,7 +50,7 @@ public class MagicTP implements CommandExecutor, TabCompleter {
                     if (sender instanceof Player) {
                         targetWorld = ((Player) sender).getWorld();
                     } else {
-                        targetWorld = Bukkit.getWorlds().get(0);
+                        targetWorld = Managers.Mundos.mundoPrincipal();
                     }
                 }
 
@@ -85,7 +85,7 @@ public class MagicTP implements CommandExecutor, TabCompleter {
         new BukkitRunnable() {
             @Override
             public void run() {
-                World mainWorld = Bukkit.getWorlds().get(0);
+                World mainWorld = Managers.Mundos.mundoPrincipal();
 
                 for (Player player : players) {
                     if (useSpawn) {

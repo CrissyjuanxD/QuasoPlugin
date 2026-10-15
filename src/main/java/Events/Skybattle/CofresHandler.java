@@ -1,5 +1,6 @@
 package Events.Skybattle;
 
+import Managers.Mundos;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -29,7 +30,7 @@ public class CofresHandler {
     public void guardarContenidoCofres(int minX, int maxX, int minZ, int maxZ) {
         contenidoCofres.clear();
 
-        World world = Bukkit.getWorld("world");
+        World world = Mundos.mundoEventos();
         if (world == null) {
             plugin.getLogger().severe("No se encontró el mundo 'survival'.");
             return;

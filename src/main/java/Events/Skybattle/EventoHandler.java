@@ -1,5 +1,6 @@
 package Events.Skybattle;
 
+import Managers.Mundos;
 import Habilidades.HabilidadesEffects;
 import Habilidades.HabilidadesManager;
 import Handlers.EventInventoryManager;
@@ -177,7 +178,7 @@ public class EventoHandler implements Listener {
         double espZ = config.getDouble("espectadores.z", 20000.27);
         float espYaw = (float) config.getDouble("espectadores.yaw", -1979.64);
         float espPitch = (float) config.getDouble("espectadores.pitch", 0.46);
-        zonaEspectadores = new Location(Bukkit.getWorld("world"), espX, espY, espZ, espYaw, espPitch);
+        zonaEspectadores = new Location(Mundos.mundoEventos(), espX, espY, espZ, espYaw, espPitch);
     }
 
     private int parseTimeToSeconds(String timeString) {
@@ -257,7 +258,7 @@ public class EventoHandler implements Listener {
                 }
             }
 
-            World world = Bukkit.getWorld("world");
+            World world = Mundos.mundoEventos();
             if (world != null) world.setGameRule(GameRules.SEND_COMMAND_FEEDBACK, false);
             guardarEstadoEvento();
 
@@ -295,7 +296,7 @@ public class EventoHandler implements Listener {
                 }
             }
 
-            World world = Bukkit.getWorld("world");
+            World world = Mundos.mundoEventos();
             if (world != null) world.setGameRule(GameRules.SEND_COMMAND_FEEDBACK, false);
             guardarEstadoEvento();
         }
@@ -386,7 +387,7 @@ public class EventoHandler implements Listener {
             }
         }
 
-        World world = Bukkit.getWorld("world");
+        World world = Mundos.mundoEventos();
         if (world != null) {
             org.bukkit.util.BoundingBox arenaBox = new org.bukkit.util.BoundingBox(arenaMinX, arenaMinY, arenaMinZ, arenaMaxX, arenaMaxY, arenaMaxZ);
             for (Entity entity : world.getNearbyEntities(arenaBox)) {
@@ -571,7 +572,7 @@ public class EventoHandler implements Listener {
         for (int x = arenaMinX; x <= arenaMaxX; x++) {
             for (int y = arenaMinY; y <= arenaMaxY; y++) {
                 for (int z = arenaMinZ; z <= arenaMaxZ; z++) {
-                    Location loc = new Location(Bukkit.getWorld("world"), x, y, z);
+                    Location loc = new Location(Mundos.mundoEventos(), x, y, z);
                     if (loc.getBlock().getType() == Material.SHROOMLIGHT) {
                         locations.add(loc);
                     }
@@ -959,7 +960,7 @@ public class EventoHandler implements Listener {
     private void spawnParticleIfClose(List<Player> players, Particle p, int x, int y, int z) {
         if (x == 20000 && z == 20000) return;
 
-        Location loc = new Location(Bukkit.getWorld("world"), x + 0.5, y + 0.5, z + 0.5);
+        Location loc = new Location(Mundos.mundoEventos(), x + 0.5, y + 0.5, z + 0.5);
         for (Player player : players) {
             if (player.getLocation().distanceSquared(loc) < 1600) {
                 player.spawnParticle(p, loc, 1, 0, 0, 0, 0);
@@ -1372,7 +1373,7 @@ public class EventoHandler implements Listener {
         for (int x = arenaMinX; x <= arenaMaxX; x++) {
             for (int y = arenaMinY; y <= arenaMaxY; y++) {
                 for (int z = arenaMinZ; z <= arenaMaxZ; z++) {
-                    Location loc = new Location(Bukkit.getWorld("world"), x, y, z);
+                    Location loc = new Location(Mundos.mundoEventos(), x, y, z);
                     if (loc.getBlock().getType() == Material.PURPLE_CONCRETE || loc.getBlock().getType() == Material.COBWEB) {
                         loc.getBlock().setType(Material.AIR);
                     }
@@ -1579,7 +1580,7 @@ public class EventoHandler implements Listener {
 
     public void eliminarMobsExistentes() {
         if (!eventoActivo) return;
-        World world = Bukkit.getWorld("world");
+        World world = Mundos.mundoEventos();
         if (world == null) return;
 
         org.bukkit.util.BoundingBox arenaBox = new org.bukkit.util.BoundingBox(arenaMinX, arenaMinY, arenaMinZ, arenaMaxX, arenaMaxY, arenaMaxZ);

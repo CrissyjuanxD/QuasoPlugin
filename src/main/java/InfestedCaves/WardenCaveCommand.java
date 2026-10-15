@@ -123,7 +123,7 @@ public class WardenCaveCommand implements CommandExecutor, TabCompleter {
 
     private void executeJoinLeave(CommandSender sender, Player p, String action, boolean center) {
         if (action.equals("leave")) {
-            p.teleport(Bukkit.getWorlds().get(0).getSpawnLocation());
+            p.teleport(Managers.Mundos.mundoPrincipal().getSpawnLocation());
             p.sendMessage(ChatColor.GREEN + "Enviado al spawn del Overworld.");
             sender.sendMessage(ChatColor.GREEN + "Ejecutado para " + p.getName());
             return;

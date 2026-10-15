@@ -171,7 +171,8 @@ public class QuasoPlugin extends JavaPlugin implements Listener {
     private StatueDebugManager statueDebugManager;
     private StatueSchematic statueSchematic;
 
-    public static final String WORLD_NAME = "wardencave";
+    // Se lee de mundos.yml al prender el plugin (warden_cave)
+    public static String WORLD_NAME = "wardencave";
     private WardenGenerator generator;
     private PortalManager portalManager;
     private WardenCaveListeners listeners;
@@ -186,6 +187,8 @@ public class QuasoPlugin extends JavaPlugin implements Listener {
         this.Version = getPluginMeta().getVersion();
 
         logStartup();
+        Managers.Mundos.cargar(this);
+        WORLD_NAME = Managers.Mundos.wardenCave();
         registerBaseListeners();
         saveDefaultConfig();
         bloodMoon = new BloodMoon(this);

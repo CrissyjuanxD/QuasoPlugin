@@ -8,6 +8,7 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Villager;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.MerchantRecipe;
@@ -19,18 +20,38 @@ import java.util.List;
 
 public class ShopGUI {
 
+    // El fondo de la tienda es una textura del resource pack que se dibuja con estos caracteres del título (igual que /menu)
+    static final String TITULO = "㈁㈁" + ChatColor.WHITE + "㈈";
+
     private final ShopManager shopManager;
+
+    // Marca los menús de tienda y de configurar: el título ahora es la textura, así que ya no sirve para reconocerlos
+    public static final class Vista implements InventoryHolder {
+        private final boolean config;
+        private Inventory inventory;
+
+        Vista(boolean config) {
+            this.config = config;
+        }
+
+        public boolean config() {
+            return config;
+        }
+
+        @Override
+        public Inventory getInventory() {
+            return inventory;
+        }
+    }
 
     public ShopGUI(ShopManager shopManager) {
         this.shopManager = shopManager;
     }
 
     public void openShopGUI(Player player, Villager villager) {
-        String villagerName = villager.getCustomName() != null ? villager.getCustomName() : "Tienda";
-        String title = ChatColor.GOLD + "" + ChatColor.BOLD + "Tienda: " + ChatColor.RESET + villagerName;
-        if (title.length() > 32) title = title.substring(0, 32);
-
-        Inventory gui = Bukkit.createInventory(null, 54, title);
+        Vista vista = new Vista(false);
+        Inventory gui = Bukkit.createInventory(vista, 54, TITULO);
+        vista.inventory = gui;
         setupSession(player, villager, gui, false);
     }
 
@@ -46,7 +67,9 @@ public class ShopGUI {
         String title = ChatColor.RED + "" + ChatColor.BOLD + "Configurar: " + ChatColor.RESET + villagerName;
         if (title.length() > 32) title = title.substring(0, 32);
 
-        Inventory gui = Bukkit.createInventory(null, 54, title);
+        Vista vista = new Vista(true);
+        Inventory gui = Bukkit.createInventory(vista, 54, title);
+        vista.inventory = gui;
         setupSession(player, villager, gui, true);
     }
 

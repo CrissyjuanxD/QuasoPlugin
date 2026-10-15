@@ -23,6 +23,7 @@ Todos van como el de misiones: `㈁㈁` (el espacio negativo de siempre) y despu
 | /menu | 6 | `㈃` (U+3203) |
 | Trabajos | 3 | `㈄` (U+3204) |
 | Habilidades | 6 | `㈅` (U+3205), las dos páginas usan el mismo |
+| Tiendas | 6 | `㈈` (U+3208), con los mismos splits `㈁㈁`; se reconocen por su holder, no por el título |
 
 ## Items invisibles
 

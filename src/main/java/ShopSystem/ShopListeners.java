@@ -16,6 +16,7 @@ import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.MerchantRecipe;
 import org.bukkit.persistence.PersistentDataType;
@@ -75,26 +76,25 @@ public class ShopListeners implements Listener {
         }
     }
 
+    // La tienda y el menú de configurar se reconocen por su holder (el título de la tienda es la textura)
+    private static ShopGUI.Vista vista(InventoryView view) {
+        return view.getTopInventory().getHolder() instanceof ShopGUI.Vista vista ? vista : null;
+    }
+
     @EventHandler
     public void onInventoryDrag(InventoryDragEvent event) {
-        String title = event.getView().getTitle();
-        if (title != null && (title.startsWith(ChatColor.GOLD + "" + ChatColor.BOLD + "Tienda:") ||
-                title.startsWith(ChatColor.RED + "" + ChatColor.BOLD + "Configurar:"))) {
-            event.setCancelled(true);
-        }
+        if (vista(event.getView()) != null) event.setCancelled(true);
     }
 
     @EventHandler
     public void onInventoryClick(InventoryClickEvent event) {
         if (!(event.getWhoClicked() instanceof Player)) return;
         Player player = (Player) event.getWhoClicked();
-        String title = event.getView().getTitle();
+        ShopGUI.Vista vista = vista(event.getView());
 
-        if (title == null) return;
-        boolean isShop = title.startsWith(ChatColor.GOLD + "" + ChatColor.BOLD + "Tienda:");
-        boolean isConfig = title.startsWith(ChatColor.RED + "" + ChatColor.BOLD + "Configurar:");
-
-        if (!isShop && !isConfig) return;
+        if (vista == null) return;
+        boolean isConfig = vista.config();
+        boolean isShop = !isConfig;
         event.setCancelled(true);
 
         if (event.getClickedInventory() != event.getView().getTopInventory()) return;
@@ -279,15 +279,11 @@ public class ShopListeners implements Listener {
     @EventHandler
     public void onInventoryClose(InventoryCloseEvent event) {
         Player player = (Player) event.getPlayer();
-        String title = event.getView().getTitle();
 
-        if (title != null && (title.startsWith(ChatColor.GOLD + "" + ChatColor.BOLD + "Tienda:") ||
-                title.startsWith(ChatColor.RED + "" + ChatColor.BOLD + "Configurar:"))) {
+        if (vista(event.getView()) != null) {
 
             Bukkit.getScheduler().runTaskLater(shopManager.getPlugin(), () -> {
-                String currentTitle = player.getOpenInventory().getTitle();
-                boolean stillInShop = currentTitle.startsWith(ChatColor.GOLD + "" + ChatColor.BOLD + "Tienda:") ||
-                        currentTitle.startsWith(ChatColor.RED + "" + ChatColor.BOLD + "Configurar:");
+                boolean stillInShop = vista(player.getOpenInventory()) != null;
 
                 if (!stillInShop && !shopManager.editingTradeIndex.containsKey(player.getUniqueId())) {
                     shopManager.activeShops.remove(player.getUniqueId());

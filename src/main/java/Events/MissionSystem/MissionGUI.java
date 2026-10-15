@@ -126,9 +126,9 @@ public class MissionGUI implements Listener {
 
         // Asigna el unicode correspondiente a la textura de cada sección
         String dynamicTitle = switch (tipo) {
-            case NORMAL -> "㈁㈁" + org.bukkit.ChatColor.WHITE + "㈂";  // \u3202
-            case EXTRA -> "㈁㈁" + org.bukkit.ChatColor.WHITE + "㈃";   // \u3203
-            case TRABAJO -> "㈁㈁" + org.bukkit.ChatColor.WHITE + "㈄"; // \u3204
+            case NORMAL -> "㈁" + org.bukkit.ChatColor.WHITE + "㈂";  // \u3202
+            case EXTRA -> "㈁" + org.bukkit.ChatColor.WHITE + "㈃";   // \u3203
+            case TRABAJO -> "㈁" + org.bukkit.ChatColor.WHITE + "㈄"; // \u3204
         };
 
         Inventory gui = Bukkit.createInventory(menu, 54, dynamicTitle);

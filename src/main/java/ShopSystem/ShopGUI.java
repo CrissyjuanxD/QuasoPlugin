@@ -21,7 +21,7 @@ import java.util.List;
 public class ShopGUI {
 
     // El fondo de la tienda es una textura del resource pack que se dibuja con estos caracteres del título (igual que /menu)
-    static final String TITULO = "㈁㈁" + ChatColor.WHITE + "㈈";
+    static final String TITULO = "㈁" + ChatColor.WHITE + "㈈";
 
     private final ShopManager shopManager;
 

@@ -26,7 +26,7 @@ import java.util.List;
 public class HabilidadesGUI implements Listener {
 
     // El fondo es una textura del resource pack que se dibuja con estos caracteres del título (igual que misiones)
-    static final String TITULO = "\u3201\u3201" + ChatColor.WHITE + "\u3206";
+    static final String TITULO = "\u3201" + ChatColor.WHITE + "\u3206";
 
     // Los slots que antes tenían tintes morados, magentas y negros
     static final int[] SEPARADORES = {0, 8, 45, 53, 1, 2, 3, 4, 5, 6, 7, 9, 17, 18, 26, 27, 35, 36, 44,

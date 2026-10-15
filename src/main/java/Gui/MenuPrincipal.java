@@ -28,7 +28,7 @@ import java.util.List;
 public class MenuPrincipal implements CommandExecutor, Listener {
 
     // El fondo es una textura del resource pack que se dibuja con estos caracteres del título (igual que misiones)
-    static final String TITULO = "\u3201\u3201" + ChatColor.WHITE + "\u3205";
+    static final String TITULO = "\u3201" + ChatColor.WHITE + "\u3205";
 
     private static final ChatColor GRIS = ChatColor.of("#B8B0C8");
     private static final ChatColor ROJO = ChatColor.of("#FF8A8A");

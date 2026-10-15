@@ -15,7 +15,7 @@ Los slots que sobran (0, 4, 8, 9, 13, 17, 18, 22, 26, 30, 31 y 32) llevan rellen
 
 ## Títulos para el resource pack
 
-Todos van como el de misiones: `㈁㈁` (el espacio negativo de siempre) y después el carácter de la textura en blanco.
+Todos van como el de misiones: `㈁` (un espacio de −8 en la fuente: `"type": "space"`, `"\u3201": -8`) y después el carácter de la textura en blanco.
 
 | Menú | Filas | Carácter nuevo |
 |---|---|---|
@@ -23,7 +23,7 @@ Todos van como el de misiones: `㈁㈁` (el espacio negativo de siempre) y despu
 | /menu | 6 | `㈃` (U+3203) |
 | Trabajos | 3 | `㈄` (U+3204) |
 | Habilidades | 6 | `㈅` (U+3205), las dos páginas usan el mismo |
-| Tiendas | 6 | `㈈` (U+3208), con los mismos splits `㈁㈁`; se reconocen por su holder, no por el título |
+| Tiendas | 6 | `㈈` (U+3208), con el mismo split `㈁`; se reconocen por su holder, no por el título |
 
 ## Items invisibles
 

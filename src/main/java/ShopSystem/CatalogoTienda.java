@@ -98,7 +98,7 @@ public final class CatalogoTienda {
                 vende("happy_ghast_enchant_2", 1, 60, 2).con("ghast_tear", 4),
                 vende("mochila_nivel_5", 1, 64, 3).con("shulker_shell", 2),
                 vende("amuleto_invisiblidad", 1, 60, 3).con("fermented_spider_eye", 8));
-        tienda("novedades_1", "&6&lNovedades &7(día 10)", "cartographer",
+        tienda("novedades_1", "&6&lNovedades 1", "cartographer",
                 vende("iman_botin", 1, 30, 1).con("hopper", 1),
                 vende("red_animales", 1, 25, 1).con("lead", 2),
                 vende("abono_concentrado", 4, 3, 1).con("bone_meal", 8),
@@ -109,7 +109,7 @@ public final class CatalogoTienda {
                 vende("elixir_minero", 1, 5, 1),
                 vende("elixir_igneo", 1, 6, 1).con("magma_cream", 2),
                 vende("galleta_fortuna", 4, 4, 1).con("cocoa_beans", 2));
-        tienda("novedades_2", "&3&lNovedades &7(día 20)", "cartographer",
+        tienda("novedades_2", "&3&lNovedades 2", "cartographer",
                 vende("bengala_sculk", 2, 4, 2),
                 vende("polvo_silencioso", 1, 8, 2).con("white_wool", 4),
                 vende("elixir_abisal", 1, 8, 2).con("prismarine_crystals", 4),
@@ -120,7 +120,7 @@ public final class CatalogoTienda {
                 vende("elixir_agilidad", 1, 6, 2).con("rabbit_foot", 1),
                 vende("caldo_profundo", 1, 3, 2),
                 vende("linterna_almas", 1, 35, 2).con("soul_lantern", 1));
-        tienda("novedades_3", "&5&lNovedades &7(día 30)", "cartographer",
+        tienda("novedades_3", "&5&lNovedades 3", "cartographer",
                 vende("elixir_coloso", 1, 12, 3).con("iron_block", 1),
                 vende("elixir_furia", 1, 12, 3).con("blaze_powder", 4),
                 vende("tonico_antilevitacion", 1, 8, 3).con("phantom_membrane", 2),

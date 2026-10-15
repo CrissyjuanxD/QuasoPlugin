@@ -24,6 +24,6 @@ El antiguo `frutas-3d-opcional.zip` cambia los modelos globalmente. Para conserv
 
 Este parche es para Java. No se incluye un reemplazo global de texturas Bedrock, porque también modificaría los bloques fuera de Warden Cave.
 
-Geyser admite bloques personalizados, pero sus mappings directos no filtran por bioma ni dimensión. Para aplicar las texturas de frutas y minerales solo en Warden Cave hace falta una integración del servidor que seleccione su representación según la ubicación. Esa integración no está incluida en el port Bedrock 1.0.0; los items de fruta y minerales sí están incluidos.
+Geyser admite bloques personalizados, pero sus mappings directos no filtran por bioma ni dimensión. La integración para seleccionar las texturas de frutas y minerales solo dentro del mundo Warden Cave ya se entrega por separado en [Quaso Bedrock 1.0.1](https://github.com/CrissyjuanxD/QuasoPlugin/tree/26.2/descargas/bedrock-1.0.1). Ese instalador reúne también el port anterior de items, fuentes, GUIs y armaduras.
 
 Se verificaron los filtros de las tres frutas, la conservación de las cuatro reglas de minerales y la integridad de los ZIP. No se ejecutó un cliente de Minecraft para comprobar su renderizado.

@@ -1,0 +1,32 @@
+{
+  "format_version": 2,
+  "header": {
+    "name": "Quaso · Warden Cave 1.0.0",
+    "description": "Frutas y minerales de Warden Cave · requiere QuasoWardenCave en Geyser",
+    "uuid": "bb29082c-6c64-5e4a-a07e-f3d435ab74a2",
+    "version": [
+      1,
+      0,
+      0
+    ],
+    "min_engine_version": [
+      1,
+      26,
+      30
+    ]
+  },
+  "modules": [
+    {
+      "type": "resources",
+      "uuid": "78538cde-8222-5efe-aa14-9210eb8dfa78",
+      "version": [
+        1,
+        0,
+        0
+      ]
+    }
+  ],
+  "capabilities": [
+    "pbr"
+  ]
+}

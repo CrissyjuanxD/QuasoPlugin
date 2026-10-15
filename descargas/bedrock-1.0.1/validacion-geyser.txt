@@ -1,0 +1,14 @@
+[23:56:35.293 main/INFO] Loading Geyser version 2.12.0-b1256 (git-master-fc2170c)
+[23:56:36.132 main/INFO] [quasowardencave] Registradas 7 apariencias de Warden Cave, sin reemplazos globales.
+[23:56:36.633 main/INFO] Registered 199 custom block overrides.
+[23:56:36.633 main/INFO] Registered 2 custom block item overrides.
+[23:56:36.634 main/INFO] Registered 14 custom blocks.
+[23:56:38.417 main/INFO] Registered 314 custom items
+[23:56:38.952 main/INFO] [quasowardencave] Warden Cave activa para [minecraft:wardencave]: 49 estados por protocolo, 3 protocolos verificados. Fuera de esos mundos se restaura el mapping original.
+[23:56:38.957 main/INFO] Done (3.664s)! Run /geyser help for help!
+
+Prueba WorldTranslationTest (Mockito 5.20.0):
+OK: entrada, reaparición, salida, nombre exacto, dos sesiones aisladas, orden/delegación y bayas cosechadas.
+
+SHA-256 del JAR verificado: d492e0956d1872bdebb3c59ba1a4a521007960c4ab9643e4a8ae79c773b20ecf
+No se ejecutó un cliente Bedrock.

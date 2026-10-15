@@ -2,6 +2,8 @@
 
 Port del `QuasoTextures.zip` entregado el 15 de octubre de 2026, para **Geyser-Spigot 2.12.0-b1256** en Paper. Conserva los dibujos originales del pack Java. El pack principal requiere Bedrock **26.30 o posterior**; el complemento de mobs usa plantillas de **26.50**.
 
+**Actualización:** [el instalador 1.0.1](../bedrock-1.0.1/README.md) incluye este lote y añade las frutas y minerales colocados únicamente en Warden Cave mediante una extensión de Geyser. Las limitaciones de bloques descritas abajo corresponden al lote original 1.0.0.
+
 [Descargar el paquete para instalar](Quaso-Bedrock-1.0.0-instalar.zip) · [Pack principal](packs/QuasoTextures-1.0.0.mcpack) · [Mappings](custom_mappings/quaso_items.json) · [Mobs opcionales](opcional_mobs/QuasoMobs-1.0.0.mcpack)
 
 ## Instalación en tu Paper

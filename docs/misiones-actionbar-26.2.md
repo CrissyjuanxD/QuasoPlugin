@@ -73,6 +73,40 @@ El mensaje de las DinoCoins de las extras sale con el ícono de las DinoCoins (`
 «Has obtenido [ícono] 14 Dinocoins.». También lo llevan el mensaje de los jefes y los de subir de nivel y bonus de los
 trabajos.
 
+## Misiones extra de los mobs de BloodMoon (Version #92)
+
+Son 6 extras nuevas (de la 213 a la 218) para los 4 mobs de BloodMoon: Zombie, Esqueleto, Araña y Creeper BloodMoon,
+los de nombre rojo. Salen con las misiones de BloodMoon que ya había (9, 58, 83 y 96). Si su misión ya estaba activa,
+se activan solas al prender el server, como las demás extras. Solo cuentan los mobs de BloodMoon: un zombie normal en
+la BloodMoon no suma.
+
+| Extra | Día | Nombre | Qué pide | DinoCoins |
+|---|---|---|---|---|
+| 213 (`9ex2`) | 9 | Primera sangre | Matar un Zombie, un Esqueleto, una Araña y un Creeper BloodMoon | 13 |
+| 214 (`58ex`) | 58 | Cazador de sangre | Matar 30 mobs de BloodMoon (se suman entre noches) | 16 |
+| 217 (`58ex2`) | 58 | Telarañas rojas | Matar 15 Arañas BloodMoon | 14 |
+| 215 (`83ex`) | 83 | Desactivador | Matar 8 Creepers BloodMoon con un proyectil (flecha, tridente...) | 15 |
+| 218 (`83ex2`) | 83 | Duelo de arqueros | Matar 10 Esqueletos BloodMoon con arco o ballesta (el tridente no cuenta) | 15 |
+| 216 (`96ex`) | 96 | Herida abierta | Matar 10 mobs de BloodMoon mientras estás sangrando | 18 |
+
+Recompensas:
+
+- 213: 3 fragmentos de BloodMoon y 4 manzanas doradas.
+- 214: 5 fragmentos y 2 pociones de Regeneración III arrojadizas.
+- 215: 64 flechas y un libro de Poder V.
+- 216: 2 pociones de Resistencia II y 2 manzanas de Notch.
+- 217: 3 frascos de velocidad y 6 manzanas doradas.
+- 218: un libro de Infinidad y 32 flechas espectrales.
+
+Se probó en el server de prueba. Se mataron 10 mobs de BloodMoon y un zombie normal. Así quedó cada misión:
+
+- 213: completa con los 4 tipos.
+- 214: llegó a 10.
+- 215: llegó a 1 con la flecha. El creeper a melee no sumó.
+- 218: llegó a 1 con la flecha. El tridente no sumó.
+- 216: solo sumaron las 2 muertes con sangrado.
+- 217: llegó a 2.
+
 ## Corrección del detector de items (Version #84)
 
 La misión 54 revisa el inventario cada 3 segundos. Los objetos vanilla o sin la etiqueta de item custom devuelven

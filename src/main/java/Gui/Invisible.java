@@ -25,6 +25,13 @@ public final class Invisible {
         return item;
     }
 
+    // Reconoce el relleno si se escapó de un menú (papel con el modelo del aire y sin tooltip)
+    public static boolean esRelleno(ItemStack item) {
+        if (item == null || item.getType() != Material.PAPER || !item.hasItemMeta()) return false;
+        ItemMeta meta = item.getItemMeta();
+        return meta.hasItemModel() && AIRE.equals(meta.getItemModel()) && meta.isHideTooltip();
+    }
+
     // Deja el item sin modelo pero con su nombre y su lore (se ven al pasar el mouse)
     public static ItemStack ocultar(ItemStack item) {
         ItemMeta meta = item.getItemMeta();

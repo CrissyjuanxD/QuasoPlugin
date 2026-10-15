@@ -50,7 +50,12 @@ public class ShopGUI {
         setupSession(player, villager, gui, true);
     }
 
+    // Antes las tiendas devolvían el relleno invisible al cerrarse: se quita del inventario de quien lo tenga
     private void setupSession(Player player, Villager villager, Inventory gui, boolean isConfig) {
+        ItemStack[] contents = player.getInventory().getContents();
+        for (int i = 0; i < contents.length; i++) {
+            if (Invisible.esRelleno(contents[i])) player.getInventory().setItem(i, null);
+        }
         String shopId = villager.getPersistentDataContainer().get(shopManager.shopIdKey, PersistentDataType.STRING);
         shopManager.activeShops.put(player.getUniqueId(), shopId);
         shopManager.loadShopTrades(shopId, villager);

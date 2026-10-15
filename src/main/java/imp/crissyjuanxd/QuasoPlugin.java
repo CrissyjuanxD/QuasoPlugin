@@ -223,6 +223,7 @@ public class QuasoPlugin extends JavaPlugin implements Listener {
         initEndSystem();
         twitchManager = new TwitchManager(this, missionHandler);
         trabajosManager = new TrabajosManager(this, databaseManager, dinoCoinsManager);
+        initBaseDatos();
         initMenu();
         initWeb();
         bloodMoon.enable();
@@ -552,6 +553,14 @@ public class QuasoPlugin extends JavaPlugin implements Listener {
     }
 
     // /menu va al final porque abre las misiones, los trabajos y el árbol de habilidades
+    // /basedatos: la base de datos en diálogos para los OPs
+    private void initBaseDatos() {
+        BaseDatos.BaseDatosCommand command = new BaseDatos.BaseDatosCommand(
+                new BaseDatos.BaseDatosDialogos(this, databaseManager, missionHandler, trabajosManager));
+        Objects.requireNonNull(getCommand("basedatos")).setExecutor(command);
+        Objects.requireNonNull(getCommand("basedatos")).setTabCompleter(command);
+    }
+
     private void initMenu() {
         MenuPrincipal menu = new MenuPrincipal(this, missionGUI, trabajosManager, habilidadesManager, habilidadesGUI);
         getServer().getPluginManager().registerEvents(menu, this);

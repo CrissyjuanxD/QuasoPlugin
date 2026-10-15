@@ -26,14 +26,23 @@ public class QuasoReloadCommand implements CommandExecutor {
             return true;
         }
 
+        recargar(plugin, databaseManager);
+
+        sender.sendMessage(ChatColor.GREEN + "§l[QuasoPlugin] §aConfiguración y Base de Datos recargadas correctamente.");
+        return true;
+    }
+
+    public static void recargar(JavaPlugin plugin, DatabaseManager databaseManager) {
+        recargarConfig(plugin);
+        databaseManager.reload();
+    }
+
+    // La parte del hilo principal; el botón Recargar de /basedatos reconecta MySQL en otro hilo para no trabar el server
+    public static void recargarConfig(JavaPlugin plugin) {
         plugin.reloadConfig();
         if (plugin instanceof QuasoPlugin quaso && quaso.getMantenimientoHandler() != null) {
             quaso.getMantenimientoHandler().reload();
         }
         if (plugin instanceof QuasoPlugin quaso && quaso.getBloodMoon() != null) quaso.getBloodMoon().reload();
-        databaseManager.reload();
-
-        sender.sendMessage(ChatColor.GREEN + "§l[QuasoPlugin] §aConfiguración y Base de Datos recargadas correctamente.");
-        return true;
     }
 }

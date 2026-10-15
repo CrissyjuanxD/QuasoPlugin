@@ -64,7 +64,9 @@ public class MissionHandler implements Listener {
             // Las extras de crafteos van desde la 201 (de la 141 a la 200 son las de trabajo)
             Mission201::new, Mission202::new, Mission203::new, Mission204::new, Mission205::new,
             Mission206::new, Mission207::new, Mission208::new, Mission209::new, Mission210::new,
-            Mission211::new, Mission212::new
+            Mission211::new, Mission212::new,
+            // Extras de los mobs de BloodMoon (de las misiones 9, 58, 83 y 96)
+            Mission213::new, Mission214::new, Mission215::new, Mission216::new, Mission217::new, Mission218::new
     );
 
     private final JavaPlugin plugin;
@@ -75,6 +77,10 @@ public class MissionHandler implements Listener {
     private final MisionAnimation ruletaAnimation;
     private DinoCoinsManager dinoCoins;
     private long tickSecond = 0;
+    // Mientras /basedatos cambia las tablas de misiones nadie guarda (pisaría lo editado), y las cargas viejas se repiten
+    private final Object guardando = new Object();
+    private volatile boolean editandoBD;
+    private volatile int generacion;
 
     public MissionHandler(JavaPlugin plugin, DatabaseManager dbManager) {
         this.plugin = plugin;
@@ -148,11 +154,15 @@ public class MissionHandler implements Listener {
         }
     }
 
-    // Carga las misiones del jugador de la base de datos en async y las sincroniza con las activas globales
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {
-        UUID uuid = event.getPlayer().getUniqueId();
+        cargarJugador(event.getPlayer().getUniqueId());
+    }
 
+    // Carga las misiones del jugador de la base de datos en async y las sincroniza con las activas globales. Si
+    // /basedatos cambió las tablas mientras tanto, la carga se repite
+    private void cargarJugador(UUID uuid) {
+        int deEstaCarga = generacion;
         Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
             Map<Integer, MissionData> data = dbManager.loadPlayerMissions(uuid);
 
@@ -181,9 +191,43 @@ public class MissionHandler implements Listener {
 
             Bukkit.getScheduler().runTask(plugin, () -> {
                 Player p = Bukkit.getPlayer(uuid);
-                if (p != null && p.isOnline()) {
-                    playerCache.put(uuid, data);
+                if (p == null || !p.isOnline()) return;
+                if (deEstaCarga != generacion) cargarJugador(uuid);
+                else playerCache.put(uuid, data);
+            });
+        });
+    }
+
+    // /basedatos va a cambiar a mano player_missions o global_missions: guarda lo pendiente, aplica el cambio sin que
+    // nada más guarde y recarga las misiones activas y el progreso de los conectados (si no, la caché pisaría lo editado)
+    public void editarBaseDeDatos(DatabaseManager.Cambio cambio, java.util.function.Consumer<java.sql.SQLException> listo) {
+        generacion++;
+        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
+            synchronized (guardando) {
+                guardarPendientes();
+                editandoBD = true;
+            }
+            java.sql.SQLException error = null;
+            try {
+                cambio.aplicar();
+            } catch (java.sql.SQLException e) {
+                error = e;
+            }
+            Set<Integer> activas = dbManager.getGlobalActiveMissions();
+            java.sql.SQLException fin = error;
+            Bukkit.getScheduler().runTask(plugin, () -> {
+                globalActiveMissions.removeIf(number -> !MisionTrabajo.es(number));
+                globalActiveMissions.addAll(activas);
+                generacion++;
+                for (Player online : Bukkit.getOnlinePlayers()) {
+                    playerCache.remove(online.getUniqueId());
+                    for (Mission mission : missions.values()) {
+                        if (mission instanceof BaseMission base) base.onQuit(online);
+                    }
                 }
+                editandoBD = false;
+                for (Player online : Bukkit.getOnlinePlayers()) cargarJugador(online.getUniqueId());
+                listo.accept(fin);
             });
         });
     }
@@ -199,22 +243,25 @@ public class MissionHandler implements Listener {
         }
 
         Map<Integer, MissionData> data = playerCache.get(uuid);
-        if (data != null) {
-            Map<Integer, MissionData> dirtyMissions = new HashMap<>();
-            Map<Integer, String> missionNames = new HashMap<>();
+        // Sin el candado: el hilo principal no espera a un guardado lento
+        if (data != null && !editandoBD) guardarJugador(uuid, player.getName(), data);
+        playerCache.remove(uuid);
+    }
 
-            for (Map.Entry<Integer, MissionData> missionEntry : data.entrySet()) {
-                if (missionEntry.getValue().isDirty()) {
-                    dirtyMissions.put(missionEntry.getKey(), missionEntry.getValue());
-                    missionEntry.getValue().setDirty(false);
-                    missionNames.put(missionEntry.getKey(), plainName(missionEntry.getKey()));
-                }
-            }
-            if (!dirtyMissions.isEmpty()) {
-                dbManager.savePlayerMissionsBatchSync(uuid, player.getName(), dirtyMissions, missionNames);
+    private void guardarJugador(UUID uuid, String playerName, Map<Integer, MissionData> data) {
+        Map<Integer, MissionData> dirtyMissions = new HashMap<>();
+        Map<Integer, String> missionNames = new HashMap<>();
+
+        for (Map.Entry<Integer, MissionData> missionEntry : data.entrySet()) {
+            if (missionEntry.getValue().isDirty()) {
+                dirtyMissions.put(missionEntry.getKey(), missionEntry.getValue());
+                missionEntry.getValue().setDirty(false);
+                missionNames.put(missionEntry.getKey(), plainName(missionEntry.getKey()));
             }
         }
-        playerCache.remove(uuid);
+        if (!dirtyMissions.isEmpty()) {
+            dbManager.savePlayerMissionsBatchSync(uuid, playerName, dirtyMissions, missionNames);
+        }
     }
 
     // Si el jugador todavía no cargó devuelve una misión vacía e inactiva
@@ -244,25 +291,15 @@ public class MissionHandler implements Listener {
 
     // Guarda en la base de datos todo lo que quedó pendiente en caché (cada 3 minutos y al apagar)
     public void autoSaveAll() {
+        synchronized (guardando) {
+            if (!editandoBD) guardarPendientes();
+        }
+    }
+
+    private void guardarPendientes() {
         for (Map.Entry<UUID, Map<Integer, MissionData>> entry : playerCache.entrySet()) {
-            UUID uuid = entry.getKey();
-            Player player = Bukkit.getPlayer(uuid);
-            String playerName = player != null ? player.getName() : "Unknown";
-
-            Map<Integer, MissionData> dirtyMissions = new HashMap<>();
-            Map<Integer, String> missionNames = new HashMap<>();
-
-            for (Map.Entry<Integer, MissionData> missionEntry : entry.getValue().entrySet()) {
-                if (missionEntry.getValue().isDirty()) {
-                    dirtyMissions.put(missionEntry.getKey(), missionEntry.getValue());
-                    missionEntry.getValue().setDirty(false);
-                    missionNames.put(missionEntry.getKey(), plainName(missionEntry.getKey()));
-                }
-            }
-
-            if (!dirtyMissions.isEmpty()) {
-                dbManager.savePlayerMissionsBatchSync(uuid, playerName, dirtyMissions, missionNames);
-            }
+            Player player = Bukkit.getPlayer(entry.getKey());
+            guardarJugador(entry.getKey(), player != null ? player.getName() : "Unknown", entry.getValue());
         }
     }
 

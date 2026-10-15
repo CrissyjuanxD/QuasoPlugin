@@ -62,6 +62,7 @@ public final class TrabajosManager implements Listener {
     private final TrabajosGUI gui;
     // Sube con cada /trabajos reset: una carga que empezó antes del reset se descarta
     private volatile int generacion;
+    private volatile boolean editandoBD;
 
     public TrabajosManager(JavaPlugin plugin, DatabaseManager db, DinoCoinsManager monedas) {
         this.plugin = plugin;
@@ -170,7 +171,33 @@ public final class TrabajosManager implements Listener {
         }
     }
 
+    // /basedatos va a cambiar a mano player_jobs o player_job_state: lo pendiente se guarda antes, el cambio va por el
+    // mismo hilo de los guardados (nada viejo lo pisa) y después se recargan los conectados
+    public void editarBaseDeDatos(DatabaseManager.Cambio cambio, java.util.function.Consumer<SQLException> listo) {
+        guardarCambios();
+        generacion++;
+        editandoBD = true;
+        guardados.execute(() -> {
+            SQLException error = null;
+            try {
+                cambio.aplicar();
+            } catch (SQLException e) {
+                error = e;
+            }
+            SQLException fin = error;
+            Bukkit.getScheduler().runTask(plugin, () -> {
+                generacion++;
+                for (Player player : Bukkit.getOnlinePlayers()) datos.remove(player.getUniqueId());
+                editandoBD = false;
+                for (Player player : Bukkit.getOnlinePlayers()) cargar(player.getUniqueId(), 0);
+                listo.accept(fin);
+            });
+        });
+    }
+
     private void guardar(UUID uuid, String nombre, DatosTrabajo datosJugador) {
+        // Lo que se gane mientras /basedatos cambia las tablas se descarta: los datos se vuelven a cargar
+        if (editandoBD) return;
         DatabaseManager.JobsData copia = datosJugador.copia();
         datosJugador.sucio = false;
         guardados.execute(() -> {

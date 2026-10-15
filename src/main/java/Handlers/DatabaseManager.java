@@ -139,6 +139,18 @@ public class DatabaseManager {
         }
     }
 
+    // Un cambio hecho a mano en la base de datos (/basedatos); los sistemas con caché lo aplican entre su guardado y su recarga
+    @FunctionalInterface
+    public interface Cambio {
+        void aplicar() throws SQLException;
+    }
+
+    // Lo que dice /basedatos en el estado: a dónde se conecta (sin la contraseña)
+    public String getHost() { return host; }
+    public int getPort() { return port; }
+    public String getDatabaseName() { return database; }
+    public String getUsername() { return username; }
+
     public void closeConnection() {
     }
 

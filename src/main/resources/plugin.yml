@@ -296,11 +296,20 @@ commands:
   fly:
     description: Activa o desactiva el vuelo (subs del canal y operadores).
     usage: /fly
+  basedatos:
+    description: Ver y editar la base de datos en diálogos (tablas, filas, estado, vaciar, reset y recargar). Solo OPs.
+    usage: /basedatos
+    aliases: [bd]
+    permission: quaso.basedatos
+    permission-message: Solo los OPs pueden ver la base de datos.
 
 depend: [EliteMobs]
 softdepend: [FastAsyncWorldEdit, WorldGuard, ViaVersion, ViciontProtections]
 
 permissions:
+  quaso.basedatos:
+    default: op
+    description: Permite usar /basedatos (ver, editar, vaciar y resetear la base de datos).
   viciont_hardcore3.command.givevct:
     default: op
     description: Permite entregar items y usar el catálogo de /giveqp.

@@ -16,7 +16,6 @@ import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.MerchantRecipe;
 import org.bukkit.persistence.PersistentDataType;
@@ -275,6 +274,8 @@ public class ShopListeners implements Listener {
         return new int[]{index, type};
     }
 
+    // Al cerrar no se devuelve nada: la columna del medio tiene el relleno invisible (papel) y los clicks y arrastres
+    // ya están cancelados, así que el jugador no puede dejar nada ahí
     @EventHandler
     public void onInventoryClose(InventoryCloseEvent event) {
         Player player = (Player) event.getPlayer();
@@ -282,17 +283,6 @@ public class ShopListeners implements Listener {
 
         if (title != null && (title.startsWith(ChatColor.GOLD + "" + ChatColor.BOLD + "Tienda:") ||
                 title.startsWith(ChatColor.RED + "" + ChatColor.BOLD + "Configurar:"))) {
-
-            Inventory top = event.getView().getTopInventory();
-            int[] emptySlots = {4, 13, 22, 31, 40, 49};
-            for (int slot : emptySlots) {
-                ItemStack leftover = top.getItem(slot);
-                if (leftover != null && leftover.getType() != Material.AIR) {
-                    player.getInventory().addItem(leftover).values().forEach(item ->
-                            player.getWorld().dropItem(player.getLocation(), item));
-                    top.setItem(slot, null);
-                }
-            }
 
             Bukkit.getScheduler().runTaskLater(shopManager.getPlugin(), () -> {
                 String currentTitle = player.getOpenInventory().getTitle();

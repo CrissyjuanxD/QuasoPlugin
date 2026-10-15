@@ -31,6 +31,13 @@ oculta el tooltip. Están en el menú de misiones (las dos filas de arriba y los
 (todo lo que no es un trabajo o la guía), en `/menu` y en el árbol de habilidades (los 33 slots que antes tenían tintes
 morados, magentas y negros; las pepitas de hierro entre niveles y las flechas de página siguen igual).
 
+**Papel invisible de las tiendas (Version #92):** al cerrar una tienda se devolvía al jugador lo que hubiera en la
+columna del medio (los slots 4, 13, 22, 31, 40 y 49). Antes esa columna estaba vacía, pero desde que las tiendas usan
+el relleno invisible cada cierre daba 6 papeles invisibles. Ya no se devuelve nada: los clics y arrastres de la tienda
+están cancelados, así que ahí no se puede dejar nada. Además, al abrir una tienda se le quita el relleno a quien lo
+tenga de antes (`Invisible.esRelleno`: papel con el modelo del aire y sin tooltip). Se reprodujo en el server de
+prueba: con el código de antes salían 6 papeles por cierre y con el arreglo 0.
+
 ## Libro de Habilidades
 
 Ya no abre el menú: al usarlo se gasta con una animación de partículas moradas y avisa en el chat que el árbol está en

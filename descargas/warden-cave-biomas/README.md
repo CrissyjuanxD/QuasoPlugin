@@ -56,19 +56,21 @@ Son PNG transparentes de **16×16**, con un máximo de 16 colores por icono. Se 
 
 Son texturas estáticas de **16×16**, con fondo sculk oscuro inspirado en tus bloques y cristales agrupados. Cada mineral tiene su pareja **`_e.png`**: solo emiten los cristales, no la piedra completa. No tienen animación.
 
-Las reglas CTM se limitan a `quaso:caverna_sculk`, `quaso:pantano_profundo`, `quaso:abismo_flotante` y `quaso:ruinas_de_ceniza`. El material colocado fuera de esos biomas conserva su textura habitual.
+Las reglas CTM de los minerales se limitan a `quaso:caverna_sculk`, `quaso:pantano_profundo`, `quaso:abismo_flotante` y `quaso:ruinas_de_ceniza`. El material colocado fuera de esos biomas conserva su textura habitual.
 
 ## Tres frutas
 
-- **Baya Sculk:** piel cian para el `verdant_froglight` de Caverna Sculk, relacionada con su item.
-- **Fruta Abisal:** piel morada para el `pearlescent_froglight` de Abismo Flotante.
-- **Baya Regenerativa:** icono original rojo con forma de corazón, nervaduras y hojas sculk; reemplaza el diseño parecido a sweet berries. Las enredaderas con bayas de Pantano Profundo usan una textura relacionada.
+- **Baya Sculk:** piel cian para el `verdant_froglight`, relacionada con su item, en los cuatro biomas de Warden Cave.
+- **Fruta Abisal:** piel morada para el `pearlescent_froglight`, en los cuatro biomas de Warden Cave.
+- **Baya Regenerativa:** icono original rojo con forma de corazón, nervaduras y hojas sculk; reemplaza el diseño parecido a sweet berries. Las enredaderas con bayas usan una textura relacionada en los cuatro biomas de Warden Cave.
 
 El identificador de la Baya Regenerativa sigue siendo **`minecraft:baya_luminosa`**, para conservar recetas, datos y comandos existentes. Los tres iconos se incluyen con sus JSON y son de **16×16**.
 
 ### 3D opcional, como elegiste
 
-El **pack principal solo cambia texturas de bloques por bioma**. No contiene sustituciones globales de blockstates.
+Desde la corrección #103, **las texturas CTM de las tres frutas se aplican en los cuatro biomas de Warden Cave**, igual que los minerales: `quaso:caverna_sculk`, `quaso:pantano_profundo`, `quaso:abismo_flotante` y `quaso:ruinas_de_ceniza`. Así mantienen su textura al pasar de un bioma de la dimensión a otro; fuera de esos biomas los bloques conservan su aspecto vanilla. El pack principal no contiene sustituciones de blockstates.
+
+El filtro CTM reconoce biomas, no el nombre del mundo: si otro mundo usa estos mismos biomas custom, también recibirá estas texturas.
 
 El ZIP **frutas-3d-opcional.zip** añade tres modelos vanilla de frutas colgantes: racimo sculk, fruto abisal alargado y fruto rojo de dos lóbulos con punta; incluyen tallo y hojas. No necesita CEM para estos bloques.
 
@@ -80,7 +82,7 @@ El ZIP **frutas-3d-opcional.zip** añade tres modelos vanilla de frutas colgante
 2. Aplica este lote **después** del pack de items anterior para que `baya_luminosa.png` sea la nueva baya roja y las cuatro almas usen sus nuevos rostros.
 3. Conserva tu `pack.mcmeta`. Recarga con **F3 + T**, o actualiza el ZIP y hash del pack del servidor.
 4. Compila e instala QuasoPlugin #63 para quitar los shriekers. Los recursos no eliminan por sí solos el bloque equipado.
-5. Solo si deseas el cambio global de frutas, fusiona además **assets** del ZIP opcional.
+5. Para conservar el aspecto vanilla fuera de Warden Cave, usa solo el pack principal. El ZIP opcional de modelos 3D sustituye los modelos globalmente; si ya lo instalaste, retira sus sustituciones de blockstates y restaura los archivos anteriores de tu pack.
 
 ### Soporte del cliente
 

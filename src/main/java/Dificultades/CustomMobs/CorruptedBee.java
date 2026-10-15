@@ -2,10 +2,12 @@ package Dificultades.CustomMobs;
 
 import org.bukkit.*;
 import org.bukkit.attribute.Attribute;
+import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.world.EntitiesLoadEvent;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
@@ -16,6 +18,8 @@ import org.bukkit.scheduler.BukkitTask;
 import java.util.*;
 
 public class CorruptedBee implements Listener {
+
+    static final double FLORAL_SCALE = 1.2;
 
     private final JavaPlugin plugin;
     private final NamespacedKey corruptedBeeKey;
@@ -62,10 +66,27 @@ public class CorruptedBee implements Listener {
         for (World world : Bukkit.getWorlds()) {
             for (Entity entity : world.getEntitiesByClass(Bee.class)) {
                 if (isCorruptedBee(entity)) {
+                    updateFloralScale((Bee) entity);
                     activeBees.add(entity.getUniqueId());
                 }
             }
         }
+    }
+
+    // Actualiza también las abejas que ya existían, sin resetear su vida.
+    @EventHandler
+    public void onEntitiesLoad(EntitiesLoadEvent event) {
+        for (Entity entity : event.getEntities()) {
+            if (entity instanceof Bee bee && isCorruptedBee(bee)) {
+                updateFloralScale(bee);
+                activeBees.add(bee.getUniqueId());
+            }
+        }
+    }
+
+    static void updateFloralScale(Bee bee) {
+        AttributeInstance scale = bee.getAttribute(Attribute.SCALE);
+        if (scale != null) scale.setBaseValue(FLORAL_SCALE);
     }
 
     // Una sola tarea para todas las abejas corruptas en vez de una por abeja
@@ -146,14 +167,14 @@ public class CorruptedBee implements Listener {
         startCentralTask();
     }
 
-    // La Mini Abeja Floral (antes Corrupted Bee): más chiquita, con el nombre y las partículas de los florales
+    // La Mini Abeja Floral: mayor tamaño, con el nombre y las partículas de los florales
     private void applyAttributes(Bee bee) {
         bee.setCustomName(net.md_5.bungee.api.ChatColor.of("#FFB3D9") + "" + ChatColor.BOLD + "Mini Abeja Floral");
         bee.setCustomNameVisible(false);
 
         Objects.requireNonNull(bee.getAttribute(Attribute.MAX_HEALTH)).setBaseValue(15.0);
         bee.setHealth(15.0);
-        Objects.requireNonNull(bee.getAttribute(Attribute.SCALE)).setBaseValue(0.8);
+        updateFloralScale(bee);
 
         Objects.requireNonNull(bee.getAttribute(Attribute.ATTACK_DAMAGE)).setBaseValue(8.0);
 

@@ -138,8 +138,8 @@ public class MissionGUI implements Listener {
         ItemStack relleno = Invisible.relleno();
         for (int slot = 0; slot < PANEL_SLOTS; slot++) gui.setItem(slot, relleno);
 
-        gui.setItem(PREV_SLOT, createArrow("§e⬅ Anterior Página", page, pages, tipo));
-        gui.setItem(NEXT_SLOT, createArrow("§eSiguiente Página ➔", page, pages, tipo));
+        gui.setItem(PREV_SLOT, createArrow("§e⬅ Anterior Página", page, pages, tipo, true));
+        gui.setItem(NEXT_SLOT, createArrow("§eSiguiente Página ➔", page, pages, tipo, false));
 
         for (int i = 0; i < MISSION_SLOTS.length; i++) {
             if (first + i >= order.size()) {
@@ -153,7 +153,7 @@ public class MissionGUI implements Listener {
 
         player.openInventory(gui);
     }
-    private ItemStack createArrow(String name, int page, int pages, TipoMision tipo) {
+    private ItemStack createArrow(String name, int page, int pages, TipoMision tipo, boolean previous) {
         ItemStack item = new ItemStack(Material.SPECTRAL_ARROW);
         ItemMeta meta = item.getItemMeta();
         meta.setDisplayName(name);
@@ -163,7 +163,8 @@ public class MissionGUI implements Listener {
             case TRABAJO -> "Misiones de trabajo";
         };
         meta.setLore(List.of(ChatColor.of("#D3D3D3") + "Página " + page + " de " + pages, ChatColor.of(tipo.primario) + section));
-        meta.setEnchantmentGlintOverride(true);
+        meta.setItemModel(NamespacedKey.minecraft(previous ? "flecha_izquierda" : "flecha_derecha"));
+        meta.setEnchantmentGlintOverride(false);
         meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
         item.setItemMeta(meta);
         return item;
@@ -179,11 +180,11 @@ public class MissionGUI implements Listener {
         if (!data.isActive()) {
             meta.setDisplayName(ChatColor.of("#A0A0A0") + missionHandler.tag(missionNum) + " ???");
             lore.add(ChatColor.of("#D3D3D3") + "Misión no descubierta");
-            meta.setItemModel(NamespacedKey.minecraft("map"));
+            meta.setItemModel(NamespacedKey.minecraft("mision_inactiva"));
         } else {
             boolean completed = data.isCompleted();
             meta.setDisplayName(ChatColor.of(completed ? "#90EE90" : tipo.secundario) + missionHandler.displayName(missionNum));
-            meta.setItemModel(NamespacedKey.minecraft(completed ? "lime_banner" : "guster_banner_pattern"));
+            meta.setItemModel(NamespacedKey.minecraft(completed ? "mision_completada" : "mision_activa"));
 
             for (String line : mission.getDescription().split("\n")) {
                 lore.add(ChatColor.of("#D3D3D3") + line);

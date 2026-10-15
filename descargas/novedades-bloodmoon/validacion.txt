@@ -1,0 +1,9 @@
+16 PNG de items en 16×16: 8 items, 3 poses adicionales del arco, 2 flechas y 3 provisionales de misión.
+Los 3 iconos provisionales son copias exactas del papel vanilla; no se recrearon los originales.
+Todos los JSON de items y modelos enlazan a recursos presentes, incluidas las cuatro poses del arco.
+6 modelos nuevos: JSON válido, dimensiones positivas, UV dentro del atlas y texturas existentes en todas las variantes conservadas.
+Selectores por nombre: BloodMoon/abeja/estatua correctos, florales y Warden conservados, fallback vanilla y variantes presentes.
+Emisión: solo el material de cristales y ojos rojos tiene alfa visible en la máscara; coincide con el atlas.
+Los recursos de descargas y resourcepack son idénticos.
+Java 25: compilación y empaquetado correctos; 8 pruebas de MissionGUI, CorruptedBeeScale y FloralMobDrops aprobadas.
+Visor HTML: 6 modelos renderizados con Chromium; texturas cargadas y sin errores JavaScript. Sin validación visual en cliente Minecraft.

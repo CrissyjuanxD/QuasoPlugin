@@ -93,10 +93,10 @@ public class HabilidadesGUI implements Listener {
         }
 
         if (page == 2) {
-            gui.setItem(45, createArrow("§e⬅ Anterior Página"));
+            gui.setItem(45, createArrow("§e⬅ Anterior Página", true));
         }
         if (page == 1) {
-            gui.setItem(53, createArrow("§eSiguiente Página ➔"));
+            gui.setItem(53, createArrow("§eSiguiente Página ➔", false));
         }
     }
 
@@ -129,12 +129,13 @@ public class HabilidadesGUI implements Listener {
         return item;
     }
 
-    private ItemStack createArrow(String name) {
+    private ItemStack createArrow(String name, boolean previous) {
         ItemStack item = new ItemStack(Material.SPECTRAL_ARROW);
         ItemMeta meta = item.getItemMeta();
         if (meta != null) {
             meta.setDisplayName(name);
-            meta.addEnchant(Enchantment.UNBREAKING, 1, true);
+            meta.setItemModel(NamespacedKey.minecraft(previous ? "flecha_izquierda" : "flecha_derecha"));
+            meta.setEnchantmentGlintOverride(false);
             meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
             item.setItemMeta(meta);
         }

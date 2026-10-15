@@ -64,6 +64,9 @@ class MissionGUITest {
             gui.openMissionGUI(player, 1);
             assertEquals(4, stacks.constructed().size());
             verify(inventory).setItem(18, stacks.constructed().getLast());
+            verify(stacks.constructed().get(1).getItemMeta()).setItemModel(NamespacedKey.minecraft("flecha_izquierda"));
+            verify(stacks.constructed().get(2).getItemMeta()).setItemModel(NamespacedKey.minecraft("flecha_derecha"));
+            verify(stacks.constructed().getLast().getItemMeta()).setItemModel(NamespacedKey.minecraft("mision_activa"));
 
             gui.openMissionGUI(player, 2);
             assertEquals(8, stacks.constructed().size());

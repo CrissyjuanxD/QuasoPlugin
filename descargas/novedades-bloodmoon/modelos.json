@@ -1,0 +1,26 @@
+{
+  "zombie": {
+    "archivo": "zombie4.jem",
+    "cubos": 33
+  },
+  "skeleton": {
+    "archivo": "skeleton4.jem",
+    "cubos": 30
+  },
+  "creeper": {
+    "archivo": "creeper4.jem",
+    "cubos": 28
+  },
+  "spider": {
+    "archivo": "spider4.jem",
+    "cubos": 40
+  },
+  "bee": {
+    "archivo": "bee2.jem",
+    "cubos": 26
+  },
+  "statue": {
+    "archivo": "copper_golem2.jem",
+    "cubos": 60
+  }
+}

@@ -1,9 +1,12 @@
-16 PNG de items en 16×16: 8 items, 3 poses adicionales del arco, 2 flechas y 3 provisionales de misión.
-Los 3 iconos provisionales son copias exactas del papel vanilla; no se recrearon los originales.
-Todos los JSON de items y modelos enlazan a recursos presentes, incluidas las cuatro poses del arco.
-6 modelos nuevos: JSON válido, dimensiones positivas, UV dentro del atlas y texturas existentes en todas las variantes conservadas.
-Selectores por nombre: BloodMoon/abeja/estatua correctos, florales y Warden conservados, fallback vanilla y variantes presentes.
-Emisión: solo el material de cristales y ojos rojos tiene alfa visible en la máscara; coincide con el atlas.
-Los recursos de descargas y resourcepack son idénticos.
-Java 25: compilación y empaquetado correctos; 8 pruebas de MissionGUI, CorruptedBeeScale y FloralMobDrops aprobadas.
-Visor HTML: 6 modelos renderizados con Chromium; texturas cargadas y sin errores JavaScript. Sin validación visual en cliente Minecraft.
+Revisión #100: corrección de selectores random y mini abeja en variante 3.
+11 selectores CEM/random comprobados: nombres con y sin formato, variantes y fallback vanilla.
+Regresión: el verificador rechaza un PNG numerado sin su .properties y una mini abeja con variante incorrecta.
+6 modelos: partes admitidas según la documentación CEM, dimensiones positivas, UV y atlas revisados.
+Mini Abeja Floral: bee3.jem conserva exactamente la geometría de la mini abeja anterior.
+Abeja Floral: bee2.jem es un recurso externo del usuario. No se incluye, no se reemplaza y no pudo validarse.
+Araña: capa de ojos BloodMoon transparente; ojos florales originales conservados; emisión en materiales_e.png.
+Recursos de descargas y resourcepack idénticos. ZIP regenerado y contenido contrastado archivo por archivo.
+Sin cambios Java respecto a #99, donde compiló el plugin y pasaron 8 pruebas; no se repitió esa compilación.
+Sin prueba en un cliente Minecraft con EMF/ETF u OptiFine; animaciones y resultado visual en juego pendientes.
+Referencia: https://github.com/sp614x/optifine/blob/master/OptiFineDoc/doc/random_entities.properties
+Referencia: https://github.com/sp614x/optifine/blob/master/OptiFineDoc/doc/cem_model.txt

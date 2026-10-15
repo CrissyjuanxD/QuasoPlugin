@@ -78,3 +78,14 @@ En un Paper 26.2 de prueba con MariaDB 10.11 se probaron todas las ventanas:
 - Vaciar escribiendo mal y bien, copia, restaurar y guardar copia.
 - El reset con `reset` en minúsculas (no borra) y con `RESET` (borra las 7 tablas y deja la de otro plugin).
 - Las misiones y los trabajos antes y después del reset, y Recargar.
+
+## Contraseña con @ en config.yml (Version #98)
+
+En YAML un valor no puede empezar con `@`, `` ` `` ni `%` sin comillas. Paper no podía leer `config.yml`, el plugin
+seguía con una config vacía y al prender la guardaba encima (por ejemplo el límite de mobs de la Warden Cave), así que
+se borraban la base de datos y lo demás.
+
+- Antes de leer `config.yml` el plugin le pone comillas simples a esos valores y avisa en la consola qué clave arregló
+  (sin mostrar la contraseña). `password: @abc` queda `password: '@abc'`.
+- Si `config.yml` igual tiene un error, el plugin ya no lo guarda hasta que se arregle y se use `/quasoreload`. Así no
+  se pierde nada.

@@ -3,7 +3,7 @@ Database1:
   port: 3306        # El puerto que te da el panel
   database: "database_name" # El nombre que te dio el panel
   username: "database_username"   # El usuario que te dio el panel
-  password: "my_password"
+  password: "my_password" # Siempre entre comillas (si empieza con @ el plugin se las pone solo)
 
 # Glifos de la fuente del resource pack: reemplaza estos unicodes por los tuyos.
 main-scoreboard:

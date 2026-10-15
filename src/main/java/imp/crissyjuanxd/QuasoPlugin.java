@@ -235,6 +235,23 @@ public class QuasoPlugin extends JavaPlugin implements Listener {
     }
 
     // Guarda los datos y apaga los sistemas que tienen tareas o entidades activas
+    // Antes de leer config.yml le pone comillas a lo que las necesite (una contraseña con @) y revisa que se pueda leer
+    @Override
+    public void reloadConfig() {
+        Handlers.ConfigSeguro.revisar(this);
+        super.reloadConfig();
+    }
+
+    // Si config.yml no se pudo leer, el plugin tiene una config vacía: guardarla borraría la base de datos y lo demás
+    @Override
+    public void saveConfig() {
+        if (Handlers.ConfigSeguro.rota()) {
+            getLogger().warning("No se guardó config.yml porque tiene un error: arréglalo y usa /quasoreload.");
+            return;
+        }
+        super.saveConfig();
+    }
+
     @Override
     public void onDisable() {
         if (webSync != null) webSync.shutdown();

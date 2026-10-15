@@ -16,8 +16,6 @@ public final class CatalogoTienda {
     // Dos stacks de DinoCoins en los dos lugares del precio
     public static final int PRECIO_MAXIMO = 128;
     public static final String MONEDA = "dinocoins";
-    // Desde el día 50 ya se mueven muchas DinoCoins: se cobra solo en monedas y el item extra se quita
-    public static final int SIN_EXTRAS_DESDE = 5;
 
     // Un tradeo: se paga "pago" x cantidadPago (más "extra" x cantidadExtra en el segundo lugar, si tiene) y se recibe
     // "producto" x cantidadProducto. Los fijos (cambios y pescadería) no suben de precio
@@ -208,9 +206,10 @@ public final class CatalogoTienda {
         return Math.max(1, Math.min(PRECIO_MAXIMO, precio));
     }
 
-    // El extra va en el segundo lugar mientras el precio quepa en un stack y no se llegue al día 50
+    // El extra va en el segundo lugar mientras el precio quepa en un stack; solo se quita cuando las DinoCoins
+    // necesitan los dos lugares. El extra no sube de precio, solo las DinoCoins
     public static boolean conExtra(Oferta oferta, int seccion, int precio) {
-        return oferta.extra() != null && seccion < SIN_EXTRAS_DESDE && precio <= 64;
+        return oferta.extra() != null && precio <= 64;
     }
 
     public static boolean abierta(Oferta oferta, int seccion) {

@@ -346,7 +346,7 @@ public class ShopManager {
         if (villager != null) villager.setRecipes(recipes);
     }
 
-    // Las DinoCoins van en el primer lugar y el item extra en el segundo. Si el precio pasa de 64 (o ya es el día 50)
+    // Las DinoCoins van en el primer lugar y el item extra en el segundo. Si el precio pasa de 64
     // el extra se quita y el resto de las DinoCoins va en el segundo lugar
     private MerchantRecipe tradeo(CatalogoTienda.Oferta oferta, int seccion, int precio) {
         ItemStack producto = CustomItemRegistry.getCustomItem(oferta.producto(), oferta.cantidadProducto());

@@ -93,12 +93,12 @@ class CatalogoTiendaTest {
     }
 
     @Test
-    void theExtraGoesInTheSecondSlotUntilThePriceNeedsItOrDayFifty() {
+    void theExtraGoesInTheSecondSlotUntilThePriceNeedsBothSlots() {
         CatalogoTienda.Oferta mochila = new CatalogoTienda.Oferta("mochila_nivel_1", 1, "dinocoins", 15, 1, false).con("bundle", 1);
         assertTrue(CatalogoTienda.conExtra(mochila, 1, 15));
         assertTrue(CatalogoTienda.conExtra(mochila, 4, 64));
         assertFalse(CatalogoTienda.conExtra(mochila, 4, 65));
-        assertFalse(CatalogoTienda.conExtra(mochila, CatalogoTienda.SIN_EXTRAS_DESDE, 20));
+        assertTrue(CatalogoTienda.conExtra(mochila, CatalogoTienda.DIAS.length, 20));
         assertFalse(CatalogoTienda.conExtra(new CatalogoTienda.Oferta("bar_tequila", 1, "dinocoins", 1, 1, false), 1, 1));
 
         int conExtra = 0, total = 0;

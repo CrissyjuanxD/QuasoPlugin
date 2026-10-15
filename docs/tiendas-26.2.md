@@ -31,10 +31,9 @@ catálogo). Algunos ejemplos:
 - Los tragos del bar piden una botella vacía.
 - El amuleto de la BloodMoon pide fragmentos de BloodMoon.
 
-El item extra se quita solo y el segundo lugar vuelve a ser DinoCoins cuando:
-
-- el precio pasa de 64 (por la subida de 15% por sección, un ajuste o un precio a mano), o
-- se abre la sección 5 (día 50). Desde ahí todo se paga solo con DinoCoins.
+El item extra se queda en todas las secciones y no sube de precio: solo suben las DinoCoins. Se quita únicamente
+cuando el precio pasa de 64 (por la subida de 15% por sección, un ajuste o un precio a mano), porque entonces las
+DinoCoins ocupan los dos lugares (Version #97).
 
 Si se pide un item vanilla (un bundle, un tótem, un arco...), no cuenta un item custom del mismo material ni uno
 encantado o con nombre. Así no se cobra una mochila (que es un echo shard) ni un tótem custom por error.

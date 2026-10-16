@@ -196,9 +196,9 @@ public class HabilidadesGUI implements Listener {
     private String getDisplayName(HabilidadesType type, int level, boolean isUnlocked) {
         String name = type.getDisplayName() + " Nivel " + level;
         if (isUnlocked) {
-            return ChatColor.of("#C77DFF") + "" + ChatColor.BOLD + name + " ✓";
+            return ChatColor.of("#8FE3A7") + "" + ChatColor.BOLD + name + " ✓";
         } else {
-            return ChatColor.of("#9D4EDD") + "" + ChatColor.BOLD + name;
+            return ChatColor.of("#6CCB8A") + "" + ChatColor.BOLD + name;
         }
     }
 
@@ -218,10 +218,10 @@ public class HabilidadesGUI implements Listener {
 
         if (!isUnlocked && canUnlock) {
             lore.add("");
-            lore.add(ChatColor.of("#E0AAFF") + "Costo:");
+            lore.add(ChatColor.of("#C8F5D2") + "Costo:");
             addCostLore(lore, level);
             lore.add("");
-            lore.add(ChatColor.of("#9D4EDD") + "Click para desbloquear");
+            lore.add(ChatColor.of("#6CCB8A") + "Click para desbloquear");
         }
 
         return lore;
@@ -235,9 +235,9 @@ public class HabilidadesGUI implements Listener {
 
     private void addCostLore(List<String> lore, int level) {
         HabilidadesType.Costo costo = HabilidadesType.costo(level);
-        lore.add(ChatColor.of("#C77DFF") + "• " + costo.xp() + " Niveles de XP");
-        lore.add(ChatColor.of("#C77DFF") + "• " + costo.cantidad() + " " + costo.nombre());
-        lore.add(ChatColor.of("#C77DFF") + "• " + costo.dinocoins() + " DinoCoins " + ChatColor.GRAY + "(inventario o monedero)");
+        lore.add(ChatColor.of("#8FE3A7") + "• " + costo.xp() + " Niveles de XP");
+        lore.add(ChatColor.of("#8FE3A7") + "• " + costo.cantidad() + " " + costo.nombre());
+        lore.add(ChatColor.of("#8FE3A7") + "• " + costo.dinocoins() + " DinoCoins " + ChatColor.GRAY + "(inventario o monedero)");
     }
 
     @EventHandler

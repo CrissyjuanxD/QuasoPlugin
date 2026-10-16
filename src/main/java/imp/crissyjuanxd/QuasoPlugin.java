@@ -614,7 +614,7 @@ public class QuasoPlugin extends JavaPlugin implements Listener {
     private void initHabilidadesSystem() {
         habilidadesManager = new HabilidadesManager(this);
         habilidadesEffects = new HabilidadesEffects(this);
-        habilidadesGUI = new HabilidadesGUI(this, habilidadesManager);
+        habilidadesGUI = new HabilidadesGUI(this, habilidadesManager, dinoCoinsManager);
         habilidadesListener = new HabilidadesListener(this, habilidadesManager, habilidadesEffects);
 
         Bukkit.getPluginManager().registerEvents(habilidadesGUI, this);

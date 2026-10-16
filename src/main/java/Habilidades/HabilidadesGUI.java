@@ -1,7 +1,8 @@
 package Habilidades;
 
 import Gui.Invisible;
-import items.EconomyItems;
+import Gui.dinocoins.DinoCoinsManager;
+import items.EconomyItemsFunctions;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -21,7 +22,10 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.UUID;
 
 public class HabilidadesGUI implements Listener {
 
@@ -34,6 +38,9 @@ public class HabilidadesGUI implements Listener {
 
     private final JavaPlugin plugin;
     private final HabilidadesManager manager;
+    // Para cobrar de los monederos (null en los tests: entonces solo cuenta el inventario)
+    private final DinoCoinsManager monedas;
+    private final Set<UUID> pagando = new HashSet<>();
 
     // Marca el inventario como árbol de habilidades y recuerda la página
     private static final class Menu implements InventoryHolder {
@@ -50,9 +57,10 @@ public class HabilidadesGUI implements Listener {
         }
     }
 
-    public HabilidadesGUI(JavaPlugin plugin, HabilidadesManager manager) {
+    public HabilidadesGUI(JavaPlugin plugin, HabilidadesManager manager, DinoCoinsManager monedas) {
         this.plugin = plugin;
         this.manager = manager;
+        this.monedas = monedas;
     }
 
     public void openHabilidadesGUI(Player player) {
@@ -229,7 +237,7 @@ public class HabilidadesGUI implements Listener {
         HabilidadesType.Costo costo = HabilidadesType.costo(level);
         lore.add(ChatColor.of("#C77DFF") + "• " + costo.xp() + " Niveles de XP");
         lore.add(ChatColor.of("#C77DFF") + "• " + costo.cantidad() + " " + costo.nombre());
-        lore.add(ChatColor.of("#C77DFF") + "• " + costo.dinocoins() + " DinoCoins");
+        lore.add(ChatColor.of("#C77DFF") + "• " + costo.dinocoins() + " DinoCoins " + ChatColor.GRAY + "(inventario o monedero)");
     }
 
     @EventHandler
@@ -278,7 +286,8 @@ public class HabilidadesGUI implements Listener {
         return 0;
     }
 
-    // Cobra XP, bloques y DinoCoins según el nivel y desbloquea la habilidad con la animación
+    // Cobra XP, bloques y DinoCoins según el nivel y desbloquea la habilidad con la animación. Las DinoCoins salen
+    // primero del inventario y lo que falte de los monederos; si al final no alcanza, se devuelve lo que se sacó
     private void handleUnlock(Player player, HabilidadesType type, int level) {
         if (manager.hasHabilidadPurchased(player.getUniqueId(), type, level)) {
             player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_NO, 1f, 1f);
@@ -292,27 +301,57 @@ public class HabilidadesGUI implements Listener {
         }
 
         HabilidadesType.Costo costo = HabilidadesType.costo(level);
-        int xpCost = costo.xp();
-        Material matCost = costo.bloque();
-        int matAmount = costo.cantidad();
+        String falta = falta(player, costo);
+        if (falta != null) {
+            player.sendMessage(ChatColor.RED + falta);
+            return;
+        }
+        UUID uuid = player.getUniqueId();
+        if (pagando.contains(uuid)) return;
         int coinCost = costo.dinocoins();
+        int enInventario = monedasEnInventario(player);
+        if (enInventario >= coinCost || monedas == null) {
+            if (enInventario < coinCost) {
+                player.sendMessage(ChatColor.RED + "Necesitas " + coinCost + " DinoCoins.");
+                return;
+            }
+            cobrarYDesbloquear(player, type, level, costo, coinCost);
+            return;
+        }
+        int faltan = coinCost - enInventario;
+        pagando.add(uuid);
+        monedas.changeAsyncMoved(player, -faltan, movidas -> {
+            pagando.remove(uuid);
+            if (!player.isOnline()) {
+                if (movidas > 0) plugin.getLogger().warning(player.getName() + " se fue mientras compraba una habilidad: se le cobraron "
+                        + movidas + " DinoCoins de su monedero.");
+                return;
+            }
+            String ahoraFalta = falta(player, costo);
+            boolean yaNoSePuede = manager.hasHabilidadPurchased(uuid, type, level) || !manager.canUnlock(uuid, type, level);
+            if (movidas < faltan || ahoraFalta != null || yaNoSePuede || monedasEnInventario(player) < enInventario) {
+                if (movidas > 0) monedas.deposit(player, movidas);
+                if (!yaNoSePuede) player.sendMessage(ChatColor.RED + (ahoraFalta != null ? ahoraFalta
+                        : "Necesitas " + coinCost + " DinoCoins en el inventario o en tus monederos."));
+                return;
+            }
+            cobrarYDesbloquear(player, type, level, costo, enInventario);
+        });
+    }
 
-        if (player.getLevel() < xpCost) {
-            player.sendMessage(ChatColor.RED + "No tienes suficiente experiencia.");
-            return;
+    // Lo que falta aparte de las DinoCoins (null = tiene todo)
+    private static String falta(Player player, HabilidadesType.Costo costo) {
+        if (player.getLevel() < costo.xp()) return "Necesitas " + costo.xp() + " niveles de experiencia.";
+        if (!player.getInventory().containsAtLeast(new ItemStack(costo.bloque()), costo.cantidad())) {
+            return "Necesitas " + costo.cantidad() + " " + costo.nombre() + ".";
         }
-        if (!player.getInventory().containsAtLeast(new ItemStack(matCost), matAmount)) {
-            player.sendMessage(ChatColor.RED + "No tienes los materiales necesarios.");
-            return;
-        }
-        if (!hasDinoCoins(player, coinCost)) {
-            player.sendMessage(ChatColor.RED + "No tienes suficientes DinoCoins.");
-            return;
-        }
+        return null;
+    }
 
-        player.setLevel(player.getLevel() - xpCost);
-        player.getInventory().removeItem(new ItemStack(matCost, matAmount));
-        removeDinoCoins(player, coinCost);
+    private void cobrarYDesbloquear(Player player, HabilidadesType type, int level, HabilidadesType.Costo costo, int delInventario) {
+        player.setLevel(player.getLevel() - costo.xp());
+        player.getInventory().removeItem(new ItemStack(costo.bloque(), costo.cantidad()));
+        quitarMonedasDelInventario(player, delInventario);
 
         manager.unlockHabilidad(player.getUniqueId(), type, level);
         player.closeInventory();
@@ -321,33 +360,25 @@ public class HabilidadesGUI implements Listener {
         effects.playUnlockAnimation(player, type, level);
     }
 
-    private boolean hasDinoCoins(Player player, int amount) {
-        int count = 0;
-        ItemStack coinItem = EconomyItems.createVithiumCoin();
-        for (ItemStack item : player.getInventory().getContents()) {
-            if (item != null && item.isSimilar(coinItem)) {
-                count += item.getAmount();
-            }
+    static int monedasEnInventario(Player player) {
+        int total = 0;
+        for (ItemStack item : player.getInventory().getStorageContents()) {
+            if (EconomyItemsFunctions.isDinoCoin(item)) total += item.getAmount();
         }
-        return count >= amount;
+        return total;
     }
 
-    // Quita las DinoCoins de los stacks que haga falta hasta completar el monto
-    private void removeDinoCoins(Player player, int amount) {
-        int remaining = amount;
-        ItemStack coinItem = EconomyItems.createVithiumCoin();
-        for (ItemStack item : player.getInventory().getContents()) {
-            if (item != null && item.isSimilar(coinItem)) {
-                if (item.getAmount() > remaining) {
-                    item.setAmount(item.getAmount() - remaining);
-                    return;
-                } else {
-                    remaining -= item.getAmount();
-                    player.getInventory().remove(item);
-                    if (remaining <= 0) return;
-                }
-            }
+    private static void quitarMonedasDelInventario(Player player, int cantidad) {
+        ItemStack[] contents = player.getInventory().getStorageContents();
+        for (int i = 0; i < contents.length && cantidad > 0; i++) {
+            ItemStack item = contents[i];
+            if (!EconomyItemsFunctions.isDinoCoin(item)) continue;
+            int quitar = Math.min(cantidad, item.getAmount());
+            item.setAmount(item.getAmount() - quitar);
+            cantidad -= quitar;
+            if (item.getAmount() <= 0) contents[i] = null;
         }
+        player.getInventory().setStorageContents(contents);
     }
 
     @EventHandler

@@ -64,4 +64,8 @@ para que el árbol tome su tiempo. La XP y los bloques de cada nivel no cambian;
 Una habilidad completa pasa de 150 a 570 DinoCoins y las tres de 450 a 1710. El Libro de Habilidades en la Biblioteca
 pasa de 1 DinoCoin a 30 más un libro normal (sube un 15% por sección como el resto de la tienda).
 
+Las DinoCoins de un nivel salen primero del inventario y lo que falte de los monederos del jugador (los que lleva y
+los registrados a su nombre), igual que al entrar a un trabajo. Si a mitad de la compra ya no le alcanza algo, se le
+devuelven al monedero las DinoCoins que se sacaron.
+
 `/proteccion` ya no está en este plugin (era el libro con la guía), así lo usa tu otro plugin.

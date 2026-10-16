@@ -45,4 +45,23 @@ Ya no abre el menú: al usarlo se gasta con una animación de partículas morada
 `/menu`, en Habilidades. Queda guardado en `Habilidades.yml` (`acceso.<uuid>`). Si ya tienes acceso el libro no se
 gasta. Los que ya habían comprado algún nivel con el libro de antes entran sin gastar otro.
 
+### Costos (Version #110)
+
+Con la economía nueva se juntan más de 100 DinoCoins en los primeros días, así que las habilidades se encarecieron
+para que el árbol tome su tiempo. La XP y los bloques de cada nivel no cambian; las DinoCoins van ~4 veces más caras.
+
+| Nivel | XP | Bloques | DinoCoins antes | DinoCoins ahora |
+|---|---|---|---|---|
+| 1 | 30 | 12 de Oro | 5 | 20 |
+| 2 | 40 | 15 de Diamante | 10 | 35 |
+| 3 | 50 | 32 de Esmeralda | 15 | 50 |
+| 4 | 60 | 3 de Netherite | 20 | 70 |
+| 5 | 70 | 30 de Oro | 10 | 60 |
+| 6 | 80 | 40 de Diamante | 20 | 85 |
+| 7 | 90 | 64 de Esmeralda | 30 | 110 |
+| 8 | 100 | 6 de Netherite | 40 | 140 |
+
+Una habilidad completa pasa de 150 a 570 DinoCoins y las tres de 450 a 1710. El Libro de Habilidades en la Biblioteca
+pasa de 1 DinoCoin a 30 más un libro normal (sube un 15% por sección como el resto de la tienda).
+
 `/proteccion` ya no está en este plugin (era el libro con la guía), así lo usa tu otro plugin.

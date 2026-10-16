@@ -136,7 +136,7 @@ public final class CatalogoTienda {
                 vende("amuleto_ultima_esperanza", 1, 15, 3).con("totem_of_undying", 1));
         tienda("biblioteca", "&9&lBiblioteca", "librarian",
                 vende("misiones", 1, 1, 1),
-                vende("libro_habilidades", 1, 1, 1),
+                vende("libro_habilidades", 1, 30, 1).con("book", 1),
                 vende("libro_purificacion_1", 1, 30, 4).con("lapis_lazuli", 16),
                 vende("libro_paso_igneo_1", 1, 40, 4).con("lapis_lazuli", 16),
                 vende("libro_vision_abisal_1", 1, 40, 4).con("lapis_lazuli", 16),

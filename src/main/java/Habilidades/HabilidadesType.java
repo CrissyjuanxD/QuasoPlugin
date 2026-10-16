@@ -34,18 +34,20 @@ public enum HabilidadesType {
 
     public static final int NIVELES = 8;
 
-    // Lo que cuesta cada nivel (igual en las tres): niveles de XP, bloques y DinoCoins
+    // Lo que cuesta cada nivel (igual en las tres): niveles de XP, bloques y DinoCoins. Las DinoCoins van ~4 veces más
+    // caras que antes porque con la economía nueva se juntan más de 100 en los primeros días: el árbol completo de una
+    // habilidad cuesta 570 y las tres 1710
     public record Costo(int xp, Material bloque, int cantidad, String nombre, int dinocoins) {}
 
     private static final Costo[] COSTOS = {
-            new Costo(30, Material.GOLD_BLOCK, 12, "Bloques de Oro", 5),
-            new Costo(40, Material.DIAMOND_BLOCK, 15, "Bloques de Diamante", 10),
-            new Costo(50, Material.EMERALD_BLOCK, 32, "Bloques de Esmeralda", 15),
-            new Costo(60, Material.NETHERITE_BLOCK, 3, "Bloques de Netherite", 20),
-            new Costo(70, Material.GOLD_BLOCK, 30, "Bloques de Oro", 10),
-            new Costo(80, Material.DIAMOND_BLOCK, 40, "Bloques de Diamante", 20),
-            new Costo(90, Material.EMERALD_BLOCK, 64, "Bloques de Esmeralda", 30),
-            new Costo(100, Material.NETHERITE_BLOCK, 6, "Bloques de Netherite", 40),
+            new Costo(30, Material.GOLD_BLOCK, 12, "Bloques de Oro", 20),
+            new Costo(40, Material.DIAMOND_BLOCK, 15, "Bloques de Diamante", 35),
+            new Costo(50, Material.EMERALD_BLOCK, 32, "Bloques de Esmeralda", 50),
+            new Costo(60, Material.NETHERITE_BLOCK, 3, "Bloques de Netherite", 70),
+            new Costo(70, Material.GOLD_BLOCK, 30, "Bloques de Oro", 60),
+            new Costo(80, Material.DIAMOND_BLOCK, 40, "Bloques de Diamante", 85),
+            new Costo(90, Material.EMERALD_BLOCK, 64, "Bloques de Esmeralda", 110),
+            new Costo(100, Material.NETHERITE_BLOCK, 6, "Bloques de Netherite", 140),
     };
 
     private final String displayName;

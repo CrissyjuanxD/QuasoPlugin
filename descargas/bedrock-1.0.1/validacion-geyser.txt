@@ -1,14 +1,23 @@
-[23:56:35.293 main/INFO] Loading Geyser version 2.12.0-b1256 (git-master-fc2170c)
-[23:56:36.132 main/INFO] [quasowardencave] Registradas 7 apariencias de Warden Cave, sin reemplazos globales.
-[23:56:36.633 main/INFO] Registered 199 custom block overrides.
-[23:56:36.633 main/INFO] Registered 2 custom block item overrides.
-[23:56:36.634 main/INFO] Registered 14 custom blocks.
-[23:56:38.417 main/INFO] Registered 314 custom items
-[23:56:38.952 main/INFO] [quasowardencave] Warden Cave activa para [minecraft:wardencave]: 49 estados por protocolo, 3 protocolos verificados. Fuera de esos mundos se restaura el mapping original.
-[23:56:38.957 main/INFO] Done (3.664s)! Run /geyser help for help!
+REPRODUCCIÓN CON EXTENSIÓN 1.0.0 EN PAPER 26.2-129:
+java.lang.ClassCastException: class org.geysermc.geyser.platform.spigot.shaded.it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap cannot be cast to class it.unimi.dsi.fastutil.objects.Object2IntMap (org.geysermc.geyser.platform.spigot.shaded.it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap is in unnamed module of loader 'Geyser-Spigot.jar' @630100a3; it.unimi.dsi.fastutil.objects.Object2IntMap is in unnamed module of loader java.net.URLClassLoader @45018215)
+	at studios.viciont.quasogeyser.QuasoWardenCave.selectedStates(QuasoWardenCave.java:171) ~[?:?]
 
-Prueba WorldTranslationTest (Mockito 5.20.0):
+MISMO PAPER CON EXTENSIÓN 1.0.1:
+[00:22:17] [ServerMain/INFO]: [bootstrap] Loading Paper 26.2-129-ver/26.2@9240f58 (2026-09-23T18:49:01Z) for Minecraft 26.2
+[00:22:35] [Server thread/INFO]: [Geyser-Spigot] Loading Geyser version 2.12.0-b1256 (git-master-fc2170c)
+[00:22:37] [Server thread/INFO]: [Geyser-Spigot] [quasowardencave] Registradas 7 apariencias de Warden Cave, sin reemplazos globales.
+[00:22:37] [Server thread/INFO]: [Geyser-Spigot] Registered 199 custom block overrides.
+[00:22:37] [Server thread/INFO]: [Geyser-Spigot] Registered 2 custom block item overrides.
+[00:22:37] [Server thread/INFO]: [Geyser-Spigot] Registered 14 custom blocks.
+[00:22:40] [Server thread/INFO]: [Geyser-Spigot] Registered 314 custom items
+[00:22:40] [Server thread/INFO]: [Geyser-Spigot] [quasowardencave] Warden Cave activa para [minecraft:wardencave]: 49 estados por protocolo, 3 protocolos verificados. Fuera de esos mundos se restaura el mapping original.
+[00:22:40] [Server thread/INFO]: [Geyser-Spigot] Done (4.866s)! Run /geyser help for help!
+[00:22:41] [Server thread/INFO]: Done (24.822s)! For help, type "help"
+
+PRUEBA DE TRANSICIONES CON GEYSER-SPIGOT:
 OK: entrada, reaparición, salida, nombre exacto, dos sesiones aisladas, orden/delegación y bayas cosechadas.
 
-SHA-256 del JAR verificado: d492e0956d1872bdebb3c59ba1a4a521007960c4ab9643e4a8ae79c773b20ecf
-No se ejecutó un cliente Bedrock.
+Compilación contra Standalone rechazada por hash/plataforma.
+SHA-256 del JAR corregido: 77da2d14b4d87c0a6f385eeb0a1223e195d2dbbc591583e8704c51f70bb4b252
+
+Extracto de compatibilidad: el servidor local offline emitió un error independiente al consultar claves de Mojang; no se comprobó autenticación ni se ejecutó un cliente Bedrock.

@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import hashlib
 import json
+import re
 from pathlib import Path
 from zipfile import ZipFile
 from PIL import Image
@@ -37,7 +38,7 @@ for texture_set in P.rglob('*.texture_set.json'):
                    for pixel, (r, g, b, a) in zip(pixels, source.getdata()))
         assert any(g > 0 for r, g, b in pixels) and any(g == 0 for r, g, b in pixels)
 for path in [B / 'packs/QuasoWardenCave-1.0.0.mcpack', B / 'Quaso-Bedrock-1.0.1-instalar.zip',
-             B / 'extensions/QuasoWardenCave-1.0.0.jar']:
+             B / 'extensions/QuasoWardenCave-1.0.1.jar']:
     with ZipFile(path) as z:
         assert z.testzip() is None
         if path.suffix == '.mcpack':
@@ -46,11 +47,20 @@ for path in [B / 'packs/QuasoWardenCave-1.0.0.mcpack', B / 'Quaso-Bedrock-1.0.1-
                 if p.is_file(): assert z.read(str(p.relative_to(P))) == p.read_bytes()
         elif path.suffix == '.jar':
             assert 'extension.yml' in z.namelist()
+            assert 'version: 1.0.1' in z.read('extension.yml').decode()
             assert not any(n.startswith('org/geysermc/') for n in z.namelist()), 'No debe redistribuir Geyser'
+            bytecode = b''.join(z.read(n) for n in z.namelist() if n.endswith('.class'))
+            # A Standalone build can compile successfully yet fail in Paper's class loaders.
+            assert not re.search(rb'(?<!/)it/unimi/dsi/fastutil/', bytecode), 'Referencia fastutil sin reubicar'
+            assert not re.search(rb'(?<!/)net/kyori/adventure/', bytecode), 'Referencia Adventure sin reubicar'
+            prefix = b'org/geysermc/geyser/platform/spigot/shaded/'
+            assert prefix + b'it/unimi/dsi/fastutil/' in bytecode
+            assert prefix + b'net/kyori/adventure/key/Key' in bytecode
         else:
             for line in z.read('SHA256SUMS.txt').decode().splitlines():
                 digest, name = line.split('  ', 1)
                 assert hashlib.sha256(z.read(name)).hexdigest() == digest, name
-            assert z.read('plugins/Geyser-Spigot/extensions/QuasoWardenCave-1.0.0.jar') == (B / 'extensions/QuasoWardenCave-1.0.0.jar').read_bytes()
+            assert z.read('plugins/Geyser-Spigot/extensions/QuasoWardenCave-1.0.1.jar') == (B / 'extensions/QuasoWardenCave-1.0.1.jar').read_bytes()
+            assert 'plugins/Geyser-Spigot/extensions/QuasoWardenCave-1.0.0.jar' not in z.namelist()
             assert not any(n.endswith('config.yml') for n in z.namelist()), 'No sobreescribir el config de Geyser'
-print('OK: 7 texturas CTM idénticas, 4 máscaras MER, JSON/PNG, contenido de ZIP/JAR y hashes de instalación.')
+print('OK: 7 texturas CTM idénticas, 4 máscaras MER, JSON/PNG, referencias Spigot reubicadas, versión 1.0.1 y hashes de instalación.')

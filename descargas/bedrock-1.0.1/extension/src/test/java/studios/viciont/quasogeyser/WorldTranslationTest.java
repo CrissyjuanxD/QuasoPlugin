@@ -1,6 +1,6 @@
 package studios.viciont.quasogeyser;
 
-import net.kyori.adventure.key.Key;
+import org.geysermc.geyser.platform.spigot.shaded.net.kyori.adventure.key.Key;
 import org.geysermc.geyser.registry.type.BlockMappings;
 import org.geysermc.geyser.registry.type.GeyserBedrockBlock;
 import org.geysermc.geyser.session.GeyserSession;
@@ -14,7 +14,7 @@ import java.util.function.Function;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
-/** Run with Geyser 1256 and Mockito 5.20 on the classpath; no network or client required. */
+/** Run with Geyser-Spigot 1256, Paper libraries and Mockito 5.20 on the classpath. */
 public final class WorldTranslationTest {
     @SuppressWarnings("unchecked")
     public static void main(String[] args) throws Exception {

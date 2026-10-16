@@ -15,7 +15,7 @@ files = {
     'plugins/Geyser-Spigot/packs/QuasoTextures-1.0.0.mcpack': OLD / 'packs/QuasoTextures-1.0.0.mcpack',
     'plugins/Geyser-Spigot/packs/QuasoWardenCave-1.0.0.mcpack': pack,
     'plugins/Geyser-Spigot/custom_mappings/quaso_items.json': OLD / 'custom_mappings/quaso_items.json',
-    'plugins/Geyser-Spigot/extensions/QuasoWardenCave-1.0.0.jar': B / 'extensions/QuasoWardenCave-1.0.0.jar',
+    'plugins/Geyser-Spigot/extensions/QuasoWardenCave-1.0.1.jar': B / 'extensions/QuasoWardenCave-1.0.1.jar',
     'opcional_mobs/QuasoMobs-1.0.0.mcpack': OLD / 'opcional_mobs/QuasoMobs-1.0.0.mcpack',
     'README.md': B / 'README.md',
     'VALIDACION.md': B / 'VALIDACION.md',

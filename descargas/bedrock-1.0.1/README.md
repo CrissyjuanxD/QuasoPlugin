@@ -2,7 +2,15 @@
 
 Este instalador reúne el port anterior (items, fuentes, rangos, GUIs y armaduras) y añade **las texturas de los cuatro minerales y las tres frutas colocadas**, solo dentro del mundo Warden Cave. Los mobs siguen siendo un complemento opcional.
 
-[Descargar todo para instalar](Quaso-Bedrock-1.0.1-instalar.zip) · [Solo extensión](extensions/QuasoWardenCave-1.0.0.jar) · [Solo pack de bloques](packs/QuasoWardenCave-1.0.0.mcpack)
+[Descargar todo para instalar](Quaso-Bedrock-1.0.1-instalar.zip) · [Solo extensión](extensions/QuasoWardenCave-1.0.1.jar) · [Solo pack de bloques](packs/QuasoWardenCave-1.0.0.mcpack)
+
+## Corrección para Geyser-Spigot
+
+La extensión **1.0.1** corrige el `ClassCastException` de fastutil de la 1.0.0. La anterior se había compilado contra Standalone; Geyser-Spigot reubica fastutil y Adventure en otros paquetes, por lo que compartir versión de Geyser no garantizaba compatibilidad binaria.
+
+**Si ya instalaste el lote:** apaga el servidor, elimina `plugins/Geyser-Spigot/extensions/QuasoWardenCave-1.0.0.jar` y coloca allí `QuasoWardenCave-1.0.1.jar`. Conserva la carpeta `quasowardencave`, sus ajustes, los `.mcpack` y los mappings. No dejes las dos versiones del JAR juntas. Inicia el servidor completo.
+
+El instalador de este directorio ya incluye el JAR corregido. El contenido gráfico no ha cambiado.
 
 ## Instalación en Paper
 
@@ -16,7 +24,7 @@ Este instalador reúne el port anterior (items, fuentes, rangos, GUIs y armadura
      custom_mappings/
        quaso_items.json
      extensions/
-       QuasoWardenCave-1.0.0.jar
+       QuasoWardenCave-1.0.1.jar
    ```
 
    La extensión va en **`plugins/Geyser-Spigot/extensions`**, no directamente en `plugins`. Los `.mcpack` se dejan cerrados, sin descomprimir. Si ya instalaste el lote 1.0.0, basta con añadir la extensión y el pack de Warden Cave. El pack principal mantiene su nombre y UUID porque no ha cambiado.
@@ -43,7 +51,7 @@ Este instalador reúne el port anterior (items, fuentes, rangos, GUIs y armadura
 
 5. Si tus clientes son **Bedrock 26.50 o posterior**, copia también `opcional_mobs/QuasoMobs-1.0.0.mcpack` a `plugins/Geyser-Spigot/packs/`. No lo instales si todavía entran clientes 26.30; el pack principal y Warden Cave sí admiten 26.30+.
 
-Probado con **Geyser 2.12.0-b1256 (`fc2170c`)**. La selección por mundo usa clases internas de Geyser: debe volver a verificarse al actualizarlo. Si tu Geyser anuncia Java 26.3 y Paper sigue en 26.2, conserva ViaVersion actualizado para permitir la conexión.
+Probado con **Geyser-Spigot 2.12.0-b1256 (`fc2170c`) dentro de Paper 26.2-129**, con ViaVersion 5.12.1. Esta extensión se compila para Spigot/Paper; no es un JAR para Standalone ni proxies. La selección por mundo usa clases internas de Geyser: debe volver a verificarse al actualizarlo. Si tu Geyser anuncia Java 26.3 y Paper sigue en 26.2, conserva ViaVersion actualizado para permitir la conexión.
 
 ## Si tu mundo tiene otro nombre
 
@@ -98,10 +106,10 @@ Las monedas siguen teniendo su comportamiento Java original. El mapping Bedrock 
 5. Si puedes, deja otro jugador Bedrock en el mundo normal: sus bloques no deben cambiar cuando tú entras.
 6. Prueba armaduras, menús, fuentes y los mobs opcionales desde un cliente real. Para los minerales emisivos, activa Vibrant Visuals/RTX si el dispositivo lo admite.
 
-Se verificaron el arranque real de Geyser, los 49 estados en tres protocolos, el aislamiento de dos sesiones, el orden del cambio de mapping antes del respawn y la restauración al salir. **No se ejecutó un cliente Bedrock ni una sesión de juego Paper→Geyser en esta validación.** La revisión visual y de interacción la cubren estos pasos. Detalles en [VALIDACION.md](VALIDACION.md).
+Se verificaron el arranque real de Geyser, los 49 estados en tres protocolos, el aislamiento de dos sesiones, el orden del cambio de mapping antes del respawn y la restauración al salir. **Se comprobó el arranque real en Paper, pero no se ejecutó un cliente Bedrock ni una sesión de juego Paper→Geyser.** La revisión visual y de interacción la cubren estos pasos. Detalles en [VALIDACION.md](VALIDACION.md).
 
 ## Retirar el complemento
 
-Apaga el servidor y retira `QuasoWardenCave-1.0.0.jar` de `extensions` y su `.mcpack` de `packs`. Al arrancar se recupera la traducción original; no hay que regenerar el mundo ni migrar datos. El resto del pack Bedrock puede quedarse instalado.
+Apaga el servidor y retira `QuasoWardenCave-1.0.1.jar` de `extensions` y su `.mcpack` de `packs`. Al arrancar se recupera la traducción original; no hay que regenerar el mundo ni migrar datos. El resto del pack Bedrock puede quedarse instalado.
 
 El código de la extensión está en [extension](extension); los scripts de compilación y empaquetado están en [herramientas](herramientas). No se distribuye Geyser dentro del JAR.

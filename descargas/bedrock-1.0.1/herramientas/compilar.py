@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Compila la extensión contra el Geyser oficial usado en la validación."""
+"""Compila exclusivamente para Geyser-Spigot, cuyas librerías están reubicadas."""
 import hashlib
 import os
 from pathlib import Path
@@ -7,18 +7,22 @@ import shutil
 import subprocess
 import sys
 import tempfile
+from zipfile import ZipFile
 
 BASE = Path(__file__).resolve().parent.parent
-GEYSER_SHA256 = 'e31619e6c0fdd0e4a06d547ff476fe6bed23d0e8e5cc56479846ec80bc2a5e77'
+GEYSER_SHA256 = 'c61720bbea714a704d9b76a2f1e9a7ac91271e48101ec745ccd668fda9514015'
 if len(sys.argv) != 2:
-    raise SystemExit('Uso: python compilar.py /ruta/Geyser-Standalone-2.12.0-b1256.jar (JDK 21+)')
+    raise SystemExit('Uso: python compilar.py /ruta/Geyser-Spigot-2.12.0-b1256.jar (JDK 21+)')
 geyser = Path(sys.argv[1]).resolve()
 if hashlib.sha256(geyser.read_bytes()).hexdigest() != GEYSER_SHA256:
-    raise SystemExit('El JAR no corresponde al Geyser 2.12.0-b1256 oficial verificado. No se compila contra otro binario.')
+    raise SystemExit('El JAR no corresponde a Geyser-Spigot 2.12.0-b1256 verificado. Standalone y otros binarios no son compatibles.')
+with ZipFile(geyser) as z:
+    assert 'org/geysermc/geyser/platform/spigot/shaded/it/unimi/dsi/fastutil/objects/Object2IntMap.class' in z.namelist()
+    assert 'org/geysermc/geyser/platform/spigot/shaded/net/kyori/adventure/key/Key.class' in z.namelist()
 jdk = Path(os.environ['JAVA_HOME']) / 'bin' if 'JAVA_HOME' in os.environ else None
 javac = str(jdk / 'javac') if jdk else 'javac'
 jar = str(jdk / 'jar') if jdk else 'jar'
-destination = BASE / 'extensions/QuasoWardenCave-1.0.0.jar'
+destination = BASE / 'extensions/QuasoWardenCave-1.0.1.jar'
 destination.parent.mkdir(exist_ok=True)
 with tempfile.TemporaryDirectory(prefix='quaso-geyser-') as temp:
     classes = Path(temp) / 'classes'

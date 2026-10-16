@@ -1,6 +1,7 @@
 package studios.viciont.quasogeyser;
 
-import net.kyori.adventure.key.Key;
+// Geyser-Spigot relocates Adventure and fastutil; compile against that distribution.
+import org.geysermc.geyser.platform.spigot.shaded.net.kyori.adventure.key.Key;
 import org.geysermc.event.subscribe.Subscribe;
 import org.geysermc.geyser.api.block.custom.CustomBlockData;
 import org.geysermc.geyser.api.block.custom.component.BoxComponent;

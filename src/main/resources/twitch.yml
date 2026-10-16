@@ -27,5 +27,7 @@ revision_minutos: 10
 dias_por_mes: 32
 
 fly:
-  # Mundos donde no se puede usar /fly, además del End y la Warden Cave
+  # Mundos donde no se puede usar /fly, además del End y la Warden Cave (tampoco se puede durante una BloodMoon).
+  # Va el nombre de la carpeta del mundo, por ejemplo para bloquear el Nether:
+  # mundos_bloqueados: ["Crossiants_nether"]
   mundos_bloqueados: []

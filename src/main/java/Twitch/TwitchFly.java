@@ -16,28 +16,26 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerGameModeChangeEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitTask;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 // /fly para los subs del canal y los operadores. No se puede en la Warden Cave, en el End, en los mundos de
-// twitch.yml ni durante un evento, y los admins lo apagan para todos con /twitchadmin fly off.
+// twitch.yml, durante un evento ni durante una BloodMoon, y los admins lo apagan para todos con /twitchadmin fly off.
 // Solo maneja el vuelo que da él: el doble salto de Habilidades y el vuelo de BuildBattle no se tocan
 public final class TwitchFly implements CommandExecutor, Listener {
 
     private static final Set<UUID> ACTIVE = ConcurrentHashMap.newKeySet();
-    private static final long FALL_PROTECTION = 10_000L;
 
     private final JavaPlugin plugin;
     private final TwitchManager manager;
-    private final Map<UUID, Long> noFallUntil = new HashMap<>();
+    // Jugadores a los que se les quitó el fly en el aire: no reciben daño de caída hasta que tocan el suelo
+    private final Set<UUID> noFall = new HashSet<>();
     private BukkitTask task;
 
     TwitchFly(JavaPlugin plugin, TwitchManager manager) {
@@ -80,7 +78,8 @@ public final class TwitchFly implements CommandExecutor, Listener {
     // Por qué no puede volar ahora (null = puede)
     String denial(Player player) {
         if (!manager.store().flyEnabled) return "El /fly está apagado por un evento.";
-        if (blocked(player.getWorld())) return "No se puede volar en la Warden Cave ni en el End.";
+        if (bloodMoon()) return "No se puede volar durante la BloodMoon.";
+        if (blocked(player.getWorld())) return "No se puede volar en este mundo.";
         if (inEvent(player)) return "No se puede volar durante un evento.";
         if (!player.isOp() && !manager.isSub(player)) return "El /fly es para los subs del canal de Crosszy.";
         return null;
@@ -90,6 +89,12 @@ public final class TwitchFly implements CommandExecutor, Listener {
         return world.getEnvironment() == World.Environment.THE_END
                 || world.getName().equals(QuasoPlugin.WORLD_NAME)
                 || manager.config().worldBlocked(world.getName());
+    }
+
+    // La BloodMoon va por mundo: con que haya una en cualquier mundo ya no se vuela
+    static boolean bloodMoon() {
+        BloodMoon.BloodMoon bloodMoon = BloodMoon.BloodMoon.GetInstance();
+        return bloodMoon != null && bloodMoon.getWorlds().stream().anyMatch(bloodMoon::isActive);
     }
 
     public static boolean inEvent(Player player) {
@@ -111,11 +116,11 @@ public final class TwitchFly implements CommandExecutor, Listener {
         player.setAllowFlight(true);
     }
 
-    // Apaga el vuelo que dio /fly; si estaba en el aire no recibe daño de caída al aterrizar
+    // Apaga el vuelo que dio /fly; si estaba en el aire no recibe daño de caída al aterrizar, caiga de donde caiga
     void disable(Player player, String message) {
         forget(player.getUniqueId());
         if (player.getGameMode() == GameMode.SURVIVAL || player.getGameMode() == GameMode.ADVENTURE) {
-            if (player.isFlying() || !player.isOnGround()) noFallUntil.put(player.getUniqueId(), System.currentTimeMillis() + FALL_PROTECTION);
+            if (player.isFlying() || !player.isOnGround()) noFall.add(player.getUniqueId());
             player.setFlying(false);
             player.setAllowFlight(false);
         }
@@ -142,8 +147,11 @@ public final class TwitchFly implements CommandExecutor, Listener {
     // Cada segundo: se le quita a quien ya no puede (fin de la sub, cambio de mundo, evento) y se le devuelve el
     // permiso de volar si otro sistema se lo sacó (por ejemplo al salir de creativo)
     private void tick() {
-        long now = System.currentTimeMillis();
-        noFallUntil.values().removeIf(until -> until < now);
+        // Si aterrizó sin daño de caída (agua, slime...) ya no hace falta la protección
+        noFall.removeIf(uuid -> {
+            Player player = Bukkit.getPlayer(uuid);
+            return player != null && player.isOnGround() && !player.isFlying();
+        });
         for (UUID uuid : new ArrayList<>(ACTIVE)) {
             Player player = Bukkit.getPlayer(uuid);
             if (player == null) continue;
@@ -192,13 +200,7 @@ public final class TwitchFly implements CommandExecutor, Listener {
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
     public void onFall(EntityDamageEvent event) {
         if (event.getCause() != EntityDamageEvent.DamageCause.FALL || !(event.getEntity() instanceof Player player)) return;
-        Long until = noFallUntil.remove(player.getUniqueId());
-        if (until != null && until >= System.currentTimeMillis()) event.setCancelled(true);
-    }
-
-    @EventHandler
-    public void onQuit(PlayerQuitEvent event) {
-        noFallUntil.remove(event.getPlayer().getUniqueId());
+        if (noFall.remove(player.getUniqueId())) event.setCancelled(true);
     }
 
     void shutdown() {

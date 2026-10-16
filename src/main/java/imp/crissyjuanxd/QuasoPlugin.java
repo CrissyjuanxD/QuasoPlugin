@@ -93,6 +93,7 @@ public class QuasoPlugin extends JavaPlugin implements Listener {
     private MantenimientoHandler mantenimientoHandler;
     private MainScoreboard mainScoreboard;
     private Homes homesCmd;
+    private Commands.Tpa tpaCmd;
 
     private TiempoCommand tiempoCommand;
     private RuletaAnimation ruletaAnimation;
@@ -265,6 +266,7 @@ public class QuasoPlugin extends JavaPlugin implements Listener {
         if (endDragon != null) endDragon.stop();
         if (mainScoreboard != null) mainScoreboard.shutdown();
         if (homesCmd != null) homesCmd.shutdown();
+        if (tpaCmd != null) tpaCmd.shutdown();
         if (amuletBloodM != null) amuletBloodM.shutdown();
         if (bloodMoon != null) bloodMoon.shutdown();
         ActionBarHandler.shutdown(this);
@@ -468,6 +470,16 @@ public class QuasoPlugin extends JavaPlugin implements Listener {
 
         getCommand("home").setTabCompleter(homesCmd);
         getCommand("delhome").setTabCompleter(homesCmd);
+
+        tpaCmd = new Commands.Tpa(this);
+        for (String nombre : java.util.List.of("tpa", "tpaccept", "tpdeny")) {
+            getCommand(nombre).setExecutor(tpaCmd);
+            getCommand(nombre).setTabCompleter(tpaCmd);
+        }
+
+        Handlers.Dimensiones dimensiones = new Handlers.Dimensiones(this);
+        getCommand("dimension").setExecutor(dimensiones);
+        getCommand("dimension").setTabCompleter(dimensiones);
 
         getCommand("bosstp").setExecutor(new BossTPCommand(this, missionHandler));
         getCommand("setbossspawn").setExecutor(new SetBossSpawnCommand(this));

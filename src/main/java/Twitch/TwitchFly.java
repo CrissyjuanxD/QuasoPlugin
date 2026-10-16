@@ -92,7 +92,7 @@ public final class TwitchFly implements CommandExecutor, Listener {
                 || manager.config().worldBlocked(world.getName());
     }
 
-    static boolean inEvent(Player player) {
+    public static boolean inEvent(Player player) {
         String team = teamOf(player);
         return team != null && (team.equals(TeamType.LAVACLASH.getId()) || team.equals(TeamType.ITEMPARTY.getId())
                 || team.equals(TeamType.HOTPOTATO.getId()) || team.equals(TeamType.BUILDBATTLE.getId()));

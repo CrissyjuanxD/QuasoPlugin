@@ -256,6 +256,21 @@ commands:
   delhome:
     description: Elimina tu casa
     usage: /delhome
+  tpa:
+    description: Pide teletransportarte a donde está otro jugador
+    usage: /tpa <jugador>
+  tpaccept:
+    description: Acepta una petición de teletransporte
+    usage: /tpaccept [jugador]
+  tpdeny:
+    description: Rechaza una petición de teletransporte
+    usage: /tpdeny [jugador]
+  dimension:
+    description: Cierra o abre el Nether, el End o la Warden Cave
+    usage: /dimension <cerrar|abrir|estado> <nether|end|wardencave>
+    aliases: [dimensiones]
+    permission: viciont_hardcore3.command.dimension
+    permission-message: No tienes permiso para usar este comando.
   pesca:
     description: Gestiona las zonas de pesca custom
     usage: /pesca <give|set|reload|list>
@@ -307,6 +322,9 @@ depend: [EliteMobs]
 softdepend: [FastAsyncWorldEdit, WorldGuard, ViaVersion, ViciontProtections]
 
 permissions:
+  viciont_hardcore3.command.dimension:
+    default: op
+    description: Permite cerrar y abrir dimensiones con /dimension.
   quaso.basedatos:
     default: op
     description: Permite usar /basedatos (ver, editar, vaciar y resetear la base de datos).

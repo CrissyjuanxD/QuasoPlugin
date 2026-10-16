@@ -138,6 +138,8 @@ public class PortalManager implements Listener {
     // Lo levita 4 segundos con efectos y después lo manda a la otra dimensión.
     // Si va a la Warden Cave, el lugar al azar se busca mientras levita
     private void triggerTeleport(Player p) {
+        if (!p.getWorld().getName().equals(QuasoPlugin.WORLD_NAME)
+                && Handlers.Dimensiones.bloquea(p, Bukkit.getWorld(QuasoPlugin.WORLD_NAME))) return;
         p.setMetadata("Teleporting", new FixedMetadataValue(plugin, true));
 
         p.addPotionEffect(new PotionEffect(PotionEffectType.LEVITATION, 100, 1));

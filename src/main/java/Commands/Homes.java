@@ -185,6 +185,8 @@ public class Homes implements CommandExecutor, TabCompleter, Listener {
                 return true;
             }
 
+            if (Handlers.Dimensiones.bloquea(player, world)) return true;
+
             Location homeLoc = new Location(world, x, y, z, player.getLocation().getYaw(), player.getLocation().getPitch());
 
             PendingTeleport previous = teleportingPlayers.remove(player.getUniqueId());
@@ -401,6 +403,7 @@ public class Homes implements CommandExecutor, TabCompleter, Listener {
     }
 
     private void teleportHome(Player player, Location location, String homeName) {
+        if (Handlers.Dimensiones.bloquea(player, location.getWorld())) return;
         player.teleport(location);
         player.playSound(player.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 1.0f, 1.0f);
         player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent("§a§l¡Teletransportado a " + homeName + "!"));

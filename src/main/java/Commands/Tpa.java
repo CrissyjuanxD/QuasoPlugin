@@ -8,8 +8,6 @@ import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.format.TextDecoration;
-import net.md_5.bungee.api.ChatMessageType;
-import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Sound;
@@ -42,11 +40,10 @@ import java.util.UUID;
 public class Tpa implements CommandExecutor, TabCompleter, Listener {
 
     private static final long EXPIRA_MS = 60_000;
-    private static final TextColor GOLD = TextColor.color(0xE28B20);
-    private static final TextColor CREAM = TextColor.color(0xF4D990);
-    private static final TextColor GREEN = TextColor.color(0xC9DC8A);
-    private static final TextColor ORANGE = TextColor.color(0xDD6110);
-    private static final TextColor RED = TextColor.color(0xE05A4F);
+    // Morado, azul y celeste pastel
+    private static final TextColor MORADO = TextColor.color(0xB79CFF);
+    private static final TextColor AZUL = TextColor.color(0x7DA7FF);
+    private static final TextColor CELESTE = TextColor.color(0xA8E4FF);
 
     private final QuasoPlugin plugin;
     // Quien recibe → (quien pide → cuándo la pidió)
@@ -109,24 +106,24 @@ public class Tpa implements CommandExecutor, TabCompleter, Listener {
         limpiar(recibidas);
         if (recibidas.containsKey(player.getUniqueId())) {
             player.sendMessage(texto("Ya le enviaste una petición a ").append(nombre(objetivo))
-                    .append(Component.text(", espera a que la responda.", CREAM)));
+                    .append(Component.text(", espera a que la responda.", CELESTE)));
             return;
         }
         recibidas.put(player.getUniqueId(), System.currentTimeMillis());
 
-        Component aceptar = Component.text("[Aceptar]", GREEN).decorate(TextDecoration.BOLD)
+        Component aceptar = Component.text("[Aceptar]", AZUL).decorate(TextDecoration.BOLD)
                 .clickEvent(ClickEvent.runCommand("/tpaccept " + player.getName()))
-                .hoverEvent(HoverEvent.showText(Component.text("Dejar que " + player.getName() + " venga a donde estás", GREEN)));
-        Component rechazar = Component.text("[Rechazar]", RED).decorate(TextDecoration.BOLD)
+                .hoverEvent(HoverEvent.showText(Component.text("Dejar que " + player.getName() + " venga a donde estás", CELESTE)));
+        Component rechazar = Component.text("[Rechazar]", MORADO).decorate(TextDecoration.BOLD)
                 .clickEvent(ClickEvent.runCommand("/tpdeny " + player.getName()))
-                .hoverEvent(HoverEvent.showText(Component.text("Rechazar la petición", RED)));
+                .hoverEvent(HoverEvent.showText(Component.text("Rechazar la petición", CELESTE)));
         objetivo.sendMessage(texto("El jugador ").append(nombre(player))
-                .append(Component.text(" quiere teletransportarse a donde tú estás ", CREAM))
+                .append(Component.text(" quiere teletransportarse a donde tú estás ", CELESTE))
                 .append(aceptar).append(Component.text(" ")).append(rechazar));
         objetivo.playSound(objetivo.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 1f, 1.5f);
 
         player.sendMessage(texto("Has enviado una petición de teletransporte a ").append(nombre(objetivo))
-                .append(Component.text(", espera a que la acepte.", CREAM)));
+                .append(Component.text(", espera a que la acepte.", CELESTE)));
         player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 0.6f, 1.2f);
     }
 
@@ -160,20 +157,20 @@ public class Tpa implements CommandExecutor, TabCompleter, Listener {
         if (!acepta) {
             player.sendMessage(texto("Has rechazado la petición de teletransporte de ").append(nombre(solicitante)));
             solicitante.sendMessage(texto("").append(nombre(player))
-                    .append(Component.text(" te ha rechazado la petición de teletransporte", CREAM)));
+                    .append(Component.text(" te ha rechazado la petición de teletransporte", CELESTE)));
             solicitante.playSound(solicitante.getLocation(), Sound.ENTITY_VILLAGER_NO, 1f, 1f);
             return;
         }
         if (Dimensiones.bloquea(solicitante, player.getWorld())) {
             player.sendMessage(texto("La dimensión donde estás está cerrada, ").append(nombre(solicitante))
-                    .append(Component.text(" no puede venir.", CREAM)));
+                    .append(Component.text(" no puede venir.", CELESTE)));
             solicitante.sendMessage(texto("La dimensión de ").append(nombre(player))
-                    .append(Component.text(" está cerrada temporalmente.", CREAM)));
+                    .append(Component.text(" está cerrada temporalmente.", CELESTE)));
             return;
         }
         player.sendMessage(texto("Has aceptado la petición de teletransporte de ").append(nombre(solicitante)));
         solicitante.sendMessage(texto("").append(nombre(player))
-                .append(Component.text(" ha aceptado tu petición de teletransporte", CREAM)));
+                .append(Component.text(" ha aceptado tu petición de teletransporte", CELESTE)));
         empezar(solicitante, player);
     }
 
@@ -203,8 +200,9 @@ public class Tpa implements CommandExecutor, TabCompleter, Listener {
                     return;
                 }
                 if (count > 0) {
-                    String color = count <= 2 ? "§c" : "§e";
-                    player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent("§bTeletransportando en " + color + count + "§b..."));
+                    player.sendActionBar(Component.text("Teletransportando en ", CELESTE)
+                            .append(Component.text(count, count <= 2 ? MORADO : AZUL).decorate(TextDecoration.BOLD))
+                            .append(Component.text("...", CELESTE)));
                     player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 0.5f, 1f);
                     count--;
                 } else {
@@ -221,15 +219,16 @@ public class Tpa implements CommandExecutor, TabCompleter, Listener {
         player.setFallDistance(0);
         player.teleport(destino.getLocation());
         player.playSound(player.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 1.0f, 1.0f);
-        player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent("§a§l¡Teletransportado a " + destino.getName() + "!"));
+        player.sendActionBar(Component.text("¡Teletransportado a ", CELESTE).decorate(TextDecoration.BOLD)
+                .append(Component.text(destino.getName(), AZUL)).append(Component.text("!", CELESTE)));
     }
 
     private void cancelar(Player player, String mensaje) {
         Espera espera = esperando.remove(player.getUniqueId());
         if (espera == null) return;
         espera.cancel();
-        player.sendMessage(Component.text(mensaje, RED));
-        player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent("§c§l¡Teletransporte Cancelado!"));
+        player.sendMessage(texto("").append(Component.text(mensaje, MORADO)));
+        player.sendActionBar(Component.text("¡Teletransporte cancelado!", MORADO).decorate(TextDecoration.BOLD));
         player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_NO, 1f, 1f);
     }
 
@@ -273,12 +272,12 @@ public class Tpa implements CommandExecutor, TabCompleter, Listener {
     }
 
     private Component texto(String mensaje) {
-        return Component.text("⚙ ", GOLD).decorate(TextDecoration.BOLD)
-                .append(Component.text(mensaje, CREAM).decoration(TextDecoration.BOLD, false));
+        return Component.text("⚙ ", MORADO).decorate(TextDecoration.BOLD)
+                .append(Component.text(mensaje, CELESTE).decoration(TextDecoration.BOLD, false));
     }
 
     private Component nombre(Player player) {
-        return Component.text(player.getName(), GREEN).decoration(TextDecoration.BOLD, false);
+        return Component.text(player.getName(), AZUL).decoration(TextDecoration.BOLD, false);
     }
 
     public void shutdown() {

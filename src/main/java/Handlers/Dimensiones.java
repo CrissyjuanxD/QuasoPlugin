@@ -74,6 +74,7 @@ public class Dimensiones implements CommandExecutor, TabCompleter, Listener {
     public static Dimension de(World world) {
         if (world == null) return null;
         if (QuasoPlugin.WORLD_NAME.equals(world.getName())) return Dimension.WARDENCAVE;
+        if (world.getEnvironment() == null) return null;
         return switch (world.getEnvironment()) {
             case NETHER -> Dimension.NETHER;
             case THE_END -> Dimension.END;
@@ -85,7 +86,7 @@ public class Dimensiones implements CommandExecutor, TabCompleter, Listener {
         return dimension != null && CERRADAS.contains(dimension);
     }
 
-    // Si el destino está cerrado le avisa con el action bar y devuelve true. Los OPs pasan igual
+    // Para /home y /tpa: si el destino está cerrado le avisa con el action bar y devuelve true. Los OPs pasan igual
     public static boolean bloquea(Player player, World destino) {
         return !CERRADAS.isEmpty() && bloquea(player, de(destino));
     }

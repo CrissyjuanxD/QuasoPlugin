@@ -94,6 +94,7 @@ public class QuasoPlugin extends JavaPlugin implements Listener {
     private MainScoreboard mainScoreboard;
     private Homes homesCmd;
     private Commands.Tpa tpaCmd;
+    private Hologramas.HologramasManager hologramasManager;
 
     private TiempoCommand tiempoCommand;
     private RuletaAnimation ruletaAnimation;
@@ -228,6 +229,7 @@ public class QuasoPlugin extends JavaPlugin implements Listener {
         twitchManager = new TwitchManager(this, missionHandler);
         trabajosManager = new TrabajosManager(this, databaseManager, dinoCoinsManager);
         initBaseDatos();
+        initHologramas();
         initMenu();
         initWeb();
         bloodMoon.enable();
@@ -267,6 +269,7 @@ public class QuasoPlugin extends JavaPlugin implements Listener {
         if (mainScoreboard != null) mainScoreboard.shutdown();
         if (homesCmd != null) homesCmd.shutdown();
         if (tpaCmd != null) tpaCmd.shutdown();
+        if (hologramasManager != null) hologramasManager.shutdown();
         if (amuletBloodM != null) amuletBloodM.shutdown();
         if (bloodMoon != null) bloodMoon.shutdown();
         ActionBarHandler.shutdown(this);
@@ -591,6 +594,15 @@ public class QuasoPlugin extends JavaPlugin implements Listener {
                 new BaseDatos.BaseDatosDialogos(this, databaseManager, missionHandler, trabajosManager));
         Objects.requireNonNull(getCommand("basedatos")).setExecutor(command);
         Objects.requireNonNull(getCommand("basedatos")).setTabCompleter(command);
+    }
+
+    // /holograma: hologramas (Text Display) en diálogos para los admins
+    private void initHologramas() {
+        hologramasManager = new Hologramas.HologramasManager(this);
+        Hologramas.HologramasCommand command = new Hologramas.HologramasCommand(hologramasManager,
+                new Hologramas.HologramasDialogos(this, hologramasManager));
+        Objects.requireNonNull(getCommand("holograma")).setExecutor(command);
+        Objects.requireNonNull(getCommand("holograma")).setTabCompleter(command);
     }
 
     private void initMenu() {

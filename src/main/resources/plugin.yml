@@ -317,11 +317,20 @@ commands:
     aliases: [bd]
     permission: quaso.basedatos
     permission-message: Solo los OPs pueden ver la base de datos.
+  holograma:
+    description: Crea y edita hologramas (Text Display) en diálogos. Solo admins.
+    usage: /holograma [crear|editar <nombre>|posicion <nombre>|guia|recargar]
+    aliases: [hologramas, holo]
+    permission: quaso.hologramas
+    permission-message: Solo los admins pueden usar los hologramas.
 
 depend: [EliteMobs]
 softdepend: [FastAsyncWorldEdit, WorldGuard, ViaVersion, ViciontProtections]
 
 permissions:
+  quaso.hologramas:
+    default: op
+    description: Permite crear, editar y ver los borradores de los hologramas (/holograma).
   viciont_hardcore3.command.dimension:
     default: op
     description: Permite cerrar y abrir dimensiones con /dimension.

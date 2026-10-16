@@ -2,6 +2,7 @@ package Handlers;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Color;
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.NamespacedKey;
 import org.bukkit.World;
@@ -92,7 +93,7 @@ public class ChatBubbleManager implements Listener, CommandExecutor, TabComplete
                     Player p = Bukkit.getPlayer(entry.getKey());
                     BubbleData data = entry.getValue();
 
-                    if (p == null || !p.isOnline() || data.display.isDead()) {
+                    if (p == null || !p.isOnline() || data.display.isDead() || p.getGameMode() == GameMode.SPECTATOR) {
                         if (data.display != null && !data.display.isDead()) data.display.remove();
                         it.remove();
                         continue;
@@ -133,7 +134,7 @@ public class ChatBubbleManager implements Listener, CommandExecutor, TabComplete
         }.runTaskTimer(plugin, 0L, 1L);
     }
 
-    // Pone el mensaje en una burbuja encima del jugador; dura más cuanto más largo es (máximo 10 s)
+    // Pone el mensaje en una burbuja encima del jugador; dura más cuanto más largo es (máximo 10 s). En espectador no
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onPlayerChat(AsyncPlayerChatEvent e) {
         if (!enabled) return;
@@ -148,6 +149,8 @@ public class ChatBubbleManager implements Listener, CommandExecutor, TabComplete
         final int finalMaxTicks = Math.min(calculatedTicks, 200);
 
         Bukkit.getScheduler().runTask(plugin, () -> {
+            // En espectador no sale burbuja (delataría dónde está)
+            if (!p.isOnline() || p.getGameMode() == GameMode.SPECTATOR) return;
             BubbleData data = activeBubbles.get(p.getUniqueId());
 
             if (data != null && data.display != null && !data.display.isDead()) {

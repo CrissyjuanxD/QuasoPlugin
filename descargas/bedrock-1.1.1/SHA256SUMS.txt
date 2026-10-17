@@ -1,0 +1,2 @@
+24084292c30f3bdd8cc6266430bc637c45d56982e8ccb7d236b84de34954253c  extensions/QuasoWardenCave-1.1.1.jar
+cb00f7aafbf7c7c94d1d578a0fe1f3739504c2286d9d6c9d7f0b56a4ff3ceb9d  Quaso-Bedrock-1.1.1-actualizar.zip

@@ -1,5 +1,7 @@
 # Quaso Bedrock 1.1.0
 
+> **Corrección al entrar:** utiliza [QuasoWardenCave 1.1.1](../bedrock-1.1.1/README.md) en lugar del JAR 1.1.0. El pack de esta carpeta se conserva. Corrige los IDs del registro de biomas relacionados con `InitialConnection-90 / Block`.
+
 Actualización del port para **Minecraft Bedrock Windows 26.52, IU clásica**, Paper **26.2** y Geyser-Spigot **2.12.0**. Integra los tres packs anteriores en uno. Conserva las texturas y mappings de items, armaduras, frutas y minerales que ya funcionaban.
 
 [Descargar instalador](Quaso-Bedrock-1.1.0-instalar.zip) · [Pack](packs/QuasoTextures-1.1.0.mcpack) · [Extensión](extensions/QuasoWardenCave-1.1.0.jar)

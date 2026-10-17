@@ -1,5 +1,8 @@
 package SistemaTumbas;
 
+import io.papermc.paper.event.player.PrePlayerAttackEntityEvent;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Interaction;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -42,31 +45,36 @@ public class GravesListener implements Listener {
     // Click derecho a la tumba abre sus items: el dueño y los admins siempre, los demás según el modo de las tumbas
     @EventHandler
     public void onInteractEntity(PlayerInteractEntityEvent event) {
-        if (event.getRightClicked() instanceof org.bukkit.entity.Interaction interaction) {
+        if (abrir(event.getPlayer(), event.getRightClicked())) event.setCancelled(true);
+    }
 
-            for (String tag : interaction.getScoreboardTags()) {
-                if (tag.startsWith("grave_")) {
-                    event.setCancelled(true);
+    // Pegarle también la abre: desde Bedrock (Geyser) tocar la tumba suele llegar como golpe y no como click derecho
+    @EventHandler
+    public void onAttackEntity(PrePlayerAttackEntityEvent event) {
+        if (abrir(event.getPlayer(), event.getAttacked())) event.setCancelled(true);
+    }
 
-                    UUID graveId = UUID.fromString(tag.replace("grave_", ""));
-                    Grave grave = manager.getGraveById(graveId);
+    // Abre la tumba si la entidad es su cuadro para clickear; devuelve true si era una tumba
+    private boolean abrir(Player player, Entity entity) {
+        if (!(entity instanceof Interaction interaction)) return false;
 
-                    if (grave != null) {
-                        Player player = event.getPlayer();
+        for (String tag : interaction.getScoreboardTags()) {
+            if (!tag.startsWith("grave_")) continue;
 
-                        if (!manager.canOpen(grave, player)) {
-                            long untilOpen = manager.millisUntilOpen(grave);
-                            player.sendMessage(TumbaMessages.error("Esta tumba es de " + grave.getOwnerName()
-                                    + (untilOpen > 0 ? ". Se abre para todos en " + ModoTumba.reloj(untilOpen) + "." : " y solo la puede abrir su dueño.")));
-                            return;
-                        }
+            Grave grave = manager.getGraveById(UUID.fromString(tag.replace("grave_", "")));
+            if (grave == null) return true;
 
-                        player.openInventory(grave.getInventory());
-                    }
-                    return;
-                }
+            if (!manager.canOpen(grave, player)) {
+                long untilOpen = manager.millisUntilOpen(grave);
+                player.sendMessage(TumbaMessages.error("Esta tumba es de " + grave.getOwnerName()
+                        + (untilOpen > 0 ? ". Se abre para todos en " + ModoTumba.reloj(untilOpen) + "." : " y solo la puede abrir su dueño.")));
+                return true;
             }
+
+            player.openInventory(grave.getInventory());
+            return true;
         }
+        return false;
     }
 
     // Si la tumba quedó vacía se borra, si no se guarda como quedó

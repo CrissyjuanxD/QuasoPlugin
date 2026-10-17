@@ -1,0 +1,45 @@
+{
+  "format_version": "1.8.0",
+  "animations": {
+    "animation.quaso.displays": {
+      "loop": true,
+      "bones": {
+        "translation": {
+          "position": [
+            "-v.t_x*16",
+            "v.t_y*16",
+            "v.t_z*16"
+          ]
+        },
+        "left": {
+          "rotation": [
+            "-v.l_x",
+            "-v.l_y",
+            "v.l_z"
+          ]
+        },
+        "scale": {
+          "scale": [
+            "v.s_x",
+            "v.s_y",
+            "v.s_z"
+          ]
+        },
+        "right": {
+          "rotation": [
+            "-v.r_x",
+            "-v.r_y",
+            "v.r_z"
+          ]
+        },
+        "item_origin": {
+          "position": [
+            "q.property('quaso:item')*8",
+            "q.property('quaso:item')*-8",
+            "q.property('quaso:item')*-8"
+          ]
+        }
+      }
+    }
+  }
+}

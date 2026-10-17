@@ -1,0 +1,87 @@
+{
+  "format_version": "1.10.0",
+  "minecraft:client_entity": {
+    "description": {
+      "identifier": "minecraft:bee",
+      "materials": {
+        "default": "bee",
+        "quaso": "entity_alphatest",
+        "quaso_glow": "entity_emissive_alpha",
+        "quaso_bee": "bee"
+      },
+      "textures": {
+        "default": "textures/entity/bee/bee",
+        "angry": "textures/entity/bee/bee_angry",
+        "nectar": "textures/entity/bee/bee_nectar",
+        "angry_nectar": "textures/entity/bee/bee_angry_nectar",
+        "baby_default": "textures/entity/bee/bee_baby",
+        "baby_angry": "textures/entity/bee/bee_angry_baby",
+        "baby_nectar": "textures/entity/bee/bee_nectar_baby",
+        "baby_angry_nectar": "textures/entity/bee/bee_angry_nectar_baby",
+        "bee2": "textures/entity/quaso/bee2",
+        "bee2_nectar": "textures/entity/quaso/bee2_nectar",
+        "bee2_angry": "textures/entity/quaso/bee2_angry",
+        "bee2_angry_nectar": "textures/entity/quaso/bee2_angry_nectar",
+        "bee3": "textures/entity/quaso/bee3",
+        "bee3_e": "textures/entity/quaso/bee3_e"
+      },
+      "geometry": {
+        "default": "geometry.bee",
+        "baby": "geometry.bee.baby",
+        "bee2": "geometry.quaso.bee2",
+        "bee3": "geometry.quaso.bee3"
+      },
+      "animations": {
+        "flying": "animation.bee.flying",
+        "drip": "controller.animation.bee.drip",
+        "controller_bee_sting": "controller.animation.bee.sting",
+        "bee_sting": "animation.bee.sting",
+        "bee_no_stinger": "animation.bee.no_stinger",
+        "bee_fly_bobbing": "animation.bee.fly.bobbing",
+        "bee_root_controller": "controller.animation.bee.root",
+        "bee2": "animation.quaso.bee2",
+        "bee3": "animation.quaso.bee3"
+      },
+      "particle_effects": {
+        "nectar_dripping": "minecraft:nectar_drip_particle"
+      },
+      "scripts": {
+        "animate": [
+          "bee_root_controller",
+          {
+            "bee_no_stinger": "query.mark_variant == 1"
+          },
+          {
+            "bee2": "variable.quaso_bee2"
+          },
+          {
+            "bee3": "variable.quaso_bee3"
+          }
+        ],
+        "scale": "query.is_baby ? 2.0 : 1.0",
+        "pre_animation": [
+          "variable.quaso_bee2 = query.property('quaso:model') == 9313;",
+          "variable.quaso_bee3 = query.property('quaso:model') == 9314;",
+          "variable.quaso_custom = variable.quaso_bee2 || variable.quaso_bee3;"
+        ]
+      },
+      "render_controllers": [
+        {
+          "controller.render.bee.v2": "!variable.quaso_custom"
+        },
+        {
+          "controller.render.quaso.bee2": "variable.quaso_bee2"
+        },
+        {
+          "controller.render.quaso.bee3": "variable.quaso_bee3"
+        },
+        {
+          "controller.render.quaso.bee3_e": "variable.quaso_bee3"
+        }
+      ],
+      "spawn_egg": {
+        "texture": "spawn_egg_bee"
+      }
+    }
+  }
+}

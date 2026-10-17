@@ -1,0 +1,44 @@
+{
+  "format_version": "1.16.0",
+  "minecraft:geometry": [
+    {
+      "description": {
+        "identifier": "geometry.quaso.shield",
+        "texture_width": 16,
+        "texture_height": 16
+      },
+      "bones": [
+        {
+          "name": "shield",
+          "binding": "q.item_slot_to_bone_name(c.item_slot)",
+          "texture_meshes": [
+            {
+              "texture": "default",
+              "local_pivot": [
+                0,
+                0,
+                0
+              ],
+              "use_pixel_depth": true,
+              "position": [
+                1,
+                28,
+                -0.5
+              ],
+              "rotation": [
+                0,
+                0,
+                0
+              ]
+            }
+          ],
+          "pivot": [
+            1,
+            15.5,
+            3
+          ]
+        }
+      ]
+    }
+  ]
+}

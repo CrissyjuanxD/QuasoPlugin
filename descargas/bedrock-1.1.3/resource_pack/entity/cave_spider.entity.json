@@ -1,0 +1,60 @@
+{
+  "format_version": "1.10.0",
+  "minecraft:client_entity": {
+    "description": {
+      "identifier": "minecraft:cave_spider",
+      "min_engine_version": "1.8.0",
+      "materials": {
+        "default": "spider",
+        "invisible": "spider_invisible",
+        "quaso": "entity_alphatest",
+        "quaso_glow": "entity_emissive_alpha"
+      },
+      "textures": {
+        "default": "textures/entity/spider/cave_spider",
+        "cave_spider3": "textures/entity/quaso/cave_spider3",
+        "cave_spider3_e": "textures/entity/quaso/cave_spider3_e"
+      },
+      "geometry": {
+        "default": "geometry.spider.v1.8",
+        "cave_spider3": "geometry.quaso.cave_spider3"
+      },
+      "scripts": {
+        "scale": "0.7",
+        "pre_animation": [
+          "variable.quaso_cave_spider3 = query.property('quaso:model') == 9311;",
+          "variable.quaso_custom = variable.quaso_cave_spider3;"
+        ],
+        "animate": [
+          {
+            "quaso_native_move_controller": "!variable.quaso_custom"
+          },
+          {
+            "cave_spider3": "variable.quaso_cave_spider3"
+          }
+        ]
+      },
+      "animations": {
+        "default_leg_pose": "animation.spider.default_leg_pose",
+        "look_at_target": "animation.spider.look_at_target",
+        "walk": "animation.spider.walk",
+        "cave_spider3": "animation.quaso.cave_spider3",
+        "quaso_native_move_controller": "controller.animation.spider.move"
+      },
+      "render_controllers": [
+        {
+          "controller.render.spider": "!variable.quaso_custom"
+        },
+        {
+          "controller.render.quaso.cave_spider3": "variable.quaso_cave_spider3"
+        },
+        {
+          "controller.render.quaso.cave_spider3_e": "variable.quaso_cave_spider3"
+        }
+      ],
+      "spawn_egg": {
+        "texture": "spawn_egg_cave_spider"
+      }
+    }
+  }
+}

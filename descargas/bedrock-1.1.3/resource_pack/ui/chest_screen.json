@@ -1,0 +1,306 @@
+{
+  "namespace": "chest",
+  "chest_label": {
+    "$quaso_title_copy": "$container_title",
+    "$quaso_visible|default": true,
+    "visible": "$quaso_visible",
+    "variables": [
+      {
+        "requires": "(not (($quaso_title_copy - '[quaso:misiones]') = $quaso_title_copy))",
+        "$quaso_visible": false
+      },
+      {
+        "requires": "(not (($quaso_title_copy - '[quaso:misiones_extra]') = $quaso_title_copy))",
+        "$quaso_visible": false
+      },
+      {
+        "requires": "(not (($quaso_title_copy - '[quaso:misiones_trabajo]') = $quaso_title_copy))",
+        "$quaso_visible": false
+      },
+      {
+        "requires": "(not (($quaso_title_copy - '[quaso:menu]') = $quaso_title_copy))",
+        "$quaso_visible": false
+      },
+      {
+        "requires": "(not (($quaso_title_copy - '[quaso:habilidades]') = $quaso_title_copy))",
+        "$quaso_visible": false
+      },
+      {
+        "requires": "(not (($quaso_title_copy - '[quaso:trabajos]') = $quaso_title_copy))",
+        "$quaso_visible": false
+      },
+      {
+        "requires": "(not (($quaso_title_copy - '[quaso:tiendas]') = $quaso_title_copy))",
+        "$quaso_visible": false
+      }
+    ]
+  },
+  "quaso_cell_image_panel@common.cell_image_panel": {
+    "$quaso_title_copy": "$container_title",
+    "$quaso_visible|default": true,
+    "visible": "$quaso_visible",
+    "variables": [
+      {
+        "requires": "(not (($quaso_title_copy - '[quaso:misiones]') = $quaso_title_copy))",
+        "$quaso_visible": false
+      },
+      {
+        "requires": "(not (($quaso_title_copy - '[quaso:misiones_extra]') = $quaso_title_copy))",
+        "$quaso_visible": false
+      },
+      {
+        "requires": "(not (($quaso_title_copy - '[quaso:misiones_trabajo]') = $quaso_title_copy))",
+        "$quaso_visible": false
+      },
+      {
+        "requires": "(not (($quaso_title_copy - '[quaso:menu]') = $quaso_title_copy))",
+        "$quaso_visible": false
+      },
+      {
+        "requires": "(not (($quaso_title_copy - '[quaso:habilidades]') = $quaso_title_copy))",
+        "$quaso_visible": false
+      },
+      {
+        "requires": "(not (($quaso_title_copy - '[quaso:trabajos]') = $quaso_title_copy))",
+        "$quaso_visible": false
+      },
+      {
+        "requires": "(not (($quaso_title_copy - '[quaso:tiendas]') = $quaso_title_copy))",
+        "$quaso_visible": false
+      }
+    ]
+  },
+  "chest_grid_item": {
+    "$background_images": "chest.quaso_cell_image_panel"
+  },
+  "quaso_misiones": {
+    "type": "image",
+    "texture": "textures/ui/quaso/misiones",
+    "size": [
+      176,
+      135
+    ],
+    "anchor_from": "top_left",
+    "anchor_to": "top_left",
+    "offset": [
+      0,
+      3
+    ],
+    "layer": 3,
+    "$quaso_title_copy": "$container_title",
+    "$quaso_visible|default": false,
+    "visible": "$quaso_visible",
+    "variables": [
+      {
+        "requires": "(not (($quaso_title_copy - '[quaso:misiones]') = $quaso_title_copy))",
+        "$quaso_visible": true
+      }
+    ]
+  },
+  "quaso_misiones_extra": {
+    "type": "image",
+    "texture": "textures/ui/quaso/misiones_extra",
+    "size": [
+      176,
+      135
+    ],
+    "anchor_from": "top_left",
+    "anchor_to": "top_left",
+    "offset": [
+      0,
+      3
+    ],
+    "layer": 3,
+    "$quaso_title_copy": "$container_title",
+    "$quaso_visible|default": false,
+    "visible": "$quaso_visible",
+    "variables": [
+      {
+        "requires": "(not (($quaso_title_copy - '[quaso:misiones_extra]') = $quaso_title_copy))",
+        "$quaso_visible": true
+      }
+    ]
+  },
+  "quaso_misiones_trabajo": {
+    "type": "image",
+    "texture": "textures/ui/quaso/misiones_trabajo",
+    "size": [
+      176,
+      135
+    ],
+    "anchor_from": "top_left",
+    "anchor_to": "top_left",
+    "offset": [
+      0,
+      3
+    ],
+    "layer": 3,
+    "$quaso_title_copy": "$container_title",
+    "$quaso_visible|default": false,
+    "visible": "$quaso_visible",
+    "variables": [
+      {
+        "requires": "(not (($quaso_title_copy - '[quaso:misiones_trabajo]') = $quaso_title_copy))",
+        "$quaso_visible": true
+      }
+    ]
+  },
+  "quaso_menu": {
+    "type": "image",
+    "texture": "textures/ui/quaso/menu",
+    "size": [
+      176,
+      135
+    ],
+    "anchor_from": "top_left",
+    "anchor_to": "top_left",
+    "offset": [
+      0,
+      3
+    ],
+    "layer": 3,
+    "$quaso_title_copy": "$container_title",
+    "$quaso_visible|default": false,
+    "visible": "$quaso_visible",
+    "variables": [
+      {
+        "requires": "(not (($quaso_title_copy - '[quaso:menu]') = $quaso_title_copy))",
+        "$quaso_visible": true
+      }
+    ]
+  },
+  "quaso_habilidades": {
+    "type": "image",
+    "texture": "textures/ui/quaso/habilidades",
+    "size": [
+      176,
+      135
+    ],
+    "anchor_from": "top_left",
+    "anchor_to": "top_left",
+    "offset": [
+      0,
+      3
+    ],
+    "layer": 3,
+    "$quaso_title_copy": "$container_title",
+    "$quaso_visible|default": false,
+    "visible": "$quaso_visible",
+    "variables": [
+      {
+        "requires": "(not (($quaso_title_copy - '[quaso:habilidades]') = $quaso_title_copy))",
+        "$quaso_visible": true
+      }
+    ]
+  },
+  "quaso_trabajos": {
+    "type": "image",
+    "texture": "textures/ui/quaso/trabajos",
+    "size": [
+      176,
+      81
+    ],
+    "anchor_from": "top_left",
+    "anchor_to": "top_left",
+    "offset": [
+      0,
+      3
+    ],
+    "layer": 3,
+    "$quaso_title_copy": "$container_title",
+    "$quaso_visible|default": false,
+    "visible": "$quaso_visible",
+    "variables": [
+      {
+        "requires": "(not (($quaso_title_copy - '[quaso:trabajos]') = $quaso_title_copy))",
+        "$quaso_visible": true
+      }
+    ]
+  },
+  "quaso_tiendas": {
+    "type": "image",
+    "texture": "textures/ui/quaso/tiendas",
+    "size": [
+      176,
+      135
+    ],
+    "anchor_from": "top_left",
+    "anchor_to": "top_left",
+    "offset": [
+      0,
+      3
+    ],
+    "layer": 3,
+    "$quaso_title_copy": "$container_title",
+    "$quaso_visible|default": false,
+    "visible": "$quaso_visible",
+    "variables": [
+      {
+        "requires": "(not (($quaso_title_copy - '[quaso:tiendas]') = $quaso_title_copy))",
+        "$quaso_visible": true
+      }
+    ]
+  },
+  "small_chest_panel/root_panel": {
+    "modifications": [
+      {
+        "array_name": "controls",
+        "operation": "insert_back",
+        "value": [
+          {
+            "quaso_misiones@chest.quaso_misiones": {}
+          },
+          {
+            "quaso_misiones_extra@chest.quaso_misiones_extra": {}
+          },
+          {
+            "quaso_misiones_trabajo@chest.quaso_misiones_trabajo": {}
+          },
+          {
+            "quaso_menu@chest.quaso_menu": {}
+          },
+          {
+            "quaso_habilidades@chest.quaso_habilidades": {}
+          },
+          {
+            "quaso_trabajos@chest.quaso_trabajos": {}
+          },
+          {
+            "quaso_tiendas@chest.quaso_tiendas": {}
+          }
+        ]
+      }
+    ]
+  },
+  "large_chest_panel/root_panel": {
+    "modifications": [
+      {
+        "array_name": "controls",
+        "operation": "insert_back",
+        "value": [
+          {
+            "quaso_misiones@chest.quaso_misiones": {}
+          },
+          {
+            "quaso_misiones_extra@chest.quaso_misiones_extra": {}
+          },
+          {
+            "quaso_misiones_trabajo@chest.quaso_misiones_trabajo": {}
+          },
+          {
+            "quaso_menu@chest.quaso_menu": {}
+          },
+          {
+            "quaso_habilidades@chest.quaso_habilidades": {}
+          },
+          {
+            "quaso_trabajos@chest.quaso_trabajos": {}
+          },
+          {
+            "quaso_tiendas@chest.quaso_tiendas": {}
+          }
+        ]
+      }
+    ]
+  }
+}

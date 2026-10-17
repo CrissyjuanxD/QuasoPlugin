@@ -1,0 +1,28 @@
+{
+  "format_version": [
+    1,
+    1,
+    0
+  ],
+  "geyser_custom:quaso_wc_ore_cyan": {
+    "sound": "stone"
+  },
+  "geyser_custom:quaso_wc_ore_green": {
+    "sound": "stone"
+  },
+  "geyser_custom:quaso_wc_ore_purple": {
+    "sound": "stone"
+  },
+  "geyser_custom:quaso_wc_ore_gray": {
+    "sound": "stone"
+  },
+  "geyser_custom:quaso_wc_baya_sculk": {
+    "sound": "froglight"
+  },
+  "geyser_custom:quaso_wc_fruta_abisal": {
+    "sound": "froglight"
+  },
+  "geyser_custom:quaso_wc_baya_luminosa": {
+    "sound": "cave_vines"
+  }
+}

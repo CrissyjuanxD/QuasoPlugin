@@ -1,0 +1,28 @@
+{
+  "format_version": "1.16.100",
+  "minecraft:fog_settings": {
+    "description": {
+      "identifier": "quaso:pantano_profundo"
+    },
+    "distance": {
+      "air": {
+        "fog_start": 8.0,
+        "fog_end": 96.0,
+        "fog_color": "#173d1c",
+        "render_distance_type": "fixed"
+      },
+      "weather": {
+        "fog_start": 8.0,
+        "fog_end": 96.0,
+        "fog_color": "#173d1c",
+        "render_distance_type": "fixed"
+      },
+      "water": {
+        "fog_start": 0,
+        "fog_end": 24,
+        "fog_color": "#12301a",
+        "render_distance_type": "fixed"
+      }
+    }
+  }
+}

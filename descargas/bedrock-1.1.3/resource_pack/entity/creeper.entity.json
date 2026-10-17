@@ -1,0 +1,95 @@
+{
+  "format_version": "1.10.0",
+  "minecraft:client_entity": {
+    "description": {
+      "identifier": "minecraft:creeper",
+      "min_engine_version": "1.8.0",
+      "materials": {
+        "default": "creeper",
+        "charged": "charged_creeper",
+        "quaso": "entity_alphatest",
+        "quaso_glow": "entity_emissive_alpha"
+      },
+      "textures": {
+        "default": "textures/entity/creeper/creeper",
+        "charged": "textures/entity/creeper/creeper_armor",
+        "creeper2": "textures/entity/quaso/creeper2",
+        "creeper3": "textures/entity/quaso/creeper3",
+        "creeper3_e": "textures/entity/quaso/creeper3_e",
+        "creeper4": "textures/entity/quaso/creeper4",
+        "creeper4_e": "textures/entity/quaso/creeper4_e"
+      },
+      "geometry": {
+        "default": "geometry.creeper.v1.8",
+        "charged": "geometry.creeper.charged.v1.8",
+        "creeper2": "geometry.quaso.creeper2",
+        "creeper3": "geometry.quaso.creeper3",
+        "creeper4": "geometry.quaso.creeper4"
+      },
+      "spawn_egg": {
+        "texture": "spawn_egg_creeper"
+      },
+      "scripts": {
+        "pre_animation": [
+          "variable.wobble = Math.sin(query.swell_amount * 5730) * query.swell_amount * 0.01 + 1.0;",
+          "variable.swelling_scale1 = (Math.pow(Math.clamp(query.swell_amount, 0.0, 1.0), 4.0) * 0.4 + 1.0) * variable.wobble;",
+          "variable.swelling_scale2 = (Math.pow(Math.clamp(query.swell_amount, 0.0, 1.0), 4.0) * 0.1 + 1.0) / variable.wobble;",
+          "variable.leg_rot = Math.cos(query.modified_distance_moved * 38.17326) * 80.22 * query.modified_move_speed;",
+          "variable.flash = Math.mod(Math.Round(query.swell_amount * 10.0), 2.0);",
+          "variable.quaso_creeper2 = query.property('quaso:model') == 9306;",
+          "variable.quaso_creeper3 = query.property('quaso:model') == 9307;",
+          "variable.quaso_creeper4 = query.property('quaso:model') == 9308;",
+          "variable.quaso_custom = variable.quaso_creeper2 || variable.quaso_creeper3 || variable.quaso_creeper4;"
+        ],
+        "animate": [
+          "creeper_head_controller",
+          "creeper_legs_controller",
+          "creeper_swelling_controller",
+          {
+            "creeper2": "variable.quaso_creeper2"
+          },
+          {
+            "creeper3": "variable.quaso_creeper3"
+          },
+          {
+            "creeper4": "variable.quaso_creeper4"
+          }
+        ]
+      },
+      "animations": {
+        "creeper_head": "animation.common.look_at_target",
+        "creeper_legs": "animation.creeper.legs",
+        "creeper_swelling": "animation.creeper.swelling",
+        "creeper_head_controller": "controller.animation.creeper.head",
+        "creeper_legs_controller": "controller.animation.creeper.legs",
+        "creeper_swelling_controller": "controller.animation.creeper.swelling",
+        "creeper2": "animation.quaso.creeper2",
+        "creeper3": "animation.quaso.creeper3",
+        "creeper4": "animation.quaso.creeper4"
+      },
+      "render_controllers": [
+        {
+          "controller.render.creeper": "!variable.quaso_custom"
+        },
+        {
+          "controller.render.creeper_armor": "(query.is_powered) && !variable.quaso_custom"
+        },
+        {
+          "controller.render.quaso.creeper2": "variable.quaso_creeper2"
+        },
+        {
+          "controller.render.quaso.creeper3": "variable.quaso_creeper3"
+        },
+        {
+          "controller.render.quaso.creeper3_e": "variable.quaso_creeper3"
+        },
+        {
+          "controller.render.quaso.creeper4": "variable.quaso_creeper4"
+        },
+        {
+          "controller.render.quaso.creeper4_e": "variable.quaso_creeper4"
+        }
+      ]
+    }
+  }
+}

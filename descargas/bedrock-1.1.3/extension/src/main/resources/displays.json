@@ -1,0 +1,437 @@
+[
+  {
+    "id": 0,
+    "key": "air"
+  },
+  {
+    "id": 1,
+    "key": "honeycomb_block",
+    "block": "minecraft:honeycomb_block",
+    "states": {}
+  },
+  {
+    "id": 2,
+    "key": "packed_ice",
+    "block": "minecraft:packed_ice",
+    "states": {}
+  },
+  {
+    "id": 3,
+    "key": "spawner",
+    "block": "minecraft:spawner",
+    "states": {}
+  },
+  {
+    "id": 4,
+    "key": "sculk_catalyst",
+    "block": "minecraft:sculk_catalyst",
+    "states": {
+      "bloom": "false"
+    }
+  },
+  {
+    "id": 5,
+    "key": "sculk_catalyst",
+    "block": "minecraft:sculk_catalyst",
+    "states": {
+      "bloom": "true"
+    }
+  },
+  {
+    "id": 6,
+    "key": "purple_glazed_terracotta",
+    "block": "minecraft:purple_glazed_terracotta",
+    "states": {
+      "facing": "east"
+    }
+  },
+  {
+    "id": 7,
+    "key": "purple_glazed_terracotta",
+    "block": "minecraft:purple_glazed_terracotta",
+    "states": {
+      "facing": "north"
+    }
+  },
+  {
+    "id": 8,
+    "key": "purple_glazed_terracotta",
+    "block": "minecraft:purple_glazed_terracotta",
+    "states": {
+      "facing": "south"
+    }
+  },
+  {
+    "id": 9,
+    "key": "purple_glazed_terracotta",
+    "block": "minecraft:purple_glazed_terracotta",
+    "states": {
+      "facing": "west"
+    }
+  },
+  {
+    "id": 10,
+    "key": "purple_stained_glass",
+    "block": "minecraft:purple_stained_glass",
+    "states": {}
+  },
+  {
+    "id": 11,
+    "key": "smooth_stone_slab",
+    "block": "minecraft:smooth_stone_slab",
+    "states": {
+      "type": "bottom"
+    }
+  },
+  {
+    "id": 12,
+    "key": "smooth_stone_slab",
+    "block": "minecraft:smooth_stone_slab",
+    "states": {
+      "type": "double"
+    }
+  },
+  {
+    "id": 13,
+    "key": "smooth_stone_slab",
+    "block": "minecraft:smooth_stone_slab",
+    "states": {
+      "type": "top"
+    }
+  },
+  {
+    "id": 14,
+    "key": "pointed_dripstone",
+    "block": "minecraft:pointed_dripstone",
+    "states": {
+      "thickness": "base",
+      "vertical_direction": "down"
+    }
+  },
+  {
+    "id": 15,
+    "key": "pointed_dripstone",
+    "block": "minecraft:pointed_dripstone",
+    "states": {
+      "thickness": "base",
+      "vertical_direction": "up"
+    }
+  },
+  {
+    "id": 16,
+    "key": "pointed_dripstone",
+    "block": "minecraft:pointed_dripstone",
+    "states": {
+      "thickness": "frustum",
+      "vertical_direction": "down"
+    }
+  },
+  {
+    "id": 17,
+    "key": "pointed_dripstone",
+    "block": "minecraft:pointed_dripstone",
+    "states": {
+      "thickness": "frustum",
+      "vertical_direction": "up"
+    }
+  },
+  {
+    "id": 18,
+    "key": "pointed_dripstone",
+    "block": "minecraft:pointed_dripstone",
+    "states": {
+      "thickness": "middle",
+      "vertical_direction": "down"
+    }
+  },
+  {
+    "id": 19,
+    "key": "pointed_dripstone",
+    "block": "minecraft:pointed_dripstone",
+    "states": {
+      "thickness": "middle",
+      "vertical_direction": "up"
+    }
+  },
+  {
+    "id": 20,
+    "key": "pointed_dripstone",
+    "block": "minecraft:pointed_dripstone",
+    "states": {
+      "thickness": "tip",
+      "vertical_direction": "down"
+    }
+  },
+  {
+    "id": 21,
+    "key": "pointed_dripstone",
+    "block": "minecraft:pointed_dripstone",
+    "states": {
+      "thickness": "tip",
+      "vertical_direction": "up"
+    }
+  },
+  {
+    "id": 22,
+    "key": "pointed_dripstone",
+    "block": "minecraft:pointed_dripstone",
+    "states": {
+      "thickness": "tip_merge",
+      "vertical_direction": "down"
+    }
+  },
+  {
+    "id": 23,
+    "key": "pointed_dripstone",
+    "block": "minecraft:pointed_dripstone",
+    "states": {
+      "thickness": "tip_merge",
+      "vertical_direction": "up"
+    }
+  },
+  {
+    "id": 24,
+    "key": "ancient_debris",
+    "block": "minecraft:ancient_debris",
+    "states": {}
+  },
+  {
+    "id": 25,
+    "key": "nether_quartz_ore",
+    "block": "minecraft:nether_quartz_ore",
+    "states": {}
+  },
+  {
+    "id": 26,
+    "key": "nether_gold_ore",
+    "block": "minecraft:nether_gold_ore",
+    "states": {}
+  },
+  {
+    "id": 27,
+    "key": "coal_ore",
+    "block": "minecraft:coal_ore",
+    "states": {}
+  },
+  {
+    "id": 28,
+    "key": "copper_ore",
+    "block": "minecraft:copper_ore",
+    "states": {}
+  },
+  {
+    "id": 29,
+    "key": "iron_ore",
+    "block": "minecraft:iron_ore",
+    "states": {}
+  },
+  {
+    "id": 30,
+    "key": "gold_ore",
+    "block": "minecraft:gold_ore",
+    "states": {}
+  },
+  {
+    "id": 31,
+    "key": "lapis_ore",
+    "block": "minecraft:lapis_ore",
+    "states": {}
+  },
+  {
+    "id": 32,
+    "key": "redstone_ore",
+    "block": "minecraft:redstone_ore",
+    "states": {}
+  },
+  {
+    "id": 33,
+    "key": "emerald_ore",
+    "block": "minecraft:emerald_ore",
+    "states": {}
+  },
+  {
+    "id": 34,
+    "key": "diamond_ore",
+    "block": "minecraft:diamond_ore",
+    "states": {}
+  },
+  {
+    "id": 35,
+    "key": "deepslate_coal_ore",
+    "block": "minecraft:deepslate_coal_ore",
+    "states": {}
+  },
+  {
+    "id": 36,
+    "key": "deepslate_copper_ore",
+    "block": "minecraft:deepslate_copper_ore",
+    "states": {}
+  },
+  {
+    "id": 37,
+    "key": "deepslate_iron_ore",
+    "block": "minecraft:deepslate_iron_ore",
+    "states": {}
+  },
+  {
+    "id": 38,
+    "key": "deepslate_gold_ore",
+    "block": "minecraft:deepslate_gold_ore",
+    "states": {}
+  },
+  {
+    "id": 39,
+    "key": "deepslate_lapis_ore",
+    "block": "minecraft:deepslate_lapis_ore",
+    "states": {}
+  },
+  {
+    "id": 40,
+    "key": "deepslate_redstone_ore",
+    "block": "minecraft:deepslate_redstone_ore",
+    "states": {}
+  },
+  {
+    "id": 41,
+    "key": "deepslate_emerald_ore",
+    "block": "minecraft:deepslate_emerald_ore",
+    "states": {}
+  },
+  {
+    "id": 42,
+    "key": "deepslate_diamond_ore",
+    "block": "minecraft:deepslate_diamond_ore",
+    "states": {}
+  },
+  {
+    "id": 43,
+    "key": "cyan_glazed_terracotta",
+    "block": "minecraft:cyan_glazed_terracotta",
+    "states": {
+      "facing": "east"
+    }
+  },
+  {
+    "id": 44,
+    "key": "cyan_glazed_terracotta",
+    "block": "minecraft:cyan_glazed_terracotta",
+    "states": {
+      "facing": "north"
+    }
+  },
+  {
+    "id": 45,
+    "key": "cyan_glazed_terracotta",
+    "block": "minecraft:cyan_glazed_terracotta",
+    "states": {
+      "facing": "south"
+    }
+  },
+  {
+    "id": 46,
+    "key": "cyan_glazed_terracotta",
+    "block": "minecraft:cyan_glazed_terracotta",
+    "states": {
+      "facing": "west"
+    }
+  },
+  {
+    "id": 47,
+    "key": "lime_glazed_terracotta",
+    "block": "minecraft:lime_glazed_terracotta",
+    "states": {
+      "facing": "east"
+    }
+  },
+  {
+    "id": 48,
+    "key": "lime_glazed_terracotta",
+    "block": "minecraft:lime_glazed_terracotta",
+    "states": {
+      "facing": "north"
+    }
+  },
+  {
+    "id": 49,
+    "key": "lime_glazed_terracotta",
+    "block": "minecraft:lime_glazed_terracotta",
+    "states": {
+      "facing": "south"
+    }
+  },
+  {
+    "id": 50,
+    "key": "lime_glazed_terracotta",
+    "block": "minecraft:lime_glazed_terracotta",
+    "states": {
+      "facing": "west"
+    }
+  },
+  {
+    "id": 51,
+    "key": "gray_glazed_terracotta",
+    "block": "minecraft:gray_glazed_terracotta",
+    "states": {
+      "facing": "east"
+    }
+  },
+  {
+    "id": 52,
+    "key": "gray_glazed_terracotta",
+    "block": "minecraft:gray_glazed_terracotta",
+    "states": {
+      "facing": "north"
+    }
+  },
+  {
+    "id": 53,
+    "key": "gray_glazed_terracotta",
+    "block": "minecraft:gray_glazed_terracotta",
+    "states": {
+      "facing": "south"
+    }
+  },
+  {
+    "id": 54,
+    "key": "gray_glazed_terracotta",
+    "block": "minecraft:gray_glazed_terracotta",
+    "states": {
+      "facing": "west"
+    }
+  },
+  {
+    "id": 55,
+    "key": "grave_head",
+    "profile": "1dd56db5aaa7037005326983f33df794ec2d313da5dcf647edd5eaadb3245fb8"
+  },
+  {
+    "id": 56,
+    "key": "grave_head",
+    "profile": "6ec7adfcdd93113297debf17b5e4f136baa9156341671856810011c9ebfe20fa"
+  },
+  {
+    "id": 57,
+    "key": "grave_head",
+    "profile": "1086a0d463dc7913d0c94b837393ebaf728c4c3563ec40b30abab542c0e1f107"
+  },
+  {
+    "id": 58,
+    "key": "grave_head",
+    "profile": "a40f726fb7c14c2447ab3849d5935fa4f6e56f3eb041910b7774e747e4c5a969"
+  },
+  {
+    "id": 59,
+    "key": "grave_head",
+    "profile": "7bbfd4290af1ea5bdff761ced099f7bb4dc6c0bd0dcb95fee27da113df112f9c"
+  },
+  {
+    "id": 60,
+    "key": "grave_head",
+    "profile": "3bcb954bca4c50221874ad9586d4a7484f47a51798ad3c8fffc984647ffc50d4"
+  },
+  {
+    "id": 61,
+    "key": "grave_head",
+    "profile": "4e8b3054376ad299e0a792ee6e6641e05650792aa69505d2520430ea0b0709e1"
+  }
+]

@@ -1,0 +1,29 @@
+{
+  "resource_pack_name": "Quaso Warden Cave",
+  "texture_name": "atlas.terrain",
+  "padding": 8,
+  "num_mip_levels": 4,
+  "texture_data": {
+    "quaso_wc_ore_cyan": {
+      "textures": "textures/blocks/quaso/ore_cyan"
+    },
+    "quaso_wc_ore_green": {
+      "textures": "textures/blocks/quaso/ore_green"
+    },
+    "quaso_wc_ore_purple": {
+      "textures": "textures/blocks/quaso/ore_purple"
+    },
+    "quaso_wc_ore_gray": {
+      "textures": "textures/blocks/quaso/ore_gray"
+    },
+    "quaso_wc_baya_sculk": {
+      "textures": "textures/blocks/quaso/baya_sculk"
+    },
+    "quaso_wc_fruta_abisal": {
+      "textures": "textures/blocks/quaso/fruta_abisal"
+    },
+    "quaso_wc_baya_luminosa": {
+      "textures": "textures/blocks/quaso/baya_luminosa"
+    }
+  }
+}

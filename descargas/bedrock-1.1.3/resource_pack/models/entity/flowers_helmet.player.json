@@ -1,0 +1,15 @@
+{
+  "format_version": "1.8.0",
+  "geometry.quaso.flowers.helmet.player:geometry.player.armor.helmet": {
+    "bones": [
+      {
+        "name": "head",
+        "inflate": 1.2
+      },
+      {
+        "name": "hat",
+        "inflate": 1.2
+      }
+    ]
+  }
+}

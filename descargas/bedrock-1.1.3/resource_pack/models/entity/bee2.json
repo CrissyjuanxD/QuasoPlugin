@@ -1,0 +1,368 @@
+{
+  "format_version": "1.16.0",
+  "minecraft:geometry": [
+    {
+      "description": {
+        "identifier": "geometry.quaso.bee2",
+        "texture_width": 64,
+        "texture_height": 64,
+        "visible_bounds_width": 6,
+        "visible_bounds_height": 6,
+        "visible_bounds_offset": [
+          0,
+          1,
+          0
+        ]
+      },
+      "bones": [
+        {
+          "name": "quaso_body",
+          "pivot": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "quaso_left_wing",
+          "pivot": [
+            1.4,
+            10.6,
+            -3
+          ],
+          "parent": "quaso_body",
+          "mirror": true,
+          "cubes": [
+            {
+              "origin": [
+                1.5,
+                9,
+                -3
+              ],
+              "size": [
+                9,
+                0,
+                7
+              ],
+              "uv": [
+                9,
+                13
+              ]
+            }
+          ]
+        },
+        {
+          "name": "quaso_right_wing",
+          "pivot": [
+            -1.4,
+            10.6,
+            -3
+          ],
+          "parent": "quaso_body",
+          "cubes": [
+            {
+              "origin": [
+                -10.5,
+                9,
+                -3
+              ],
+              "size": [
+                9,
+                0,
+                7
+              ],
+              "uv": [
+                9,
+                13
+              ]
+            }
+          ]
+        },
+        {
+          "name": "quaso_front_legs",
+          "pivot": [
+            1.5,
+            2.7,
+            -2.5
+          ],
+          "parent": "quaso_body"
+        },
+        {
+          "name": "quaso_middle_legs",
+          "pivot": [
+            1.5,
+            2.1,
+            -0.6
+          ],
+          "parent": "quaso_body"
+        },
+        {
+          "name": "quaso_back_legs",
+          "pivot": [
+            1.5,
+            0.8,
+            1.1
+          ],
+          "parent": "quaso_body"
+        },
+        {
+          "name": "quaso_left_antenna",
+          "pivot": [
+            0,
+            8,
+            -5
+          ],
+          "parent": "quaso_body",
+          "cubes": [
+            {
+              "origin": [
+                1.5,
+                8,
+                -8
+              ],
+              "size": [
+                1,
+                2,
+                3
+              ],
+              "uv": [
+                0,
+                0
+              ]
+            }
+          ]
+        },
+        {
+          "name": "quaso_stinger",
+          "pivot": [
+            0,
+            4.71177,
+            2.08
+          ],
+          "parent": "quaso_body",
+          "rotation": [
+            -30,
+            0,
+            0
+          ],
+          "cubes": [
+            {
+              "origin": [
+                0,
+                5.45651,
+                7.63596
+              ],
+              "size": [
+                0,
+                1,
+                2
+              ],
+              "uv": [
+                24,
+                -1
+              ]
+            }
+          ]
+        },
+        {
+          "name": "quaso_right_antenna",
+          "pivot": [
+            0,
+            8,
+            -5
+          ],
+          "parent": "quaso_body",
+          "cubes": [
+            {
+              "origin": [
+                -2.5,
+                8,
+                -8
+              ],
+              "size": [
+                1,
+                2,
+                3
+              ],
+              "uv": [
+                0,
+                3
+              ]
+            }
+          ]
+        },
+        {
+          "name": "quaso_torso",
+          "pivot": [
+            0,
+            6.45,
+            0.25
+          ],
+          "parent": "quaso_body",
+          "cubes": [
+            {
+              "origin": [
+                -2.5,
+                4,
+                -3
+              ],
+              "size": [
+                5,
+                5,
+                3
+              ],
+              "uv": [
+                0,
+                13
+              ]
+            },
+            {
+              "origin": [
+                -2,
+                4.4,
+                -6
+              ],
+              "size": [
+                4,
+                4,
+                9
+              ],
+              "uv": [
+                0,
+                0
+              ]
+            }
+          ]
+        },
+        {
+          "name": "quaso_abdomen",
+          "pivot": [
+            0.5,
+            -0.5,
+            0
+          ],
+          "parent": "quaso_torso",
+          "rotation": [
+            -30,
+            0,
+            0
+          ],
+          "cubes": [
+            {
+              "origin": [
+                -3.0,
+                3.5,
+                -2
+              ],
+              "size": [
+                6,
+                6,
+                7
+              ],
+              "uv": [
+                27,
+                0
+              ]
+            }
+          ]
+        },
+        {
+          "name": "quaso_front_legs2",
+          "pivot": [
+            0,
+            3.1,
+            -2.7
+          ],
+          "parent": "quaso_torso",
+          "rotation": [
+            12.5,
+            0,
+            0
+          ],
+          "cubes": [
+            {
+              "origin": [
+                -1.5,
+                2.1,
+                -2.7
+              ],
+              "size": [
+                3,
+                2,
+                0
+              ],
+              "uv": [
+                18,
+                1
+              ]
+            }
+          ]
+        },
+        {
+          "name": "quaso_middle_legs2",
+          "pivot": [
+            0,
+            3.1,
+            -1.6
+          ],
+          "parent": "quaso_torso",
+          "rotation": [
+            20,
+            0,
+            0
+          ],
+          "cubes": [
+            {
+              "origin": [
+                -2.5,
+                2.1,
+                -1.6
+              ],
+              "size": [
+                5,
+                2,
+                0
+              ],
+              "uv": [
+                17,
+                3
+              ]
+            }
+          ]
+        },
+        {
+          "name": "quaso_back_legs2",
+          "pivot": [
+            0,
+            2.2,
+            0
+          ],
+          "parent": "quaso_torso",
+          "rotation": [
+            20,
+            0,
+            0
+          ],
+          "cubes": [
+            {
+              "origin": [
+                -2.5,
+                1.2000000000000002,
+                0
+              ],
+              "size": [
+                5,
+                3,
+                0
+              ],
+              "uv": [
+                17,
+                6
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

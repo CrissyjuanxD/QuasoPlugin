@@ -73,6 +73,11 @@ public enum Trabajo {
         };
     }
 
+    // Qué parte de la XP de Guerrero pide cada nivel: ahora es la misma en todos (1.0). Se deja para el código que lo usa
+    public double ritmo() {
+        return 1.0;
+    }
+
     public static Trabajo porId(String id) {
         if (id == null) return null;
         String lower = id.toLowerCase(Locale.ROOT);

@@ -73,19 +73,6 @@ public enum Trabajo {
         };
     }
 
-    // Qué parte de la XP de Guerrero pide cada nivel, según la XP por hora que da el trabajo jugando en serio:
-    // Guerrero ~2.000 (unos 4 monstruos por minuto, más los del plugin y los élites), Minería ~1.100 (minerales y
-    // piedra), Leñador ~1.000 (con Talador), Granjero y Pescador ~900 y Constructor ~700
-    public double ritmo() {
-        return switch (this) {
-            case GUERRERO -> 1.0;
-            case MINERIA -> 0.55;
-            case LENADOR -> 0.5;
-            case GRANJERO, PESCADOR -> 0.45;
-            case CONSTRUCTOR -> 0.35;
-        };
-    }
-
     public static Trabajo porId(String id) {
         if (id == null) return null;
         String lower = id.toLowerCase(Locale.ROOT);

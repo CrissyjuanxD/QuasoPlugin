@@ -154,7 +154,7 @@ final class TrabajosGuia {
         StringBuilder fuentes = new StringBuilder(BEIGE + "Cómo ganar XP:\n");
         for (String fuente : trabajo.fuentes()) fuentes.append('\n').append(GRIS).append(" · ").append(CREMA).append(fuente);
         fuentes.append("\n\n").append(CREMA).append("Cada nivel pide ").append(BLANCO)
-                .append(trabajo == Trabajo.GUERRERO ? "la XP completa" : Math.round(trabajo.ritmo() * 100) + "% de la XP de Guerrero")
+                .append("la misma XP que los demás trabajos")
                 .append(GRIS).append(" (nivel 10: ").append(TrabajoNiveles.xpParaNivel(trabajo, 10)).append(" XP)");
 
         List<DialogBody> cuerpo = List.of(

@@ -13,20 +13,15 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class TrabajosTest {
 
-    // Guerrero (el que más XP da por hora) pide la curva completa; los demás menos según su ritmo, y todos pagan igual
+    // Todos los trabajos piden la misma XP por nivel que Guerrero
     @Test
-    void eachJobAsksXpByHowFastItIsEarned() {
-        for (int nivel = 1; nivel <= Trabajo.NIVEL_MAXIMO; nivel++) {
-            assertEquals(TrabajoNiveles.xpParaNivel(nivel), TrabajoNiveles.xpParaNivel(Trabajo.GUERRERO, nivel));
-        }
+    void everyJobAsksTheSameXpAsGuerrero() {
         for (Trabajo trabajo : Trabajo.values()) {
-            assertTrue(trabajo.ritmo() > 0 && trabajo.ritmo() <= 1, trabajo.name());
-            if (trabajo != Trabajo.GUERRERO) {
-                assertTrue(TrabajoNiveles.xpParaNivel(trabajo, 10) < TrabajoNiveles.xpParaNivel(Trabajo.GUERRERO, 10), trabajo.name());
+            for (int nivel = 1; nivel <= Trabajo.NIVEL_MAXIMO; nivel++) {
+                assertEquals(TrabajoNiveles.xpParaNivel(Trabajo.GUERRERO, nivel), TrabajoNiveles.xpParaNivel(trabajo, nivel), trabajo.name());
             }
         }
-        assertTrue(Trabajo.CONSTRUCTOR.ritmo() < Trabajo.MINERIA.ritmo());
-        assertEquals(Math.round(TrabajoNiveles.xpParaNivel(50) * 0.55), TrabajoNiveles.xpParaNivel(Trabajo.MINERIA, 50));
+        assertEquals(308, TrabajoNiveles.xpParaNivel(Trabajo.MINERIA, 10));
     }
 
     @Test

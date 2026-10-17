@@ -1,5 +1,7 @@
 # Quaso Bedrock 1.0.1 · Warden Cave
 
+> Actualización disponible: [Quaso Bedrock 1.1.0](../bedrock-1.1.0/README.md), con pack unificado y correcciones de presentación.
+
 Este instalador reúne el port anterior (items, fuentes, rangos, GUIs y armaduras) y añade **las texturas de los cuatro minerales y las tres frutas colocadas**, solo dentro del mundo Warden Cave. Los mobs siguen siendo un complemento opcional.
 
 [Descargar todo para instalar](Quaso-Bedrock-1.0.1-instalar.zip) · [Solo extensión](extensions/QuasoWardenCave-1.0.1.jar) · [Solo pack de bloques](packs/QuasoWardenCave-1.0.0.mcpack)

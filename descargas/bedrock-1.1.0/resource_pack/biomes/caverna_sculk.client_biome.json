@@ -1,0 +1,19 @@
+{
+  "format_version": "1.21.70",
+  "minecraft:client_biome": {
+    "description": {
+      "identifier": "quaso:caverna_sculk"
+    },
+    "components": {
+      "minecraft:fog_appearance": {
+        "fog_identifier": "quaso:caverna_sculk"
+      },
+      "minecraft:sky_color": {
+        "sky_color": "#1f7a86"
+      },
+      "minecraft:water_appearance": {
+        "surface_color": "#2a8c8c"
+      }
+    }
+  }
+}

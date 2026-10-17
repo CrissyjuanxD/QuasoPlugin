@@ -1,0 +1,3975 @@
+{
+  "format_version": 2,
+  "items": {
+    "minecraft:glowstone_dust": [
+      {
+        "type": "definition",
+        "model": "minecraft:abono_concentrado",
+        "bedrock_identifier": "quaso:abono_concentrado",
+        "display_name": "Abono Concentrado",
+        "bedrock_options": {
+          "icon": "quaso.abono_concentrado",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      }
+    ],
+    "minecraft:prismarine_shard": [
+      {
+        "type": "definition",
+        "model": "minecraft:aguijon_floral",
+        "bedrock_identifier": "quaso:aguijon_floral",
+        "display_name": "Aguijón Floral",
+        "bedrock_options": {
+          "icon": "quaso.aguijon_floral",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:mineral_crudo_cian",
+        "bedrock_identifier": "quaso:mineral_crudo_cian",
+        "display_name": "Mineral Crudo Cian",
+        "bedrock_options": {
+          "icon": "quaso.mineral_crudo_cian",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:mineral_crudo_gris",
+        "bedrock_identifier": "quaso:mineral_crudo_gris",
+        "display_name": "Mineral Crudo Gris",
+        "bedrock_options": {
+          "icon": "quaso.mineral_crudo_gris",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:mineral_crudo_morado",
+        "bedrock_identifier": "quaso:mineral_crudo_morado",
+        "display_name": "Mineral Crudo Morado",
+        "bedrock_options": {
+          "icon": "quaso.mineral_crudo_morado",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:mineral_crudo_verde",
+        "bedrock_identifier": "quaso:mineral_crudo_verde",
+        "display_name": "Mineral Crudo Verde",
+        "bedrock_options": {
+          "icon": "quaso.mineral_crudo_verde",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      }
+    ],
+    "minecraft:paper": [
+      {
+        "type": "definition",
+        "model": "minecraft:air",
+        "bedrock_identifier": "quaso:air",
+        "display_name": "Air",
+        "bedrock_options": {
+          "icon": "quaso.air",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:botiquin",
+        "bedrock_identifier": "quaso:botiquin",
+        "display_name": "Botiquín",
+        "bedrock_options": {
+          "icon": "quaso.botiquin",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:carta_5000",
+        "bedrock_identifier": "quaso:carta_5000",
+        "display_name": "Carta 5000",
+        "bedrock_options": {
+          "icon": "quaso.carta_5000",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:carta_5001",
+        "bedrock_identifier": "quaso:carta_5001",
+        "display_name": "Carta 5001",
+        "bedrock_options": {
+          "icon": "quaso.carta_5001",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:carta_5002",
+        "bedrock_identifier": "quaso:carta_5002",
+        "display_name": "Carta 5002",
+        "bedrock_options": {
+          "icon": "quaso.carta_5002",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:carta_5003",
+        "bedrock_identifier": "quaso:carta_5003",
+        "display_name": "Carta 5003",
+        "bedrock_options": {
+          "icon": "quaso.carta_5003",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:carta_5004",
+        "bedrock_identifier": "quaso:carta_5004",
+        "display_name": "Carta 5004",
+        "bedrock_options": {
+          "icon": "quaso.carta_5004",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:carta_5005",
+        "bedrock_identifier": "quaso:carta_5005",
+        "display_name": "Carta 5005",
+        "bedrock_options": {
+          "icon": "quaso.carta_5005",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:carta_5006",
+        "bedrock_identifier": "quaso:carta_5006",
+        "display_name": "Carta 5006",
+        "bedrock_options": {
+          "icon": "quaso.carta_5006",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:carta_5007",
+        "bedrock_identifier": "quaso:carta_5007",
+        "display_name": "Carta 5007",
+        "bedrock_options": {
+          "icon": "quaso.carta_5007",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:carta_5008",
+        "bedrock_identifier": "quaso:carta_5008",
+        "display_name": "Carta 5008",
+        "bedrock_options": {
+          "icon": "quaso.carta_5008",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:carta_5009",
+        "bedrock_identifier": "quaso:carta_5009",
+        "display_name": "Carta 5009",
+        "bedrock_options": {
+          "icon": "quaso.carta_5009",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:carta_5010",
+        "bedrock_identifier": "quaso:carta_5010",
+        "display_name": "Carta 5010",
+        "bedrock_options": {
+          "icon": "quaso.carta_5010",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:carta_5011",
+        "bedrock_identifier": "quaso:carta_5011",
+        "display_name": "Carta 5011",
+        "bedrock_options": {
+          "icon": "quaso.carta_5011",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:carta_5012",
+        "bedrock_identifier": "quaso:carta_5012",
+        "display_name": "Carta 5012",
+        "bedrock_options": {
+          "icon": "quaso.carta_5012",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:carta_oculta",
+        "bedrock_identifier": "quaso:carta_oculta",
+        "display_name": "Carta oculta",
+        "bedrock_options": {
+          "icon": "quaso.carta_oculta",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:logro_completado",
+        "bedrock_identifier": "quaso:logro_completado",
+        "display_name": "Logro completado",
+        "bedrock_options": {
+          "icon": "quaso.logro_completado",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:logro_pendiente",
+        "bedrock_identifier": "quaso:logro_pendiente",
+        "display_name": "Logro pendiente",
+        "bedrock_options": {
+          "icon": "quaso.logro_pendiente",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:mision_activa",
+        "bedrock_identifier": "quaso:mision_activa",
+        "display_name": "Mision activa",
+        "bedrock_options": {
+          "icon": "quaso.mision_activa",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:mision_completada",
+        "bedrock_identifier": "quaso:mision_completada",
+        "display_name": "Mision completada",
+        "bedrock_options": {
+          "icon": "quaso.mision_completada",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:mision_inactiva",
+        "bedrock_identifier": "quaso:mision_inactiva",
+        "display_name": "Mision inactiva",
+        "bedrock_options": {
+          "icon": "quaso.mision_inactiva",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:piruleta",
+        "bedrock_identifier": "quaso:piruleta",
+        "display_name": "Piruleta",
+        "bedrock_options": {
+          "icon": "quaso.piruleta",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:quaso_ticket",
+        "bedrock_identifier": "quaso:quaso_ticket",
+        "display_name": "Quaso ticket",
+        "bedrock_options": {
+          "icon": "quaso.quaso_ticket",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:trabajo_constructor",
+        "bedrock_identifier": "quaso:trabajo_constructor",
+        "display_name": "Trabajo constructor",
+        "bedrock_options": {
+          "icon": "quaso.trabajo_constructor",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:trabajo_granjero",
+        "bedrock_identifier": "quaso:trabajo_granjero",
+        "display_name": "Trabajo granjero",
+        "bedrock_options": {
+          "icon": "quaso.trabajo_granjero",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:trabajo_guerrero",
+        "bedrock_identifier": "quaso:trabajo_guerrero",
+        "display_name": "Trabajo guerrero",
+        "bedrock_options": {
+          "icon": "quaso.trabajo_guerrero",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:trabajo_lenador",
+        "bedrock_identifier": "quaso:trabajo_lenador",
+        "display_name": "Trabajo lenador",
+        "bedrock_options": {
+          "icon": "quaso.trabajo_lenador",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:trabajo_mineria",
+        "bedrock_identifier": "quaso:trabajo_mineria",
+        "display_name": "Trabajo mineria",
+        "bedrock_options": {
+          "icon": "quaso.trabajo_mineria",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:trabajo_pescador",
+        "bedrock_identifier": "quaso:trabajo_pescador",
+        "display_name": "Trabajo pescador",
+        "bedrock_options": {
+          "icon": "quaso.trabajo_pescador",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      }
+    ],
+    "minecraft:string": [
+      {
+        "type": "definition",
+        "model": "minecraft:algodon_azucar",
+        "bedrock_identifier": "quaso:algodon_azucar",
+        "display_name": "Algodon azucar",
+        "bedrock_options": {
+          "icon": "quaso.algodon_azucar",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      }
+    ],
+    "minecraft:echo_shard": [
+      {
+        "type": "definition",
+        "model": "minecraft:alma_infested_cave_spider",
+        "bedrock_identifier": "quaso:alma_infested_cave_spider",
+        "display_name": "Alma de Infested Cave Spider",
+        "bedrock_options": {
+          "icon": "quaso.alma_infested_cave_spider",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:alma_infested_creeper",
+        "bedrock_identifier": "quaso:alma_infested_creeper",
+        "display_name": "Alma de Infested Creeper",
+        "bedrock_options": {
+          "icon": "quaso.alma_infested_creeper",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:alma_infested_ghast",
+        "bedrock_identifier": "quaso:alma_infested_ghast",
+        "display_name": "Alma de Infested Ghast",
+        "bedrock_options": {
+          "icon": "quaso.alma_infested_ghast",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:alma_infested_skeleton",
+        "bedrock_identifier": "quaso:alma_infested_skeleton",
+        "display_name": "Alma de Infested Skeletons",
+        "bedrock_options": {
+          "icon": "quaso.alma_infested_skeleton",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:amuleto_esperanza",
+        "bedrock_identifier": "quaso:amuleto_esperanza",
+        "display_name": "Amuleto de la Última Esperanza",
+        "bedrock_options": {
+          "icon": "quaso.amuleto_esperanza",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:barco_custom",
+        "bedrock_identifier": "quaso:barco_custom",
+        "display_name": "Barco custom",
+        "bedrock_options": {
+          "icon": "quaso.barco_custom",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:combustible_barco",
+        "bedrock_identifier": "quaso:combustible_barco",
+        "display_name": "Combustible barco",
+        "bedrock_options": {
+          "icon": "quaso.combustible_barco",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:energia_warden",
+        "bedrock_identifier": "quaso:energia_warden",
+        "display_name": "Energía de Warden",
+        "bedrock_options": {
+          "icon": "quaso.energia_warden",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:mejora_bota_warden",
+        "bedrock_identifier": "quaso:mejora_bota_warden",
+        "display_name": "Mejora de Botas Warden",
+        "bedrock_options": {
+          "icon": "quaso.mejora_bota_warden",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:mejora_casco_warden",
+        "bedrock_identifier": "quaso:mejora_casco_warden",
+        "display_name": "Mejora de Casco Warden",
+        "bedrock_options": {
+          "icon": "quaso.mejora_casco_warden",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:mejora_pantalon_warden",
+        "bedrock_identifier": "quaso:mejora_pantalon_warden",
+        "display_name": "Mejora de Pantalón Warden",
+        "bedrock_options": {
+          "icon": "quaso.mejora_pantalon_warden",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:mejora_peto_warden",
+        "bedrock_identifier": "quaso:mejora_peto_warden",
+        "display_name": "Mejora de Peto Warden",
+        "bedrock_options": {
+          "icon": "quaso.mejora_peto_warden",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:mochila_nivel_1",
+        "bedrock_identifier": "quaso:mochila_nivel_1",
+        "display_name": "Mochila Nivel 1",
+        "bedrock_options": {
+          "icon": "quaso.mochila_nivel_1",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:mochila_nivel_2",
+        "bedrock_identifier": "quaso:mochila_nivel_2",
+        "display_name": "Mochila Nivel 2",
+        "bedrock_options": {
+          "icon": "quaso.mochila_nivel_2",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:mochila_nivel_3",
+        "bedrock_identifier": "quaso:mochila_nivel_3",
+        "display_name": "Mochila Nivel 3",
+        "bedrock_options": {
+          "icon": "quaso.mochila_nivel_3",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:mochila_nivel_4",
+        "bedrock_identifier": "quaso:mochila_nivel_4",
+        "display_name": "Mochila Nivel 4",
+        "bedrock_options": {
+          "icon": "quaso.mochila_nivel_4",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:mochila_nivel_5",
+        "bedrock_identifier": "quaso:mochila_nivel_5",
+        "display_name": "Mochila Nivel 5",
+        "bedrock_options": {
+          "icon": "quaso.mochila_nivel_5",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:monedero",
+        "bedrock_identifier": "quaso:monedero",
+        "display_name": "Monedero",
+        "bedrock_options": {
+          "icon": "quaso.monedero",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        },
+        "components": {
+          "minecraft:max_stack_size": 1
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:warden_gun",
+        "bedrock_identifier": "quaso:warden_gun",
+        "display_name": "Warden Gun",
+        "bedrock_options": {
+          "icon": "quaso.warden_gun",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        },
+        "components": {
+          "minecraft:max_stack_size": 1
+        }
+      }
+    ],
+    "minecraft:torchflower_seeds": [
+      {
+        "type": "definition",
+        "model": "minecraft:amulet_bloodmoon",
+        "bedrock_identifier": "quaso:amulet_bloodmoon",
+        "display_name": "Amuleto Luna de Sangre",
+        "bedrock_options": {
+          "icon": "quaso.amulet_bloodmoon",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      }
+    ],
+    "minecraft:glow_squid_spawn_egg": [
+      {
+        "type": "definition",
+        "model": "minecraft:amuleto_invisibilidad",
+        "bedrock_identifier": "quaso:amuleto_invisibilidad",
+        "display_name": "Amuleto de Invisibilidad",
+        "bedrock_options": {
+          "icon": "quaso.amuleto_invisibilidad",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      }
+    ],
+    "minecraft:potion": [
+      {
+        "type": "definition",
+        "model": "minecraft:antidoto",
+        "bedrock_identifier": "quaso:antidoto",
+        "display_name": "Antídoto Universal",
+        "bedrock_options": {
+          "icon": "quaso.antidoto",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:bar_azulito",
+        "bedrock_identifier": "quaso:bar_azulito",
+        "display_name": "Bar azulito",
+        "bedrock_options": {
+          "icon": "quaso.bar_azulito",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:bar_cerveza",
+        "bedrock_identifier": "quaso:bar_cerveza",
+        "display_name": "Bar cerveza",
+        "bedrock_options": {
+          "icon": "quaso.bar_cerveza",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:bar_ginebra",
+        "bedrock_identifier": "quaso:bar_ginebra",
+        "display_name": "Bar ginebra",
+        "bedrock_options": {
+          "icon": "quaso.bar_ginebra",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:bar_margarita",
+        "bedrock_identifier": "quaso:bar_margarita",
+        "display_name": "Bar margarita",
+        "bedrock_options": {
+          "icon": "quaso.bar_margarita",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:bar_mezcal",
+        "bedrock_identifier": "quaso:bar_mezcal",
+        "display_name": "Bar mezcal",
+        "bedrock_options": {
+          "icon": "quaso.bar_mezcal",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:bar_michelada",
+        "bedrock_identifier": "quaso:bar_michelada",
+        "display_name": "Bar michelada",
+        "bedrock_options": {
+          "icon": "quaso.bar_michelada",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:bar_pulque",
+        "bedrock_identifier": "quaso:bar_pulque",
+        "display_name": "Bar pulque",
+        "bedrock_options": {
+          "icon": "quaso.bar_pulque",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:bar_ron",
+        "bedrock_identifier": "quaso:bar_ron",
+        "display_name": "Bar ron",
+        "bedrock_options": {
+          "icon": "quaso.bar_ron",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:bar_sake",
+        "bedrock_identifier": "quaso:bar_sake",
+        "display_name": "Bar sake",
+        "bedrock_options": {
+          "icon": "quaso.bar_sake",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:bar_tequila",
+        "bedrock_identifier": "quaso:bar_tequila",
+        "display_name": "Bar tequila",
+        "bedrock_options": {
+          "icon": "quaso.bar_tequila",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:bar_vodka",
+        "bedrock_identifier": "quaso:bar_vodka",
+        "display_name": "Bar vodka",
+        "bedrock_options": {
+          "icon": "quaso.bar_vodka",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:bar_whisky",
+        "bedrock_identifier": "quaso:bar_whisky",
+        "display_name": "Bar whisky",
+        "bedrock_options": {
+          "icon": "quaso.bar_whisky",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:elixir_abisal",
+        "bedrock_identifier": "quaso:elixir_abisal",
+        "display_name": "Elixir Abisal",
+        "bedrock_options": {
+          "icon": "quaso.elixir_abisal",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:elixir_agilidad",
+        "bedrock_identifier": "quaso:elixir_agilidad",
+        "display_name": "Elixir de Agilidad",
+        "bedrock_options": {
+          "icon": "quaso.elixir_agilidad",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:elixir_coloso",
+        "bedrock_identifier": "quaso:elixir_coloso",
+        "display_name": "Elixir del Coloso",
+        "bedrock_options": {
+          "icon": "quaso.elixir_coloso",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:elixir_furia",
+        "bedrock_identifier": "quaso:elixir_furia",
+        "display_name": "Elixir de Furia",
+        "bedrock_options": {
+          "icon": "quaso.elixir_furia",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:elixir_igneo",
+        "bedrock_identifier": "quaso:elixir_igneo",
+        "display_name": "Elixir Ígneo",
+        "bedrock_options": {
+          "icon": "quaso.elixir_igneo",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:elixir_minero",
+        "bedrock_identifier": "quaso:elixir_minero",
+        "display_name": "Elixir del Minero",
+        "bedrock_options": {
+          "icon": "quaso.elixir_minero",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:frasco_sabiduria",
+        "bedrock_identifier": "quaso:frasco_sabiduria",
+        "display_name": "Frasco de Sabiduría",
+        "bedrock_options": {
+          "icon": "quaso.frasco_sabiduria",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:potion_haste_2",
+        "bedrock_identifier": "quaso:potion_haste_2",
+        "display_name": "Poción de Prisa Minera II",
+        "bedrock_options": {
+          "icon": "quaso.potion_haste_2",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:potion_haste_3",
+        "bedrock_identifier": "quaso:potion_haste_3",
+        "display_name": "Poción de Prisa Minera III",
+        "bedrock_options": {
+          "icon": "quaso.potion_haste_3",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:potion_resistance_2",
+        "bedrock_identifier": "quaso:potion_resistance_2",
+        "display_name": "Poción de Resistencia II",
+        "bedrock_options": {
+          "icon": "quaso.potion_resistance_2",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:potion_slow_falling",
+        "bedrock_identifier": "quaso:potion_slow_falling",
+        "display_name": "Poción de Caída Lenta",
+        "bedrock_options": {
+          "icon": "quaso.potion_slow_falling",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:tonico_antilevitacion",
+        "bedrock_identifier": "quaso:tonico_antilevitacion",
+        "display_name": "Tónico Antilevitación",
+        "bedrock_options": {
+          "icon": "quaso.tonico_antilevitacion",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      }
+    ],
+    "minecraft:bow": [
+      {
+        "type": "definition",
+        "model": "minecraft:arco_hielo",
+        "bedrock_identifier": "quaso:arco_hielo",
+        "display_name": "Arco de Hielo",
+        "bedrock_options": {
+          "icon": "quaso.arco_hielo",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:arco_mejorado",
+        "bedrock_identifier": "quaso:arco_mejorado",
+        "display_name": "Arco Mejorado",
+        "bedrock_options": {
+          "icon": "quaso.arco_mejorado",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:arco_nivel1",
+        "bedrock_identifier": "quaso:arco_nivel1",
+        "display_name": "Arco Explosivo Nvl 1",
+        "bedrock_options": {
+          "icon": "quaso.arco_nivel1",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:arco_nivel2",
+        "bedrock_identifier": "quaso:arco_nivel2",
+        "display_name": "Arco Explosivo Nvl 2",
+        "bedrock_options": {
+          "icon": "quaso.arco_nivel2",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:arco_nivel3",
+        "bedrock_identifier": "quaso:arco_nivel3",
+        "display_name": "Arco Explosivo Nvl 3",
+        "bedrock_options": {
+          "icon": "quaso.arco_nivel3",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:arco_sculk",
+        "bedrock_identifier": "quaso:arco_sculk",
+        "display_name": "Arco de Sculk",
+        "bedrock_options": {
+          "icon": "quaso.arco_sculk",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      }
+    ],
+    "minecraft:netherite_hoe": [
+      {
+        "type": "definition",
+        "model": "minecraft:azada_celestita",
+        "bedrock_identifier": "quaso:azada_celestita",
+        "display_name": "Azada celestita",
+        "bedrock_options": {
+          "icon": "quaso.azada_celestita",
+          "display_handheld": true,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:azada_floral",
+        "bedrock_identifier": "quaso:azada_floral",
+        "display_name": "Azada floral",
+        "bedrock_options": {
+          "icon": "quaso.azada_floral",
+          "display_handheld": true,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      }
+    ],
+    "minecraft:glow_berries": [
+      {
+        "type": "definition",
+        "model": "minecraft:baya_luminosa",
+        "bedrock_identifier": "quaso:baya_luminosa",
+        "display_name": "Baya Regenerativa",
+        "bedrock_options": {
+          "icon": "quaso.baya_luminosa",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      }
+    ],
+    "minecraft:sweet_berries": [
+      {
+        "type": "definition",
+        "model": "minecraft:baya_sculk",
+        "bedrock_identifier": "quaso:baya_sculk",
+        "display_name": "Baya Sculk",
+        "bedrock_options": {
+          "icon": "quaso.baya_sculk",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      }
+    ],
+    "minecraft:snowball": [
+      {
+        "type": "definition",
+        "model": "minecraft:bengala_sculk",
+        "bedrock_identifier": "quaso:bengala_sculk",
+        "display_name": "Bengala de Sculk",
+        "bedrock_options": {
+          "icon": "quaso.bengala_sculk",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:bomba_humo",
+        "bedrock_identifier": "quaso:bomba_humo",
+        "display_name": "Bomba de Humo",
+        "bedrock_options": {
+          "icon": "quaso.bomba_humo",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:granada_sonica",
+        "bedrock_identifier": "quaso:granada_sonica",
+        "display_name": "Granada Sónica",
+        "bedrock_options": {
+          "icon": "quaso.granada_sonica",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      }
+    ],
+    "minecraft:copper_nugget": [
+      {
+        "type": "definition",
+        "model": "minecraft:blood_fragment",
+        "bedrock_identifier": "quaso:blood_fragment",
+        "display_name": "Fragmento de BloodMoon",
+        "bedrock_options": {
+          "icon": "quaso.blood_fragment",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:fragmento_profundo_cian",
+        "bedrock_identifier": "quaso:fragmento_profundo_cian",
+        "display_name": "Fragmento Profundo Cian",
+        "bedrock_options": {
+          "icon": "quaso.fragmento_profundo_cian",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:fragmento_profundo_gris",
+        "bedrock_identifier": "quaso:fragmento_profundo_gris",
+        "display_name": "Fragmento Profundo Gris",
+        "bedrock_options": {
+          "icon": "quaso.fragmento_profundo_gris",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:fragmento_profundo_morado",
+        "bedrock_identifier": "quaso:fragmento_profundo_morado",
+        "display_name": "Fragmento Profundo Morado",
+        "bedrock_options": {
+          "icon": "quaso.fragmento_profundo_morado",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:fragmento_profundo_verde",
+        "bedrock_identifier": "quaso:fragmento_profundo_verde",
+        "display_name": "Fragmento Profundo Verde",
+        "bedrock_options": {
+          "icon": "quaso.fragmento_profundo_verde",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      }
+    ],
+    "minecraft:gold_block": [
+      {
+        "type": "definition",
+        "model": "minecraft:bloque_oro_apilado",
+        "bedrock_identifier": "quaso:bloque_oro_apilado",
+        "display_name": "Bloque de Oro Apilado",
+        "bedrock_options": {
+          "icon": "quaso.bloque_oro_apilado",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      }
+    ],
+    "minecraft:netherite_boots": [
+      {
+        "type": "definition",
+        "model": "minecraft:bota_warden",
+        "bedrock_identifier": "quaso:bota_warden",
+        "display_name": "Botas de Warden",
+        "bedrock_options": {
+          "icon": "quaso.bota_warden",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "equipment",
+          "protection_value": 4
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:botas_floral",
+        "bedrock_identifier": "quaso:botas_floral",
+        "display_name": "Botas Florales",
+        "bedrock_options": {
+          "icon": "quaso.botas_floral",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "equipment",
+          "protection_value": 3
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:botas_warden_escaladoras",
+        "bedrock_identifier": "quaso:botas_warden_escaladoras",
+        "display_name": "Botas de Warden Escaladoras",
+        "bedrock_options": {
+          "icon": "quaso.botas_warden_escaladoras",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "equipment",
+          "protection_value": 4
+        }
+      }
+    ],
+    "minecraft:compass": [
+      {
+        "type": "definition",
+        "model": "minecraft:brujula_explorador",
+        "bedrock_identifier": "quaso:brujula_explorador",
+        "display_name": "Brújula del Explorador",
+        "bedrock_options": {
+          "icon": "quaso.brujula_explorador",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        },
+        "components": {
+          "minecraft:max_stack_size": 1
+        }
+      }
+    ],
+    "minecraft:chest": [
+      {
+        "type": "definition",
+        "model": "minecraft:caja_misteriosa",
+        "bedrock_identifier": "quaso:caja_misteriosa",
+        "display_name": "Caja Misteriosa",
+        "bedrock_options": {
+          "icon": "quaso.caja_misteriosa",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      }
+    ],
+    "minecraft:mushroom_stew": [
+      {
+        "type": "definition",
+        "model": "minecraft:caldo_profundo",
+        "bedrock_identifier": "quaso:caldo_profundo",
+        "display_name": "Caldo Profundo",
+        "bedrock_options": {
+          "icon": "quaso.caldo_profundo",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      }
+    ],
+    "minecraft:sugar": [
+      {
+        "type": "definition",
+        "model": "minecraft:caramelo",
+        "bedrock_identifier": "quaso:caramelo",
+        "display_name": "Caramelo",
+        "bedrock_options": {
+          "icon": "quaso.caramelo",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      }
+    ],
+    "minecraft:rotten_flesh": [
+      {
+        "type": "definition",
+        "model": "minecraft:carne_podrida_floral",
+        "bedrock_identifier": "quaso:carne_podrida_floral",
+        "display_name": "Carne Podrida Floral",
+        "bedrock_options": {
+          "icon": "quaso.carne_podrida_floral",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      }
+    ],
+    "minecraft:mojang_banner_pattern": [
+      {
+        "type": "definition",
+        "model": "minecraft:carta_5013",
+        "bedrock_identifier": "quaso:carta_5013",
+        "display_name": "Carta 5013",
+        "bedrock_options": {
+          "icon": "quaso.carta_5013",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:carta_5014",
+        "bedrock_identifier": "quaso:carta_5014",
+        "display_name": "Carta 5014",
+        "bedrock_options": {
+          "icon": "quaso.carta_5014",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:carta_5015",
+        "bedrock_identifier": "quaso:carta_5015",
+        "display_name": "Carta 5015",
+        "bedrock_options": {
+          "icon": "quaso.carta_5015",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:carta_5016",
+        "bedrock_identifier": "quaso:carta_5016",
+        "display_name": "Carta 5016",
+        "bedrock_options": {
+          "icon": "quaso.carta_5016",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:carta_5017",
+        "bedrock_identifier": "quaso:carta_5017",
+        "display_name": "Carta 5017",
+        "bedrock_options": {
+          "icon": "quaso.carta_5017",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:carta_5018",
+        "bedrock_identifier": "quaso:carta_5018",
+        "display_name": "Carta 5018",
+        "bedrock_options": {
+          "icon": "quaso.carta_5018",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:carta_5019",
+        "bedrock_identifier": "quaso:carta_5019",
+        "display_name": "Carta 5019",
+        "bedrock_options": {
+          "icon": "quaso.carta_5019",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:carta_5020",
+        "bedrock_identifier": "quaso:carta_5020",
+        "display_name": "Carta 5020",
+        "bedrock_options": {
+          "icon": "quaso.carta_5020",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:carta_5021",
+        "bedrock_identifier": "quaso:carta_5021",
+        "display_name": "Carta 5021",
+        "bedrock_options": {
+          "icon": "quaso.carta_5021",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:carta_5022",
+        "bedrock_identifier": "quaso:carta_5022",
+        "display_name": "Carta 5022",
+        "bedrock_options": {
+          "icon": "quaso.carta_5022",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:carta_5023",
+        "bedrock_identifier": "quaso:carta_5023",
+        "display_name": "Carta 5023",
+        "bedrock_options": {
+          "icon": "quaso.carta_5023",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:carta_5024",
+        "bedrock_identifier": "quaso:carta_5024",
+        "display_name": "Carta 5024",
+        "bedrock_options": {
+          "icon": "quaso.carta_5024",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:carta_5025",
+        "bedrock_identifier": "quaso:carta_5025",
+        "display_name": "Carta 5025",
+        "bedrock_options": {
+          "icon": "quaso.carta_5025",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      }
+    ],
+    "minecraft:globe_banner_pattern": [
+      {
+        "type": "definition",
+        "model": "minecraft:carta_5026",
+        "bedrock_identifier": "quaso:carta_5026",
+        "display_name": "Carta 5026",
+        "bedrock_options": {
+          "icon": "quaso.carta_5026",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:carta_5027",
+        "bedrock_identifier": "quaso:carta_5027",
+        "display_name": "Carta 5027",
+        "bedrock_options": {
+          "icon": "quaso.carta_5027",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:carta_5028",
+        "bedrock_identifier": "quaso:carta_5028",
+        "display_name": "Carta 5028",
+        "bedrock_options": {
+          "icon": "quaso.carta_5028",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:carta_5029",
+        "bedrock_identifier": "quaso:carta_5029",
+        "display_name": "Carta 5029",
+        "bedrock_options": {
+          "icon": "quaso.carta_5029",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:carta_5030",
+        "bedrock_identifier": "quaso:carta_5030",
+        "display_name": "Carta 5030",
+        "bedrock_options": {
+          "icon": "quaso.carta_5030",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:carta_5031",
+        "bedrock_identifier": "quaso:carta_5031",
+        "display_name": "Carta 5031",
+        "bedrock_options": {
+          "icon": "quaso.carta_5031",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:carta_5032",
+        "bedrock_identifier": "quaso:carta_5032",
+        "display_name": "Carta 5032",
+        "bedrock_options": {
+          "icon": "quaso.carta_5032",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:carta_5033",
+        "bedrock_identifier": "quaso:carta_5033",
+        "display_name": "Carta 5033",
+        "bedrock_options": {
+          "icon": "quaso.carta_5033",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:carta_5034",
+        "bedrock_identifier": "quaso:carta_5034",
+        "display_name": "Carta 5034",
+        "bedrock_options": {
+          "icon": "quaso.carta_5034",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:carta_5035",
+        "bedrock_identifier": "quaso:carta_5035",
+        "display_name": "Carta 5035",
+        "bedrock_options": {
+          "icon": "quaso.carta_5035",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:carta_5036",
+        "bedrock_identifier": "quaso:carta_5036",
+        "display_name": "Carta 5036",
+        "bedrock_options": {
+          "icon": "quaso.carta_5036",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:carta_5037",
+        "bedrock_identifier": "quaso:carta_5037",
+        "display_name": "Carta 5037",
+        "bedrock_options": {
+          "icon": "quaso.carta_5037",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:carta_5038",
+        "bedrock_identifier": "quaso:carta_5038",
+        "display_name": "Carta 5038",
+        "bedrock_options": {
+          "icon": "quaso.carta_5038",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      }
+    ],
+    "minecraft:creeper_banner_pattern": [
+      {
+        "type": "definition",
+        "model": "minecraft:carta_5039",
+        "bedrock_identifier": "quaso:carta_5039",
+        "display_name": "Carta 5039",
+        "bedrock_options": {
+          "icon": "quaso.carta_5039",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:carta_5040",
+        "bedrock_identifier": "quaso:carta_5040",
+        "display_name": "Carta 5040",
+        "bedrock_options": {
+          "icon": "quaso.carta_5040",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:carta_5041",
+        "bedrock_identifier": "quaso:carta_5041",
+        "display_name": "Carta 5041",
+        "bedrock_options": {
+          "icon": "quaso.carta_5041",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:carta_5042",
+        "bedrock_identifier": "quaso:carta_5042",
+        "display_name": "Carta 5042",
+        "bedrock_options": {
+          "icon": "quaso.carta_5042",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:carta_5043",
+        "bedrock_identifier": "quaso:carta_5043",
+        "display_name": "Carta 5043",
+        "bedrock_options": {
+          "icon": "quaso.carta_5043",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:carta_5044",
+        "bedrock_identifier": "quaso:carta_5044",
+        "display_name": "Carta 5044",
+        "bedrock_options": {
+          "icon": "quaso.carta_5044",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:carta_5045",
+        "bedrock_identifier": "quaso:carta_5045",
+        "display_name": "Carta 5045",
+        "bedrock_options": {
+          "icon": "quaso.carta_5045",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:carta_5046",
+        "bedrock_identifier": "quaso:carta_5046",
+        "display_name": "Carta 5046",
+        "bedrock_options": {
+          "icon": "quaso.carta_5046",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:carta_5047",
+        "bedrock_identifier": "quaso:carta_5047",
+        "display_name": "Carta 5047",
+        "bedrock_options": {
+          "icon": "quaso.carta_5047",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:carta_5048",
+        "bedrock_identifier": "quaso:carta_5048",
+        "display_name": "Carta 5048",
+        "bedrock_options": {
+          "icon": "quaso.carta_5048",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:carta_5049",
+        "bedrock_identifier": "quaso:carta_5049",
+        "display_name": "Carta 5049",
+        "bedrock_options": {
+          "icon": "quaso.carta_5049",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:carta_5050",
+        "bedrock_identifier": "quaso:carta_5050",
+        "display_name": "Carta 5050",
+        "bedrock_options": {
+          "icon": "quaso.carta_5050",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:carta_5051",
+        "bedrock_identifier": "quaso:carta_5051",
+        "display_name": "Carta 5051",
+        "bedrock_options": {
+          "icon": "quaso.carta_5051",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:habilidad_resistencia_1_off",
+        "bedrock_identifier": "quaso:habilidad_resistencia_1_off",
+        "display_name": "Habilidad resistencia 1 off",
+        "bedrock_options": {
+          "icon": "quaso.habilidad_resistencia_1_off",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:habilidad_resistencia_1_on",
+        "bedrock_identifier": "quaso:habilidad_resistencia_1_on",
+        "display_name": "Habilidad resistencia 1 on",
+        "bedrock_options": {
+          "icon": "quaso.habilidad_resistencia_1_on",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:habilidad_resistencia_2_off",
+        "bedrock_identifier": "quaso:habilidad_resistencia_2_off",
+        "display_name": "Habilidad resistencia 2 off",
+        "bedrock_options": {
+          "icon": "quaso.habilidad_resistencia_2_off",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:habilidad_resistencia_2_on",
+        "bedrock_identifier": "quaso:habilidad_resistencia_2_on",
+        "display_name": "Habilidad resistencia 2 on",
+        "bedrock_options": {
+          "icon": "quaso.habilidad_resistencia_2_on",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:habilidad_resistencia_3_off",
+        "bedrock_identifier": "quaso:habilidad_resistencia_3_off",
+        "display_name": "Habilidad resistencia 3 off",
+        "bedrock_options": {
+          "icon": "quaso.habilidad_resistencia_3_off",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:habilidad_resistencia_3_on",
+        "bedrock_identifier": "quaso:habilidad_resistencia_3_on",
+        "display_name": "Habilidad resistencia 3 on",
+        "bedrock_options": {
+          "icon": "quaso.habilidad_resistencia_3_on",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:habilidad_resistencia_4_off",
+        "bedrock_identifier": "quaso:habilidad_resistencia_4_off",
+        "display_name": "Habilidad resistencia 4 off",
+        "bedrock_options": {
+          "icon": "quaso.habilidad_resistencia_4_off",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:habilidad_resistencia_4_on",
+        "bedrock_identifier": "quaso:habilidad_resistencia_4_on",
+        "display_name": "Habilidad resistencia 4 on",
+        "bedrock_options": {
+          "icon": "quaso.habilidad_resistencia_4_on",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:habilidad_resistencia_5_off",
+        "bedrock_identifier": "quaso:habilidad_resistencia_5_off",
+        "display_name": "Habilidad resistencia 5 off",
+        "bedrock_options": {
+          "icon": "quaso.habilidad_resistencia_5_off",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:habilidad_resistencia_5_on",
+        "bedrock_identifier": "quaso:habilidad_resistencia_5_on",
+        "display_name": "Habilidad resistencia 5 on",
+        "bedrock_options": {
+          "icon": "quaso.habilidad_resistencia_5_on",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:habilidad_resistencia_6_off",
+        "bedrock_identifier": "quaso:habilidad_resistencia_6_off",
+        "display_name": "Habilidad resistencia 6 off",
+        "bedrock_options": {
+          "icon": "quaso.habilidad_resistencia_6_off",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:habilidad_resistencia_6_on",
+        "bedrock_identifier": "quaso:habilidad_resistencia_6_on",
+        "display_name": "Habilidad resistencia 6 on",
+        "bedrock_options": {
+          "icon": "quaso.habilidad_resistencia_6_on",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:habilidad_resistencia_7_off",
+        "bedrock_identifier": "quaso:habilidad_resistencia_7_off",
+        "display_name": "Habilidad resistencia 7 off",
+        "bedrock_options": {
+          "icon": "quaso.habilidad_resistencia_7_off",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:habilidad_resistencia_7_on",
+        "bedrock_identifier": "quaso:habilidad_resistencia_7_on",
+        "display_name": "Habilidad resistencia 7 on",
+        "bedrock_options": {
+          "icon": "quaso.habilidad_resistencia_7_on",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:habilidad_resistencia_8_off",
+        "bedrock_identifier": "quaso:habilidad_resistencia_8_off",
+        "display_name": "Habilidad resistencia 8 off",
+        "bedrock_options": {
+          "icon": "quaso.habilidad_resistencia_8_off",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:habilidad_resistencia_8_on",
+        "bedrock_identifier": "quaso:habilidad_resistencia_8_on",
+        "display_name": "Habilidad resistencia 8 on",
+        "bedrock_options": {
+          "icon": "quaso.habilidad_resistencia_8_on",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      }
+    ],
+    "minecraft:netherite_helmet": [
+      {
+        "type": "definition",
+        "model": "minecraft:casco_floral",
+        "bedrock_identifier": "quaso:casco_floral",
+        "display_name": "Casco Floral",
+        "bedrock_options": {
+          "icon": "quaso.casco_floral",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "equipment",
+          "protection_value": 3
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:casco_warden",
+        "bedrock_identifier": "quaso:casco_warden",
+        "display_name": "Casco de Warden",
+        "bedrock_options": {
+          "icon": "quaso.casco_warden",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "equipment",
+          "protection_value": 4
+        }
+      }
+    ],
+    "minecraft:barrier": [
+      {
+        "type": "definition",
+        "model": "minecraft:casino_cerrar",
+        "bedrock_identifier": "quaso:casino_cerrar",
+        "display_name": "Casino cerrar",
+        "bedrock_options": {
+          "icon": "quaso.casino_cerrar",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      }
+    ],
+    "minecraft:black_dye": [
+      {
+        "type": "definition",
+        "model": "minecraft:casino_fondo",
+        "bedrock_identifier": "quaso:casino_fondo",
+        "display_name": "Casino fondo",
+        "bedrock_options": {
+          "icon": "quaso.casino_fondo",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:esencia_marchita",
+        "bedrock_identifier": "quaso:esencia_marchita",
+        "display_name": "Esencia Marchita",
+        "bedrock_options": {
+          "icon": "quaso.esencia_marchita",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      }
+    ],
+    "minecraft:lever": [
+      {
+        "type": "definition",
+        "model": "minecraft:casino_girar",
+        "bedrock_identifier": "quaso:casino_girar",
+        "display_name": "Casino girar",
+        "bedrock_options": {
+          "icon": "quaso.casino_girar",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      }
+    ],
+    "minecraft:red_dye": [
+      {
+        "type": "definition",
+        "model": "minecraft:casino_linea_derecha",
+        "bedrock_identifier": "quaso:casino_linea_derecha",
+        "display_name": "Casino linea derecha",
+        "bedrock_options": {
+          "icon": "quaso.casino_linea_derecha",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:casino_linea_izquierda",
+        "bedrock_identifier": "quaso:casino_linea_izquierda",
+        "display_name": "Casino linea izquierda",
+        "bedrock_options": {
+          "icon": "quaso.casino_linea_izquierda",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      }
+    ],
+    "minecraft:iron_nugget": [
+      {
+        "type": "definition",
+        "model": "minecraft:chatarra",
+        "bedrock_identifier": "quaso:chatarra",
+        "display_name": "Chatarra",
+        "bedrock_options": {
+          "icon": "quaso.chatarra",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:fosiles_pequenos",
+        "bedrock_identifier": "quaso:fosiles_pequenos",
+        "display_name": "Fósiles Pequeños",
+        "bedrock_options": {
+          "icon": "quaso.fosiles_pequenos",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:fragmentos_ambar",
+        "bedrock_identifier": "quaso:fragmentos_ambar",
+        "display_name": "Fragmentos de Ámbar",
+        "bedrock_options": {
+          "icon": "quaso.fragmentos_ambar",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:iman_botin",
+        "bedrock_identifier": "quaso:iman_botin",
+        "display_name": "Imán de Botín",
+        "bedrock_options": {
+          "icon": "quaso.iman_botin",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:lingote_platino",
+        "bedrock_identifier": "quaso:lingote_platino",
+        "display_name": "Lingote de Platino",
+        "bedrock_options": {
+          "icon": "quaso.lingote_platino",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:manzana_podrida",
+        "bedrock_identifier": "quaso:manzana_podrida",
+        "display_name": "Manzana Podrida",
+        "bedrock_options": {
+          "icon": "quaso.manzana_podrida",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:pepitas_diamante",
+        "bedrock_identifier": "quaso:pepitas_diamante",
+        "display_name": "Pepitas de Diamante",
+        "bedrock_options": {
+          "icon": "quaso.pepitas_diamante",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:pepitas_hierro_oxidadas",
+        "bedrock_identifier": "quaso:pepitas_hierro_oxidadas",
+        "display_name": "Pepitas de Hierro Oxidadas",
+        "bedrock_options": {
+          "icon": "quaso.pepitas_hierro_oxidadas",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:zanahoria_encantada",
+        "bedrock_identifier": "quaso:zanahoria_encantada",
+        "display_name": "Zanahoria Encantada",
+        "bedrock_options": {
+          "icon": "quaso.zanahoria_encantada",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      }
+    ],
+    "minecraft:heart_of_the_sea": [
+      {
+        "type": "definition",
+        "model": "minecraft:corazon_warden_boss",
+        "bedrock_identifier": "quaso:corazon_warden_boss",
+        "display_name": "Corazón de Warden Boss",
+        "bedrock_options": {
+          "icon": "quaso.corazon_warden_boss",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:enderking_pearl",
+        "bedrock_identifier": "quaso:enderking_pearl",
+        "display_name": "EnderKing Pearl",
+        "bedrock_options": {
+          "icon": "quaso.enderking_pearl",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      }
+    ],
+    "minecraft:golden_apple": [
+      {
+        "type": "definition",
+        "model": "minecraft:corrupted_golden_apple",
+        "bedrock_identifier": "quaso:corrupted_golden_apple",
+        "display_name": "Corrupted Golden Apple",
+        "bedrock_options": {
+          "icon": "quaso.corrupted_golden_apple",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:keep_inv_liquido",
+        "bedrock_identifier": "quaso:keep_inv_liquido",
+        "display_name": "Keep inv liquido",
+        "bedrock_options": {
+          "icon": "quaso.keep_inv_liquido",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      }
+    ],
+    "minecraft:cooked_beef": [
+      {
+        "type": "definition",
+        "model": "minecraft:corrupted_steak",
+        "bedrock_identifier": "quaso:corrupted_steak",
+        "display_name": "Carne Corrupta",
+        "bedrock_options": {
+          "icon": "quaso.corrupted_steak",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      }
+    ],
+    "minecraft:prismarine_crystals": [
+      {
+        "type": "definition",
+        "model": "minecraft:cristal_celestita",
+        "bedrock_identifier": "quaso:cristal_celestita",
+        "display_name": "Cristal de Celestita",
+        "bedrock_options": {
+          "icon": "quaso.cristal_celestita",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      }
+    ],
+    "minecraft:amethyst_shard": [
+      {
+        "type": "definition",
+        "model": "minecraft:cristal_eco",
+        "bedrock_identifier": "quaso:cristal_eco",
+        "display_name": "Cristal de Eco",
+        "bedrock_options": {
+          "icon": "quaso.cristal_eco",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        },
+        "components": {
+          "minecraft:max_stack_size": 1
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:cristal_hielo",
+        "bedrock_identifier": "quaso:cristal_hielo",
+        "display_name": "Cristal de Hielo",
+        "bedrock_options": {
+          "icon": "quaso.cristal_hielo",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      }
+    ],
+    "minecraft:sunflower": [
+      {
+        "type": "definition",
+        "model": "minecraft:dinocoins",
+        "bedrock_identifier": "quaso:dinocoins",
+        "display_name": "DinoCoins ۞",
+        "bedrock_options": {
+          "icon": "quaso.dinocoins",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        },
+        "components": {
+          "minecraft:max_stack_size": 64
+        }
+      }
+    ],
+    "minecraft:gold_nugget": [
+      {
+        "type": "definition",
+        "model": "minecraft:dinofichas",
+        "bedrock_identifier": "quaso:dinofichas",
+        "display_name": "DinoFichas ۞",
+        "bedrock_options": {
+          "icon": "quaso.dinofichas",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        },
+        "components": {
+          "minecraft:max_stack_size": 64
+        }
+      }
+    ],
+    "minecraft:endermite_spawn_egg": [
+      {
+        "type": "definition",
+        "model": "minecraft:ender_bag",
+        "bedrock_identifier": "quaso:ender_bag",
+        "display_name": "Ender Bag",
+        "bedrock_options": {
+          "icon": "quaso.ender_bag",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      }
+    ],
+    "minecraft:totem_of_undying": [
+      {
+        "type": "definition",
+        "model": "minecraft:ender_totem",
+        "bedrock_identifier": "quaso:ender_totem",
+        "display_name": "Ender Totem",
+        "bedrock_options": {
+          "icon": "quaso.ender_totem",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:flytotem",
+        "bedrock_identifier": "quaso:flytotem",
+        "display_name": "Fly Totem",
+        "bedrock_options": {
+          "icon": "quaso.flytotem",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:icetotem",
+        "bedrock_identifier": "quaso:icetotem",
+        "display_name": "Ice Totem",
+        "bedrock_options": {
+          "icon": "quaso.icetotem",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:sculk_totem",
+        "bedrock_identifier": "quaso:sculk_totem",
+        "display_name": "Sculk Totem",
+        "bedrock_options": {
+          "icon": "quaso.sculk_totem",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:special_totem",
+        "bedrock_identifier": "quaso:special_totem",
+        "display_name": "Totem Especial",
+        "bedrock_options": {
+          "icon": "quaso.special_totem",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:totem_doble1",
+        "bedrock_identifier": "quaso:totem_doble1",
+        "display_name": "Totem doble1",
+        "bedrock_options": {
+          "icon": "quaso.totem_doble1",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:totem_doble2",
+        "bedrock_identifier": "quaso:totem_doble2",
+        "display_name": "Tótem de Doble Vida",
+        "bedrock_options": {
+          "icon": "quaso.totem_doble2",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      }
+    ],
+    "minecraft:shield": [
+      {
+        "type": "definition",
+        "model": "minecraft:escudo_floral",
+        "bedrock_identifier": "quaso:escudo_floral",
+        "display_name": "Escudo Floral",
+        "bedrock_options": {
+          "icon": "quaso.escudo_floral",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      }
+    ],
+    "minecraft:firework_star": [
+      {
+        "type": "definition",
+        "model": "minecraft:esencia_floral",
+        "bedrock_identifier": "quaso:esencia_floral",
+        "display_name": "Esencia Floral",
+        "bedrock_options": {
+          "icon": "quaso.esencia_floral",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:fragmento_astral",
+        "bedrock_identifier": "quaso:fragmento_astral",
+        "display_name": "Fragmento Astral",
+        "bedrock_options": {
+          "icon": "quaso.fragmento_astral",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      }
+    ],
+    "minecraft:netherite_sword": [
+      {
+        "type": "definition",
+        "model": "minecraft:espada_celestita",
+        "bedrock_identifier": "quaso:espada_celestita",
+        "display_name": "Espada celestita",
+        "bedrock_options": {
+          "icon": "quaso.espada_celestita",
+          "display_handheld": true,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:espada_floral",
+        "bedrock_identifier": "quaso:espada_floral",
+        "display_name": "Espada floral",
+        "bedrock_options": {
+          "icon": "quaso.espada_floral",
+          "display_handheld": true,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      }
+    ],
+    "minecraft:red_banner": [
+      {
+        "type": "definition",
+        "model": "minecraft:estandarte_guerra",
+        "bedrock_identifier": "quaso:estandarte_guerra",
+        "display_name": "Estandarte de Guerra",
+        "bedrock_options": {
+          "icon": "quaso.estandarte_guerra",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      }
+    ],
+    "minecraft:netherite_pickaxe": [
+      {
+        "type": "definition",
+        "model": "minecraft:excavator_pickaxe",
+        "bedrock_identifier": "quaso:excavator_pickaxe",
+        "display_name": "La Excavadora",
+        "bedrock_options": {
+          "icon": "quaso.excavator_pickaxe",
+          "display_handheld": true,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:pico_celestita",
+        "bedrock_identifier": "quaso:pico_celestita",
+        "display_name": "Pico celestita",
+        "bedrock_options": {
+          "icon": "quaso.pico_celestita",
+          "display_handheld": true,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:pico_floral",
+        "bedrock_identifier": "quaso:pico_floral",
+        "display_name": "Pico floral",
+        "bedrock_options": {
+          "icon": "quaso.pico_floral",
+          "display_handheld": true,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      }
+    ],
+    "minecraft:popped_chorus_fruit": [
+      {
+        "type": "definition",
+        "model": "minecraft:ficha_mision",
+        "bedrock_identifier": "quaso:ficha_mision",
+        "display_name": "Ficha mision",
+        "bedrock_options": {
+          "icon": "quaso.ficha_mision",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      }
+    ],
+    "minecraft:spectral_arrow": [
+      {
+        "type": "definition",
+        "model": "minecraft:flecha_derecha",
+        "bedrock_identifier": "quaso:flecha_derecha",
+        "display_name": "Flecha derecha",
+        "bedrock_options": {
+          "icon": "quaso.flecha_derecha",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:flecha_izquierda",
+        "bedrock_identifier": "quaso:flecha_izquierda",
+        "display_name": "Flecha izquierda",
+        "bedrock_options": {
+          "icon": "quaso.flecha_izquierda",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      }
+    ],
+    "minecraft:honey_bottle": [
+      {
+        "type": "definition",
+        "model": "minecraft:frasco_de_velocidad",
+        "bedrock_identifier": "quaso:frasco_de_velocidad",
+        "display_name": "Frasco de Velocidad",
+        "bedrock_options": {
+          "icon": "quaso.frasco_de_velocidad",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:soda",
+        "bedrock_identifier": "quaso:soda",
+        "display_name": "Soda",
+        "bedrock_options": {
+          "icon": "quaso.soda",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      }
+    ],
+    "minecraft:beetroot": [
+      {
+        "type": "definition",
+        "model": "minecraft:fruta_abisal",
+        "bedrock_identifier": "quaso:fruta_abisal",
+        "display_name": "Fruta Abisal",
+        "bedrock_options": {
+          "icon": "quaso.fruta_abisal",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      }
+    ],
+    "minecraft:torchflower": [
+      {
+        "type": "definition",
+        "model": "minecraft:fuel_campfire",
+        "bedrock_identifier": "quaso:fuel_campfire",
+        "display_name": "Combustible",
+        "bedrock_options": {
+          "icon": "quaso.fuel_campfire",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      }
+    ],
+    "minecraft:cookie": [
+      {
+        "type": "definition",
+        "model": "minecraft:galleta_fortuna",
+        "bedrock_identifier": "quaso:galleta_fortuna",
+        "display_name": "Galleta de la Fortuna",
+        "bedrock_options": {
+          "icon": "quaso.galleta_fortuna",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      }
+    ],
+    "minecraft:fishing_rod": [
+      {
+        "type": "definition",
+        "model": "minecraft:gancho",
+        "bedrock_identifier": "quaso:gancho",
+        "display_name": "Gancho",
+        "bedrock_options": {
+          "icon": "quaso.gancho",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      }
+    ],
+    "minecraft:flow_banner_pattern": [
+      {
+        "type": "definition",
+        "model": "minecraft:habilidad_agilidad_1_off",
+        "bedrock_identifier": "quaso:habilidad_agilidad_1_off",
+        "display_name": "Habilidad agilidad 1 off",
+        "bedrock_options": {
+          "icon": "quaso.habilidad_agilidad_1_off",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:habilidad_agilidad_1_on",
+        "bedrock_identifier": "quaso:habilidad_agilidad_1_on",
+        "display_name": "Habilidad agilidad 1 on",
+        "bedrock_options": {
+          "icon": "quaso.habilidad_agilidad_1_on",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:habilidad_agilidad_2_off",
+        "bedrock_identifier": "quaso:habilidad_agilidad_2_off",
+        "display_name": "Habilidad agilidad 2 off",
+        "bedrock_options": {
+          "icon": "quaso.habilidad_agilidad_2_off",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:habilidad_agilidad_2_on",
+        "bedrock_identifier": "quaso:habilidad_agilidad_2_on",
+        "display_name": "Habilidad agilidad 2 on",
+        "bedrock_options": {
+          "icon": "quaso.habilidad_agilidad_2_on",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:habilidad_agilidad_3_off",
+        "bedrock_identifier": "quaso:habilidad_agilidad_3_off",
+        "display_name": "Habilidad agilidad 3 off",
+        "bedrock_options": {
+          "icon": "quaso.habilidad_agilidad_3_off",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:habilidad_agilidad_3_on",
+        "bedrock_identifier": "quaso:habilidad_agilidad_3_on",
+        "display_name": "Habilidad agilidad 3 on",
+        "bedrock_options": {
+          "icon": "quaso.habilidad_agilidad_3_on",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:habilidad_agilidad_4_off",
+        "bedrock_identifier": "quaso:habilidad_agilidad_4_off",
+        "display_name": "Habilidad agilidad 4 off",
+        "bedrock_options": {
+          "icon": "quaso.habilidad_agilidad_4_off",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:habilidad_agilidad_4_on",
+        "bedrock_identifier": "quaso:habilidad_agilidad_4_on",
+        "display_name": "Habilidad agilidad 4 on",
+        "bedrock_options": {
+          "icon": "quaso.habilidad_agilidad_4_on",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:habilidad_agilidad_5_off",
+        "bedrock_identifier": "quaso:habilidad_agilidad_5_off",
+        "display_name": "Habilidad agilidad 5 off",
+        "bedrock_options": {
+          "icon": "quaso.habilidad_agilidad_5_off",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:habilidad_agilidad_5_on",
+        "bedrock_identifier": "quaso:habilidad_agilidad_5_on",
+        "display_name": "Habilidad agilidad 5 on",
+        "bedrock_options": {
+          "icon": "quaso.habilidad_agilidad_5_on",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:habilidad_agilidad_6_off",
+        "bedrock_identifier": "quaso:habilidad_agilidad_6_off",
+        "display_name": "Habilidad agilidad 6 off",
+        "bedrock_options": {
+          "icon": "quaso.habilidad_agilidad_6_off",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:habilidad_agilidad_6_on",
+        "bedrock_identifier": "quaso:habilidad_agilidad_6_on",
+        "display_name": "Habilidad agilidad 6 on",
+        "bedrock_options": {
+          "icon": "quaso.habilidad_agilidad_6_on",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:habilidad_agilidad_7_off",
+        "bedrock_identifier": "quaso:habilidad_agilidad_7_off",
+        "display_name": "Habilidad agilidad 7 off",
+        "bedrock_options": {
+          "icon": "quaso.habilidad_agilidad_7_off",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:habilidad_agilidad_7_on",
+        "bedrock_identifier": "quaso:habilidad_agilidad_7_on",
+        "display_name": "Habilidad agilidad 7 on",
+        "bedrock_options": {
+          "icon": "quaso.habilidad_agilidad_7_on",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:habilidad_agilidad_8_off",
+        "bedrock_identifier": "quaso:habilidad_agilidad_8_off",
+        "display_name": "Habilidad agilidad 8 off",
+        "bedrock_options": {
+          "icon": "quaso.habilidad_agilidad_8_off",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:habilidad_agilidad_8_on",
+        "bedrock_identifier": "quaso:habilidad_agilidad_8_on",
+        "display_name": "Habilidad agilidad 8 on",
+        "bedrock_options": {
+          "icon": "quaso.habilidad_agilidad_8_on",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      }
+    ],
+    "minecraft:flower_banner_pattern": [
+      {
+        "type": "definition",
+        "model": "minecraft:habilidad_vitalidad_1_off",
+        "bedrock_identifier": "quaso:habilidad_vitalidad_1_off",
+        "display_name": "Habilidad vitalidad 1 off",
+        "bedrock_options": {
+          "icon": "quaso.habilidad_vitalidad_1_off",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:habilidad_vitalidad_1_on",
+        "bedrock_identifier": "quaso:habilidad_vitalidad_1_on",
+        "display_name": "Habilidad vitalidad 1 on",
+        "bedrock_options": {
+          "icon": "quaso.habilidad_vitalidad_1_on",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:habilidad_vitalidad_2_off",
+        "bedrock_identifier": "quaso:habilidad_vitalidad_2_off",
+        "display_name": "Habilidad vitalidad 2 off",
+        "bedrock_options": {
+          "icon": "quaso.habilidad_vitalidad_2_off",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:habilidad_vitalidad_2_on",
+        "bedrock_identifier": "quaso:habilidad_vitalidad_2_on",
+        "display_name": "Habilidad vitalidad 2 on",
+        "bedrock_options": {
+          "icon": "quaso.habilidad_vitalidad_2_on",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:habilidad_vitalidad_3_off",
+        "bedrock_identifier": "quaso:habilidad_vitalidad_3_off",
+        "display_name": "Habilidad vitalidad 3 off",
+        "bedrock_options": {
+          "icon": "quaso.habilidad_vitalidad_3_off",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:habilidad_vitalidad_3_on",
+        "bedrock_identifier": "quaso:habilidad_vitalidad_3_on",
+        "display_name": "Habilidad vitalidad 3 on",
+        "bedrock_options": {
+          "icon": "quaso.habilidad_vitalidad_3_on",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:habilidad_vitalidad_4_off",
+        "bedrock_identifier": "quaso:habilidad_vitalidad_4_off",
+        "display_name": "Habilidad vitalidad 4 off",
+        "bedrock_options": {
+          "icon": "quaso.habilidad_vitalidad_4_off",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:habilidad_vitalidad_4_on",
+        "bedrock_identifier": "quaso:habilidad_vitalidad_4_on",
+        "display_name": "Habilidad vitalidad 4 on",
+        "bedrock_options": {
+          "icon": "quaso.habilidad_vitalidad_4_on",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:habilidad_vitalidad_5_off",
+        "bedrock_identifier": "quaso:habilidad_vitalidad_5_off",
+        "display_name": "Habilidad vitalidad 5 off",
+        "bedrock_options": {
+          "icon": "quaso.habilidad_vitalidad_5_off",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:habilidad_vitalidad_5_on",
+        "bedrock_identifier": "quaso:habilidad_vitalidad_5_on",
+        "display_name": "Habilidad vitalidad 5 on",
+        "bedrock_options": {
+          "icon": "quaso.habilidad_vitalidad_5_on",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:habilidad_vitalidad_6_off",
+        "bedrock_identifier": "quaso:habilidad_vitalidad_6_off",
+        "display_name": "Habilidad vitalidad 6 off",
+        "bedrock_options": {
+          "icon": "quaso.habilidad_vitalidad_6_off",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:habilidad_vitalidad_6_on",
+        "bedrock_identifier": "quaso:habilidad_vitalidad_6_on",
+        "display_name": "Habilidad vitalidad 6 on",
+        "bedrock_options": {
+          "icon": "quaso.habilidad_vitalidad_6_on",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:habilidad_vitalidad_7_off",
+        "bedrock_identifier": "quaso:habilidad_vitalidad_7_off",
+        "display_name": "Habilidad vitalidad 7 off",
+        "bedrock_options": {
+          "icon": "quaso.habilidad_vitalidad_7_off",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:habilidad_vitalidad_7_on",
+        "bedrock_identifier": "quaso:habilidad_vitalidad_7_on",
+        "display_name": "Habilidad vitalidad 7 on",
+        "bedrock_options": {
+          "icon": "quaso.habilidad_vitalidad_7_on",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:habilidad_vitalidad_8_off",
+        "bedrock_identifier": "quaso:habilidad_vitalidad_8_off",
+        "display_name": "Habilidad vitalidad 8 off",
+        "bedrock_options": {
+          "icon": "quaso.habilidad_vitalidad_8_off",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:habilidad_vitalidad_8_on",
+        "bedrock_identifier": "quaso:habilidad_vitalidad_8_on",
+        "display_name": "Habilidad vitalidad 8 on",
+        "bedrock_options": {
+          "icon": "quaso.habilidad_vitalidad_8_on",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      }
+    ],
+    "minecraft:netherite_axe": [
+      {
+        "type": "definition",
+        "model": "minecraft:hacha_celestita",
+        "bedrock_identifier": "quaso:hacha_celestita",
+        "display_name": "Hacha celestita",
+        "bedrock_options": {
+          "icon": "quaso.hacha_celestita",
+          "display_handheld": true,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:hacha_floral",
+        "bedrock_identifier": "quaso:hacha_floral",
+        "display_name": "Hacha floral",
+        "bedrock_options": {
+          "icon": "quaso.hacha_floral",
+          "display_handheld": true,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      }
+    ],
+    "minecraft:enchanted_book": [
+      {
+        "type": "definition",
+        "model": "minecraft:happy_ghast_enchant",
+        "bedrock_identifier": "quaso:happy_ghast_enchant",
+        "display_name": "Happy ghast enchant",
+        "bedrock_options": {
+          "icon": "quaso.happy_ghast_enchant",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:libro_alcance",
+        "bedrock_identifier": "quaso:libro_alcance",
+        "display_name": "Libro alcance",
+        "bedrock_options": {
+          "icon": "quaso.libro_alcance",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:libro_anclaje",
+        "bedrock_identifier": "quaso:libro_anclaje",
+        "display_name": "Libro anclaje",
+        "bedrock_options": {
+          "icon": "quaso.libro_anclaje",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:libro_anzuelo_veloz",
+        "bedrock_identifier": "quaso:libro_anzuelo_veloz",
+        "display_name": "Libro anzuelo veloz",
+        "bedrock_options": {
+          "icon": "quaso.libro_anzuelo_veloz",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:libro_cosecha",
+        "bedrock_identifier": "quaso:libro_cosecha",
+        "display_name": "Libro cosecha",
+        "bedrock_options": {
+          "icon": "quaso.libro_cosecha",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:libro_fervor_minero",
+        "bedrock_identifier": "quaso:libro_fervor_minero",
+        "display_name": "Libro fervor minero",
+        "bedrock_options": {
+          "icon": "quaso.libro_fervor_minero",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:libro_paso_igneo",
+        "bedrock_identifier": "quaso:libro_paso_igneo",
+        "display_name": "Libro paso igneo",
+        "bedrock_options": {
+          "icon": "quaso.libro_paso_igneo",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:libro_purificacion",
+        "bedrock_identifier": "quaso:libro_purificacion",
+        "display_name": "Libro purificacion",
+        "bedrock_options": {
+          "icon": "quaso.libro_purificacion",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:libro_retorno_del_vacio",
+        "bedrock_identifier": "quaso:libro_retorno_del_vacio",
+        "display_name": "Libro retorno del vacio",
+        "bedrock_options": {
+          "icon": "quaso.libro_retorno_del_vacio",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:libro_talador",
+        "bedrock_identifier": "quaso:libro_talador",
+        "display_name": "Libro talador",
+        "bedrock_options": {
+          "icon": "quaso.libro_talador",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:libro_veta",
+        "bedrock_identifier": "quaso:libro_veta",
+        "display_name": "Libro veta",
+        "bedrock_options": {
+          "icon": "quaso.libro_veta",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:libro_vigor_de_batalla",
+        "bedrock_identifier": "quaso:libro_vigor_de_batalla",
+        "display_name": "Libro vigor de batalla",
+        "bedrock_options": {
+          "icon": "quaso.libro_vigor_de_batalla",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:libro_vision_abisal",
+        "bedrock_identifier": "quaso:libro_vision_abisal",
+        "display_name": "Libro vision abisal",
+        "bedrock_options": {
+          "icon": "quaso.libro_vision_abisal",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      }
+    ],
+    "minecraft:allay_spawn_egg": [
+      {
+        "type": "definition",
+        "model": "minecraft:immunity",
+        "bedrock_identifier": "quaso:immunity",
+        "display_name": "Amuleto de la Inmortalidad",
+        "bedrock_options": {
+          "icon": "quaso.immunity",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      }
+    ],
+    "minecraft:blaze_powder": [
+      {
+        "type": "definition",
+        "model": "minecraft:incienso_ahuyentador",
+        "bedrock_identifier": "quaso:incienso_ahuyentador",
+        "display_name": "Incienso Ahuyentador",
+        "bedrock_options": {
+          "icon": "quaso.incienso_ahuyentador",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      }
+    ],
+    "minecraft:netherite_spear": [
+      {
+        "type": "definition",
+        "model": "minecraft:lanza_celestita",
+        "bedrock_identifier": "quaso:lanza_celestita",
+        "display_name": "Lanza celestita",
+        "bedrock_options": {
+          "icon": "quaso.lanza_celestita",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:lanza_floral",
+        "bedrock_identifier": "quaso:lanza_floral",
+        "display_name": "Lanza floral",
+        "bedrock_options": {
+          "icon": "quaso.lanza_floral",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      }
+    ],
+    "minecraft:knowledge_book": [
+      {
+        "type": "definition",
+        "model": "minecraft:libro_habilidades",
+        "bedrock_identifier": "quaso:libro_habilidades",
+        "display_name": "Libro de Habilidades",
+        "bedrock_options": {
+          "icon": "quaso.libro_habilidades",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      }
+    ],
+    "minecraft:campfire": [
+      {
+        "type": "definition",
+        "model": "minecraft:life_campfire",
+        "bedrock_identifier": "quaso:life_campfire",
+        "display_name": "Fogata de la Vida",
+        "bedrock_options": {
+          "icon": "quaso.life_campfire",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      }
+    ],
+    "minecraft:copper_ingot": [
+      {
+        "type": "definition",
+        "model": "minecraft:lingote_celestita",
+        "bedrock_identifier": "quaso:lingote_celestita",
+        "display_name": "Lingote de Celestita",
+        "bedrock_options": {
+          "icon": "quaso.lingote_celestita",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:lingote_profundo",
+        "bedrock_identifier": "quaso:lingote_profundo",
+        "display_name": "Lingote Profundo",
+        "bedrock_options": {
+          "icon": "quaso.lingote_profundo",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:lingote_profundo_cian",
+        "bedrock_identifier": "quaso:lingote_profundo_cian",
+        "display_name": "Lingote Profundo Cian",
+        "bedrock_options": {
+          "icon": "quaso.lingote_profundo_cian",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:lingote_profundo_gris",
+        "bedrock_identifier": "quaso:lingote_profundo_gris",
+        "display_name": "Lingote Profundo Gris",
+        "bedrock_options": {
+          "icon": "quaso.lingote_profundo_gris",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:lingote_profundo_morado",
+        "bedrock_identifier": "quaso:lingote_profundo_morado",
+        "display_name": "Lingote Profundo Morado",
+        "bedrock_options": {
+          "icon": "quaso.lingote_profundo_morado",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:lingote_profundo_verde",
+        "bedrock_identifier": "quaso:lingote_profundo_verde",
+        "display_name": "Lingote Profundo Verde",
+        "bedrock_options": {
+          "icon": "quaso.lingote_profundo_verde",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      }
+    ],
+    "minecraft:soul_lantern": [
+      {
+        "type": "definition",
+        "model": "minecraft:linterna_almas",
+        "bedrock_identifier": "quaso:linterna_almas",
+        "display_name": "Linterna de Almas",
+        "bedrock_options": {
+          "icon": "quaso.linterna_almas",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      }
+    ],
+    "minecraft:gray_stained_glass_pane": [
+      {
+        "type": "definition",
+        "model": "minecraft:logro_borde",
+        "bedrock_identifier": "quaso:logro_borde",
+        "display_name": "Logro borde",
+        "bedrock_options": {
+          "icon": "quaso.logro_borde",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      }
+    ],
+    "minecraft:apple": [
+      {
+        "type": "definition",
+        "model": "minecraft:manzana_vida",
+        "bedrock_identifier": "quaso:manzana_vida",
+        "display_name": "Manzana de la Vida",
+        "bedrock_options": {
+          "icon": "quaso.manzana_vida",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:panic_apple",
+        "bedrock_identifier": "quaso:panic_apple",
+        "display_name": "Manzana del Pánico",
+        "bedrock_options": {
+          "icon": "quaso.panic_apple",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      }
+    ],
+    "minecraft:netherite_upgrade_smithing_template": [
+      {
+        "type": "definition",
+        "model": "minecraft:mejora_floral",
+        "bedrock_identifier": "quaso:mejora_floral",
+        "display_name": "Mejora Floral",
+        "bedrock_options": {
+          "icon": "quaso.mejora_floral",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:plantilla_celestita",
+        "bedrock_identifier": "quaso:plantilla_celestita",
+        "display_name": "Plantilla de Celestita",
+        "bedrock_options": {
+          "icon": "quaso.plantilla_celestita",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      }
+    ],
+    "minecraft:nether_star": [
+      {
+        "type": "definition",
+        "model": "minecraft:nucleo_sonico",
+        "bedrock_identifier": "quaso:nucleo_sonico",
+        "display_name": "Núcleo Sónico",
+        "bedrock_options": {
+          "icon": "quaso.nucleo_sonico",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      }
+    ],
+    "minecraft:spider_eye": [
+      {
+        "type": "definition",
+        "model": "minecraft:ojo_arana_floral",
+        "bedrock_identifier": "quaso:ojo_arana_floral",
+        "display_name": "Ojo de Araña Floral",
+        "bedrock_options": {
+          "icon": "quaso.ojo_arana_floral",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      }
+    ],
+    "minecraft:ender_eye": [
+      {
+        "type": "definition",
+        "model": "minecraft:ojo_rey_ender",
+        "bedrock_identifier": "quaso:ojo_rey_ender",
+        "display_name": "Ojo del Rey Ender",
+        "bedrock_options": {
+          "icon": "quaso.ojo_rey_ender",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      }
+    ],
+    "minecraft:netherite_shovel": [
+      {
+        "type": "definition",
+        "model": "minecraft:pala_celestita",
+        "bedrock_identifier": "quaso:pala_celestita",
+        "display_name": "Pala celestita",
+        "bedrock_options": {
+          "icon": "quaso.pala_celestita",
+          "display_handheld": true,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:pala_floral",
+        "bedrock_identifier": "quaso:pala_floral",
+        "display_name": "Pala floral",
+        "bedrock_options": {
+          "icon": "quaso.pala_floral",
+          "display_handheld": true,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      }
+    ],
+    "minecraft:netherite_leggings": [
+      {
+        "type": "definition",
+        "model": "minecraft:pantalon_floral",
+        "bedrock_identifier": "quaso:pantalon_floral",
+        "display_name": "Pantalón Floral",
+        "bedrock_options": {
+          "icon": "quaso.pantalon_floral",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "equipment",
+          "protection_value": 6
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:pantalon_warden",
+        "bedrock_identifier": "quaso:pantalon_warden",
+        "display_name": "Pantalón de Warden",
+        "bedrock_options": {
+          "icon": "quaso.pantalon_warden",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "equipment",
+          "protection_value": 7
+        }
+      }
+    ],
+    "minecraft:ender_pearl": [
+      {
+        "type": "definition",
+        "model": "minecraft:perla_infinita",
+        "bedrock_identifier": "quaso:perla_infinita",
+        "display_name": "Perla Infinita",
+        "bedrock_options": {
+          "icon": "quaso.perla_infinita",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        },
+        "components": {
+          "minecraft:max_stack_size": 1
+        }
+      }
+    ],
+    "minecraft:netherite_chestplate": [
+      {
+        "type": "definition",
+        "model": "minecraft:peto_floral",
+        "bedrock_identifier": "quaso:peto_floral",
+        "display_name": "Peto Floral",
+        "bedrock_options": {
+          "icon": "quaso.peto_floral",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "equipment",
+          "protection_value": 8
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:peto_warden",
+        "bedrock_identifier": "quaso:peto_warden",
+        "display_name": "Peto de Warden",
+        "bedrock_options": {
+          "icon": "quaso.peto_warden",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "equipment",
+          "protection_value": 9
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:peto_warden_alado",
+        "bedrock_identifier": "quaso:peto_warden_alado",
+        "display_name": "Peto de Warden Alado",
+        "bedrock_options": {
+          "icon": "quaso.peto_warden_alado",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "equipment",
+          "protection_value": 9
+        }
+      }
+    ],
+    "minecraft:feather": [
+      {
+        "type": "definition",
+        "model": "minecraft:pluma_levi",
+        "bedrock_identifier": "quaso:pluma_levi",
+        "display_name": "Pluma de Levitación",
+        "bedrock_options": {
+          "icon": "quaso.pluma_levi",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:pluma_levi_mejorada",
+        "bedrock_identifier": "quaso:pluma_levi_mejorada",
+        "display_name": "Pluma de Levitación Mejorada",
+        "bedrock_options": {
+          "icon": "quaso.pluma_levi_mejorada",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:pluma_vacio",
+        "bedrock_identifier": "quaso:pluma_vacio",
+        "display_name": "Pluma del Vacío",
+        "bedrock_options": {
+          "icon": "quaso.pluma_vacio",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      }
+    ],
+    "minecraft:flint": [
+      {
+        "type": "definition",
+        "model": "minecraft:polvo_silencioso",
+        "bedrock_identifier": "quaso:polvo_silencioso",
+        "display_name": "Polvo Silencioso",
+        "bedrock_options": {
+          "icon": "quaso.polvo_silencioso",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      }
+    ],
+    "minecraft:gunpowder": [
+      {
+        "type": "definition",
+        "model": "minecraft:polvora_floral",
+        "bedrock_identifier": "quaso:polvora_floral",
+        "display_name": "Pólvora Floral",
+        "bedrock_options": {
+          "icon": "quaso.polvora_floral",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      }
+    ],
+    "minecraft:firework_rocket": [
+      {
+        "type": "definition",
+        "model": "minecraft:propulsor_estelar",
+        "bedrock_identifier": "quaso:propulsor_estelar",
+        "display_name": "Propulsor Estelar",
+        "bedrock_options": {
+          "icon": "quaso.propulsor_estelar",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        },
+        "components": {
+          "minecraft:max_stack_size": 1
+        }
+      }
+    ],
+    "minecraft:bread": [
+      {
+        "type": "definition",
+        "model": "minecraft:racion_viaje",
+        "bedrock_identifier": "quaso:racion_viaje",
+        "display_name": "Ración de Viaje",
+        "bedrock_options": {
+          "icon": "quaso.racion_viaje",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      }
+    ],
+    "minecraft:clock": [
+      {
+        "type": "definition",
+        "model": "minecraft:radar_minerales",
+        "bedrock_identifier": "quaso:radar_minerales",
+        "display_name": "Radar de Minerales",
+        "bedrock_options": {
+          "icon": "quaso.radar_minerales",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        },
+        "components": {
+          "minecraft:max_stack_size": 1
+        }
+      }
+    ],
+    "minecraft:phantom_membrane": [
+      {
+        "type": "definition",
+        "model": "minecraft:red_animales",
+        "bedrock_identifier": "quaso:red_animales",
+        "display_name": "Red Atrapa-Animales",
+        "bedrock_options": {
+          "icon": "quaso.red_animales",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        },
+        "components": {
+          "minecraft:max_stack_size": 1
+        }
+      }
+    ],
+    "minecraft:skeleton_horse_spawn_egg": [
+      {
+        "type": "definition",
+        "model": "minecraft:rep_hierro",
+        "bedrock_identifier": "quaso:rep_hierro",
+        "display_name": "Artefacto de Hierro Reparador",
+        "bedrock_options": {
+          "icon": "quaso.rep_hierro",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      }
+    ],
+    "minecraft:blaze_spawn_egg": [
+      {
+        "type": "definition",
+        "model": "minecraft:rep_oro",
+        "bedrock_identifier": "quaso:rep_oro",
+        "display_name": "Artefacto de Oro Reparador",
+        "bedrock_options": {
+          "icon": "quaso.rep_oro",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      }
+    ],
+    "minecraft:spawner": [
+      {
+        "type": "definition",
+        "model": "minecraft:spawner_custom",
+        "bedrock_identifier": "quaso:spawner_custom",
+        "display_name": "Spawner custom",
+        "bedrock_options": {
+          "icon": "quaso.spawner_custom",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      }
+    ],
+    "minecraft:splash_potion": [
+      {
+        "type": "definition",
+        "model": "minecraft:splash_absorption_10",
+        "bedrock_identifier": "quaso:splash_absorption_10",
+        "display_name": "Poción de Absorción X",
+        "bedrock_options": {
+          "icon": "quaso.splash_absorption_10",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:splash_regeneration_3",
+        "bedrock_identifier": "quaso:splash_regeneration_3",
+        "display_name": "Poción de Regeneración III",
+        "bedrock_options": {
+          "icon": "quaso.splash_regeneration_3",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:splash_resistance_3",
+        "bedrock_identifier": "quaso:splash_resistance_3",
+        "display_name": "Poción de Resistencia III",
+        "bedrock_options": {
+          "icon": "quaso.splash_resistance_3",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      }
+    ],
+    "minecraft:armor_stand": [
+      {
+        "type": "definition",
+        "model": "minecraft:statue_effect",
+        "bedrock_identifier": "quaso:statue_effect",
+        "display_name": "Statue effect",
+        "bedrock_options": {
+          "icon": "quaso.statue_effect",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      },
+      {
+        "type": "definition",
+        "model": "minecraft:statue_pr",
+        "bedrock_identifier": "quaso:statue_pr",
+        "display_name": "Estatua Protectora",
+        "bedrock_options": {
+          "icon": "quaso.statue_pr",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      }
+    ],
+    "minecraft:nautilus_shell": [
+      {
+        "type": "definition",
+        "model": "minecraft:talisman_botin",
+        "bedrock_identifier": "quaso:talisman_botin",
+        "display_name": "Talismán del Botín",
+        "bedrock_options": {
+          "icon": "quaso.talisman_botin",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      }
+    ],
+    "minecraft:pumpkin_pie": [
+      {
+        "type": "definition",
+        "model": "minecraft:tarta_calabaza_mejorada",
+        "bedrock_identifier": "quaso:tarta_calabaza_mejorada",
+        "display_name": "Tarta de Calabaza Mejorada",
+        "bedrock_options": {
+          "icon": "quaso.tarta_calabaza_mejorada",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      }
+    ],
+    "minecraft:rabbit_hide": [
+      {
+        "type": "definition",
+        "model": "minecraft:tejido_sculk",
+        "bedrock_identifier": "quaso:tejido_sculk",
+        "display_name": "Tejido Sculk",
+        "bedrock_options": {
+          "icon": "quaso.tejido_sculk",
+          "display_handheld": false,
+          "allow_offhand": true,
+          "creative_category": "items"
+        }
+      }
+    ]
+  }
+}

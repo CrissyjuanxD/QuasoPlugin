@@ -1,0 +1,28 @@
+{
+  "format_version": "1.8.0",
+  "minecraft:attachable": {
+    "description": {
+      "identifier": "quaso:pantalon_floral",
+      "materials": {
+        "default": "armor",
+        "enchanted": "armor_enchanted"
+      },
+      "textures": {
+        "default": "textures/models/armor/quaso/humanoid_leggings/floral",
+        "enchanted": "textures/misc/enchanted_actor_glint",
+        "flowers": "textures/models/armor/quaso/humanoid_leggings/floral_flores"
+      },
+      "geometry": {
+        "default": "geometry.humanoid.armor.leggings",
+        "flowers": "geometry.quaso.flowers.leggings"
+      },
+      "scripts": {
+        "parent_setup": "variable.leg_layer_visible = 0.0;"
+      },
+      "render_controllers": [
+        "controller.render.quaso.armor",
+        "controller.render.quaso.flowers"
+      ]
+    }
+  }
+}

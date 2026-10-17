@@ -1,0 +1,10 @@
+{
+  "namespace": "common_art",
+  "title_image": {
+    "texture": "textures/ui/quaso/croissants",
+    "size": [
+      256,
+      69
+    ]
+  }
+}

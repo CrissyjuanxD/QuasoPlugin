@@ -1,0 +1,22 @@
+{
+  "format_version": "1.16.100",
+  "minecraft:fog_settings": {
+    "description": {
+      "identifier": "quaso:bloodmoon_18"
+    },
+    "distance": {
+      "air": {
+        "fog_start": 88,
+        "fog_end": 219,
+        "fog_color": "#89192b",
+        "render_distance_type": "fixed"
+      },
+      "weather": {
+        "fog_start": 88,
+        "fog_end": 219,
+        "fog_color": "#89192b",
+        "render_distance_type": "fixed"
+      }
+    }
+  }
+}

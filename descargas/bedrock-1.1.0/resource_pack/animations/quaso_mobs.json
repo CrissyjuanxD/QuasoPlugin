@@ -1,0 +1,635 @@
+{
+  "format_version": "1.8.0",
+  "animations": {
+    "animation.quaso.zombie2": {
+      "loop": true,
+      "bones": {
+        "quaso_head": {
+          "rotation": [
+            "query.target_x_rotation",
+            "query.target_y_rotation",
+            0
+          ]
+        },
+        "quaso_left_arm": {
+          "rotation": [
+            -75,
+            0,
+            0
+          ]
+        },
+        "quaso_right_arm": {
+          "rotation": [
+            -75,
+            0,
+            0
+          ]
+        },
+        "quaso_left_leg": {
+          "rotation": [
+            "(math.cos(query.modified_distance_moved * 38.17) * math.min(query.modified_move_speed * 2, 1) * 35)",
+            0,
+            0
+          ]
+        },
+        "quaso_right_leg": {
+          "rotation": [
+            "-(math.cos(query.modified_distance_moved * 38.17) * math.min(query.modified_move_speed * 2, 1) * 35)",
+            0,
+            0
+          ]
+        }
+      }
+    },
+    "animation.quaso.zombie3": {
+      "loop": true,
+      "bones": {
+        "quaso_head": {
+          "rotation": [
+            "query.target_x_rotation",
+            "query.target_y_rotation",
+            0
+          ]
+        },
+        "quaso_left_arm": {
+          "rotation": [
+            -75,
+            0,
+            0
+          ]
+        },
+        "quaso_right_arm": {
+          "rotation": [
+            -75,
+            0,
+            0
+          ]
+        },
+        "quaso_left_leg": {
+          "rotation": [
+            "(math.cos(query.modified_distance_moved * 38.17) * math.min(query.modified_move_speed * 2, 1) * 35)",
+            0,
+            0
+          ]
+        },
+        "quaso_right_leg": {
+          "rotation": [
+            "-(math.cos(query.modified_distance_moved * 38.17) * math.min(query.modified_move_speed * 2, 1) * 35)",
+            0,
+            0
+          ]
+        }
+      }
+    },
+    "animation.quaso.zombie4": {
+      "loop": true,
+      "bones": {
+        "quaso_head": {
+          "rotation": [
+            "query.target_x_rotation",
+            "query.target_y_rotation",
+            0
+          ]
+        },
+        "quaso_left_arm": {
+          "rotation": [
+            -75,
+            0,
+            0
+          ]
+        },
+        "quaso_right_arm": {
+          "rotation": [
+            -75,
+            0,
+            0
+          ]
+        },
+        "quaso_left_leg": {
+          "rotation": [
+            "(math.cos(query.modified_distance_moved * 38.17) * math.min(query.modified_move_speed * 2, 1) * 35)",
+            0,
+            0
+          ]
+        },
+        "quaso_right_leg": {
+          "rotation": [
+            "-(math.cos(query.modified_distance_moved * 38.17) * math.min(query.modified_move_speed * 2, 1) * 35)",
+            0,
+            0
+          ]
+        }
+      }
+    },
+    "animation.quaso.skeleton3": {
+      "loop": true,
+      "bones": {
+        "quaso_head": {
+          "rotation": [
+            "query.target_x_rotation",
+            "query.target_y_rotation",
+            0
+          ]
+        },
+        "quaso_left_arm": {
+          "rotation": [
+            0,
+            0,
+            0
+          ]
+        },
+        "quaso_right_arm": {
+          "rotation": [
+            0,
+            0,
+            0
+          ]
+        },
+        "quaso_left_leg": {
+          "rotation": [
+            "(math.cos(query.modified_distance_moved * 38.17) * math.min(query.modified_move_speed * 2, 1) * 35)",
+            0,
+            0
+          ]
+        },
+        "quaso_right_leg": {
+          "rotation": [
+            "-(math.cos(query.modified_distance_moved * 38.17) * math.min(query.modified_move_speed * 2, 1) * 35)",
+            0,
+            0
+          ]
+        }
+      }
+    },
+    "animation.quaso.skeleton4": {
+      "loop": true,
+      "bones": {
+        "quaso_head": {
+          "rotation": [
+            "query.target_x_rotation",
+            "query.target_y_rotation",
+            0
+          ]
+        },
+        "quaso_left_arm": {
+          "rotation": [
+            0,
+            0,
+            0
+          ]
+        },
+        "quaso_right_arm": {
+          "rotation": [
+            0,
+            0,
+            0
+          ]
+        },
+        "quaso_left_leg": {
+          "rotation": [
+            "(math.cos(query.modified_distance_moved * 38.17) * math.min(query.modified_move_speed * 2, 1) * 35)",
+            0,
+            0
+          ]
+        },
+        "quaso_right_leg": {
+          "rotation": [
+            "-(math.cos(query.modified_distance_moved * 38.17) * math.min(query.modified_move_speed * 2, 1) * 35)",
+            0,
+            0
+          ]
+        }
+      }
+    },
+    "animation.quaso.creeper2": {
+      "loop": true,
+      "bones": {
+        "quaso_head": {
+          "rotation": [
+            "query.target_x_rotation",
+            "query.target_y_rotation",
+            0
+          ]
+        },
+        "quaso_leg1": {
+          "rotation": [
+            "1 * (math.cos(query.modified_distance_moved * 38.17) * math.min(query.modified_move_speed * 2, 1) * 35)",
+            0,
+            0
+          ]
+        },
+        "quaso_leg2": {
+          "rotation": [
+            "-1 * (math.cos(query.modified_distance_moved * 38.17) * math.min(query.modified_move_speed * 2, 1) * 35)",
+            0,
+            0
+          ]
+        },
+        "quaso_leg3": {
+          "rotation": [
+            "1 * (math.cos(query.modified_distance_moved * 38.17) * math.min(query.modified_move_speed * 2, 1) * 35)",
+            0,
+            0
+          ]
+        },
+        "quaso_leg4": {
+          "rotation": [
+            "-1 * (math.cos(query.modified_distance_moved * 38.17) * math.min(query.modified_move_speed * 2, 1) * 35)",
+            0,
+            0
+          ]
+        }
+      }
+    },
+    "animation.quaso.creeper3": {
+      "loop": true,
+      "bones": {
+        "quaso_head": {
+          "rotation": [
+            "query.target_x_rotation",
+            "query.target_y_rotation",
+            0
+          ]
+        },
+        "quaso_leg1": {
+          "rotation": [
+            "1 * (math.cos(query.modified_distance_moved * 38.17) * math.min(query.modified_move_speed * 2, 1) * 35)",
+            0,
+            0
+          ]
+        },
+        "quaso_leg2": {
+          "rotation": [
+            "-1 * (math.cos(query.modified_distance_moved * 38.17) * math.min(query.modified_move_speed * 2, 1) * 35)",
+            0,
+            0
+          ]
+        },
+        "quaso_leg3": {
+          "rotation": [
+            "1 * (math.cos(query.modified_distance_moved * 38.17) * math.min(query.modified_move_speed * 2, 1) * 35)",
+            0,
+            0
+          ]
+        },
+        "quaso_leg4": {
+          "rotation": [
+            "-1 * (math.cos(query.modified_distance_moved * 38.17) * math.min(query.modified_move_speed * 2, 1) * 35)",
+            0,
+            0
+          ]
+        }
+      }
+    },
+    "animation.quaso.creeper4": {
+      "loop": true,
+      "bones": {
+        "quaso_head": {
+          "rotation": [
+            "query.target_x_rotation",
+            "query.target_y_rotation",
+            0
+          ]
+        },
+        "quaso_leg1": {
+          "rotation": [
+            "1 * (math.cos(query.modified_distance_moved * 38.17) * math.min(query.modified_move_speed * 2, 1) * 35)",
+            0,
+            0
+          ]
+        },
+        "quaso_leg2": {
+          "rotation": [
+            "-1 * (math.cos(query.modified_distance_moved * 38.17) * math.min(query.modified_move_speed * 2, 1) * 35)",
+            0,
+            0
+          ]
+        },
+        "quaso_leg3": {
+          "rotation": [
+            "1 * (math.cos(query.modified_distance_moved * 38.17) * math.min(query.modified_move_speed * 2, 1) * 35)",
+            0,
+            0
+          ]
+        },
+        "quaso_leg4": {
+          "rotation": [
+            "-1 * (math.cos(query.modified_distance_moved * 38.17) * math.min(query.modified_move_speed * 2, 1) * 35)",
+            0,
+            0
+          ]
+        }
+      }
+    },
+    "animation.quaso.spider2": {
+      "loop": true,
+      "bones": {
+        "quaso_head": {
+          "rotation": [
+            "query.target_x_rotation",
+            "query.target_y_rotation",
+            0
+          ]
+        },
+        "quaso_leg1": {
+          "rotation": [
+            0,
+            "45 + (math.cos(query.modified_distance_moved * 38.17) * math.min(query.modified_move_speed * 2, 1) * 35) * 0.3",
+            35
+          ]
+        },
+        "quaso_leg2": {
+          "rotation": [
+            0,
+            "-45 + (math.cos(query.modified_distance_moved * 38.17) * math.min(query.modified_move_speed * 2, 1) * 35) * 0.3",
+            -35
+          ]
+        },
+        "quaso_leg3": {
+          "rotation": [
+            0,
+            "15 + (math.cos(query.modified_distance_moved * 38.17) * math.min(query.modified_move_speed * 2, 1) * 35) * 0.3",
+            35
+          ]
+        },
+        "quaso_leg4": {
+          "rotation": [
+            0,
+            "-15 + (math.cos(query.modified_distance_moved * 38.17) * math.min(query.modified_move_speed * 2, 1) * 35) * 0.3",
+            -35
+          ]
+        },
+        "quaso_leg5": {
+          "rotation": [
+            0,
+            "-15 + (math.cos(query.modified_distance_moved * 38.17) * math.min(query.modified_move_speed * 2, 1) * 35) * 0.3",
+            35
+          ]
+        },
+        "quaso_leg6": {
+          "rotation": [
+            0,
+            "15 + (math.cos(query.modified_distance_moved * 38.17) * math.min(query.modified_move_speed * 2, 1) * 35) * 0.3",
+            -35
+          ]
+        },
+        "quaso_leg7": {
+          "rotation": [
+            0,
+            "-45 + (math.cos(query.modified_distance_moved * 38.17) * math.min(query.modified_move_speed * 2, 1) * 35) * 0.3",
+            35
+          ]
+        },
+        "quaso_leg8": {
+          "rotation": [
+            0,
+            "45 + (math.cos(query.modified_distance_moved * 38.17) * math.min(query.modified_move_speed * 2, 1) * 35) * 0.3",
+            -35
+          ]
+        }
+      }
+    },
+    "animation.quaso.spider4": {
+      "loop": true,
+      "bones": {
+        "quaso_head": {
+          "rotation": [
+            "query.target_x_rotation",
+            "query.target_y_rotation",
+            0
+          ]
+        },
+        "quaso_leg1": {
+          "rotation": [
+            0,
+            "45 + (math.cos(query.modified_distance_moved * 38.17) * math.min(query.modified_move_speed * 2, 1) * 35) * 0.3",
+            35
+          ]
+        },
+        "quaso_leg2": {
+          "rotation": [
+            0,
+            "-45 + (math.cos(query.modified_distance_moved * 38.17) * math.min(query.modified_move_speed * 2, 1) * 35) * 0.3",
+            -35
+          ]
+        },
+        "quaso_leg3": {
+          "rotation": [
+            0,
+            "15 + (math.cos(query.modified_distance_moved * 38.17) * math.min(query.modified_move_speed * 2, 1) * 35) * 0.3",
+            35
+          ]
+        },
+        "quaso_leg4": {
+          "rotation": [
+            0,
+            "-15 + (math.cos(query.modified_distance_moved * 38.17) * math.min(query.modified_move_speed * 2, 1) * 35) * 0.3",
+            -35
+          ]
+        },
+        "quaso_leg5": {
+          "rotation": [
+            0,
+            "-15 + (math.cos(query.modified_distance_moved * 38.17) * math.min(query.modified_move_speed * 2, 1) * 35) * 0.3",
+            35
+          ]
+        },
+        "quaso_leg6": {
+          "rotation": [
+            0,
+            "15 + (math.cos(query.modified_distance_moved * 38.17) * math.min(query.modified_move_speed * 2, 1) * 35) * 0.3",
+            -35
+          ]
+        },
+        "quaso_leg7": {
+          "rotation": [
+            0,
+            "-45 + (math.cos(query.modified_distance_moved * 38.17) * math.min(query.modified_move_speed * 2, 1) * 35) * 0.3",
+            35
+          ]
+        },
+        "quaso_leg8": {
+          "rotation": [
+            0,
+            "45 + (math.cos(query.modified_distance_moved * 38.17) * math.min(query.modified_move_speed * 2, 1) * 35) * 0.3",
+            -35
+          ]
+        }
+      }
+    },
+    "animation.quaso.cave_spider3": {
+      "loop": true,
+      "bones": {
+        "quaso_head": {
+          "rotation": [
+            "query.target_x_rotation",
+            "query.target_y_rotation",
+            0
+          ]
+        },
+        "quaso_leg1": {
+          "rotation": [
+            0,
+            "45 + (math.cos(query.modified_distance_moved * 38.17) * math.min(query.modified_move_speed * 2, 1) * 35) * 0.3",
+            35
+          ]
+        },
+        "quaso_leg2": {
+          "rotation": [
+            0,
+            "-45 + (math.cos(query.modified_distance_moved * 38.17) * math.min(query.modified_move_speed * 2, 1) * 35) * 0.3",
+            -35
+          ]
+        },
+        "quaso_leg3": {
+          "rotation": [
+            0,
+            "15 + (math.cos(query.modified_distance_moved * 38.17) * math.min(query.modified_move_speed * 2, 1) * 35) * 0.3",
+            35
+          ]
+        },
+        "quaso_leg4": {
+          "rotation": [
+            0,
+            "-15 + (math.cos(query.modified_distance_moved * 38.17) * math.min(query.modified_move_speed * 2, 1) * 35) * 0.3",
+            -35
+          ]
+        },
+        "quaso_leg5": {
+          "rotation": [
+            0,
+            "-15 + (math.cos(query.modified_distance_moved * 38.17) * math.min(query.modified_move_speed * 2, 1) * 35) * 0.3",
+            35
+          ]
+        },
+        "quaso_leg6": {
+          "rotation": [
+            0,
+            "15 + (math.cos(query.modified_distance_moved * 38.17) * math.min(query.modified_move_speed * 2, 1) * 35) * 0.3",
+            -35
+          ]
+        },
+        "quaso_leg7": {
+          "rotation": [
+            0,
+            "-45 + (math.cos(query.modified_distance_moved * 38.17) * math.min(query.modified_move_speed * 2, 1) * 35) * 0.3",
+            35
+          ]
+        },
+        "quaso_leg8": {
+          "rotation": [
+            0,
+            "45 + (math.cos(query.modified_distance_moved * 38.17) * math.min(query.modified_move_speed * 2, 1) * 35) * 0.3",
+            -35
+          ]
+        }
+      }
+    },
+    "animation.quaso.ghast3": {
+      "loop": true,
+      "bones": {
+        "quaso_tentacle1": {
+          "rotation": [
+            "10 + math.sin(query.life_time * 170 + 50) * 8",
+            0,
+            0
+          ]
+        },
+        "quaso_tentacle2": {
+          "rotation": [
+            "10 + math.sin(query.life_time * 170 + 75) * 8",
+            0,
+            0
+          ]
+        },
+        "quaso_tentacle3": {
+          "rotation": [
+            "10 + math.sin(query.life_time * 170 + 100) * 8",
+            0,
+            0
+          ]
+        },
+        "quaso_tentacle4": {
+          "rotation": [
+            "10 + math.sin(query.life_time * 170 + 125) * 8",
+            0,
+            0
+          ]
+        },
+        "quaso_tentacle5": {
+          "rotation": [
+            "10 + math.sin(query.life_time * 170 + 150) * 8",
+            0,
+            0
+          ]
+        },
+        "quaso_tentacle6": {
+          "rotation": [
+            "10 + math.sin(query.life_time * 170 + 175) * 8",
+            0,
+            0
+          ]
+        },
+        "quaso_tentacle7": {
+          "rotation": [
+            "10 + math.sin(query.life_time * 170 + 200) * 8",
+            0,
+            0
+          ]
+        },
+        "quaso_tentacle8": {
+          "rotation": [
+            "10 + math.sin(query.life_time * 170 + 225) * 8",
+            0,
+            0
+          ]
+        },
+        "quaso_tentacle9": {
+          "rotation": [
+            "10 + math.sin(query.life_time * 170 + 250) * 8",
+            0,
+            0
+          ]
+        }
+      }
+    },
+    "animation.quaso.bee2": {
+      "loop": true,
+      "bones": {
+        "quaso_left_wing": {
+          "rotation": [
+            0,
+            0,
+            "1 * math.sin(query.life_time * 1600) * 35"
+          ]
+        },
+        "quaso_right_wing": {
+          "rotation": [
+            0,
+            0,
+            "-1 * math.sin(query.life_time * 1600) * 35"
+          ]
+        }
+      }
+    },
+    "animation.quaso.bee3": {
+      "loop": true,
+      "bones": {
+        "quaso_right_wing": {
+          "rotation": [
+            0,
+            0,
+            "-1 * math.sin(query.life_time * 1600) * 35"
+          ]
+        },
+        "quaso_left_wing": {
+          "rotation": [
+            0,
+            0,
+            "1 * math.sin(query.life_time * 1600) * 35"
+          ]
+        }
+      }
+    }
+  }
+}

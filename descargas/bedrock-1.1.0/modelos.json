@@ -1,0 +1,170 @@
+[
+  {
+    "model": "zombie2",
+    "names": [
+      "Zombie Floral"
+    ],
+    "source": "optifine/random/entity/zombie/zombie2.png",
+    "cubes": 142,
+    "emissive": false,
+    "mark_variant": 9301,
+    "entity": "minecraft:zombie"
+  },
+  {
+    "model": "zombie3",
+    "names": [
+      "Warden Zombie",
+      "Infested Zombie"
+    ],
+    "source": "optifine/random/entity/zombie/zombie3.png",
+    "cubes": 36,
+    "emissive": true,
+    "mark_variant": 9302,
+    "entity": "minecraft:zombie"
+  },
+  {
+    "model": "zombie4",
+    "names": [
+      "Zombie BloodMoon"
+    ],
+    "source": "optifine/cem/quaso99/materiales.png",
+    "cubes": 33,
+    "emissive": true,
+    "mark_variant": 9303,
+    "entity": "minecraft:zombie"
+  },
+  {
+    "model": "skeleton3",
+    "names": [
+      "Infested Skeleton"
+    ],
+    "source": "optifine/random/entity/skeleton/skeleton3.png",
+    "cubes": 19,
+    "emissive": true,
+    "mark_variant": 9304,
+    "entity": "minecraft:skeleton"
+  },
+  {
+    "model": "skeleton4",
+    "names": [
+      "Esqueleto BloodMoon"
+    ],
+    "source": "optifine/cem/quaso99/materiales.png",
+    "cubes": 30,
+    "emissive": true,
+    "mark_variant": 9305,
+    "entity": "minecraft:skeleton"
+  },
+  {
+    "model": "creeper2",
+    "names": [
+      "Creeper Floral"
+    ],
+    "source": "optifine/random/entity/creeper/creeper2.png",
+    "cubes": 59,
+    "emissive": false,
+    "mark_variant": 9306,
+    "entity": "minecraft:creeper"
+  },
+  {
+    "model": "creeper3",
+    "names": [
+      "Infested Creeper"
+    ],
+    "source": "optifine/random/entity/creeper/creeper3.png",
+    "cubes": 14,
+    "emissive": true,
+    "mark_variant": 9307,
+    "entity": "minecraft:creeper"
+  },
+  {
+    "model": "creeper4",
+    "names": [
+      "Creeper BloodMoon"
+    ],
+    "source": "optifine/cem/quaso99/materiales.png",
+    "cubes": 28,
+    "emissive": true,
+    "mark_variant": 9308,
+    "entity": "minecraft:creeper"
+  },
+  {
+    "model": "spider2",
+    "names": [
+      "Spider Floral",
+      "Araña Floral"
+    ],
+    "source": "optifine/random/entity/spider/spider2.png",
+    "cubes": 136,
+    "emissive": false,
+    "mark_variant": 9309,
+    "entity": "minecraft:spider"
+  },
+  {
+    "model": "spider4",
+    "names": [
+      "Araña BloodMoon"
+    ],
+    "source": "optifine/cem/quaso99/materiales.png",
+    "cubes": 40,
+    "emissive": true,
+    "mark_variant": 9310,
+    "entity": "minecraft:spider"
+  },
+  {
+    "model": "cave_spider3",
+    "names": [
+      "Infested Cave Spider"
+    ],
+    "source": "optifine/random/entity/spider/cave_spider3.png",
+    "cubes": 30,
+    "emissive": true,
+    "mark_variant": 9311,
+    "entity": "minecraft:cave_spider"
+  },
+  {
+    "model": "ghast3",
+    "names": [
+      "Infested Ghast"
+    ],
+    "source": "optifine/random/entity/ghast/ghast3.png",
+    "cubes": 20,
+    "emissive": true,
+    "mark_variant": 9312,
+    "entity": "minecraft:ghast"
+  },
+  {
+    "model": "bee2",
+    "names": [
+      "Abeja Floral"
+    ],
+    "source": "optifine/random/entity/bee/bee2.png",
+    "cubes": 11,
+    "emissive": false,
+    "mark_variant": 9313,
+    "entity": "minecraft:bee"
+  },
+  {
+    "model": "bee3",
+    "names": [
+      "Mini Abeja Floral",
+      "Corrupted Bee"
+    ],
+    "source": "optifine/cem/quaso99/materiales.png",
+    "cubes": 26,
+    "emissive": true,
+    "mark_variant": 9314,
+    "entity": "minecraft:bee"
+  },
+  {
+    "model": "copper_golem2",
+    "names": [
+      "Estatua de Recompensas"
+    ],
+    "source": "optifine/cem/quaso99/materiales.png",
+    "cubes": 60,
+    "emissive": true,
+    "mark_variant": 9315,
+    "entity": "minecraft:copper_golem"
+  }
+]

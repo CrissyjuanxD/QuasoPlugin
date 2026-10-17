@@ -1,0 +1,70 @@
+{
+  "format_version": "1.8.0",
+  "minecraft:client_entity": {
+    "description": {
+      "identifier": "minecraft:spider",
+      "min_engine_version": "1.8.0",
+      "materials": {
+        "default": "spider",
+        "invisible": "spider_invisible",
+        "quaso": "entity_alphatest",
+        "quaso_glow": "entity_emissive_alpha"
+      },
+      "textures": {
+        "default": "textures/entity/spider/spider",
+        "spider2": "textures/entity/quaso/spider2",
+        "spider4": "textures/entity/quaso/spider4",
+        "spider4_e": "textures/entity/quaso/spider4_e"
+      },
+      "geometry": {
+        "default": "geometry.spider.v1.8",
+        "spider2": "geometry.quaso.spider2",
+        "spider4": "geometry.quaso.spider4"
+      },
+      "animations": {
+        "default_leg_pose": "animation.spider.default_leg_pose",
+        "look_at_target": "animation.spider.look_at_target",
+        "walk": "animation.spider.walk",
+        "spider2": "animation.quaso.spider2",
+        "spider4": "animation.quaso.spider4"
+      },
+      "animation_controllers": [
+        {
+          "move": "controller.animation.spider.move"
+        }
+      ],
+      "render_controllers": [
+        {
+          "controller.render.spider": "!variable.quaso_custom"
+        },
+        {
+          "controller.render.quaso.spider2": "variable.quaso_spider2"
+        },
+        {
+          "controller.render.quaso.spider4": "variable.quaso_spider4"
+        },
+        {
+          "controller.render.quaso.spider4_e": "variable.quaso_spider4"
+        }
+      ],
+      "spawn_egg": {
+        "texture": "spawn_egg_spider"
+      },
+      "scripts": {
+        "pre_animation": [
+          "variable.quaso_spider2 = query.mark_variant == 9309;",
+          "variable.quaso_spider4 = query.mark_variant == 9310;",
+          "variable.quaso_custom = variable.quaso_spider2 || variable.quaso_spider4;"
+        ],
+        "animate": [
+          {
+            "spider2": "variable.quaso_spider2"
+          },
+          {
+            "spider4": "variable.quaso_spider4"
+          }
+        ]
+      }
+    }
+  }
+}

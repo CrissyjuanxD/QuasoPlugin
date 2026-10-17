@@ -1,0 +1,19 @@
+{
+  "format_version": "1.8.0",
+  "geometry.quaso.flowers.chestplate.player:geometry.player.armor.chestplate": {
+    "bones": [
+      {
+        "name": "body",
+        "inflate": 1.2
+      },
+      {
+        "name": "leftArm",
+        "inflate": 1.2
+      },
+      {
+        "name": "rightArm",
+        "inflate": 1.2
+      }
+    ]
+  }
+}

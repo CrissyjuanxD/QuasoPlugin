@@ -106,12 +106,13 @@ public final class HologramasDialogos {
         cuerpo.add(mensaje(CELESTE + "Aparece " + AZUL + "2 bloques delante de ti" + CELESTE + " como " + AMARILLO
                 + "borrador" + CELESTE + ": solo lo ven los admins hasta que lo publiques. Después lo puedes mover, girar y "
                 + "cambiar todo.\n" + GRIS + "Nombre: minúsculas, números, - y _ (máximo 32)."));
+        // La entrada no se puede llamar "id": Paper guarda ahí el id del botón y el diálogo fallaba con "Not a list"
         List<DialogInput> entradas = List.of(
-                DialogInput.text("id", texto(CELESTE + "Nombre del holograma")).width(300).maxLength(32).build(),
+                DialogInput.text("nombre", texto(CELESTE + "Nombre del holograma")).width(300).maxLength(32).build(),
                 textoMultilinea("texto", "&#B79CFF&lMi holograma\n&7Escribe aquí"));
         mostrar(player, dialogo(VERDE + NEGRITA + "Crear holograma", cuerpo, entradas, DialogType.confirmation(
                 formulario(VERDE + "Crear", (p, respuesta) -> {
-                    String id = limpio(respuesta.getText("id")).toLowerCase(Locale.ROOT);
+                    String id = limpio(respuesta.getText("nombre")).toLowerCase(Locale.ROOT);
                     if (!HologramasManager.idValido(id)) {
                         crear(p, ROJO + "Nombre no válido: usa minúsculas, números, - o _.");
                     } else if (manager.get(id) != null) {
@@ -130,11 +131,11 @@ public final class HologramasDialogos {
         if (aviso != null) cuerpo.add(mensaje(aviso));
         cuerpo.add(mensaje(CELESTE + "La copia tiene el mismo texto y apariencia, aparece delante de ti y empieza como "
                 + AMARILLO + "borrador" + CELESTE + "."));
-        List<DialogInput> entradas = List.of(DialogInput.text("id", texto(CELESTE + "Nombre de la copia")).width(300)
+        List<DialogInput> entradas = List.of(DialogInput.text("nombre", texto(CELESTE + "Nombre de la copia")).width(300)
                 .maxLength(32).initial(original.id.length() <= 28 ? original.id + "_2" : "").build());
         mostrar(player, dialogo(AZUL + NEGRITA + "Duplicar " + original.id, cuerpo, entradas, DialogType.confirmation(
                 formulario(VERDE + "Duplicar", (p, respuesta) -> {
-                    String id = limpio(respuesta.getText("id")).toLowerCase(Locale.ROOT);
+                    String id = limpio(respuesta.getText("nombre")).toLowerCase(Locale.ROOT);
                     if (!HologramasManager.idValido(id)) duplicar(p, original, ROJO + "Nombre no válido.");
                     else if (manager.get(id) != null) duplicar(p, original, ROJO + "Ya hay un holograma llamado " + id + ".");
                     else {

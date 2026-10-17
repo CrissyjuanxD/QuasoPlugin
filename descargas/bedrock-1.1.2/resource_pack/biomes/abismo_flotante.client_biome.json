@@ -1,0 +1,22 @@
+{
+  "format_version": "1.21.70",
+  "minecraft:client_biome": {
+    "description": {
+      "identifier": "quaso:abismo_flotante"
+    },
+    "components": {
+      "minecraft:fog_appearance": {
+        "fog_identifier": "quaso:abismo_flotante"
+      },
+      "minecraft:sky_color": {
+        "sky_color": "#5e2f8a"
+      },
+      "minecraft:water_appearance": {
+        "surface_color": "#6a4fa0"
+      },
+      "minecraft:foliage_appearance": {
+        "color": "#A35EE8"
+      }
+    }
+  }
+}

@@ -1,0 +1,945 @@
+{
+  "resource_pack_name": "quaso",
+  "texture_name": "atlas.items",
+  "texture_data": {
+    "quaso.abono_concentrado": {
+      "textures": "textures/items/quaso/abono_concentrado"
+    },
+    "quaso.aguijon_floral": {
+      "textures": "textures/items/quaso/aguijon_floral"
+    },
+    "quaso.air": {
+      "textures": "textures/items/quaso/air"
+    },
+    "quaso.algodon_azucar": {
+      "textures": "textures/items/quaso/algodon_azucar"
+    },
+    "quaso.alma_infested_cave_spider": {
+      "textures": "textures/items/quaso/alma_infested_cave_spider"
+    },
+    "quaso.alma_infested_creeper": {
+      "textures": "textures/items/quaso/alma_infested_creeper"
+    },
+    "quaso.alma_infested_ghast": {
+      "textures": "textures/items/quaso/alma_infested_ghast"
+    },
+    "quaso.alma_infested_skeleton": {
+      "textures": "textures/items/quaso/alma_infested_skeleton"
+    },
+    "quaso.amulet_bloodmoon": {
+      "textures": "textures/items/quaso/amulet_bloodmoon"
+    },
+    "quaso.amuleto_esperanza": {
+      "textures": "textures/items/quaso/amuleto_esperanza"
+    },
+    "quaso.amuleto_invisibilidad": {
+      "textures": "textures/items/quaso/amuleto_invisibilidad"
+    },
+    "quaso.antidoto": {
+      "textures": "textures/items/quaso/antidoto"
+    },
+    "quaso.arco_hielo": {
+      "textures": "textures/items/quaso/arco_hielo"
+    },
+    "quaso.arco_mejorado": {
+      "textures": "textures/items/quaso/arco_mejorado"
+    },
+    "quaso.arco_nivel1": {
+      "textures": "textures/items/quaso/arco_nivel1"
+    },
+    "quaso.arco_nivel2": {
+      "textures": "textures/items/quaso/arco_nivel2"
+    },
+    "quaso.arco_nivel3": {
+      "textures": "textures/items/quaso/arco_nivel3"
+    },
+    "quaso.arco_sculk": {
+      "textures": "textures/items/quaso/arco_sculk"
+    },
+    "quaso.azada_celestita": {
+      "textures": "textures/items/quaso/azada_celestita"
+    },
+    "quaso.azada_floral": {
+      "textures": "textures/items/quaso/azada_floral"
+    },
+    "quaso.bar_azulito": {
+      "textures": "textures/items/quaso/bar_azulito"
+    },
+    "quaso.bar_cerveza": {
+      "textures": "textures/items/quaso/bar_cerveza"
+    },
+    "quaso.bar_ginebra": {
+      "textures": "textures/items/quaso/bar_ginebra"
+    },
+    "quaso.bar_margarita": {
+      "textures": "textures/items/quaso/bar_margarita"
+    },
+    "quaso.bar_mezcal": {
+      "textures": "textures/items/quaso/bar_mezcal"
+    },
+    "quaso.bar_michelada": {
+      "textures": "textures/items/quaso/bar_michelada"
+    },
+    "quaso.bar_pulque": {
+      "textures": "textures/items/quaso/bar_pulque"
+    },
+    "quaso.bar_ron": {
+      "textures": "textures/items/quaso/bar_ron"
+    },
+    "quaso.bar_sake": {
+      "textures": "textures/items/quaso/bar_sake"
+    },
+    "quaso.bar_tequila": {
+      "textures": "textures/items/quaso/bar_tequila"
+    },
+    "quaso.bar_vodka": {
+      "textures": "textures/items/quaso/bar_vodka"
+    },
+    "quaso.bar_whisky": {
+      "textures": "textures/items/quaso/bar_whisky"
+    },
+    "quaso.barco_custom": {
+      "textures": "textures/items/quaso/barco_custom"
+    },
+    "quaso.baya_luminosa": {
+      "textures": "textures/items/quaso/baya_luminosa"
+    },
+    "quaso.baya_sculk": {
+      "textures": "textures/items/quaso/baya_sculk"
+    },
+    "quaso.bengala_sculk": {
+      "textures": "textures/items/quaso/bengala_sculk"
+    },
+    "quaso.blood_fragment": {
+      "textures": "textures/items/quaso/blood_fragment"
+    },
+    "quaso.bloque_oro_apilado": {
+      "textures": "textures/items/quaso/bloque_oro_apilado"
+    },
+    "quaso.bomba_humo": {
+      "textures": "textures/items/quaso/bomba_humo"
+    },
+    "quaso.bota_warden": {
+      "textures": "textures/items/quaso/bota_warden"
+    },
+    "quaso.botas_floral": {
+      "textures": "textures/items/quaso/botas_floral"
+    },
+    "quaso.botas_warden_escaladoras": {
+      "textures": "textures/items/quaso/botas_warden_escaladoras"
+    },
+    "quaso.botiquin": {
+      "textures": "textures/items/quaso/botiquin"
+    },
+    "quaso.brujula_explorador": {
+      "textures": "textures/items/quaso/brujula_explorador"
+    },
+    "quaso.caja_misteriosa": {
+      "textures": "textures/items/quaso/caja_misteriosa"
+    },
+    "quaso.caldo_profundo": {
+      "textures": "textures/items/quaso/caldo_profundo"
+    },
+    "quaso.caramelo": {
+      "textures": "textures/items/quaso/caramelo"
+    },
+    "quaso.carne_podrida_floral": {
+      "textures": "textures/items/quaso/carne_podrida_floral"
+    },
+    "quaso.carta_5000": {
+      "textures": "textures/items/quaso/carta_5000"
+    },
+    "quaso.carta_5001": {
+      "textures": "textures/items/quaso/carta_5001"
+    },
+    "quaso.carta_5002": {
+      "textures": "textures/items/quaso/carta_5002"
+    },
+    "quaso.carta_5003": {
+      "textures": "textures/items/quaso/carta_5003"
+    },
+    "quaso.carta_5004": {
+      "textures": "textures/items/quaso/carta_5004"
+    },
+    "quaso.carta_5005": {
+      "textures": "textures/items/quaso/carta_5005"
+    },
+    "quaso.carta_5006": {
+      "textures": "textures/items/quaso/carta_5006"
+    },
+    "quaso.carta_5007": {
+      "textures": "textures/items/quaso/carta_5007"
+    },
+    "quaso.carta_5008": {
+      "textures": "textures/items/quaso/carta_5008"
+    },
+    "quaso.carta_5009": {
+      "textures": "textures/items/quaso/carta_5009"
+    },
+    "quaso.carta_5010": {
+      "textures": "textures/items/quaso/carta_5010"
+    },
+    "quaso.carta_5011": {
+      "textures": "textures/items/quaso/carta_5011"
+    },
+    "quaso.carta_5012": {
+      "textures": "textures/items/quaso/carta_5012"
+    },
+    "quaso.carta_5013": {
+      "textures": "textures/items/quaso/carta_5013"
+    },
+    "quaso.carta_5014": {
+      "textures": "textures/items/quaso/carta_5014"
+    },
+    "quaso.carta_5015": {
+      "textures": "textures/items/quaso/carta_5015"
+    },
+    "quaso.carta_5016": {
+      "textures": "textures/items/quaso/carta_5016"
+    },
+    "quaso.carta_5017": {
+      "textures": "textures/items/quaso/carta_5017"
+    },
+    "quaso.carta_5018": {
+      "textures": "textures/items/quaso/carta_5018"
+    },
+    "quaso.carta_5019": {
+      "textures": "textures/items/quaso/carta_5019"
+    },
+    "quaso.carta_5020": {
+      "textures": "textures/items/quaso/carta_5020"
+    },
+    "quaso.carta_5021": {
+      "textures": "textures/items/quaso/carta_5021"
+    },
+    "quaso.carta_5022": {
+      "textures": "textures/items/quaso/carta_5022"
+    },
+    "quaso.carta_5023": {
+      "textures": "textures/items/quaso/carta_5023"
+    },
+    "quaso.carta_5024": {
+      "textures": "textures/items/quaso/carta_5024"
+    },
+    "quaso.carta_5025": {
+      "textures": "textures/items/quaso/carta_5025"
+    },
+    "quaso.carta_5026": {
+      "textures": "textures/items/quaso/carta_5026"
+    },
+    "quaso.carta_5027": {
+      "textures": "textures/items/quaso/carta_5027"
+    },
+    "quaso.carta_5028": {
+      "textures": "textures/items/quaso/carta_5028"
+    },
+    "quaso.carta_5029": {
+      "textures": "textures/items/quaso/carta_5029"
+    },
+    "quaso.carta_5030": {
+      "textures": "textures/items/quaso/carta_5030"
+    },
+    "quaso.carta_5031": {
+      "textures": "textures/items/quaso/carta_5031"
+    },
+    "quaso.carta_5032": {
+      "textures": "textures/items/quaso/carta_5032"
+    },
+    "quaso.carta_5033": {
+      "textures": "textures/items/quaso/carta_5033"
+    },
+    "quaso.carta_5034": {
+      "textures": "textures/items/quaso/carta_5034"
+    },
+    "quaso.carta_5035": {
+      "textures": "textures/items/quaso/carta_5035"
+    },
+    "quaso.carta_5036": {
+      "textures": "textures/items/quaso/carta_5036"
+    },
+    "quaso.carta_5037": {
+      "textures": "textures/items/quaso/carta_5037"
+    },
+    "quaso.carta_5038": {
+      "textures": "textures/items/quaso/carta_5038"
+    },
+    "quaso.carta_5039": {
+      "textures": "textures/items/quaso/carta_5039"
+    },
+    "quaso.carta_5040": {
+      "textures": "textures/items/quaso/carta_5040"
+    },
+    "quaso.carta_5041": {
+      "textures": "textures/items/quaso/carta_5041"
+    },
+    "quaso.carta_5042": {
+      "textures": "textures/items/quaso/carta_5042"
+    },
+    "quaso.carta_5043": {
+      "textures": "textures/items/quaso/carta_5043"
+    },
+    "quaso.carta_5044": {
+      "textures": "textures/items/quaso/carta_5044"
+    },
+    "quaso.carta_5045": {
+      "textures": "textures/items/quaso/carta_5045"
+    },
+    "quaso.carta_5046": {
+      "textures": "textures/items/quaso/carta_5046"
+    },
+    "quaso.carta_5047": {
+      "textures": "textures/items/quaso/carta_5047"
+    },
+    "quaso.carta_5048": {
+      "textures": "textures/items/quaso/carta_5048"
+    },
+    "quaso.carta_5049": {
+      "textures": "textures/items/quaso/carta_5049"
+    },
+    "quaso.carta_5050": {
+      "textures": "textures/items/quaso/carta_5050"
+    },
+    "quaso.carta_5051": {
+      "textures": "textures/items/quaso/carta_5051"
+    },
+    "quaso.carta_oculta": {
+      "textures": "textures/items/quaso/carta_oculta"
+    },
+    "quaso.casco_floral": {
+      "textures": "textures/items/quaso/casco_floral"
+    },
+    "quaso.casco_warden": {
+      "textures": "textures/items/quaso/casco_warden"
+    },
+    "quaso.casino_cerrar": {
+      "textures": "textures/items/quaso/casino_cerrar"
+    },
+    "quaso.casino_fondo": {
+      "textures": "textures/items/quaso/casino_fondo"
+    },
+    "quaso.casino_girar": {
+      "textures": "textures/items/quaso/casino_girar"
+    },
+    "quaso.casino_linea_derecha": {
+      "textures": "textures/items/quaso/casino_linea_derecha"
+    },
+    "quaso.casino_linea_izquierda": {
+      "textures": "textures/items/quaso/casino_linea_izquierda"
+    },
+    "quaso.chatarra": {
+      "textures": "textures/items/quaso/chatarra"
+    },
+    "quaso.combustible_barco": {
+      "textures": "textures/items/quaso/combustible_barco"
+    },
+    "quaso.corazon_warden_boss": {
+      "textures": "textures/items/quaso/corazon_warden_boss"
+    },
+    "quaso.corrupted_golden_apple": {
+      "textures": "textures/items/quaso/corrupted_golden_apple"
+    },
+    "quaso.corrupted_steak": {
+      "textures": "textures/items/quaso/corrupted_steak"
+    },
+    "quaso.cristal_celestita": {
+      "textures": "textures/items/quaso/cristal_celestita"
+    },
+    "quaso.cristal_eco": {
+      "textures": "textures/items/quaso/cristal_eco"
+    },
+    "quaso.cristal_hielo": {
+      "textures": "textures/items/quaso/cristal_hielo"
+    },
+    "quaso.dinocoins": {
+      "textures": "textures/items/quaso/dinocoins"
+    },
+    "quaso.dinofichas": {
+      "textures": "textures/items/quaso/dinofichas"
+    },
+    "quaso.elixir_abisal": {
+      "textures": "textures/items/quaso/elixir_abisal"
+    },
+    "quaso.elixir_agilidad": {
+      "textures": "textures/items/quaso/elixir_agilidad"
+    },
+    "quaso.elixir_coloso": {
+      "textures": "textures/items/quaso/elixir_coloso"
+    },
+    "quaso.elixir_furia": {
+      "textures": "textures/items/quaso/elixir_furia"
+    },
+    "quaso.elixir_igneo": {
+      "textures": "textures/items/quaso/elixir_igneo"
+    },
+    "quaso.elixir_minero": {
+      "textures": "textures/items/quaso/elixir_minero"
+    },
+    "quaso.ender_bag": {
+      "textures": "textures/items/quaso/ender_bag"
+    },
+    "quaso.ender_totem": {
+      "textures": "textures/items/quaso/ender_totem"
+    },
+    "quaso.enderking_pearl": {
+      "textures": "textures/items/quaso/enderking_pearl"
+    },
+    "quaso.energia_warden": {
+      "textures": "textures/items/quaso/energia_warden"
+    },
+    "quaso.escudo_floral": {
+      "textures": "textures/items/quaso/escudo_floral"
+    },
+    "quaso.esencia_floral": {
+      "textures": "textures/items/quaso/esencia_floral"
+    },
+    "quaso.esencia_marchita": {
+      "textures": "textures/items/quaso/esencia_marchita"
+    },
+    "quaso.espada_celestita": {
+      "textures": "textures/items/quaso/espada_celestita"
+    },
+    "quaso.espada_floral": {
+      "textures": "textures/items/quaso/espada_floral"
+    },
+    "quaso.estandarte_guerra": {
+      "textures": "textures/items/quaso/estandarte_guerra"
+    },
+    "quaso.excavator_pickaxe": {
+      "textures": "textures/items/quaso/excavator_pickaxe"
+    },
+    "quaso.ficha_mision": {
+      "textures": "textures/items/quaso/ficha_mision"
+    },
+    "quaso.flecha_derecha": {
+      "textures": "textures/items/quaso/flecha_derecha"
+    },
+    "quaso.flecha_izquierda": {
+      "textures": "textures/items/quaso/flecha_izquierda"
+    },
+    "quaso.flytotem": {
+      "textures": "textures/items/quaso/flytotem"
+    },
+    "quaso.fosiles_pequenos": {
+      "textures": "textures/items/quaso/fosiles_pequenos"
+    },
+    "quaso.fragmento_astral": {
+      "textures": "textures/items/quaso/fragmento_astral"
+    },
+    "quaso.fragmento_profundo_cian": {
+      "textures": "textures/items/quaso/fragmento_profundo_cian"
+    },
+    "quaso.fragmento_profundo_gris": {
+      "textures": "textures/items/quaso/fragmento_profundo_gris"
+    },
+    "quaso.fragmento_profundo_morado": {
+      "textures": "textures/items/quaso/fragmento_profundo_morado"
+    },
+    "quaso.fragmento_profundo_verde": {
+      "textures": "textures/items/quaso/fragmento_profundo_verde"
+    },
+    "quaso.fragmentos_ambar": {
+      "textures": "textures/items/quaso/fragmentos_ambar"
+    },
+    "quaso.frasco_de_velocidad": {
+      "textures": "textures/items/quaso/frasco_de_velocidad"
+    },
+    "quaso.frasco_sabiduria": {
+      "textures": "textures/items/quaso/frasco_sabiduria"
+    },
+    "quaso.fruta_abisal": {
+      "textures": "textures/items/quaso/fruta_abisal"
+    },
+    "quaso.fuel_campfire": {
+      "textures": "textures/items/quaso/fuel_campfire"
+    },
+    "quaso.galleta_fortuna": {
+      "textures": "textures/items/quaso/galleta_fortuna"
+    },
+    "quaso.gancho": {
+      "textures": "textures/items/quaso/gancho"
+    },
+    "quaso.granada_sonica": {
+      "textures": "textures/items/quaso/granada_sonica"
+    },
+    "quaso.habilidad_agilidad_1_off": {
+      "textures": "textures/items/quaso/habilidad_agilidad_1_off"
+    },
+    "quaso.habilidad_agilidad_1_on": {
+      "textures": "textures/items/quaso/habilidad_agilidad_1_on"
+    },
+    "quaso.habilidad_agilidad_2_off": {
+      "textures": "textures/items/quaso/habilidad_agilidad_2_off"
+    },
+    "quaso.habilidad_agilidad_2_on": {
+      "textures": "textures/items/quaso/habilidad_agilidad_2_on"
+    },
+    "quaso.habilidad_agilidad_3_off": {
+      "textures": "textures/items/quaso/habilidad_agilidad_3_off"
+    },
+    "quaso.habilidad_agilidad_3_on": {
+      "textures": "textures/items/quaso/habilidad_agilidad_3_on"
+    },
+    "quaso.habilidad_agilidad_4_off": {
+      "textures": "textures/items/quaso/habilidad_agilidad_4_off"
+    },
+    "quaso.habilidad_agilidad_4_on": {
+      "textures": "textures/items/quaso/habilidad_agilidad_4_on"
+    },
+    "quaso.habilidad_agilidad_5_off": {
+      "textures": "textures/items/quaso/habilidad_agilidad_5_off"
+    },
+    "quaso.habilidad_agilidad_5_on": {
+      "textures": "textures/items/quaso/habilidad_agilidad_5_on"
+    },
+    "quaso.habilidad_agilidad_6_off": {
+      "textures": "textures/items/quaso/habilidad_agilidad_6_off"
+    },
+    "quaso.habilidad_agilidad_6_on": {
+      "textures": "textures/items/quaso/habilidad_agilidad_6_on"
+    },
+    "quaso.habilidad_agilidad_7_off": {
+      "textures": "textures/items/quaso/habilidad_agilidad_7_off"
+    },
+    "quaso.habilidad_agilidad_7_on": {
+      "textures": "textures/items/quaso/habilidad_agilidad_7_on"
+    },
+    "quaso.habilidad_agilidad_8_off": {
+      "textures": "textures/items/quaso/habilidad_agilidad_8_off"
+    },
+    "quaso.habilidad_agilidad_8_on": {
+      "textures": "textures/items/quaso/habilidad_agilidad_8_on"
+    },
+    "quaso.habilidad_resistencia_1_off": {
+      "textures": "textures/items/quaso/habilidad_resistencia_1_off"
+    },
+    "quaso.habilidad_resistencia_1_on": {
+      "textures": "textures/items/quaso/habilidad_resistencia_1_on"
+    },
+    "quaso.habilidad_resistencia_2_off": {
+      "textures": "textures/items/quaso/habilidad_resistencia_2_off"
+    },
+    "quaso.habilidad_resistencia_2_on": {
+      "textures": "textures/items/quaso/habilidad_resistencia_2_on"
+    },
+    "quaso.habilidad_resistencia_3_off": {
+      "textures": "textures/items/quaso/habilidad_resistencia_3_off"
+    },
+    "quaso.habilidad_resistencia_3_on": {
+      "textures": "textures/items/quaso/habilidad_resistencia_3_on"
+    },
+    "quaso.habilidad_resistencia_4_off": {
+      "textures": "textures/items/quaso/habilidad_resistencia_4_off"
+    },
+    "quaso.habilidad_resistencia_4_on": {
+      "textures": "textures/items/quaso/habilidad_resistencia_4_on"
+    },
+    "quaso.habilidad_resistencia_5_off": {
+      "textures": "textures/items/quaso/habilidad_resistencia_5_off"
+    },
+    "quaso.habilidad_resistencia_5_on": {
+      "textures": "textures/items/quaso/habilidad_resistencia_5_on"
+    },
+    "quaso.habilidad_resistencia_6_off": {
+      "textures": "textures/items/quaso/habilidad_resistencia_6_off"
+    },
+    "quaso.habilidad_resistencia_6_on": {
+      "textures": "textures/items/quaso/habilidad_resistencia_6_on"
+    },
+    "quaso.habilidad_resistencia_7_off": {
+      "textures": "textures/items/quaso/habilidad_resistencia_7_off"
+    },
+    "quaso.habilidad_resistencia_7_on": {
+      "textures": "textures/items/quaso/habilidad_resistencia_7_on"
+    },
+    "quaso.habilidad_resistencia_8_off": {
+      "textures": "textures/items/quaso/habilidad_resistencia_8_off"
+    },
+    "quaso.habilidad_resistencia_8_on": {
+      "textures": "textures/items/quaso/habilidad_resistencia_8_on"
+    },
+    "quaso.habilidad_vitalidad_1_off": {
+      "textures": "textures/items/quaso/habilidad_vitalidad_1_off"
+    },
+    "quaso.habilidad_vitalidad_1_on": {
+      "textures": "textures/items/quaso/habilidad_vitalidad_1_on"
+    },
+    "quaso.habilidad_vitalidad_2_off": {
+      "textures": "textures/items/quaso/habilidad_vitalidad_2_off"
+    },
+    "quaso.habilidad_vitalidad_2_on": {
+      "textures": "textures/items/quaso/habilidad_vitalidad_2_on"
+    },
+    "quaso.habilidad_vitalidad_3_off": {
+      "textures": "textures/items/quaso/habilidad_vitalidad_3_off"
+    },
+    "quaso.habilidad_vitalidad_3_on": {
+      "textures": "textures/items/quaso/habilidad_vitalidad_3_on"
+    },
+    "quaso.habilidad_vitalidad_4_off": {
+      "textures": "textures/items/quaso/habilidad_vitalidad_4_off"
+    },
+    "quaso.habilidad_vitalidad_4_on": {
+      "textures": "textures/items/quaso/habilidad_vitalidad_4_on"
+    },
+    "quaso.habilidad_vitalidad_5_off": {
+      "textures": "textures/items/quaso/habilidad_vitalidad_5_off"
+    },
+    "quaso.habilidad_vitalidad_5_on": {
+      "textures": "textures/items/quaso/habilidad_vitalidad_5_on"
+    },
+    "quaso.habilidad_vitalidad_6_off": {
+      "textures": "textures/items/quaso/habilidad_vitalidad_6_off"
+    },
+    "quaso.habilidad_vitalidad_6_on": {
+      "textures": "textures/items/quaso/habilidad_vitalidad_6_on"
+    },
+    "quaso.habilidad_vitalidad_7_off": {
+      "textures": "textures/items/quaso/habilidad_vitalidad_7_off"
+    },
+    "quaso.habilidad_vitalidad_7_on": {
+      "textures": "textures/items/quaso/habilidad_vitalidad_7_on"
+    },
+    "quaso.habilidad_vitalidad_8_off": {
+      "textures": "textures/items/quaso/habilidad_vitalidad_8_off"
+    },
+    "quaso.habilidad_vitalidad_8_on": {
+      "textures": "textures/items/quaso/habilidad_vitalidad_8_on"
+    },
+    "quaso.hacha_celestita": {
+      "textures": "textures/items/quaso/hacha_celestita"
+    },
+    "quaso.hacha_floral": {
+      "textures": "textures/items/quaso/hacha_floral"
+    },
+    "quaso.happy_ghast_enchant": {
+      "textures": "textures/items/quaso/happy_ghast_enchant"
+    },
+    "quaso.icetotem": {
+      "textures": "textures/items/quaso/icetotem"
+    },
+    "quaso.iman_botin": {
+      "textures": "textures/items/quaso/iman_botin"
+    },
+    "quaso.immunity": {
+      "textures": "textures/items/quaso/immunity"
+    },
+    "quaso.incienso_ahuyentador": {
+      "textures": "textures/items/quaso/incienso_ahuyentador"
+    },
+    "quaso.keep_inv_liquido": {
+      "textures": "textures/items/quaso/keep_inv_liquido"
+    },
+    "quaso.lanza_celestita": {
+      "textures": "textures/items/quaso/lanza_celestita"
+    },
+    "quaso.lanza_floral": {
+      "textures": "textures/items/quaso/lanza_floral"
+    },
+    "quaso.libro_alcance": {
+      "textures": "textures/items/quaso/libro_alcance"
+    },
+    "quaso.libro_anclaje": {
+      "textures": "textures/items/quaso/libro_anclaje"
+    },
+    "quaso.libro_anzuelo_veloz": {
+      "textures": "textures/items/quaso/libro_anzuelo_veloz"
+    },
+    "quaso.libro_cosecha": {
+      "textures": "textures/items/quaso/libro_cosecha"
+    },
+    "quaso.libro_fervor_minero": {
+      "textures": "textures/items/quaso/libro_fervor_minero"
+    },
+    "quaso.libro_habilidades": {
+      "textures": "textures/items/quaso/libro_habilidades"
+    },
+    "quaso.libro_paso_igneo": {
+      "textures": "textures/items/quaso/libro_paso_igneo"
+    },
+    "quaso.libro_purificacion": {
+      "textures": "textures/items/quaso/libro_purificacion"
+    },
+    "quaso.libro_retorno_del_vacio": {
+      "textures": "textures/items/quaso/libro_retorno_del_vacio"
+    },
+    "quaso.libro_talador": {
+      "textures": "textures/items/quaso/libro_talador"
+    },
+    "quaso.libro_veta": {
+      "textures": "textures/items/quaso/libro_veta"
+    },
+    "quaso.libro_vigor_de_batalla": {
+      "textures": "textures/items/quaso/libro_vigor_de_batalla"
+    },
+    "quaso.libro_vision_abisal": {
+      "textures": "textures/items/quaso/libro_vision_abisal"
+    },
+    "quaso.life_campfire": {
+      "textures": "textures/items/quaso/life_campfire"
+    },
+    "quaso.lingote_celestita": {
+      "textures": "textures/items/quaso/lingote_celestita"
+    },
+    "quaso.lingote_platino": {
+      "textures": "textures/items/quaso/lingote_platino"
+    },
+    "quaso.lingote_profundo": {
+      "textures": "textures/items/quaso/lingote_profundo"
+    },
+    "quaso.lingote_profundo_cian": {
+      "textures": "textures/items/quaso/lingote_profundo_cian"
+    },
+    "quaso.lingote_profundo_gris": {
+      "textures": "textures/items/quaso/lingote_profundo_gris"
+    },
+    "quaso.lingote_profundo_morado": {
+      "textures": "textures/items/quaso/lingote_profundo_morado"
+    },
+    "quaso.lingote_profundo_verde": {
+      "textures": "textures/items/quaso/lingote_profundo_verde"
+    },
+    "quaso.linterna_almas": {
+      "textures": "textures/items/quaso/linterna_almas"
+    },
+    "quaso.logro_borde": {
+      "textures": "textures/items/quaso/logro_borde"
+    },
+    "quaso.logro_completado": {
+      "textures": "textures/items/quaso/logro_completado"
+    },
+    "quaso.logro_pendiente": {
+      "textures": "textures/items/quaso/logro_pendiente"
+    },
+    "quaso.manzana_podrida": {
+      "textures": "textures/items/quaso/manzana_podrida"
+    },
+    "quaso.manzana_vida": {
+      "textures": "textures/items/quaso/manzana_vida"
+    },
+    "quaso.mejora_bota_warden": {
+      "textures": "textures/items/quaso/mejora_bota_warden"
+    },
+    "quaso.mejora_casco_warden": {
+      "textures": "textures/items/quaso/mejora_casco_warden"
+    },
+    "quaso.mejora_floral": {
+      "textures": "textures/items/quaso/mejora_floral"
+    },
+    "quaso.mejora_pantalon_warden": {
+      "textures": "textures/items/quaso/mejora_pantalon_warden"
+    },
+    "quaso.mejora_peto_warden": {
+      "textures": "textures/items/quaso/mejora_peto_warden"
+    },
+    "quaso.mineral_crudo_cian": {
+      "textures": "textures/items/quaso/mineral_crudo_cian"
+    },
+    "quaso.mineral_crudo_gris": {
+      "textures": "textures/items/quaso/mineral_crudo_gris"
+    },
+    "quaso.mineral_crudo_morado": {
+      "textures": "textures/items/quaso/mineral_crudo_morado"
+    },
+    "quaso.mineral_crudo_verde": {
+      "textures": "textures/items/quaso/mineral_crudo_verde"
+    },
+    "quaso.mision_activa": {
+      "textures": "textures/items/quaso/mision_activa"
+    },
+    "quaso.mision_completada": {
+      "textures": "textures/items/quaso/mision_completada"
+    },
+    "quaso.mision_inactiva": {
+      "textures": "textures/items/quaso/mision_inactiva"
+    },
+    "quaso.mochila_nivel_1": {
+      "textures": "textures/items/quaso/mochila_nivel_1"
+    },
+    "quaso.mochila_nivel_2": {
+      "textures": "textures/items/quaso/mochila_nivel_2"
+    },
+    "quaso.mochila_nivel_3": {
+      "textures": "textures/items/quaso/mochila_nivel_3"
+    },
+    "quaso.mochila_nivel_4": {
+      "textures": "textures/items/quaso/mochila_nivel_4"
+    },
+    "quaso.mochila_nivel_5": {
+      "textures": "textures/items/quaso/mochila_nivel_5"
+    },
+    "quaso.monedero": {
+      "textures": "textures/items/quaso/monedero"
+    },
+    "quaso.nucleo_sonico": {
+      "textures": "textures/items/quaso/nucleo_sonico"
+    },
+    "quaso.ojo_arana_floral": {
+      "textures": "textures/items/quaso/ojo_arana_floral"
+    },
+    "quaso.ojo_rey_ender": {
+      "textures": "textures/items/quaso/ojo_rey_ender"
+    },
+    "quaso.pala_celestita": {
+      "textures": "textures/items/quaso/pala_celestita"
+    },
+    "quaso.pala_floral": {
+      "textures": "textures/items/quaso/pala_floral"
+    },
+    "quaso.panic_apple": {
+      "textures": "textures/items/quaso/panic_apple"
+    },
+    "quaso.pantalon_floral": {
+      "textures": "textures/items/quaso/pantalon_floral"
+    },
+    "quaso.pantalon_warden": {
+      "textures": "textures/items/quaso/pantalon_warden"
+    },
+    "quaso.pepitas_diamante": {
+      "textures": "textures/items/quaso/pepitas_diamante"
+    },
+    "quaso.pepitas_hierro_oxidadas": {
+      "textures": "textures/items/quaso/pepitas_hierro_oxidadas"
+    },
+    "quaso.perla_infinita": {
+      "textures": "textures/items/quaso/perla_infinita"
+    },
+    "quaso.peto_floral": {
+      "textures": "textures/items/quaso/peto_floral"
+    },
+    "quaso.peto_warden": {
+      "textures": "textures/items/quaso/peto_warden"
+    },
+    "quaso.peto_warden_alado": {
+      "textures": "textures/items/quaso/peto_warden_alado"
+    },
+    "quaso.pico_celestita": {
+      "textures": "textures/items/quaso/pico_celestita"
+    },
+    "quaso.pico_floral": {
+      "textures": "textures/items/quaso/pico_floral"
+    },
+    "quaso.piruleta": {
+      "textures": "textures/items/quaso/piruleta"
+    },
+    "quaso.plantilla_celestita": {
+      "textures": "textures/items/quaso/plantilla_celestita"
+    },
+    "quaso.pluma_levi": {
+      "textures": "textures/items/quaso/pluma_levi"
+    },
+    "quaso.pluma_levi_mejorada": {
+      "textures": "textures/items/quaso/pluma_levi_mejorada"
+    },
+    "quaso.pluma_vacio": {
+      "textures": "textures/items/quaso/pluma_vacio"
+    },
+    "quaso.polvo_silencioso": {
+      "textures": "textures/items/quaso/polvo_silencioso"
+    },
+    "quaso.polvora_floral": {
+      "textures": "textures/items/quaso/polvora_floral"
+    },
+    "quaso.potion_haste_2": {
+      "textures": "textures/items/quaso/potion_haste_2"
+    },
+    "quaso.potion_haste_3": {
+      "textures": "textures/items/quaso/potion_haste_3"
+    },
+    "quaso.potion_resistance_2": {
+      "textures": "textures/items/quaso/potion_resistance_2"
+    },
+    "quaso.potion_slow_falling": {
+      "textures": "textures/items/quaso/potion_slow_falling"
+    },
+    "quaso.propulsor_estelar": {
+      "textures": "textures/items/quaso/propulsor_estelar"
+    },
+    "quaso.quaso_ticket": {
+      "textures": "textures/items/quaso/quaso_ticket"
+    },
+    "quaso.racion_viaje": {
+      "textures": "textures/items/quaso/racion_viaje"
+    },
+    "quaso.radar_minerales": {
+      "textures": "textures/items/quaso/radar_minerales"
+    },
+    "quaso.red_animales": {
+      "textures": "textures/items/quaso/red_animales"
+    },
+    "quaso.rep_hierro": {
+      "textures": "textures/items/quaso/rep_hierro"
+    },
+    "quaso.rep_oro": {
+      "textures": "textures/items/quaso/rep_oro"
+    },
+    "quaso.sculk_totem": {
+      "textures": "textures/items/quaso/sculk_totem"
+    },
+    "quaso.soda": {
+      "textures": "textures/items/quaso/soda"
+    },
+    "quaso.spawner_custom": {
+      "textures": "textures/items/quaso/spawner_custom"
+    },
+    "quaso.special_totem": {
+      "textures": "textures/items/quaso/special_totem"
+    },
+    "quaso.splash_absorption_10": {
+      "textures": "textures/items/quaso/splash_absorption_10"
+    },
+    "quaso.splash_regeneration_3": {
+      "textures": "textures/items/quaso/splash_regeneration_3"
+    },
+    "quaso.splash_resistance_3": {
+      "textures": "textures/items/quaso/splash_resistance_3"
+    },
+    "quaso.statue_effect": {
+      "textures": "textures/items/quaso/statue_effect"
+    },
+    "quaso.statue_pr": {
+      "textures": "textures/items/quaso/statue_pr"
+    },
+    "quaso.talisman_botin": {
+      "textures": "textures/items/quaso/talisman_botin"
+    },
+    "quaso.tarta_calabaza_mejorada": {
+      "textures": "textures/items/quaso/tarta_calabaza_mejorada"
+    },
+    "quaso.tejido_sculk": {
+      "textures": "textures/items/quaso/tejido_sculk"
+    },
+    "quaso.tonico_antilevitacion": {
+      "textures": "textures/items/quaso/tonico_antilevitacion"
+    },
+    "quaso.totem_doble1": {
+      "textures": "textures/items/quaso/totem_doble1"
+    },
+    "quaso.totem_doble2": {
+      "textures": "textures/items/quaso/totem_doble2"
+    },
+    "quaso.trabajo_constructor": {
+      "textures": "textures/items/quaso/trabajo_constructor"
+    },
+    "quaso.trabajo_granjero": {
+      "textures": "textures/items/quaso/trabajo_granjero"
+    },
+    "quaso.trabajo_guerrero": {
+      "textures": "textures/items/quaso/trabajo_guerrero"
+    },
+    "quaso.trabajo_lenador": {
+      "textures": "textures/items/quaso/trabajo_lenador"
+    },
+    "quaso.trabajo_mineria": {
+      "textures": "textures/items/quaso/trabajo_mineria"
+    },
+    "quaso.trabajo_pescador": {
+      "textures": "textures/items/quaso/trabajo_pescador"
+    },
+    "quaso.warden_gun": {
+      "textures": "textures/items/quaso/warden_gun"
+    },
+    "quaso.zanahoria_encantada": {
+      "textures": "textures/items/quaso/zanahoria_encantada"
+    }
+  }
+}

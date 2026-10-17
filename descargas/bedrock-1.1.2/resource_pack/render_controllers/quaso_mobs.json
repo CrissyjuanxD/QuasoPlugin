@@ -1,0 +1,301 @@
+{
+  "format_version": "1.8.0",
+  "render_controllers": {
+    "controller.render.quaso.zombie2": {
+      "geometry": "Geometry.zombie2",
+      "materials": [
+        {
+          "*": "Material.quaso"
+        }
+      ],
+      "textures": [
+        "Texture.zombie2"
+      ]
+    },
+    "controller.render.quaso.zombie3": {
+      "geometry": "Geometry.zombie3",
+      "materials": [
+        {
+          "*": "Material.quaso"
+        }
+      ],
+      "textures": [
+        "Texture.zombie3"
+      ]
+    },
+    "controller.render.quaso.zombie3_e": {
+      "geometry": "Geometry.zombie3",
+      "materials": [
+        {
+          "*": "Material.quaso_glow"
+        }
+      ],
+      "textures": [
+        "Texture.zombie3_e"
+      ]
+    },
+    "controller.render.quaso.zombie4": {
+      "geometry": "Geometry.zombie4",
+      "materials": [
+        {
+          "*": "Material.quaso"
+        }
+      ],
+      "textures": [
+        "Texture.zombie4"
+      ]
+    },
+    "controller.render.quaso.zombie4_e": {
+      "geometry": "Geometry.zombie4",
+      "materials": [
+        {
+          "*": "Material.quaso_glow"
+        }
+      ],
+      "textures": [
+        "Texture.zombie4_e"
+      ]
+    },
+    "controller.render.quaso.skeleton3": {
+      "geometry": "Geometry.skeleton3",
+      "materials": [
+        {
+          "*": "Material.quaso"
+        }
+      ],
+      "textures": [
+        "Texture.skeleton3"
+      ]
+    },
+    "controller.render.quaso.skeleton3_e": {
+      "geometry": "Geometry.skeleton3",
+      "materials": [
+        {
+          "*": "Material.quaso_glow"
+        }
+      ],
+      "textures": [
+        "Texture.skeleton3_e"
+      ]
+    },
+    "controller.render.quaso.skeleton4": {
+      "geometry": "Geometry.skeleton4",
+      "materials": [
+        {
+          "*": "Material.quaso"
+        }
+      ],
+      "textures": [
+        "Texture.skeleton4"
+      ]
+    },
+    "controller.render.quaso.skeleton4_e": {
+      "geometry": "Geometry.skeleton4",
+      "materials": [
+        {
+          "*": "Material.quaso_glow"
+        }
+      ],
+      "textures": [
+        "Texture.skeleton4_e"
+      ]
+    },
+    "controller.render.quaso.creeper2": {
+      "geometry": "Geometry.creeper2",
+      "materials": [
+        {
+          "*": "Material.quaso"
+        }
+      ],
+      "textures": [
+        "Texture.creeper2"
+      ]
+    },
+    "controller.render.quaso.creeper3": {
+      "geometry": "Geometry.creeper3",
+      "materials": [
+        {
+          "*": "Material.quaso"
+        }
+      ],
+      "textures": [
+        "Texture.creeper3"
+      ]
+    },
+    "controller.render.quaso.creeper3_e": {
+      "geometry": "Geometry.creeper3",
+      "materials": [
+        {
+          "*": "Material.quaso_glow"
+        }
+      ],
+      "textures": [
+        "Texture.creeper3_e"
+      ]
+    },
+    "controller.render.quaso.creeper4": {
+      "geometry": "Geometry.creeper4",
+      "materials": [
+        {
+          "*": "Material.quaso"
+        }
+      ],
+      "textures": [
+        "Texture.creeper4"
+      ]
+    },
+    "controller.render.quaso.creeper4_e": {
+      "geometry": "Geometry.creeper4",
+      "materials": [
+        {
+          "*": "Material.quaso_glow"
+        }
+      ],
+      "textures": [
+        "Texture.creeper4_e"
+      ]
+    },
+    "controller.render.quaso.spider2": {
+      "geometry": "Geometry.spider2",
+      "materials": [
+        {
+          "*": "Material.quaso"
+        }
+      ],
+      "textures": [
+        "Texture.spider2"
+      ]
+    },
+    "controller.render.quaso.spider4": {
+      "geometry": "Geometry.spider4",
+      "materials": [
+        {
+          "*": "Material.quaso"
+        }
+      ],
+      "textures": [
+        "Texture.spider4"
+      ]
+    },
+    "controller.render.quaso.spider4_e": {
+      "geometry": "Geometry.spider4",
+      "materials": [
+        {
+          "*": "Material.quaso_glow"
+        }
+      ],
+      "textures": [
+        "Texture.spider4_e"
+      ]
+    },
+    "controller.render.quaso.cave_spider3": {
+      "geometry": "Geometry.cave_spider3",
+      "materials": [
+        {
+          "*": "Material.quaso"
+        }
+      ],
+      "textures": [
+        "Texture.cave_spider3"
+      ]
+    },
+    "controller.render.quaso.cave_spider3_e": {
+      "geometry": "Geometry.cave_spider3",
+      "materials": [
+        {
+          "*": "Material.quaso_glow"
+        }
+      ],
+      "textures": [
+        "Texture.cave_spider3_e"
+      ]
+    },
+    "controller.render.quaso.ghast3": {
+      "geometry": "Geometry.ghast3",
+      "materials": [
+        {
+          "*": "Material.quaso"
+        }
+      ],
+      "textures": [
+        "Texture.ghast3"
+      ]
+    },
+    "controller.render.quaso.ghast3_e": {
+      "geometry": "Geometry.ghast3",
+      "materials": [
+        {
+          "*": "Material.quaso_glow"
+        }
+      ],
+      "textures": [
+        "Texture.ghast3_e"
+      ]
+    },
+    "controller.render.quaso.bee2": {
+      "geometry": "Geometry.bee2",
+      "materials": [
+        {
+          "*": "Material.quaso"
+        }
+      ],
+      "textures": [
+        "Array.skins[query.property('minecraft:has_nectar') + query.is_angry * 2]"
+      ],
+      "arrays": {
+        "textures": {
+          "Array.skins": [
+            "Texture.bee2",
+            "Texture.bee2_nectar",
+            "Texture.bee2_angry",
+            "Texture.bee2_angry_nectar"
+          ]
+        }
+      }
+    },
+    "controller.render.quaso.bee3": {
+      "geometry": "Geometry.bee3",
+      "materials": [
+        {
+          "*": "Material.quaso"
+        }
+      ],
+      "textures": [
+        "Texture.bee3"
+      ]
+    },
+    "controller.render.quaso.bee3_e": {
+      "geometry": "Geometry.bee3",
+      "materials": [
+        {
+          "*": "Material.quaso_glow"
+        }
+      ],
+      "textures": [
+        "Texture.bee3_e"
+      ]
+    },
+    "controller.render.quaso.copper_golem2": {
+      "geometry": "Geometry.copper_golem2",
+      "materials": [
+        {
+          "*": "Material.quaso"
+        }
+      ],
+      "textures": [
+        "Texture.copper_golem2"
+      ]
+    },
+    "controller.render.quaso.copper_golem2_e": {
+      "geometry": "Geometry.copper_golem2",
+      "materials": [
+        {
+          "*": "Material.quaso_glow"
+        }
+      ],
+      "textures": [
+        "Texture.copper_golem2_e"
+      ]
+    }
+  }
+}

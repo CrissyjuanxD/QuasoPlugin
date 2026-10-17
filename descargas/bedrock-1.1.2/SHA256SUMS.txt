@@ -1,0 +1,4 @@
+2e86ac5d4b6430ec02787ae70e78c31b6d0bd0914c9341cdef1a5696539c73d9  packs/QuasoTextures-1.1.2.mcpack
+f1c51c386a59ce77f8d24158029b9c3cfc9a46135306219b18e359cb90d2a823  extensions/QuasoWardenCave-1.1.2.jar
+f6bc032e94b3e3900f6650745040d635ecf2dccc51a0a7ac2a873cd8db03594a  opcional_cliente/QuasoLogo-global-1.1.2.mcpack
+23642f11908ca6b78ea241d6cb897ddd9a30a0b14ea0dcd15d666c43282ba67e  Quaso-Bedrock-1.1.2-instalar.zip

@@ -1,0 +1,32 @@
+{
+  "format_version": 2,
+  "header": {
+    "name": "Croissants · Segunda edición | Quaso 1.1.2",
+    "description": "Presentación Bedrock con QuasoWardenCave 1.1.2: mobs, menús, rangos y atmósfera.",
+    "uuid": "1a5b1be9-b1a4-537f-91d9-4ccbce20733e",
+    "version": [
+      1,
+      1,
+      2
+    ],
+    "min_engine_version": [
+      1,
+      26,
+      50
+    ]
+  },
+  "modules": [
+    {
+      "type": "resources",
+      "uuid": "5323f654-4be0-509b-86d6-1a6bd5be90fa",
+      "version": [
+        1,
+        1,
+        2
+      ]
+    }
+  ],
+  "capabilities": [
+    "pbr"
+  ]
+}

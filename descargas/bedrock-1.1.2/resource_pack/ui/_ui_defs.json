@@ -1,0 +1,8 @@
+{
+  "ui_defs": [
+    "ui/chest_screen.json",
+    "ui/scoreboards.json",
+    "ui/progress_screen.json",
+    "ui/quaso_loading.json"
+  ]
+}

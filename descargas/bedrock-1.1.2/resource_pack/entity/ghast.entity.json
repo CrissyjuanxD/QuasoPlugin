@@ -1,0 +1,57 @@
+{
+  "format_version": "1.10.0",
+  "minecraft:client_entity": {
+    "description": {
+      "identifier": "minecraft:ghast",
+      "materials": {
+        "default": "ghast",
+        "quaso": "entity_alphatest",
+        "quaso_glow": "entity_emissive_alpha"
+      },
+      "textures": {
+        "default": "textures/entity/ghast/ghast",
+        "shooting": "textures/entity/ghast/ghast_shooting",
+        "ghast3": "textures/entity/quaso/ghast3",
+        "ghast3_e": "textures/entity/quaso/ghast3_e"
+      },
+      "geometry": {
+        "default": "geometry.ghast",
+        "ghast3": "geometry.quaso.ghast3"
+      },
+      "spawn_egg": {
+        "texture": "spawn_egg_ghast"
+      },
+      "animations": {
+        "move": "animation.ghast.move",
+        "scale": "animation.ghast.scale",
+        "ghast3": "animation.quaso.ghast3",
+        "quaso_native_move_controller": "controller.animation.ghast.move"
+      },
+      "render_controllers": [
+        {
+          "controller.render.ghast": "!variable.quaso_custom"
+        },
+        {
+          "controller.render.quaso.ghast3": "variable.quaso_ghast3"
+        },
+        {
+          "controller.render.quaso.ghast3_e": "variable.quaso_ghast3"
+        }
+      ],
+      "scripts": {
+        "pre_animation": [
+          "variable.quaso_ghast3 = query.property('quaso:model') == 9312;",
+          "variable.quaso_custom = variable.quaso_ghast3;"
+        ],
+        "animate": [
+          {
+            "quaso_native_move_controller": "!variable.quaso_custom"
+          },
+          {
+            "ghast3": "variable.quaso_ghast3"
+          }
+        ]
+      }
+    }
+  }
+}

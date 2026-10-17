@@ -1,0 +1,37 @@
+{
+  "format_version": "1.10.0",
+  "minecraft:attachable": {
+    "description": {
+      "identifier": "quaso:botas_floral.player",
+      "item": {
+        "quaso:botas_floral": "query.owner_identifier == 'minecraft:player'"
+      },
+      "materials": {
+        "default": "armor",
+        "enchanted": "armor_enchanted"
+      },
+      "textures": {
+        "default": "textures/models/armor/quaso/humanoid/floral",
+        "enchanted": "textures/misc/enchanted_actor_glint",
+        "flowers": "textures/models/armor/quaso/humanoid/floral_flores"
+      },
+      "geometry": {
+        "default": "geometry.player.armor.boots",
+        "flowers": "geometry.quaso.flowers.boots.player"
+      },
+      "scripts": {
+        "parent_setup": "variable.boot_layer_visible = 0.0;",
+        "animate": [
+          "offset"
+        ]
+      },
+      "animations": {
+        "offset": "animation.armor.boots.offset"
+      },
+      "render_controllers": [
+        "controller.render.quaso.armor",
+        "controller.render.quaso.flowers"
+      ]
+    }
+  }
+}
